@@ -1,0 +1,13 @@
+{
+  "headline": "Agent Feature Test 19700101-053000",
+  "subheadline": "Verifying the complete editorial lifecycle from draft to publish.",
+  "section": "politics",
+  "contentType": "news",
+  "body": "This is the body content for the feature test. It verifies that Git storage works.",
+  "tags": [],
+  "sources": [],
+  "placement": "standard",
+  "draftId": "draft-1770261482860-rjp6af5ia",
+  "savedAt": "2026-02-05T03:18:02.860Z",
+  "createdAt": "2026-02-05T03:18:02.860Z"
+}
