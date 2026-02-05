@@ -7,7 +7,7 @@ const ALG = 'HS256';
 export async function createMagicToken(email: string) {
     const expiry = process.env.MAGIC_LINK_EXPIRY_MINUTES
         ? `${process.env.MAGIC_LINK_EXPIRY_MINUTES}m`
-        : '30m'; // 30 minutes default
+        : '3m'; // 3 minutes default
 
     return new SignJWT({ email, jti: crypto.randomUUID() })
         .setProtectedHeader({ alg: ALG })

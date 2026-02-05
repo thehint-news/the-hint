@@ -1,15 +1,56 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { SkeletonBlock } from '@/components/skeleton';
 
 function UnsubscribeContent() {
     const searchParams = useSearchParams();
-    const status = searchParams.get('status');
-    const message = searchParams.get('message');
+    const resultStatus = searchParams.get('status');
+    const resultMessage = searchParams.get('message');
 
-    const isSuccess = status === 'success';
+    // State for manual unsubscribe form
+    const [email, setEmail] = useState('');
+    const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [formMessage, setFormMessage] = useState('');
+
+    // Determine view state
+    const isManualSuccess = formStatus === 'success';
+    const isResultView = resultStatus !== null || isManualSuccess;
+    const isSuccess = resultStatus === 'success' || isManualSuccess;
+
+    // Display message
+    const displayMessage = isManualSuccess ? formMessage : resultMessage;
+
+    const handleManualSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!email) return;
+
+        setFormStatus('loading');
+        setFormMessage('');
+
+        try {
+            const res = await fetch('/api/unsubscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                setFormStatus('success');
+                setFormMessage(data.message);
+                setEmail(''); // Clear form
+            } else {
+                setFormStatus('error');
+                setFormMessage(data.error || data.message || 'Failed to unsubscribe.');
+            }
+        } catch (error) {
+            setFormStatus('error');
+            setFormMessage('An error occurred. Please try again.');
+        }
+    };
 
     return (
         <main style={{
@@ -23,6 +64,7 @@ function UnsubscribeContent() {
         }}>
             <div style={{
                 maxWidth: '500px',
+                width: '100%',
                 backgroundColor: '#ffffff',
                 padding: '40px',
                 textAlign: 'center',
@@ -38,49 +80,137 @@ function UnsubscribeContent() {
                     THE HINT
                 </h1>
 
-                {isSuccess ? (
-                    <>
-                        <div style={{
-                            fontSize: '48px',
-                            marginBottom: '20px',
-                        }}>
-                            ✓
-                        </div>
-                        <h2 style={{
-                            fontSize: '24px',
-                            fontWeight: 'bold',
-                            marginBottom: '15px',
-                            color: '#111',
-                        }}>
-                            Unsubscribed
-                        </h2>
-                        <p style={{
-                            fontSize: '16px',
-                            lineHeight: 1.6,
-                            color: '#666',
-                            marginBottom: '30px',
-                        }}>
-                            {message || 'You have been successfully unsubscribed from our mailing list.'}
-                        </p>
-                    </>
+                {isResultView ? (
+                    /* RESULT VIEW (From Email Link) */
+                    isSuccess ? (
+                        <>
+                            <div style={{
+                                fontSize: '48px',
+                                marginBottom: '20px',
+                            }}>
+                                ✓
+                            </div>
+                            <h2 style={{
+                                fontSize: '24px',
+                                fontWeight: 'bold',
+                                marginBottom: '15px',
+                                color: '#111',
+                            }}>
+                                Unsubscribed
+                            </h2>
+                            <p style={{
+                                fontSize: '16px',
+                                lineHeight: 1.6,
+                                color: '#666',
+                                marginBottom: '30px',
+                            }}>
+                                {displayMessage || 'You have been successfully unsubscribed from our mailing list.'}
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <h2 style={{
+                                fontSize: '24px',
+                                fontWeight: 'bold',
+                                marginBottom: '15px',
+                                color: '#111',
+                            }}>
+                                Unsubscribe
+                            </h2>
+                            <p style={{
+                                fontSize: '16px',
+                                lineHeight: 1.6,
+                                color: '#666',
+                                marginBottom: '30px',
+                            }}>
+                                {displayMessage || 'There was an issue processing your request.'}
+                            </p>
+                        </>
+                    )
                 ) : (
+                    /* MANUAL FORM VIEW */
                     <>
                         <h2 style={{
                             fontSize: '24px',
                             fontWeight: 'bold',
-                            marginBottom: '15px',
+                            marginBottom: '10px',
                             color: '#111',
                         }}>
                             Unsubscribe
                         </h2>
                         <p style={{
-                            fontSize: '16px',
+                            fontSize: '15px',
                             lineHeight: 1.6,
                             color: '#666',
                             marginBottom: '30px',
                         }}>
-                            {message || 'There was an issue processing your request.'}
+                            Enter your email address to unsubscribe from our newsletter.
                         </p>
+
+                        <form onSubmit={handleManualSubmit} style={{ marginBottom: '30px' }}>
+                            <div style={{ marginBottom: '20px', textAlign: 'left' }}>
+                                <label htmlFor="email" style={{
+                                    display: 'block',
+                                    fontSize: '12px',
+                                    fontWeight: 'bold',
+                                    color: '#333',
+                                    textTransform: 'uppercase',
+                                    marginBottom: '8px',
+                                    fontFamily: 'Arial, sans-serif',
+                                    letterSpacing: '0.5px'
+                                }}>
+                                    Email Address
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    placeholder="your@email.com"
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px',
+                                        fontSize: '16px',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '0',
+                                        fontFamily: 'Arial, sans-serif',
+                                        boxSizing: 'border-box',
+                                    }}
+                                />
+                                {formStatus === 'error' && (
+                                    <p style={{
+                                        color: '#dc2626',
+                                        fontSize: '13px',
+                                        marginTop: '8px',
+                                        textAlign: 'left',
+                                        fontFamily: 'Arial, sans-serif'
+                                    }}>
+                                        {formMessage}
+                                    </p>
+                                )}
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={formStatus === 'loading'}
+                                style={{
+                                    width: '100%',
+                                    padding: '14px',
+                                    backgroundColor: '#111',
+                                    color: '#fff',
+                                    border: 'none',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '1px',
+                                    cursor: formStatus === 'loading' ? 'not-allowed' : 'pointer',
+                                    fontFamily: 'Arial, sans-serif',
+                                    opacity: formStatus === 'loading' ? 0.7 : 1,
+                                }}
+                            >
+                                {formStatus === 'loading' ? 'Processing...' : 'Unsubscribe'}
+                            </button>
+                        </form>
                     </>
                 )}
 
@@ -89,9 +219,9 @@ function UnsubscribeContent() {
                     style={{
                         display: 'inline-block',
                         padding: '14px 28px',
-                        backgroundColor: '#111',
-                        color: '#fff',
-                        textDecoration: 'none',
+                        backgroundColor: isResultView ? '#111' : 'transparent',
+                        color: isResultView ? '#fff' : '#666',
+                        textDecoration: isResultView ? 'none' : 'underline',
                         fontFamily: 'Arial, sans-serif',
                         fontSize: '13px',
                         fontWeight: 'bold',
@@ -102,17 +232,19 @@ function UnsubscribeContent() {
                     Return to Homepage
                 </a>
 
-                <p style={{
-                    marginTop: '30px',
-                    fontSize: '13px',
-                    color: '#999',
-                    fontFamily: 'Arial, sans-serif',
-                }}>
-                    Changed your mind?{' '}
-                    <a href="/" style={{ color: '#666', textDecoration: 'underline' }}>
-                        Subscribe again
-                    </a>
-                </p>
+                {!isResultView && (
+                    <p style={{
+                        marginTop: '30px',
+                        fontSize: '13px',
+                        color: '#999',
+                        fontFamily: 'Arial, sans-serif',
+                    }}>
+                        Changed your mind?{' '}
+                        <a href="/" style={{ color: '#666', textDecoration: 'underline' }}>
+                            Stay subscribed
+                        </a>
+                    </p>
+                )}
             </div>
         </main>
     );

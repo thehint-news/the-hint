@@ -20,6 +20,7 @@ import {
     DraftArticleInput,
 } from '@/lib/validation';
 import { contentGit } from '@/lib/git';
+import { logger } from '@/lib/feedback/console-guard';
 
 /**
  * User-friendly response helper
@@ -107,7 +108,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         );
 
         if (!result.success) {
-            console.error('Draft save failed:', result.error);
+            logger.error('Draft save failed', result.error);
             return userResponse(
                 false,
                 result.userMessage || 'We couldn\'t save this draft right now. Nothing was lost.',
@@ -126,7 +127,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         );
 
     } catch (error) {
-        console.error('Unexpected error in draft save API:', error);
+        logger.error('Unexpected error in draft save API', error);
         return userResponse(
             false,
             'Something went wrong. Please try again.',
@@ -196,7 +197,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         );
 
     } catch (error) {
-        console.error('Unexpected error in draft load API:', error);
+        logger.error('Unexpected error in draft load API', error);
         return userResponse(
             false,
             'Something went wrong. Please try again.',
@@ -241,7 +242,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         );
 
     } catch (error) {
-        console.error('Unexpected error in draft delete API:', error);
+        logger.error('Unexpected error in draft delete API', error);
         return userResponse(
             false,
             'Something went wrong. Please try again.',

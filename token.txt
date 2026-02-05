@@ -1,1 +1,0 @@
-http://localhost:3001/api/auth/verify?token=eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNoaXJhbmplZXZpODA1MEBnbWFpbC5jb20iLCJqdGkiOiJ0ZXN0LXV1aWQiLCJpYXQiOjE3Njg5MDUyMzgsImV4cCI6MTc2ODkwNjEzOH0.4FE0dQGJCgOafbrsYrt1wG79B9uMKf_QaG5LcSbIjOM

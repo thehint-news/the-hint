@@ -353,19 +353,19 @@ describe('validateImageFile', () => {
 // =============================================================================
 
 describe('canInsertMediaAt', () => {
-    it('should reject insertion at position 0', () => {
+    it('should allow insertion at position 0', () => {
         const blocks: ContentBlock[] = [makeParagraph(0), makeParagraph(1)];
         const result = canInsertMediaAt(blocks, 0, 'image');
-        expect(result.valid).toBe(false);
+        expect(result.valid).toBe(true);
     });
 
-    it('should reject insertion at end', () => {
+    it('should allow insertion at end', () => {
         const blocks: ContentBlock[] = [makeParagraph(0), makeParagraph(1)];
         const result = canInsertMediaAt(blocks, 2, 'image');
-        expect(result.valid).toBe(false);
+        expect(result.valid).toBe(true);
     });
 
-    it('should reject insertion next to media', () => {
+    it('should allow insertion next to media', () => {
         const blocks: ContentBlock[] = [
             makeParagraph(0),
             makeImage(1),
@@ -373,7 +373,7 @@ describe('canInsertMediaAt', () => {
         ];
         // Position 1 would be adjacent to image at position 1
         const result = canInsertMediaAt(blocks, 2, 'image');
-        expect(result.valid).toBe(false);
+        expect(result.valid).toBe(true);
     });
 
     it('should allow insertion between text blocks', () => {

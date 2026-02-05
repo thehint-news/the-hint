@@ -14,6 +14,7 @@
  */
 
 import { gitService, GitOperationError, GitErrorType, Section } from './service';
+import { logger } from '../feedback/console-guard';
 import path from 'path';
 
 /** Draft data structure */
@@ -132,7 +133,7 @@ class ContentGit {
                 userMessage: 'Draft saved successfully.',
             };
         } catch (error) {
-            console.error('Failed to create/update draft:', error);
+            logger.error('Failed to create/update draft', error);
             const gitError = gitService.translateError(error);
             return {
                 success: false,
@@ -170,7 +171,7 @@ class ContentGit {
                 userMessage: 'Draft loaded.',
             };
         } catch (error) {
-            console.error('Failed to load draft:', error);
+            logger.error('Failed to load draft', error);
             const gitError = gitService.translateError(error);
             return {
                 success: false,
@@ -201,7 +202,7 @@ class ContentGit {
                         const draft = JSON.parse(content) as DraftData;
                         drafts.push(draft);
                     } catch {
-                        console.warn(`Skipping invalid draft file: ${filename}`);
+                        logger.warn(`Skipping invalid draft file: ${filename}`);
                     }
                 }
             }
@@ -215,7 +216,7 @@ class ContentGit {
                 userMessage: `Found ${drafts.length} draft(s).`,
             };
         } catch (error) {
-            console.error('Failed to list drafts:', error);
+            logger.error('Failed to list drafts', error);
             const gitError = gitService.translateError(error);
             return {
                 success: false,
@@ -247,7 +248,7 @@ class ContentGit {
                                 articles.push(article);
                             }
                         } catch {
-                            console.warn(`Skipping invalid article file: ${filename}`);
+                            logger.warn(`Skipping invalid article file: ${filename}`);
                         }
                     }
                 }
@@ -262,7 +263,7 @@ class ContentGit {
                 userMessage: `Found ${articles.length} published article(s).`,
             };
         } catch (error) {
-            console.error('Failed to list published articles:', error);
+            logger.error('Failed to list published articles', error);
             const gitError = gitService.translateError(error);
             return {
                 success: false,
@@ -312,7 +313,7 @@ class ContentGit {
                 userMessage: 'Draft updated.',
             };
         } catch (error) {
-            console.error('Failed to update draft:', error);
+            logger.error('Failed to update draft', error);
             const gitError = gitService.translateError(error);
             return {
                 success: false,
@@ -356,7 +357,7 @@ class ContentGit {
                 userMessage: 'Draft deleted.',
             };
         } catch (error) {
-            console.error('Failed to delete draft:', error);
+            logger.error('Failed to delete draft', error);
             const gitError = gitService.translateError(error);
             return {
                 success: false,
@@ -406,7 +407,7 @@ class ContentGit {
                 userMessage: 'Article removed.',
             };
         } catch (error) {
-            console.error('Failed to delete published article:', error);
+            logger.error('Failed to delete published article', error);
             const gitError = gitService.translateError(error);
             return {
                 success: false,
@@ -486,7 +487,7 @@ class ContentGit {
                 userMessage: 'Article published successfully.',
             };
         } catch (error) {
-            console.error('Failed to publish article:', error);
+            logger.error('Failed to publish article', error);
             const gitError = gitService.translateError(error);
             return {
                 success: false,
@@ -575,7 +576,7 @@ class ContentGit {
                 userMessage: 'Article updated.',
             };
         } catch (error) {
-            console.error('Failed to update published article:', error);
+            logger.error('Failed to update published article', error);
             const gitError = gitService.translateError(error);
             return {
                 success: false,
@@ -733,7 +734,7 @@ class ContentGit {
                 body,
             };
         } catch (error) {
-            console.error('Failed to parse frontmatter:', error);
+            logger.error('Failed to parse frontmatter', error);
             return null;
         }
     }
@@ -744,7 +745,7 @@ class ContentGit {
      */
     private pushAsync(): void {
         gitService.push().catch(error => {
-            console.error('Background push failed:', error);
+            logger.error('Background push failed', error);
             // TODO: Queue for retry
         });
     }

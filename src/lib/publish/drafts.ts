@@ -9,6 +9,7 @@
  */
 
 import { contentGit, DraftData } from '../git';
+import { logger } from '@/lib/feedback/console-guard';
 import { ValidatedDraftData, Section, ContentType, Placement } from '../validation';
 
 /** Draft metadata for history - backward compatible interface */
@@ -54,7 +55,7 @@ export async function saveDraft(draft: ValidatedDraftData): Promise<{ success: b
             draftId: result.data?.draftId || draft.draftId,
         };
     } catch (error) {
-        console.error('Failed to save draft:', error);
+        logger.error('Failed to save draft', error);
         return {
             success: false,
             draftId: draft.draftId,
@@ -89,7 +90,7 @@ export async function loadDraft(draftId: string): Promise<ValidatedDraftData | n
             savedAt: draft.savedAt,
         };
     } catch (error) {
-        console.error('Failed to load draft:', error);
+        logger.error('Failed to load draft', error);
         return null;
     }
 }
@@ -103,7 +104,7 @@ export async function deleteDraft(draftId: string): Promise<boolean> {
         const result = await contentGit.deleteDraft(draftId);
         return result.success;
     } catch (error) {
-        console.error('Failed to delete draft:', error);
+        logger.error('Failed to delete draft', error);
         return false;
     }
 }
@@ -128,7 +129,7 @@ export async function getDraftHistory(): Promise<DraftHistoryEntry[]> {
             contentType: draft.contentType,
         }));
     } catch (error) {
-        console.error('Failed to get draft history:', error);
+        logger.error('Failed to get draft history', error);
         return [];
     }
 }
@@ -149,10 +150,10 @@ export function draftExists(draftId: string): boolean {
 export function saveDraftSync(draft: ValidatedDraftData): { success: boolean; draftId: string; error?: string } {
     // This is a synchronous wrapper - Git operations are still async internally
     // Not recommended for production use
-    console.warn('saveDraftSync is deprecated. Use async saveDraft instead.');
+    logger.warn('saveDraftSync is deprecated. Use async saveDraft instead.');
 
     // Return a pending result - actual save happens async
-    saveDraft(draft).catch(console.error);
+    saveDraft(draft).catch(err => logger.error('saveDraftSync failed', err));
 
     return { success: true, draftId: draft.draftId };
 }
@@ -161,6 +162,6 @@ export function saveDraftSync(draft: ValidatedDraftData): { success: boolean; dr
  * @deprecated Use async getDraftHistory instead
  */
 export function getDraftHistorySync(): DraftHistoryEntry[] {
-    console.warn('getDraftHistorySync is deprecated. Use async getDraftHistory instead.');
+    logger.warn('getDraftHistorySync is deprecated. Use async getDraftHistory instead.');
     return [];
 }

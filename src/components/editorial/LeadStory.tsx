@@ -10,6 +10,7 @@
  */
 
 import Link from "next/link";
+import { formatSafeDate } from "@/lib/utils";
 
 interface LeadStoryProps {
     article: {
@@ -28,7 +29,7 @@ export function LeadStory({ article }: LeadStoryProps) {
         return null;
     }
 
-    const formattedDate = new Date(article.publishedAt).toLocaleDateString("en-US", {
+    const formattedDate = formatSafeDate(article.publishedAt, {
         weekday: "long",
         year: "numeric",
         month: "long",

@@ -99,6 +99,9 @@ export function Footer() {
                                     <Link href="/privacy" className="block font-sans text-[13px] text-[#999] hover:text-[#e5e5e5] transition-colors">
                                         Privacy
                                     </Link>
+                                    <Link href="/unsubscribe" className="block font-sans text-[13px] text-[#999] hover:text-[#e5e5e5] transition-colors">
+                                        Unsubscribe
+                                    </Link>
                                 </div>
                             </div>
 

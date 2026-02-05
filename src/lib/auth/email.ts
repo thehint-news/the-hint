@@ -67,7 +67,7 @@ export async function sendMagicLinkEmail(email: string, token: string) {
                                 Ready to publish?
                             </h2>
                             <p style="margin: 0 0 28px 0; font-size: 16px; line-height: 1.6; color: #444444;">
-                                Click the button below to access your newsroom. This secure link expires in 30 minutes.
+                                Click the button below to access your newsroom. This secure link expires in 3 minutes.
                             </p>
                             
                             <!-- CTA Button -->

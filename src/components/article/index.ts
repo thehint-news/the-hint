@@ -4,7 +4,7 @@
  */
 
 export { ArticleHeader } from './ArticleHeader';
-export { ArticleMeta } from './ArticleMeta';
+
 export { ArticleBody } from './ArticleBody';
 export { SourcesList } from './SourcesList';
 export { CorrectionNotice } from './CorrectionNotice';

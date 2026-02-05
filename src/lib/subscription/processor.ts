@@ -1,5 +1,6 @@
 
 import { queueManager } from './queue';
+import { logger } from '../feedback/console-guard';
 import { sendEmailForEvent } from './email-service';
 import { getActiveSubscribers } from '../subscription';
 import { EmailWorkerConfig } from './types';
@@ -17,7 +18,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export async function processSubscriptionQueue(): Promise<{ processed: number; errors: number; remaining: boolean }> {
     // 1. Check if paused
     if (queueManager.isPaused()) {
-        console.log('[QUEUE] Subscription queue is PAUSED.');
+        logger.info('[QUEUE] Subscription queue is PAUSED.');
         return { processed: 0, errors: 0, remaining: true };
     }
 
@@ -55,7 +56,7 @@ export async function processSubscriptionQueue(): Promise<{ processed: number; e
     let consecutiveFailures = 0;
     const sentTo: string[] = [];
 
-    console.log(`[QUEUE] Processing batch of ${batch.length} emails for event ${event.id}`);
+    logger.info(`[QUEUE] Processing batch of ${batch.length} emails for event ${event.id}`);
 
     for (const recipient of batch) {
         // Rate Limit Delay
@@ -76,7 +77,7 @@ export async function processSubscriptionQueue(): Promise<{ processed: number; e
 
         // Circuit Breaker
         if (consecutiveFailures >= CONFIG.circuitBreakerThreshold) {
-            console.error('[QUEUE] Circuit breaker tripped! Pausing queue.');
+            logger.error('[QUEUE] Circuit breaker tripped! Pausing queue.');
             queueManager.pauseQueue();
             queueManager.updateEvent(event.id, {
                 status: 'failed',

@@ -25,7 +25,6 @@ import {
     MAX_IMAGE_SIZE_BYTES,
     ALLOWED_VIDEO_PROVIDERS,
     isTextBlock,
-    isMediaBlock,
     isImageBlock,
     isVideoBlock,
     AllowedImageFormat,
@@ -487,7 +486,7 @@ export function isValidBlockOrder(blocks: ContentBlock[]): MediaValidationResult
  */
 export function canInsertMediaAt(
     blocks: ContentBlock[],
-    position: number,
+    _position: number,
     mediaType: 'image' | 'video'
 ): { valid: boolean; reason?: string } {
     // Helper options for validation

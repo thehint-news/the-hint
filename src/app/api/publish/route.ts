@@ -22,6 +22,7 @@ import {
     generateSlug,
 } from '@/lib/validation';
 import { contentGit, DraftData, PublishedArticleData } from '@/lib/git';
+import { logger } from '@/lib/feedback/console-guard';
 
 /** Valid sections */
 type Section = 'politics' | 'world-affairs' | 'crime' | 'court' | 'opinion';
@@ -156,7 +157,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         });
 
         if (!result.success) {
-            console.error('Publish failed:', result.error);
+            logger.error('Publish failed', result.error);
             return userResponse(
                 false,
                 result.userMessage || 'Publishing didn\'t complete. Please try again.',
@@ -176,17 +177,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 contentType: (articleData.contentType as 'news' | 'opinion') || 'news',
                 priority: 'normal',
             });
-            console.log(`[PUBLISH] Subscription event enqueued for ${targetSlug}`);
+            logger.info(`[PUBLISH] Subscription event enqueued for ${targetSlug}`);
 
             // Auto-trigger queue processor in background
             import('@/lib/subscription/processor').then(mod => {
                 mod.processSubscriptionQueue()
-                    .then(r => console.log(`[PUBLISH] Queue processor: ${r.processed} emails sent`))
-                    .catch(err => console.error('[PUBLISH] Queue processor error:', err));
-            }).catch(err => console.error('[PUBLISH] Failed to load queue processor:', err));
+                    .then(r => logger.info(`[PUBLISH] Queue processor: ${r.processed} emails sent`))
+                    .catch(err => logger.error('[PUBLISH] Queue processor error', err));
+            }).catch(err => logger.error('[PUBLISH] Failed to load queue processor', err));
 
         } catch (queueError) {
-            console.error('Failed to enqueue subscription event:', queueError);
+            logger.error('Failed to enqueue subscription event', queueError);
             // Critical: Do NOT fail publishing. Valid content > Email delivery.
         }
 
@@ -203,7 +204,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         );
 
     } catch (error) {
-        console.error('Unexpected error in publish API:', error);
+        logger.error('Unexpected error in publish API', error);
         return userResponse(
             false,
             'Something went wrong. Please try again.',
@@ -271,7 +272,7 @@ export async function GET(): Promise<NextResponse> {
         );
 
     } catch (error) {
-        console.error('Unexpected error in articles list API:', error);
+        logger.error('Unexpected error in articles list API', error);
         return userResponse(
             false,
             'Couldn\'t load articles right now.',

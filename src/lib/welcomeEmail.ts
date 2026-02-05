@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { getActiveSubscribers } from './subscription';
+import { logger } from '@/lib/feedback/console-guard';
 
 const EMAIL_LOG_FILE = 'sent-emails.log';
 
@@ -28,14 +29,13 @@ export async function sendArticleEmail(article: ArticleEmailData): Promise<void>
     const subscribers = getActiveSubscribers();
 
     if (subscribers.length === 0) {
-        console.log('[EMAIL-SYSTEM] No active subscribers to send email to.');
         return;
     }
 
     const subject = `THE HINT: ${article.headline}`;
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3002';
 
-    console.log(`[EMAIL-SYSTEM] Preparing to dispatch "${article.headline}" to ${subscribers.length} subscribers.`);
+    logger.info(`[EMAIL-SYSTEM] Preparing to dispatch "${article.headline}" to ${subscribers.length} subscribers.`);
 
     const transporter = createTransporter();
     const fromAddress = process.env.SMTP_FROM || process.env.SMTP_USER;
@@ -73,9 +73,9 @@ export async function sendArticleEmail(article: ArticleEmailData): Promise<void>
                 subject: subject,
                 html: htmlContent,
             });
-            console.log(`[EMAIL-SYSTEM] ✓ Sent article email to ${recipientEmail}`);
+            logger.debug(`[EMAIL-SYSTEM] ✓ Sent article email to ${recipientEmail}`);
         } catch (error) {
-            console.error(`[EMAIL-SYSTEM] ✗ Failed to send to ${recipientEmail}:`, error);
+            logger.error(`[EMAIL-SYSTEM] ✗ Failed to send to ${recipientEmail}`, error);
         }
     }
 
@@ -89,7 +89,7 @@ export async function sendArticleEmail(article: ArticleEmailData): Promise<void>
     }) + '\n';
     fs.appendFileSync(EMAIL_LOG_FILE, logEntry);
 
-    console.log(`[EMAIL-SYSTEM] Successfully dispatched article to ${subscribers.length} recipients.`);
+    logger.info(`[EMAIL-SYSTEM] Successfully dispatched article to ${subscribers.length} recipients.`);
 }
 
 
@@ -150,7 +150,7 @@ export async function sendWelcomeEmail(email: string): Promise<void> {
         </div>
     `;
 
-    console.log(`[EMAIL-SYSTEM] Preparing to send Welcome Email to: ${email}`);
+    logger.info(`[EMAIL-SYSTEM] Preparing to send Welcome Email to: ${email}`);
 
     const transporter = createTransporter();
     const fromAddress = process.env.SMTP_FROM || process.env.SMTP_USER;
@@ -162,9 +162,9 @@ export async function sendWelcomeEmail(email: string): Promise<void> {
             subject: subject,
             html: htmlContent,
         });
-        console.log(`[EMAIL-SYSTEM] ✓ Welcome email sent successfully to ${email}`);
+        logger.debug(`[EMAIL-SYSTEM] ✓ Welcome email sent successfully to ${email}`);
     } catch (error) {
-        console.error(`[EMAIL-SYSTEM] ✗ Failed to send welcome email to ${email}:`, error);
+        logger.error(`[EMAIL-SYSTEM] ✗ Failed to send welcome email to ${email}`, error);
         throw error;
     }
 

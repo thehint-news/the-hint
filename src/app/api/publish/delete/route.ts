@@ -13,6 +13,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { contentGit } from '@/lib/git';
+import { logger } from '@/lib/feedback/console-guard';
 
 /** Valid sections */
 type Section = 'politics' | 'world-affairs' | 'crime' | 'court' | 'opinion';
@@ -87,7 +88,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
             const result = await contentGit.deleteDraft(draftId);
 
             if (!result.success) {
-                console.error('Draft deletion failed:', result.error);
+                logger.error('Draft deletion failed', result.error);
                 return userResponse(
                     false,
                     result.userMessage || 'Couldn\'t delete this draft. Please try again.',
@@ -131,7 +132,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
             const result = await contentGit.deletePublishedArticle(section as Section, safeSlug);
 
             if (!result.success) {
-                console.error('Published article deletion failed:', result.error);
+                logger.error('Published article deletion failed', result.error);
                 return userResponse(
                     false,
                     result.userMessage || 'Couldn\'t delete this article. Please try again.',
@@ -149,7 +150,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         );
 
     } catch (error) {
-        console.error('Error deleting article:', error);
+        logger.error('Error deleting article', error);
         return userResponse(
             false,
             'Something went wrong. Please try again.',

@@ -8,6 +8,7 @@
  */
 
 import Link from 'next/link';
+import { formatSafeDate } from '@/lib/utils';
 
 interface StoryListArticle {
     id: string;
@@ -111,7 +112,7 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
                             {/* Date / Meta */}
                             <div className="flex items-center gap-3 text-xs text-neutral-500 font-medium uppercase tracking-wider">
                                 <time dateTime={article.publishedAt}>
-                                    {new Date(article.publishedAt).toLocaleDateString('en-US', {
+                                    {formatSafeDate(article.publishedAt, {
                                         month: 'short',
                                         day: 'numeric',
                                         year: 'numeric'
