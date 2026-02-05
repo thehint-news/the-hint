@@ -1,0 +1,61 @@
+import { MetadataRoute } from 'next';
+import { getAllArticles, getValidSections } from '@/lib/content/reader';
+
+export default function sitemap(): MetadataRoute.Sitemap {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thehint.news';
+    const currentDate = new Date().toISOString();
+
+    // 1. Static Routes
+    const staticRoutes: MetadataRoute.Sitemap = [
+        {
+            url: baseUrl,
+            lastModified: currentDate,
+            changeFrequency: 'always',
+            priority: 1.0,
+        },
+        {
+            url: `${baseUrl}/about`,
+            lastModified: currentDate,
+            changeFrequency: 'monthly',
+            priority: 0.8,
+        },
+        {
+            url: `${baseUrl}/contact`,
+            lastModified: currentDate,
+            changeFrequency: 'yearly',
+            priority: 0.7,
+        },
+        {
+            url: `${baseUrl}/terms`,
+            lastModified: currentDate,
+            changeFrequency: 'yearly',
+            priority: 0.5,
+        },
+        {
+            url: `${baseUrl}/privacy`,
+            lastModified: currentDate,
+            changeFrequency: 'yearly',
+            priority: 0.5,
+        },
+    ];
+
+    // 2. Section Pages
+    const sections = getValidSections();
+    const sectionRoutes: MetadataRoute.Sitemap = sections.map((section) => ({
+        url: `${baseUrl}/${section}`,
+        lastModified: currentDate,
+        changeFrequency: 'hourly',
+        priority: 0.9,
+    }));
+
+    // 3. Article Pages
+    const allArticles = getAllArticles();
+    const articleRoutes: MetadataRoute.Sitemap = allArticles.map((article) => ({
+        url: `${baseUrl}/${article.section}/${article.id}`,
+        lastModified: article.updatedAt ? new Date(article.updatedAt).toISOString() : new Date(article.publishedAt).toISOString(),
+        changeFrequency: 'never', // News articles typically don't change
+        priority: 0.8,
+    }));
+
+    return [...staticRoutes, ...sectionRoutes, ...articleRoutes];
+}

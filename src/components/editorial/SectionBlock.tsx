@@ -32,7 +32,7 @@ interface SectionBlockProps {
 function WireStyleLayout({ articles, sectionSlug }: { articles: SectionArticle[]; sectionSlug: string }) {
     return (
         <div>
-            {articles.slice(0, 5).map((article, index) => {
+            {articles.slice(0, 5).map((article) => {
                 const articleUrl = `/${sectionSlug}/${article.id}`;
                 const formattedDate = new Date(article.publishedAt).toLocaleDateString("en-US", {
                     month: "long",
@@ -120,7 +120,7 @@ function WireStyleLayout({ articles, sectionSlug }: { articles: SectionArticle[]
 function PoliticsLayout({ articles, sectionSlug }: { articles: SectionArticle[]; sectionSlug: string }) {
     return (
         <div>
-            {articles.slice(0, 4).map((article, index) => {
+            {articles.slice(0, 4).map((article) => {
                 const articleUrl = `/${sectionSlug}/${article.id}`;
                 const formattedDate = new Date(article.publishedAt).toLocaleDateString("en-US", {
                     month: "long",
@@ -342,12 +342,18 @@ export function SectionBlock({ sectionTitle, articles }: SectionBlockProps) {
     return (
         <section style={{ marginBottom: "1.25rem" }} aria-labelledby={`section-${sectionSlug}`}>
             {/* Section Header - Prominent label */}
-            <div className="section-header" style={{ marginBottom: "0.5rem" }}>
-                <h2 id={`section-${sectionSlug}`} className="section-title" style={{ fontWeight: 700 }}>
-                    {sectionTitle}
-                </h2>
-                <div className="section-line" aria-hidden="true" />
+            <div className="section-header flex justify-between items-baseline" style={{ marginBottom: "0.5rem" }}>
+                <Link href={`/${actualSlug}`} className="group">
+                    <h2 id={`section-${sectionSlug}`} className="section-title group-hover:underline decoration-2 underline-offset-4 decoration-[#111]" style={{ fontWeight: 700 }}>
+                        {sectionTitle}
+                    </h2>
+                </Link>
+                <Link href={`/${actualSlug}`} className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#8A8A8A] hover:text-[#111]">
+                    View All
+                </Link>
             </div>
+            <div className="section-line" aria-hidden="true" />
+
 
             {/* Section Content */}
             {isOpinion && <OpinionLayout articles={articles} sectionSlug={actualSlug} />}

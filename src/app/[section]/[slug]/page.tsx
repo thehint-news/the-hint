@@ -7,6 +7,7 @@
  * NO editorial logic, NO formatting logic.
  */
 
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import {
     getArticlePageData,
@@ -28,6 +29,47 @@ interface ArticlePageProps {
         section: string;
         slug: string;
     }>;
+}
+
+export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+    const { section, slug } = await params;
+
+    let article;
+    try {
+        const data = getArticlePageData(section, slug);
+        article = data.article;
+    } catch {
+        return {
+            title: 'Article Not Found',
+            description: 'The requested article could not be found.',
+        };
+    }
+
+    const isoDate = new Date(article.publishedAt).toISOString();
+    const isoUpdated = article.updatedAt ? new Date(article.updatedAt).toISOString() : isoDate;
+
+    return {
+        title: article.title,
+        description: article.subtitle,
+        authors: [{ name: "The Hint Editorial Board" }], // Or specific author if available
+        openGraph: {
+            title: article.title,
+            description: article.subtitle,
+            type: 'article',
+            publishedTime: isoDate,
+            modifiedTime: isoUpdated,
+            section: article.section,
+            tags: article.tags,
+            images: article.image ? [{ url: article.image, alt: article.title }] : [],
+            url: `/${article.section}/${article.id}`,
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: article.title,
+            description: article.subtitle,
+            images: article.image ? [article.image] : [],
+        },
+    };
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
@@ -60,8 +102,42 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         .replace('-', ' ')
         .replace(/\b\w/g, (c) => c.toUpperCase());
 
+    // JSON-LD Structured Data
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': article.contentType === 'opinion' ? 'OpinionNewsArticle' : 'NewsArticle',
+        headline: article.title,
+        description: article.subtitle,
+        image: article.image ? [article.image] : [],
+        datePublished: article.publishedAt,
+        dateModified: article.updatedAt || article.publishedAt,
+        author: [{
+            '@type': 'Organization',
+            name: 'The Hint Editorial Board',
+            url: 'https://thehint.news'
+        }],
+        publisher: {
+            '@type': 'Organization',
+            name: 'The Hint',
+            url: 'https://thehint.news',
+            logo: {
+                '@type': 'ImageObject',
+                url: 'https://thehint.news/logo.png' // Replace with actual logo URL if available
+            }
+        },
+        mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': `https://thehint.news/${article.section}/${article.id}`
+        }
+    };
+
     return (
         <main className="w-full bg-white">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+
             <article className="px-6 py-12 max-w-[1200px] mx-auto">
                 {/* Article Header (Section, Title, Subtitle, Meta, HR) */}
                 <div className="max-w-4xl mx-auto">
@@ -80,7 +156,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     <figure className="mb-10 max-w-4xl mx-auto">
                         <img
                             src={article.image}
-                            alt=""
+                            alt={article.title} // Use title as fallback alt text
                             className="w-full h-auto object-cover max-h-[500px]"
                         />
                         {/* Caption support could be added here if data existed */}

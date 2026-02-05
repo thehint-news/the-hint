@@ -10,6 +10,7 @@
 import { notFound } from 'next/navigation';
 import { getSectionPageData, InvalidSectionError } from '@/lib/content';
 import { SectionHeader, StoryList, Pagination, LeadStory } from '@/components/editorial';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 // Revalidate section pages every 60 seconds
 export const revalidate = 60;
@@ -83,11 +84,12 @@ export default async function SectionPage({ params, searchParams }: SectionPageP
                     name={section.name}
                     description={section.description}
                 />
-                <div className="py-12 text-center border-t border-neutral-300">
-                    <p className="text-lg font-serif italic text-neutral-500">
-                        No stories available in this section.
-                    </p>
-                </div>
+                <EmptyState
+                    title="This section is quiet... for now."
+                    message={`We haven't published any stories in ${section.name} just yet. Our editorial team is working on it.`}
+                    actionLabel="Read Top Stories"
+                    actionHref="/"
+                />
             </main>
         );
     }
