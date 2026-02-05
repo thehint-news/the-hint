@@ -5,16 +5,13 @@
  * Creates a new draft from an existing article (draft or published).
  * Title prefixed with "Copy of..."
  * New draft ID generated.
+ * 
+ * All operations backed by Git.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import { loadDraft, saveDraft } from '@/lib/publish';
-import { ValidatedDraftData } from '@/lib/validation';
-
-/** Base path for content files */
-const CONTENT_BASE_PATH = path.join(process.cwd(), 'src', 'content');
+import { contentGit, PublishedArticleData } from '@/lib/git';
+import { Section, ContentType, Placement } from '@/lib/validation';
 
 /**
  * Generate a unique draft ID
@@ -26,65 +23,31 @@ function generateDraftId(): string {
 }
 
 /**
- * Parse YAML frontmatter from markdown content
+ * User-friendly response helper
  */
-function parseFrontmatter(content: string): Record<string, unknown> {
-    const match = content.match(/^---\n([\s\S]*?)\n---/);
-    if (!match) return {};
-
-    const yaml = match[1];
-    const result: Record<string, unknown> = {};
-
-    const lines = yaml.split('\n');
-    let currentKey = '';
-    let currentArray: string[] = [];
-    let inArray = false;
-
-    for (const line of lines) {
-        if (line.startsWith('  - ') && inArray) {
-            currentArray.push(line.slice(4).replace(/^["']|["']$/g, ''));
-        } else if (line.includes(':')) {
-            if (inArray && currentKey) {
-                result[currentKey] = currentArray;
-                currentArray = [];
-                inArray = false;
-            }
-
-            const colonIndex = line.indexOf(':');
-            const key = line.slice(0, colonIndex).trim();
-            const value = line.slice(colonIndex + 1).trim();
-
-            if (value === '' || value === '[]') {
-                if (value === '[]') {
-                    result[key] = [];
-                } else {
-                    currentKey = key;
-                    inArray = true;
-                    currentArray = [];
-                }
-            } else {
-                result[key] = value.replace(/^["']|["']$/g, '');
-            }
-        }
-    }
-
-    if (inArray && currentKey) {
-        result[currentKey] = currentArray;
-    }
-
-    return result;
+function userResponse(
+    success: boolean,
+    message: string,
+    data?: Record<string, unknown>,
+    status: number = success ? 200 : 400
+) {
+    return NextResponse.json(
+        {
+            success,
+            message,
+            ...(data && { data }),
+        },
+        { status }
+    );
 }
 
-/**
- * Get body content from markdown
- */
-function getBody(content: string): string {
-    const match = content.match(/^---\n[\s\S]*?\n---\n\n?([\s\S]*)/);
-    return match ? match[1].trim() : content;
-}
+/** Valid sections */
+const VALID_SECTIONS: Section[] = ['politics', 'crime', 'court', 'opinion', 'world-affairs'];
 
 /**
  * POST - Duplicate an article
+ * Creates a new draft from existing content (draft or published)
+ * Commits: "Draft created: Copy of {{headline}}"
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
@@ -92,135 +55,170 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const { id, type, section, slug } = body;
 
         if (!id) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: 'Article ID is required',
-                },
-                { status: 400 }
+            return userResponse(
+                false,
+                'Please specify an article to duplicate.',
+                undefined,
+                400
             );
         }
 
-        let newDraftData: ValidatedDraftData;
         const newDraftId = generateDraftId();
-        const now = new Date().toISOString();
 
         // Handle draft duplication
-        if (type === 'draft' || id.startsWith('draft-')) {
-            const draftId = id.startsWith('draft-') ? id : id;
-            const existingDraft = loadDraft(draftId);
+        if (type === 'draft' || (typeof id === 'string' && id.startsWith('draft-'))) {
+            const draftId = id;
+            const loadResult = await contentGit.loadDraft(draftId);
 
-            if (!existingDraft) {
-                return NextResponse.json(
-                    {
-                        success: false,
-                        error: 'Draft not found',
-                    },
-                    { status: 404 }
+            if (!loadResult.success || !loadResult.data) {
+                return userResponse(
+                    false,
+                    'Draft not found. It may have been deleted.',
+                    undefined,
+                    404
                 );
             }
 
-            newDraftData = {
-                ...existingDraft,
-                draftId: newDraftId,
-                headline: `Copy of ${existingDraft.headline}`,
-                savedAt: now,
-            };
+            const existingDraft = loadResult.data;
+
+            // Create new draft with "Copy of" prefix
+            const result = await contentGit.createDraft(
+                {
+                    headline: `Copy of ${existingDraft.headline}`,
+                    subheadline: existingDraft.subheadline,
+                    section: existingDraft.section,
+                    contentType: existingDraft.contentType,
+                    body: existingDraft.body,
+                    tags: existingDraft.tags,
+                    sources: existingDraft.sources,
+                    placement: existingDraft.placement,
+                },
+                newDraftId
+            );
+
+            if (!result.success) {
+                return userResponse(
+                    false,
+                    result.userMessage || 'Couldn\'t duplicate this draft.',
+                    undefined,
+                    500
+                );
+            }
+
+            return userResponse(
+                true,
+                'Article duplicated successfully.',
+                {
+                    draftId: result.data?.draftId,
+                    headline: `Copy of ${existingDraft.headline}`,
+                }
+            );
         }
+
         // Handle published article duplication
-        else if (type === 'published' || id.startsWith('published-')) {
+        if (type === 'published' || (typeof id === 'string' && id.startsWith('published-'))) {
             if (!section || !slug) {
-                return NextResponse.json(
-                    {
-                        success: false,
-                        error: 'Section and slug are required for published articles',
-                    },
-                    { status: 400 }
+                return userResponse(
+                    false,
+                    'Article identifier is incomplete.',
+                    undefined,
+                    400
                 );
             }
 
-            const safeSlug = slug.replace(/[^a-z0-9-]/gi, '-');
-            const filePath = path.join(CONTENT_BASE_PATH, section, `${safeSlug}.md`);
-
-            if (!fs.existsSync(filePath)) {
-                return NextResponse.json(
-                    {
-                        success: false,
-                        error: 'Published article not found',
-                    },
-                    { status: 404 }
+            // Validate section
+            if (!VALID_SECTIONS.includes(section as Section)) {
+                return userResponse(
+                    false,
+                    'Invalid section specified.',
+                    undefined,
+                    400
                 );
             }
 
-            const content = fs.readFileSync(filePath, 'utf-8');
-            const frontmatter = parseFrontmatter(content);
-            const articleBody = getBody(content);
+            // Load published article
+            const publishedResult = await contentGit.listPublishedArticles();
 
-            const title = (frontmatter.title as string) || slug;
-            const subtitle = (frontmatter.subtitle as string) || '';
-            const rawContentType = (frontmatter.contentType as string) || 'news';
-            // Validate contentType is 'news' or 'opinion', default to 'news'
-            const validContentType: 'news' | 'opinion' = (rawContentType === 'opinion') ? 'opinion' : 'news';
-            const placement = (frontmatter.placement as 'lead' | 'top' | 'standard') || 'standard';
-            const tags = Array.isArray(frontmatter.tags) ? frontmatter.tags : [];
-            const sources = Array.isArray(frontmatter.sources) ? frontmatter.sources : [];
-            // Validate section is valid
-            const validSections = ['politics', 'crime', 'court', 'opinion', 'world-affairs'] as const;
-            const validSection = validSections.includes(section as typeof validSections[number])
-                ? section as typeof validSections[number]
-                : 'politics';
+            if (!publishedResult.success || !publishedResult.data) {
+                return userResponse(
+                    false,
+                    'Couldn\'t access published articles.',
+                    undefined,
+                    500
+                );
+            }
 
-            newDraftData = {
-                draftId: newDraftId,
-                headline: `Copy of ${title}`,
-                subheadline: subtitle,
-                section: validSection,
-                contentType: validContentType,
-                body: articleBody,
-                tags,
-                sources,
-                placement,
-                savedAt: now,
-            };
-        } else {
-            return NextResponse.json(
+            const article = publishedResult.data.find(
+                (a: PublishedArticleData) => a.section === section && a.slug === slug
+            );
+
+            if (!article) {
+                return userResponse(
+                    false,
+                    'Article not found.',
+                    undefined,
+                    404
+                );
+            }
+
+            // Validate and default contentType
+            const validContentType: ContentType =
+                (article.contentType === 'opinion') ? 'opinion' : 'news';
+
+            // Validate and default placement
+            const validPlacements: Placement[] = ['lead', 'top', 'standard'];
+            const validPlacement: Placement = validPlacements.includes(article.placement as Placement)
+                ? (article.placement as Placement)
+                : 'standard';
+
+            // Create new draft from published article
+            const result = await contentGit.createDraft(
                 {
-                    success: false,
-                    error: 'Invalid article type',
+                    headline: `Copy of ${article.title}`,
+                    subheadline: article.subtitle,
+                    section: section as Section,
+                    contentType: validContentType,
+                    body: article.body,
+                    tags: article.tags,
+                    sources: article.sources,
+                    placement: validPlacement,
                 },
-                { status: 400 }
+                newDraftId
+            );
+
+            if (!result.success) {
+                return userResponse(
+                    false,
+                    result.userMessage || 'Couldn\'t duplicate this article.',
+                    undefined,
+                    500
+                );
+            }
+
+            return userResponse(
+                true,
+                'Article duplicated successfully.',
+                {
+                    draftId: result.data?.draftId,
+                    headline: `Copy of ${article.title}`,
+                }
             );
         }
 
-        // Save the new draft
-        const result = saveDraft(newDraftData);
+        return userResponse(
+            false,
+            'Please specify the article type (draft or published).',
+            undefined,
+            400
+        );
 
-        if (result.success) {
-            return NextResponse.json({
-                success: true,
-                message: 'Article duplicated successfully',
-                data: {
-                    draftId: newDraftId,
-                    headline: newDraftData.headline,
-                },
-            });
-        } else {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: result.error || 'Failed to save duplicated draft',
-                },
-                { status: 500 }
-            );
-        }
     } catch (error) {
         console.error('Error duplicating article:', error);
-        return NextResponse.json(
-            {
-                success: false,
-                error: 'An unexpected error occurred',
-            },
-            { status: 500 }
+        return userResponse(
+            false,
+            'Something went wrong. Please try again.',
+            undefined,
+            500
         );
     }
 }

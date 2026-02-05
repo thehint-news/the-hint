@@ -3,18 +3,11 @@
  * GET /api/publish/articles
  * 
  * Returns a combined list of drafts and published articles for the editorial database.
+ * Now backed by Git for version control.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import { getDraftHistory, loadDraft } from '@/lib/publish';
-
-/** Base path for content files */
-const CONTENT_BASE_PATH = path.join(process.cwd(), 'src', 'content');
-
-/** Valid sections */
-const VALID_SECTIONS = ['politics', 'crime', 'court', 'opinion', 'world-affairs'];
+import { contentGit, DraftData, PublishedArticleData } from '@/lib/git';
 
 interface ArticleEntry {
     id: string;
@@ -43,172 +36,66 @@ interface ArticleEntry {
 }
 
 /**
- * Parse YAML frontmatter from markdown content
+ * Transform draft data to article entry
  */
-function parseFrontmatter(content: string): Record<string, unknown> {
-    const match = content.match(/^---\n([\s\S]*?)\n---/);
-    if (!match) return {};
-
-    const yaml = match[1];
-    const result: Record<string, unknown> = {};
-
-    // Simple YAML parser for our use case
-    const lines = yaml.split('\n');
-    let currentKey = '';
-    let currentArray: string[] = [];
-    let inArray = false;
-
-    for (const line of lines) {
-        if (line.startsWith('  - ') && inArray) {
-            // Array item
-            currentArray.push(line.slice(4).replace(/^["']|["']$/g, ''));
-        } else if (line.includes(':')) {
-            // Save previous array if any
-            if (inArray && currentKey) {
-                result[currentKey] = currentArray;
-                currentArray = [];
-                inArray = false;
-            }
-
-            const colonIndex = line.indexOf(':');
-            const key = line.slice(0, colonIndex).trim();
-            const value = line.slice(colonIndex + 1).trim();
-
-            if (value === '' || value === '[]') {
-                // Could be start of array or empty
-                if (value === '[]') {
-                    result[key] = [];
-                } else {
-                    currentKey = key;
-                    inArray = true;
-                    currentArray = [];
-                }
-            } else {
-                // Simple value - remove quotes if present
-                result[key] = value.replace(/^["']|["']$/g, '');
-            }
-        }
-    }
-
-    // Save last array if any
-    if (inArray && currentKey) {
-        result[currentKey] = currentArray;
-    }
-
-    return result;
-}
-
-/**
- * Get body content from markdown (after frontmatter)
- */
-function getBody(content: string): string {
-    const match = content.match(/^---\n[\s\S]*?\n---\n\n?([\s\S]*)/);
-    return match ? match[1].trim() : content;
-}
-
-/**
- * Read all published articles
- */
-function getPublishedArticles(): ArticleEntry[] {
-    const articles: ArticleEntry[] = [];
-
-    for (const section of VALID_SECTIONS) {
-        const sectionPath = path.join(CONTENT_BASE_PATH, section);
-
-        if (!fs.existsSync(sectionPath)) continue;
-
-        const files = fs.readdirSync(sectionPath).filter(f => f.endsWith('.md'));
-
-        for (const file of files) {
-            try {
-                const filePath = path.join(sectionPath, file);
-                const content = fs.readFileSync(filePath, 'utf-8');
-                const frontmatter = parseFrontmatter(content);
-                const body = getBody(content);
-                const slug = file.replace('.md', '');
-                const stats = fs.statSync(filePath);
-
-                const title = (frontmatter.title as string) || slug;
-                const subtitle = (frontmatter.subtitle as string) || '';
-                const contentType = (frontmatter.contentType as string) || 'news';
-                const placement = (frontmatter.placement as 'lead' | 'top' | 'standard') || 'standard';
-                const publishedAt = (frontmatter.publishedAt as string) || stats.birthtime.toISOString();
-                const tags = Array.isArray(frontmatter.tags) ? frontmatter.tags : [];
-                const sources = Array.isArray(frontmatter.sources) ? frontmatter.sources : [];
-
-                articles.push({
-                    id: `published-${section}-${slug}`,
-                    title,
-                    section: section as ArticleEntry['section'],
-                    status: 'published',
-                    placement,
-                    lastEdited: stats.mtime.toISOString(),
-                    publishedAt,
-                    slug,
-                    data: {
-                        headline: title,
-                        subheadline: subtitle,
-                        section: section as ArticleEntry['data']['section'],
-                        contentType: contentType as ArticleEntry['data']['contentType'],
-                        body,
-                        tags: tags.join(', '),
-                        placement,
-                        sources: sources.join(', '),
-                        draftId: null,
-                        status: 'published',
-                        slug,
-                        publishedAt,
-                        lastEdited: stats.mtime.toISOString(),
-                    },
-                });
-            } catch (error) {
-                console.error(`Error reading published article: ${file}`, error);
-            }
-        }
-    }
-
-    return articles;
-}
-
-/**
- * Get all draft articles
- */
-function getDraftArticles(): ArticleEntry[] {
-    const history = getDraftHistory();
-    const articles: ArticleEntry[] = [];
-
-    for (const entry of history) {
-        const draft = loadDraft(entry.draftId);
-        if (!draft) continue;
-
-        articles.push({
-            id: entry.draftId,
-            title: entry.headline || 'Untitled',
-            section: entry.section as ArticleEntry['section'],
+function transformDraftToEntry(draft: DraftData): ArticleEntry {
+    return {
+        id: draft.draftId,
+        title: draft.headline || 'Untitled',
+        section: draft.section,
+        status: 'draft',
+        placement: (draft.placement as 'lead' | 'top' | 'standard') || 'standard',
+        lastEdited: draft.savedAt,
+        data: {
+            headline: draft.headline,
+            subheadline: draft.subheadline,
+            section: draft.section,
+            contentType: draft.contentType,
+            body: draft.body,
+            tags: Array.isArray(draft.tags) ? draft.tags.join(', ') : '',
+            placement: (draft.placement as 'lead' | 'top' | 'standard') || 'standard',
+            sources: Array.isArray(draft.sources) ? draft.sources.join(', ') : '',
+            draftId: draft.draftId,
             status: 'draft',
-            placement: (draft as { placement?: 'lead' | 'top' | 'standard' }).placement || 'standard',
-            lastEdited: entry.savedAt,
-            data: {
-                headline: draft.headline,
-                subheadline: draft.subheadline,
-                section: draft.section as ArticleEntry['data']['section'],
-                contentType: draft.contentType as ArticleEntry['data']['contentType'],
-                body: draft.body,
-                tags: Array.isArray(draft.tags) ? draft.tags.join(', ') : '',
-                placement: (draft as { placement?: 'lead' | 'top' | 'standard' }).placement || 'standard',
-                sources: Array.isArray(draft.sources) ? draft.sources.join(', ') : '',
-                draftId: draft.draftId,
-                status: 'draft',
-                lastEdited: entry.savedAt,
-            },
-        });
-    }
+            lastEdited: draft.savedAt,
+        },
+    };
+}
 
-    return articles;
+/**
+ * Transform published article data to article entry
+ */
+function transformPublishedToEntry(article: PublishedArticleData): ArticleEntry {
+    return {
+        id: `published-${article.section}-${article.slug}`,
+        title: article.title,
+        section: article.section,
+        status: 'published',
+        placement: (article.placement as 'lead' | 'top' | 'standard') || 'standard',
+        lastEdited: article.updatedAt || article.publishedAt,
+        publishedAt: article.publishedAt,
+        slug: article.slug,
+        data: {
+            headline: article.title,
+            subheadline: article.subtitle,
+            section: article.section,
+            contentType: article.contentType,
+            body: article.body,
+            tags: Array.isArray(article.tags) ? article.tags.join(', ') : '',
+            placement: (article.placement as 'lead' | 'top' | 'standard') || 'standard',
+            sources: Array.isArray(article.sources) ? article.sources.join(', ') : '',
+            draftId: null,
+            status: 'published',
+            slug: article.slug,
+            publishedAt: article.publishedAt,
+            lastEdited: article.updatedAt || article.publishedAt,
+        },
+    };
 }
 
 /**
  * GET - List all articles (drafts + published)
+ * Uses Git-backed content operations
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
     try {
@@ -218,12 +105,32 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         let articles: ArticleEntry[] = [];
 
         if (filter === 'drafts') {
-            articles = getDraftArticles();
+            // Get drafts only
+            const result = await contentGit.listDrafts();
+            if (result.success && result.data) {
+                articles = result.data.map(transformDraftToEntry);
+            }
         } else if (filter === 'published') {
-            articles = getPublishedArticles();
+            // Get published only
+            const result = await contentGit.listPublishedArticles();
+            if (result.success && result.data) {
+                articles = result.data.map(transformPublishedToEntry);
+            }
         } else {
             // All articles
-            articles = [...getDraftArticles(), ...getPublishedArticles()];
+            const [draftsResult, publishedResult] = await Promise.all([
+                contentGit.listDrafts(),
+                contentGit.listPublishedArticles(),
+            ]);
+
+            const drafts = draftsResult.success && draftsResult.data
+                ? draftsResult.data.map(transformDraftToEntry)
+                : [];
+            const published = publishedResult.success && publishedResult.data
+                ? publishedResult.data.map(transformPublishedToEntry)
+                : [];
+
+            articles = [...drafts, ...published];
         }
 
         // Sort by lastEdited (newest first)
@@ -245,7 +152,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json(
             {
                 success: false,
-                error: 'Failed to list articles',
+                error: 'Couldn\'t load articles right now.',
             },
             { status: 500 }
         );

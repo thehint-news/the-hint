@@ -3,139 +3,176 @@
  * DELETE /api/publish/delete
  * 
  * Handles deletion of both drafts and published articles.
+ * All deletions are backed by Git commits.
+ * 
+ * RULES:
+ * - No hard deletes without commit
+ * - History must remain recoverable
+ * - Commits: "Draft deleted: {{headline}}" or "Remove article: {{headline}}"
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import { deleteDraft, draftExists } from '@/lib/publish';
-
-/** Base path for content files */
-const CONTENT_BASE_PATH = path.join(process.cwd(), 'src', 'content');
+import { contentGit } from '@/lib/git';
 
 /** Valid sections */
-const VALID_SECTIONS = ['politics', 'crime', 'court', 'opinion', 'world-affairs'];
+type Section = 'politics' | 'world-affairs' | 'crime' | 'court' | 'opinion';
+const VALID_SECTIONS: Section[] = ['politics', 'crime', 'court', 'opinion', 'world-affairs'];
+
+/**
+ * User-friendly response helper
+ */
+function userResponse(
+    success: boolean,
+    message: string,
+    status: number = success ? 200 : 400
+) {
+    return NextResponse.json(
+        {
+            success,
+            message,
+            error: success ? undefined : message,
+        },
+        { status }
+    );
+}
 
 /**
  * DELETE - Remove an article (draft or published)
+ * 
+ * Request body:
+ * {
+ *   id: string,          // Required: article identifier
+ *   type: 'draft' | 'published',  // Required: article type
+ *   section?: string,    // Required for published articles
+ *   slug?: string        // Required for published articles
+ * }
  */
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
     try {
-        const body = await request.json();
+        let body: Record<string, unknown>;
+
+        try {
+            body = await request.json();
+        } catch {
+            return userResponse(
+                false,
+                'Invalid request format.',
+                400
+            );
+        }
+
         const { id, type, section, slug } = body;
 
-        if (!id) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: 'Article ID is required',
-                },
-                { status: 400 }
+        if (!id || typeof id !== 'string') {
+            return userResponse(
+                false,
+                'Please specify an article to delete.',
+                400
             );
         }
 
         // Handle draft deletion
-        if (type === 'draft' || id.startsWith('draft-')) {
-            const draftId = id.startsWith('draft-') ? id : id;
+        if (type === 'draft' || (typeof id === 'string' && id.startsWith('draft-'))) {
+            const draftId = id;
 
-            if (!draftExists(draftId)) {
-                return NextResponse.json(
-                    {
-                        success: false,
-                        error: 'Draft not found',
-                    },
-                    { status: 404 }
+            // Check if draft exists
+            if (!contentGit.draftExists(draftId)) {
+                return userResponse(
+                    false,
+                    'Draft not found. It may have already been deleted.',
+                    404
                 );
             }
 
-            const deleted = deleteDraft(draftId);
+            const result = await contentGit.deleteDraft(draftId);
 
-            if (deleted) {
-                return NextResponse.json({
-                    success: true,
-                    message: 'Draft deleted successfully',
-                });
-            } else {
-                return NextResponse.json(
-                    {
-                        success: false,
-                        error: 'Failed to delete draft',
-                    },
-                    { status: 500 }
+            if (!result.success) {
+                console.error('Draft deletion failed:', result.error);
+                return userResponse(
+                    false,
+                    result.userMessage || 'Couldn\'t delete this draft. Please try again.',
+                    500
                 );
             }
+
+            return userResponse(true, 'Draft deleted.');
         }
 
         // Handle published article deletion
-        if (type === 'published' || id.startsWith('published-')) {
-            if (!section || !slug) {
-                return NextResponse.json(
-                    {
-                        success: false,
-                        error: 'Section and slug are required for published articles',
-                    },
-                    { status: 400 }
+        if (type === 'published' || (typeof id === 'string' && id.startsWith('published-'))) {
+            if (!section || typeof section !== 'string' || !VALID_SECTIONS.includes(section as Section)) {
+                return userResponse(
+                    false,
+                    'Invalid section specified.',
+                    400
                 );
             }
 
-            // Validate section
-            if (!VALID_SECTIONS.includes(section)) {
-                return NextResponse.json(
-                    {
-                        success: false,
-                        error: 'Invalid section',
-                    },
-                    { status: 400 }
+            if (!slug || typeof slug !== 'string') {
+                return userResponse(
+                    false,
+                    'Article identifier is missing.',
+                    400
                 );
             }
 
-            // Sanitize slug to prevent path traversal
+            // Sanitize slug
             const safeSlug = slug.replace(/[^a-z0-9-]/gi, '-');
-            const filePath = path.join(CONTENT_BASE_PATH, section, `${safeSlug}.md`);
 
-            if (!fs.existsSync(filePath)) {
-                return NextResponse.json(
-                    {
-                        success: false,
-                        error: 'Published article not found',
-                    },
-                    { status: 404 }
+            // Check if article exists
+            if (!contentGit.slugExists(section as Section, safeSlug)) {
+                return userResponse(
+                    false,
+                    'Article not found. It may have already been deleted.',
+                    404
                 );
             }
 
-            try {
-                fs.unlinkSync(filePath);
-                return NextResponse.json({
-                    success: true,
-                    message: 'Published article deleted successfully',
-                });
-            } catch (error) {
-                console.error('Failed to delete published article:', error);
-                return NextResponse.json(
-                    {
-                        success: false,
-                        error: 'Failed to delete published article',
-                    },
-                    { status: 500 }
+            const result = await contentGit.deletePublishedArticle(section as Section, safeSlug);
+
+            if (!result.success) {
+                console.error('Published article deletion failed:', result.error);
+                return userResponse(
+                    false,
+                    result.userMessage || 'Couldn\'t delete this article. Please try again.',
+                    500
                 );
             }
+
+            return userResponse(true, 'Article removed.');
         }
 
-        return NextResponse.json(
-            {
-                success: false,
-                error: 'Invalid article type',
-            },
-            { status: 400 }
+        return userResponse(
+            false,
+            'Please specify the article type (draft or published).',
+            400
         );
+
     } catch (error) {
         console.error('Error deleting article:', error);
-        return NextResponse.json(
-            {
-                success: false,
-                error: 'An unexpected error occurred',
-            },
-            { status: 500 }
+        return userResponse(
+            false,
+            'Something went wrong. Please try again.',
+            500
         );
     }
+}
+
+/**
+ * Reject unsupported HTTP methods
+ */
+export async function GET(): Promise<NextResponse> {
+    return userResponse(false, 'This action is not supported.', 405);
+}
+
+export async function POST(): Promise<NextResponse> {
+    return userResponse(false, 'Use DELETE method to remove articles.', 405);
+}
+
+export async function PUT(): Promise<NextResponse> {
+    return userResponse(false, 'This action is not supported.', 405);
+}
+
+export async function PATCH(): Promise<NextResponse> {
+    return userResponse(false, 'This action is not supported.', 405);
 }

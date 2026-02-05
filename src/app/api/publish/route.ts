@@ -1,188 +1,95 @@
 /**
  * Publish API Route
- * POST /api/publish
+ * POST /api/publish - Publish an article
+ * GET /api/publish - Get all articles (drafts + published)
  * 
- * Handles article PUBLISHING with strict validation and file-based storage.
- * This is a critical write path - prioritizes correctness and safety.
+ * All operations are backed by Git commits.
+ * Git is the single source of truth.
  * 
  * RULES:
- * - Publishing must be explicit and irreversible
+ * - Publishing is atomic and irreversible
  * - All validation happens server-side
  * - Drafts and published articles are strictly separated
  * - No silent failures
+ * - Publishing commits: "Publish: {{headline}}"
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 import {
     validateArticleInput,
     transformToValidatedData,
     PublishArticleInput,
-    ValidatedArticleData,
+    generateSlug,
 } from '@/lib/validation';
-import { deleteDraft } from '@/lib/publish';
+import { contentGit, DraftData, PublishedArticleData } from '@/lib/git';
 
-/** Base path for content files */
-const CONTENT_BASE_PATH = path.join(process.cwd(), 'src', 'content');
+/** Valid sections */
+type Section = 'politics' | 'world-affairs' | 'crime' | 'court' | 'opinion';
 
 /**
- * Generate YAML frontmatter from article data
+ * User-friendly response helper
  */
-function generateFrontmatter(data: ValidatedArticleData): string {
-    const lines: string[] = ['---'];
-
-    // Required fields - map headline/subheadline to title/subtitle for content system
-    lines.push(`title: ${escapeYamlString(data.headline)}`);
-    lines.push(`subtitle: ${escapeYamlString(data.subheadline)}`);
-    lines.push(`contentType: ${data.contentType}`);
-    lines.push(`status: published`);  // Always published when going through this route
-    lines.push(`publishedAt: ${new Date().toISOString()}`);
-    lines.push(`updatedAt: null`);
-    lines.push(`placement: ${data.placement}`);
-
-    // Tags array
-    if (data.tags.length > 0) {
-        lines.push('tags:');
-        for (const tag of data.tags) {
-            lines.push(`  - ${escapeYamlString(tag)}`);
-        }
-    } else {
-        lines.push('tags: []');
-    }
-
-    // Sources array
-    if (data.sources.length > 0) {
-        lines.push('sources:');
-        for (const source of data.sources) {
-            lines.push(`  - ${escapeYamlString(source)}`);
-        }
-    } else {
-        lines.push('sources: []');
-    }
-
-    lines.push('---');
-
-    return lines.join('\n');
+function userResponse(
+    success: boolean,
+    message: string,
+    data?: Record<string, unknown>,
+    status: number = success ? 200 : 400
+) {
+    return NextResponse.json(
+        {
+            success,
+            message,
+            error: success ? undefined : message,
+            ...(data && { data }),
+        },
+        { status }
+    );
 }
 
 /**
- * Escape special characters in YAML string values
- */
-function escapeYamlString(value: string): string {
-    // If the string contains special characters, wrap in quotes
-    if (/[:#\[\]{}|>!&*?'"\n\r]/.test(value) || value.startsWith(' ') || value.endsWith(' ')) {
-        // Escape any existing double quotes and wrap in double quotes
-        return `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-    }
-    return value;
-}
-
-/**
- * Generate complete Markdown content
- */
-function generateMarkdownContent(data: ValidatedArticleData): string {
-    const frontmatter = generateFrontmatter(data);
-    return `${frontmatter}\n\n${data.body}\n`;
-}
-
-/**
- * Check if a file already exists at the given path
- */
-function slugExists(section: string, slug: string): boolean {
-    const filePath = path.join(CONTENT_BASE_PATH, section, `${slug}.md`);
-    return fs.existsSync(filePath);
-}
-
-/**
- * Ensure section directory exists
- */
-function ensureSectionDirectory(section: string): void {
-    const sectionPath = path.join(CONTENT_BASE_PATH, section);
-    if (!fs.existsSync(sectionPath)) {
-        fs.mkdirSync(sectionPath, { recursive: true });
-    }
-}
-
-/**
- * Write article to file system atomically
- * Writes to a temporary file first, then renames to final location
- */
-function writeArticleFile(section: string, slug: string, content: string): void {
-    const sectionPath = path.join(CONTENT_BASE_PATH, section);
-    const finalPath = path.join(sectionPath, `${slug}.md`);
-    const tempPath = path.join(sectionPath, `${slug}.md.tmp`);
-
-    try {
-        // Write to temporary file first
-        fs.writeFileSync(tempPath, content, { encoding: 'utf-8' });
-
-        // Rename temp file to final location (atomic on most file systems)
-        fs.renameSync(tempPath, finalPath);
-    } catch (error) {
-        // Clean up temp file if it exists
-        try {
-            if (fs.existsSync(tempPath)) {
-                fs.unlinkSync(tempPath);
-            }
-        } catch {
-            // Ignore cleanup errors
-        }
-        throw error;
-    }
-}
-
-/**
- * Handle POST requests to PUBLISH articles
- * This is the FINAL, IRREVERSIBLE publish action
+ * POST - Publish an article
+ * This is the FINAL, atomic publish action.
+ * Steps:
+ * 1. Validate content server-side
+ * 2. Generate final slug
+ * 3. Write markdown to /content/{section}/{slug}.md
+ * 4. Delete corresponding draft file (if exists)
+ * 5. Commit atomically: "Publish: {{headline}}"
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
-        // TODO: Add authentication check here
-        // if (!isAuthenticated(request)) {
-        //     return NextResponse.json(
-        //         { success: false, error: 'Unauthorized', errors: [{ field: 'auth', message: 'Authentication required' }] },
-        //         { status: 401 }
-        //     );
-        // }
-
         // Parse request body
         let body: unknown;
         try {
             body = await request.json();
         } catch {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: 'Invalid JSON in request body',
-                    errors: [{ field: 'body', message: 'Request body must be valid JSON' }]
-                },
-                { status: 400 }
+            return userResponse(
+                false,
+                'Invalid request format.',
+                { errors: [{ field: 'body', message: 'Request body must be valid JSON' }] },
+                400
             );
         }
 
         // Ensure body is an object
         if (!body || typeof body !== 'object' || Array.isArray(body)) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: 'Request body must be an object',
-                    errors: [{ field: 'body', message: 'Request body must be a JSON object' }]
-                },
-                { status: 400 }
+            return userResponse(
+                false,
+                'Invalid request format.',
+                { errors: [{ field: 'body', message: 'Request body must be a JSON object' }] },
+                400
             );
         }
 
         const input = body as PublishArticleInput;
 
+        // Verify this is a publish request
         if (input.status !== 'published') {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: 'This endpoint is for publishing only. Use /api/publish/draft to save drafts.',
-                    errors: [{ field: 'status', message: 'Status must be "published" to publish an article' }]
-                },
-                { status: 400 }
+            return userResponse(
+                false,
+                'This endpoint is for publishing only. Use /api/publish/draft to save drafts.',
+                { errors: [{ field: 'status', message: 'Status must be "published"' }] },
+                400
             );
         }
 
@@ -190,13 +97,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const validationResult = validateArticleInput(input);
 
         if (!validationResult.isValid) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: 'Validation failed',
-                    errors: validationResult.errors,
-                },
-                { status: 400 }
+            return userResponse(
+                false,
+                'Please complete all required fields before publishing.',
+                { errors: validationResult.errors },
+                400
             );
         }
 
@@ -205,88 +110,78 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
         // Validate slug is not empty after transformation
         if (!articleData.slug) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: 'Could not generate a valid slug from the headline',
-                    errors: [{ field: 'headline', message: 'Headline must contain at least one alphanumeric character' }],
-                },
-                { status: 400 }
+            return userResponse(
+                false,
+                'Could not generate a valid URL from the headline.',
+                { errors: [{ field: 'headline', message: 'Headline must contain at least one alphanumeric character' }] },
+                400
             );
         }
 
-        // Check if slug already exists
-        // ALLOW overwrite if input.slug matches generated slug (Minute changes/Update)
+        // Check if slug already exists (allow updates)
         const targetSlug = articleData.slug;
         const inputSlug = typeof input.slug === 'string' && input.slug ? input.slug : null;
         const isSelfUpdate = inputSlug && inputSlug === targetSlug;
 
-        if (!isSelfUpdate && slugExists(articleData.section, targetSlug)) {
-            return NextResponse.json(
+        if (!isSelfUpdate && contentGit.slugExists(articleData.section as Section, targetSlug)) {
+            return userResponse(
+                false,
+                `An article with this title already exists in ${articleData.section}.`,
                 {
-                    success: false,
-                    error: 'An article with this title already exists in this section',
                     errors: [{
                         field: 'headline',
                         message: `An article with this title already exists in the ${articleData.section} section`
-                    }],
+                    }]
                 },
-                { status: 409 }
+                409
             );
         }
 
-        // Ensure section directory exists
-        try {
-            ensureSectionDirectory(articleData.section);
-        } catch (error) {
-            console.error('Failed to create section directory:', error);
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: 'Failed to create section directory',
-                    errors: [{ field: 'section', message: 'Could not create section directory' }],
-                },
-                { status: 500 }
+        // Get draft ID if provided
+        const draftId = (body as Record<string, unknown>).draftId;
+        const draftIdString = typeof draftId === 'string' ? draftId : undefined;
+
+        // Perform atomic publish operation
+        const result = await contentGit.publish({
+            headline: articleData.headline,
+            subheadline: articleData.subheadline,
+            section: articleData.section as Section,
+            contentType: articleData.contentType,
+            body: articleData.body,
+            tags: articleData.tags,
+            sources: articleData.sources,
+            placement: articleData.placement,
+            slug: targetSlug,
+            draftId: draftIdString,
+        });
+
+        if (!result.success) {
+            console.error('Publish failed:', result.error);
+            return userResponse(
+                false,
+                result.userMessage || 'Publishing didn\'t complete. Please try again.',
+                undefined,
+                500
             );
         }
 
-        // Generate markdown content
-        const markdownContent = generateMarkdownContent(articleData);
-
-        // Write file atomically
-        try {
-            writeArticleFile(articleData.section, articleData.slug, markdownContent);
-        } catch (error) {
-            console.error('Failed to write article file:', error);
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: 'Failed to save article',
-                    errors: [{ field: 'body', message: 'Could not write article to file system' }],
-                },
-                { status: 500 }
-            );
-        }
-
-        // Initialize Subscription Event (Control Plane)
-        // This is strictly decoupled - filesystem queue
+        // Initialize Subscription Event (Control Plane) - fire and forget
         try {
             const { queueManager } = await import('@/lib/subscription/queue');
             queueManager.enqueue({
-                articleSlug: articleData.slug,
+                articleSlug: targetSlug,
                 section: articleData.section,
                 headline: articleData.headline,
                 summary: articleData.subheadline || 'Read the full story on our website.',
                 contentType: (articleData.contentType as 'news' | 'opinion') || 'news',
-                priority: 'normal', // Default, could be enhanced later
+                priority: 'normal',
             });
-            console.log(`[PUBLISH] Subscription event enqueued for ${articleData.slug}`);
+            console.log(`[PUBLISH] Subscription event enqueued for ${targetSlug}`);
 
-            // Auto-trigger queue processor in background (fire and forget)
-            // This does NOT block the publish response
+            // Auto-trigger queue processor in background
             import('@/lib/subscription/processor').then(mod => {
                 mod.processSubscriptionQueue()
-                    .then(result => console.log(`[PUBLISH] Queue processor triggered: ${result.processed} emails sent`))
+                    .then(r => console.log(`[PUBLISH] Queue processor: ${r.processed} emails sent`))
                     .catch(err => console.error('[PUBLISH] Queue processor error:', err));
             }).catch(err => console.error('[PUBLISH] Failed to load queue processor:', err));
 
@@ -295,75 +190,108 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             // Critical: Do NOT fail publishing. Valid content > Email delivery.
         }
 
-        // If there was a draft ID, remove the draft
-        const draftId = (body as Record<string, unknown>).draftId;
-        if (typeof draftId === 'string' && draftId) {
-            deleteDraft(draftId);
-        }
-
-        // Success response
-        return NextResponse.json(
+        return userResponse(
+            true,
+            'Article published successfully.',
             {
-                success: true,
-                message: 'Article published successfully',
-                data: {
-                    slug: articleData.slug,
-                    section: articleData.section,
-                    url: `/${articleData.section}/${articleData.slug}`,
-                    publishedAt: new Date().toISOString(),
-                },
+                slug: result.data?.slug,
+                section: result.data?.section,
+                url: result.data?.url,
+                publishedAt: result.data?.publishedAt,
             },
-            { status: 201 }
+            201
         );
-
 
     } catch (error) {
         console.error('Unexpected error in publish API:', error);
-        return NextResponse.json(
-            {
-                success: false,
-                error: 'An unexpected error occurred',
-                errors: [{ field: 'unknown', message: 'Internal server error' }],
-            },
-            { status: 500 }
+        return userResponse(
+            false,
+            'Something went wrong. Please try again.',
+            undefined,
+            500
         );
     }
 }
 
 /**
- * Reject GET requests explicitly
+ * GET - Get all articles (drafts and published)
+ * Returns a combined list for the editorial dashboard
  */
 export async function GET(): Promise<NextResponse> {
-    return NextResponse.json(
-        {
-            success: false,
-            error: 'Method not allowed',
-            errors: [{ field: 'method', message: 'Only POST requests are allowed' }],
-        },
-        { status: 405 }
-    );
+    try {
+        // Get all drafts
+        const draftsResult = await contentGit.listDrafts();
+        const drafts = draftsResult.success ? draftsResult.data || [] : [];
+
+        // Get all published articles
+        const publishedResult = await contentGit.listPublishedArticles();
+        const published = publishedResult.success ? publishedResult.data || [] : [];
+
+        // Transform to unified list format
+        const articles = [
+            ...drafts.map((d: DraftData) => ({
+                id: d.draftId,
+                type: 'draft' as const,
+                headline: d.headline,
+                subheadline: d.subheadline,
+                section: d.section,
+                contentType: d.contentType,
+                savedAt: d.savedAt,
+                publishedAt: undefined as undefined,
+                slug: generateSlug(d.headline),
+            })),
+            ...published.map((p: PublishedArticleData) => ({
+                id: `published-${p.section}-${p.slug}`,
+                type: 'published' as const,
+                headline: p.title,
+                subheadline: p.subtitle,
+                section: p.section,
+                contentType: p.contentType,
+                savedAt: undefined as undefined,
+                publishedAt: p.publishedAt,
+                slug: p.slug,
+            })),
+        ];
+
+        // Sort by most recent activity
+        articles.sort((a, b) => {
+            const dateA = new Date(a.savedAt || a.publishedAt || 0);
+            const dateB = new Date(b.savedAt || b.publishedAt || 0);
+            return dateB.getTime() - dateA.getTime();
+        });
+
+        return userResponse(
+            true,
+            `Found ${drafts.length} draft(s) and ${published.length} published article(s).`,
+            {
+                articles,
+                drafts: drafts.length,
+                published: published.length,
+            }
+        );
+
+    } catch (error) {
+        console.error('Unexpected error in articles list API:', error);
+        return userResponse(
+            false,
+            'Couldn\'t load articles right now.',
+            undefined,
+            500
+        );
+    }
 }
 
 /**
- * Reject other HTTP methods
+ * Reject unsupported HTTP methods
  */
 export async function PUT(): Promise<NextResponse> {
-    return NextResponse.json(
-        { success: false, error: 'Method not allowed' },
-        { status: 405 }
-    );
+    return userResponse(false, 'This action is not supported.', undefined, 405);
 }
 
 export async function DELETE(): Promise<NextResponse> {
-    return NextResponse.json(
-        { success: false, error: 'Method not allowed' },
-        { status: 405 }
-    );
+    return userResponse(false, 'Use /api/publish/delete for deletion.', undefined, 405);
 }
 
 export async function PATCH(): Promise<NextResponse> {
-    return NextResponse.json(
-        { success: false, error: 'Method not allowed' },
-        { status: 405 }
-    );
+    return userResponse(false, 'This action is not supported.', undefined, 405);
 }

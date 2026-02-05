@@ -65,3 +65,6 @@ export type {
     MediaValidationWarning,
     MediaValidationResult,
 } from './media';
+
+// Export Section from content types
+export type { Section } from '../content/types';

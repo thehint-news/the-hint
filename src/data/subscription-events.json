@@ -187,5 +187,47 @@
     ],
     "lastAttemptAt": "2026-02-01T07:55:17.970Z",
     "totalSubscribers": 4
+  },
+  {
+    "id": "57213e9e-b8e5-43b5-8893-854f12c1f087",
+    "articleSlug": "agent-feature-test-19700101-053000",
+    "section": "politics",
+    "headline": "Agent Feature Test 19700101-053000",
+    "summary": "Verifying the complete editorial lifecycle from draft to publish.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-05T03:19:03.292Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 4,
+    "sentEmails": [
+      "bhuvaneshwari9011@gmail.com",
+      "venugopal6362@gmail.com",
+      "chiranjeevi8050@gmail.com",
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-05T03:19:38.131Z",
+    "totalSubscribers": 4
+  },
+  {
+    "id": "fc763195-0642-4e0c-bf36-fb074fc35bee",
+    "articleSlug": "mobile-test-1731500000000",
+    "section": "politics",
+    "headline": "Mobile Test 1731500000000",
+    "summary": "Testing mobile editor UX.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-05T03:27:59.055Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 4,
+    "sentEmails": [
+      "bhuvaneshwari9011@gmail.com",
+      "venugopal6362@gmail.com",
+      "chiranjeevi8050@gmail.com",
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-05T03:28:49.903Z",
+    "totalSubscribers": 4
   }
 ]
