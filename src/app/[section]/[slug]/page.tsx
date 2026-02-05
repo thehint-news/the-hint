@@ -51,7 +51,11 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     return {
         title: article.title,
         description: article.subtitle,
+        keywords: article.tags,
         authors: [{ name: "The Hint Editorial Board" }], // Or specific author if available
+        alternates: {
+            canonical: `/${article.section}/${article.id}`,
+        },
         openGraph: {
             title: article.title,
             description: article.subtitle,
@@ -138,13 +142,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <article className="px-6 py-12 max-w-[1200px] mx-auto">
+            <article className="px-6 pt-12 pb-4 max-w-[1200px] mx-auto">
                 {/* Article Header (Section, Title, Subtitle, Meta, HR) */}
                 <div className="max-w-4xl mx-auto">
                     <ArticleHeader
                         title={article.title}
                         subtitle={article.subtitle}
                         sectionLabel={sectionLabel}
+                        sectionSlug={article.section}
                         contentTypeLabel={article.contentType}
                         publishedAt={article.publishedAt}
                         updatedAt={article.updatedAt}
@@ -158,6 +163,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                             src={article.image}
                             alt={article.title} // Use title as fallback alt text
                             className="w-full h-auto object-cover max-h-[500px]"
+                            loading="eager"
+                            decoding="async"
                         />
                         {/* Caption support could be added here if data existed */}
                     </figure>

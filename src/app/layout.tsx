@@ -61,6 +61,7 @@ export const metadata: Metadata = {
 import { Header, Footer } from "@/components/layout";
 import { SubscribePopup } from "@/components/features/SubscribePopup";
 import ScrollToTop from "@/components/features/ScrollToTop";
+import Analytics from "@/components/analytics/Analytics";
 
 export default async function RootLayout({
   children,
@@ -83,6 +84,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${playfairDisplay.variable} ${inter.variable}`}>
         <div className="min-h-screen flex flex-col">
+          <Analytics />
           <Header latestUpdate={latestUpdate} tickerHeadlines={tickerHeadlines} />
           <ScrollToTop />
           {children}

@@ -19,7 +19,7 @@
 
 import { getHomepageData } from "@/lib/content/homepage";
 import { LeadStory, TopStories, SectionBlock } from "@/components/editorial";
-import Link from "next/link";
+
 
 // Revalidate homepage every 60 seconds
 export const revalidate = 60;
@@ -95,41 +95,7 @@ export default function HomePage() {
       </div>
 
 
-      {/* 7. EXPLORE SECTIONS - Guidance to prevent dead-end */}
-      <div className="bg-[#F7F6F2] border-t border-[#111] py-16 mt-8">
-        <div className="container-editorial text-center">
-          <span className="block font-sans text-[10px] font-bold tracking-[0.2em] text-[#8B0000] uppercase mb-4">
-            Continue Your Journey
-          </span>
-          <h3 className="font-serif text-3xl font-bold text-[#111] mb-8">
-            Explore All Sections
-          </h3>
-          <div className="flex flex-wrap justify-center gap-4 max-w-3xl mx-auto">
-            {[
-              { label: "Politics", href: "/politics" },
-              { label: "World Affairs", href: "/world-affairs" },
-              { label: "Crime", href: "/crime" },
-              { label: "Court", href: "/court" },
-              { label: "Opinion", href: "/opinion" },
-            ].map((section) => (
-              <Link
-                key={section.href}
-                href={section.href}
-                className="
-                  px-6 py-3 
-                  bg-white border border-[#D9D9D9] 
-                  font-sans text-xs font-bold uppercase tracking-widest 
-                  text-[#111] 
-                  hover:bg-[#111] hover:text-white hover:border-[#111] 
-                  transition-all duration-200
-                "
-              >
-                {section.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
+
     </main>
   );
 }

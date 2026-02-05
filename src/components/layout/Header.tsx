@@ -132,10 +132,6 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                                 >
                                     Subscribe for Updates
                                 </button>
-
-                                <div className="pt-2">
-                                    <span className="text-sm text-[#8A8A8A]">Search (Coming Soon)</span>
-                                </div>
                             </div>
                         </nav>
                     </div>

@@ -21,6 +21,7 @@ interface LeadStoryProps {
         publishedAt: string;
         contentType: string;
         image?: string;
+        body?: string;
     } | null;
 }
 
@@ -28,6 +29,27 @@ export function LeadStory({ article }: LeadStoryProps) {
     if (!article) {
         return null;
     }
+
+    // Helper to extract first image from markdown body if featured image is missing
+    // Helper to extract first image from markdown body if featured image is missing
+    const getFirstBodyImage = (body: string) => {
+        // Match custom :::image block syntax
+        const customBlockMatch = body.match(/:::image[\s\S]*?src:\s*([^\s]+)/);
+        if (customBlockMatch && customBlockMatch[1]) return customBlockMatch[1].trim();
+
+        // Match Markdown image syntax ![alt](url)
+        const markdownMatch = body.match(/!\[.*?\]\((.*?)\)/);
+        if (markdownMatch && markdownMatch[1]) return markdownMatch[1];
+
+        // Match HTML image syntax <img src="url" />
+        const htmlMatch = body.match(/<img[^>]+src=["'](.*?)["']/);
+        if (htmlMatch && htmlMatch[1]) return htmlMatch[1];
+
+        return undefined;
+    };
+
+    // Use featured image or fallback to first image in body
+    const displayImage = article.image || (article.body ? getFirstBodyImage(article.body) : undefined);
 
     const formattedDate = formatSafeDate(article.publishedAt, {
         weekday: "long",
@@ -63,9 +85,9 @@ export function LeadStory({ article }: LeadStoryProps) {
 
                 {/* Hero Image - Taller for front-page presence */}
                 <Link href={articleUrl} className="article-link" style={{ display: "block", marginBottom: "0.35rem" }}>
-                    {article.image ? (
+                    {displayImage ? (
                         <img
-                            src={article.image}
+                            src={displayImage}
                             alt={article.title}
                             className="article-image"
                             style={{

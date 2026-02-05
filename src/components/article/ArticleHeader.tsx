@@ -7,10 +7,13 @@
  * NO business logic, NO imports from lib/content.
  */
 
+import Link from 'next/link';
+
 interface ArticleHeaderProps {
     title: string;
     subtitle: string;
     sectionLabel: string;
+    sectionSlug: string;
     contentTypeLabel?: string;
     publishedAt: string;
     updatedAt: string | null;
@@ -20,6 +23,7 @@ export function ArticleHeader({
     title,
     subtitle,
     sectionLabel,
+    sectionSlug,
     contentTypeLabel,
     publishedAt,
     updatedAt,
@@ -36,9 +40,11 @@ export function ArticleHeader({
         <header className="mb-6">
             {/* 1. Section Label */}
             <div className="mb-3 flex items-center gap-4">
-                <span className="text-xs font-bold uppercase tracking-[0.15em] text-[#8A8A8A]">
-                    {sectionLabel}
-                </span>
+                <Link href={`/${sectionSlug}`} className="hover:opacity-70 transition-opacity">
+                    <span className="text-xs font-bold uppercase tracking-[0.15em] text-[#8A8A8A]">
+                        {sectionLabel}
+                    </span>
+                </Link>
                 {contentTypeLabel &&
                     contentTypeLabel !== 'news' &&
                     contentTypeLabel.toLowerCase() !== sectionLabel.toLowerCase() && (
@@ -60,6 +66,7 @@ export function ArticleHeader({
 
             {/* 4. Meta Row */}
             <div className="flex items-center gap-4 text-sm font-sans text-[#6B6B6B] mb-6">
+
                 <time dateTime={publishedAt}>
                     {formattedPublished}
                 </time>

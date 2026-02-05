@@ -18,7 +18,7 @@ sources:
 
 :::image
 src: /media/images/484f26cee82b4156-800w.webp
-alt: ಕೇಂದ್ರ ಬಜೆಟ್‌ಗೆ
+alt: ಕೇಂದ್ರ ಬಜೆಟ್‌
 width: 1200
 height: 800
 srcset: /media/images/484f26cee82b4156-400w.webp 400w, /media/images/484f26cee82b4156-800w.webp 800w, /media/images/484f26cee82b4156-1200w.webp 1200w

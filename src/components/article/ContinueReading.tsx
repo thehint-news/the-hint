@@ -55,7 +55,7 @@ export function ContinueReading({ items }: ContinueReadingProps) {
     return (
         <section
             aria-label="Continue Reading"
-            className="w-full bg-[#F5F5F0] py-8 mt-8 border-t border-neutral-200"
+            className="w-full bg-[#F5F5F0] py-8 mt-0 border-t border-neutral-200"
         >
             <div className="max-w-[900px] mx-auto px-6">
 
@@ -162,8 +162,8 @@ export function ContinueReading({ items }: ContinueReadingProps) {
                                     )}
                                     <div className="absolute top-3 left-3">
                                         <span className={`inline-flex items-center px-2 py-0.5 text-[9px] font-bold tracking-widest uppercase rounded-sm shadow-md ring-1 ring-black/5 ${item.type === 'top'
-                                                ? 'bg-white text-neutral-900'
-                                                : 'bg-white text-neutral-900'
+                                            ? 'bg-white text-neutral-900'
+                                            : 'bg-white text-neutral-900'
                                             }`}>
                                             <Icons.Zap />
                                             {item.label}

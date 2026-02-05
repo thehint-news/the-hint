@@ -7,6 +7,7 @@
  * NO filtering, sorting, or editorial logic here.
  */
 
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getSectionPageData, InvalidSectionError } from '@/lib/content';
 import { SectionHeader, StoryList, Pagination, LeadStory } from '@/components/editorial';
@@ -25,6 +26,29 @@ interface SectionPageProps {
     searchParams: Promise<{
         page?: string;
     }>;
+}
+
+export async function generateMetadata({ params }: SectionPageProps): Promise<Metadata> {
+    const { section: sectionSlug } = await params;
+
+    try {
+        const { section } = getSectionPageData(sectionSlug);
+        
+        return {
+            title: `${section.name} News`,
+            description: section.description,
+            openGraph: {
+                title: `${section.name} News | The Hint`,
+                description: section.description,
+                type: 'website',
+                url: `/${section.slug}`,
+            },
+        };
+    } catch {
+        return {
+            title: 'Section Not Found',
+        };
+    }
 }
 
 export default async function SectionPage({ params, searchParams }: SectionPageProps) {

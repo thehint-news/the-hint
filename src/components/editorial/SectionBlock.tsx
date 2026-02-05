@@ -209,7 +209,7 @@ function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticl
 
                 return (
                     <Link key={article.id} href={articleUrl} className="article-link">
-                        <article style={{ paddingBottom: "0.5rem" }}>
+                        <article style={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
                             {/* Image-led */}
                             {article.image ? (
                                 <img
@@ -342,7 +342,7 @@ export function SectionBlock({ sectionTitle, articles }: SectionBlockProps) {
     return (
         <section style={{ marginBottom: "1.25rem" }} aria-labelledby={`section-${sectionSlug}`}>
             {/* Section Header - Prominent label */}
-            <div className="section-header flex justify-between items-baseline" style={{ marginBottom: "0.5rem" }}>
+            <div className="section-header flex justify-between items-baseline" style={{ marginBottom: "0.15rem" }}>
                 <Link href={`/${actualSlug}`} className="group">
                     <h2 id={`section-${sectionSlug}`} className="section-title group-hover:underline decoration-2 underline-offset-4 decoration-[#111]" style={{ fontWeight: 700 }}>
                         {sectionTitle}
@@ -352,7 +352,7 @@ export function SectionBlock({ sectionTitle, articles }: SectionBlockProps) {
                     View All
                 </Link>
             </div>
-            <div className="section-line" aria-hidden="true" />
+            <div className="section-line" aria-hidden="true" style={{ marginBottom: "1rem" }} />
 
 
             {/* Section Content */}
