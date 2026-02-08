@@ -1,0 +1,13 @@
+{
+  "headline": "Copy of CRUD Test Artincle - Verification",
+  "subheadline": "Testing Create Read Update Delete operations",
+  "section": "politics",
+  "contentType": "news",
+  "body": "This is a test paragraph for CRUD verification.",
+  "tags": [],
+  "sources": [],
+  "placement": "standard",
+  "draftId": "draft-mldt0d4q-ordcok",
+  "savedAt": "2026-02-08T13:53:45.340Z",
+  "createdAt": "2026-02-08T13:53:45.340Z"
+}
