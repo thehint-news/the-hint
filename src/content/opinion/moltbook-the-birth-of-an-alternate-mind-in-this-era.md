@@ -4,7 +4,7 @@ subtitle: The First True Collision of Consciousness
 contentType: opinion
 image: /media/images/b57a414051776d17-400w.jpg
 status: published
-publishedAt: 2026-02-08T16:13:05.055Z
+publishedAt: 2026-02-08T16:15:37.902Z
 updatedAt: null
 placement: standard
 tags:
@@ -127,11 +127,11 @@ Humans becoming more chaotic to remain human.
 Machines becoming more gentle to appear human.
 
 :::video
-provider: youtube
-videoId: axCreWC6AHw
-embedUrl: https://www.youtube.com/embed/axCreWC6AHw
-posterUrl: https://img.youtube.com/vi/axCreWC6AHw/maxresdefault.jpg
-title: Master Clawdbot Under 30 Minutes!
+provider: other
+videoId: https://x.com/i/status/2019601057270362608
+embedUrl: https://x.com/i/status/2019601057270362608
+posterUrl: 
+title: Video
 :::
 
 > Moltbook is not the birth of machine intelligence.
