@@ -2,8 +2,9 @@
 title: "Budget 2026 Live Updates: ಕೇಂದ್ರ ಬಜೆಟ್‌ಗೆ ಮುನ್ನ ಕರ್ತವ್ಯ ಭವನ ತಲುಪಿದ ನಿರ್ಮಲಾ ಸೀತಾರಾಮನ್"
 subtitle: "Union Budget 2026 Live Updates: ಕೇಂದ್ರ ಬಜೆಟ್ ದುರ್ಬಲ ಮತ್ತು ಹಿಂದುಳಿದವರನ್ನು ಸಬಲೀಕರಣಗೊಳಿಸಲು ಕ್ರಮಗಳನ್ನು ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ ಎಂದು ನಿರೀಕ್ಷಿಸಲಾಗಿದ್ದರೂ, ಹಣದುಬ್ಬರ ನಿಯಂತ್ರಣ, ತೆರಿಗೆ ಸರಳೀಕರಣ ಮತ್ತು ವ್ಯವಹಾರ ಪರಿಹಾರ"
 contentType: news
+image: /media/images/3a473b173959f5da-original.jpg
 status: published
-publishedAt: 2026-02-05T09:07:14.093Z
+publishedAt: 2026-02-08T13:42:18.807Z
 updatedAt: null
 placement: lead
 tags:
