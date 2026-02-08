@@ -41,6 +41,7 @@ export interface ArticleFormData {
     tags: string;
     placement: PlacementValue;
     sources: string;
+    thumbnail: string; // Thumbnail image URL
     draftId: string | null;
     status: StatusValue;
     /** For editing published articles */
@@ -59,6 +60,7 @@ export const INITIAL_FORM_DATA: ArticleFormData = {
     tags: '',
     placement: 'standard',
     sources: '',
+    thumbnail: '',
     draftId: null,
     status: 'draft',
 };

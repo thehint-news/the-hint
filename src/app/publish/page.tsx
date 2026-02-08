@@ -60,6 +60,9 @@ function getClientHints(formData: ArticleFormData): Record<string, string> {
     if (formData.contentType === 'opinion' && formData.section !== 'opinion') {
         hints.contentType = 'Opinion articles must be in Opinion section';
     }
+    if (!formData.thumbnail) {
+        hints.thumbnail = 'Thumbnail is required for publishing';
+    }
 
     return hints;
 }
@@ -70,7 +73,8 @@ function canPublish(formData: ArticleFormData): boolean {
         formData.headline.trim() &&
         formData.subheadline.trim() &&
         formData.body.trim() &&
-        formData.section
+        formData.section &&
+        formData.thumbnail // Thumbnail is now mandatory
     );
 }
 
@@ -162,6 +166,7 @@ export default function PublishPage() {
             draftId: formData.draftId,
             status: formData.status,
             slug: formData.slug || undefined,
+            thumbnail: formData.thumbnail || undefined,
         };
     }, [formData]);
 
@@ -395,7 +400,26 @@ export default function PublishPage() {
      * Edit article (from database view)
      */
     const handleEdit = useCallback((article: ArticleEntry) => {
-        setFormData(article.data);
+        const a = article as any;
+        // Map article data to form data
+        // API returns tags/sources as arrays, form expects comma-separated strings
+        const tags = Array.isArray(a.tags) ? (a.tags as string[]).join(', ') : '';
+        const sources = Array.isArray(a.sources) ? (a.sources as string[]).join(', ') : '';
+
+        setFormData({
+            headline: a.headline,
+            subheadline: a.subheadline,
+            section: a.section,
+            contentType: a.contentType,
+            body: a.body || '',
+            tags,
+            sources,
+            placement: a.placement || 'standard',
+            thumbnail: a.thumbnail || '',
+            draftId: a.type === 'draft' ? a.id : undefined,
+            status: a.type === 'published' ? 'published' : 'draft',
+            slug: a.slug,
+        });
         setFieldErrors({});
         setShowPreview(false);
         setMode('editor');
@@ -405,15 +429,16 @@ export default function PublishPage() {
      * Duplicate article
      */
     const handleDuplicate = useCallback(async (article: ArticleEntry) => {
+        const a = article as any;
         try {
             const response = await fetch('/api/publish/duplicate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    id: article.id,
-                    type: article.status,
-                    section: article.section,
-                    slug: article.slug,
+                    id: a.id,
+                    type: a.type, // API returns 'type', use that
+                    section: a.section,
+                    slug: a.slug,
                 }),
             });
 
@@ -437,13 +462,32 @@ export default function PublishPage() {
      * Remove Placement
      */
     const handleRemovePlacement = useCallback(async (article: ArticleEntry) => {
-        if (!confirm(`Remove "${article.title}" from ${article.placement === 'lead' ? 'Lead Story' : 'Top Story'}?`)) {
+        const a = article as any;
+        // Use headline/title for confirmation
+        const title = a.headline || a.title || 'Untitled';
+        const placement = a.placement || 'standard';
+
+        if (!confirm(`Remove "${title}" from ${placement === 'lead' ? 'Lead Story' : 'Top Story'}?`)) {
             return;
         }
 
         try {
-            const payload = { ...article.data, placement: 'standard' };
-            const endpoint = article.status === 'published' ? '/api/publish' : '/api/publish/draft';
+            // Reconstruct payload from flat article data
+            const payload = {
+                headline: a.headline,
+                subheadline: a.subheadline,
+                section: a.section,
+                contentType: a.contentType,
+                body: a.body || '',
+                tags: a.tags || [],
+                sources: a.sources || [],
+                placement: 'standard',
+                draftId: a.type === 'draft' ? a.id : undefined,
+                status: a.type === 'published' ? 'published' : 'draft',
+                slug: a.slug,
+            };
+
+            const endpoint = a.type === 'published' ? '/api/publish' : '/api/publish/draft';
 
             const response = await fetch(endpoint, {
                 method: 'POST',
@@ -470,15 +514,16 @@ export default function PublishPage() {
      * Delete article
      */
     const handleDelete = useCallback(async (article: ArticleEntry) => {
+        const a = article as any;
         try {
             const response = await fetch('/api/publish/delete', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    id: article.id,
-                    type: article.status,
-                    section: article.section,
-                    slug: article.slug,
+                    id: a.id,
+                    type: a.type,
+                    section: a.section,
+                    slug: a.slug,
                 }),
             });
 

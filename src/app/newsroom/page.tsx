@@ -137,8 +137,6 @@ function LoginForm() {
                                     {status === 'loading' ? 'Sending...' : 'Send Link'}
                                 </button>
                             </form>
-
-                            <p className="secure">🔒 Passwordless authentication</p>
                         </>
                     )}
                 </div>

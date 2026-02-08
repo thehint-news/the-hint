@@ -171,25 +171,40 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 )}
 
                 {/* Article Body - Strict reading width */}
+                {/* Skip first image if it's already shown as the featured thumbnail above */}
                 <div className="max-w-[68ch] mx-auto">
-                    <ArticleBody content={article.body} />
+                    <ArticleBody content={article.body} featuredImage={article.image} />
+
 
                     {/* Article Footer: Tags, Corrections, Sources */}
-                    <div className="mt-8 pt-6 border-t border-[#D9D9D9]">
-                        {/* Tags */}
+                    <div style={{ marginTop: '2.5rem', borderTop: '1px solid #D9D9D9', paddingTop: '1.5rem' }}>
+                        {/* Keywords - Clean, minimal design */}
                         {article.tags.length > 0 && (
-                            <div className="mb-6 flex flex-wrap gap-2">
-                                <span className="text-xs font-bold uppercase tracking-wider text-[#8A8A8A] self-center mr-2">
-                                    Topics:
+                            <div style={{ marginBottom: '1.5rem' }}>
+                                {/* Simple label */}
+                                <span style={{
+                                    fontFamily: 'var(--font-sans)',
+                                    fontSize: '0.6875rem',
+                                    fontWeight: 700,
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.1em',
+                                    color: '#595959',
+                                    display: 'block',
+                                    marginBottom: '0.75rem',
+                                }}>
+                                    Keywords
                                 </span>
-                                {article.tags.map((tag) => (
-                                    <span
-                                        key={tag}
-                                        className="text-xs px-2 py-1 border border-[#D9D9D9] text-[#2B2B2B] hover:border-[#111111] transition-colors cursor-default"
-                                    >
-                                        {tag}
-                                    </span>
-                                ))}
+                                {/* Clean tag list */}
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                    {article.tags.map((tag) => (
+                                        <span
+                                            key={tag}
+                                            className="keyword-tag"
+                                        >
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
                         )}
 

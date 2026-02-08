@@ -28,6 +28,7 @@ export interface DraftData {
     tags: string[];
     sources: string[];
     placement: string;
+    thumbnail?: string;
     savedAt: string;
     createdAt: string;
 }
@@ -45,6 +46,7 @@ export interface PublishedArticleData {
     placement: string;
     tags: string[];
     sources: string[];
+    image?: string;
     body: string;
 }
 
@@ -435,6 +437,7 @@ class ContentGit {
         sources: string[];
         placement: string;
         slug: string;
+        thumbnail?: string;
         draftId?: string;
     }): Promise<ContentOperationResult<{ slug: string; section: string; url: string; publishedAt: string }>> {
         try {
@@ -444,6 +447,7 @@ class ContentGit {
             // Generate markdown content
             const markdownContent = this.generateMarkdownContent({
                 ...articleData,
+                image: articleData.thumbnail,
                 publishedAt,
             });
 
@@ -511,6 +515,7 @@ class ContentGit {
             tags: string[];
             sources: string[];
             placement: string;
+            thumbnail: string;
         }>
     ): Promise<ContentOperationResult<{ updatedAt: string }>> {
         try {
@@ -553,6 +558,7 @@ class ContentGit {
                 tags: updates.tags || existingArticle.tags,
                 sources: updates.sources || existingArticle.sources,
                 placement: updates.placement || existingArticle.placement,
+                image: updates.thumbnail !== undefined ? updates.thumbnail : existingArticle.image,
                 slug,
                 publishedAt: existingArticle.publishedAt,
                 updatedAt,
@@ -613,6 +619,7 @@ class ContentGit {
         tags: string[];
         sources: string[];
         placement: string;
+        image?: string;
         publishedAt: string;
         updatedAt?: string;
     }): string {
@@ -621,6 +628,9 @@ class ContentGit {
         lines.push(`title: ${this.escapeYamlString(data.headline)}`);
         lines.push(`subtitle: ${this.escapeYamlString(data.subheadline)}`);
         lines.push(`contentType: ${data.contentType}`);
+        if (data.image) {
+            lines.push(`image: ${this.escapeYamlString(data.image)}`);
+        }
         lines.push(`status: published`);
         lines.push(`publishedAt: ${data.publishedAt}`);
         lines.push(`updatedAt: ${data.updatedAt || 'null'}`);
@@ -731,6 +741,7 @@ class ContentGit {
                 placement: getValue('placement'),
                 tags: getArray('tags'),
                 sources: getArray('sources'),
+                image: getValue('image'),
                 body,
             };
         } catch (error) {

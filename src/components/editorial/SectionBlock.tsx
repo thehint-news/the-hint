@@ -47,27 +47,16 @@ function WireStyleLayout({ articles, sectionSlug }: { articles: SectionArticle[]
                             gap: "0.625rem",
                             padding: "0.35rem 0"
                         }}>
-                            {/* Small Thumbnail */}
+                            {/* Small Thumbnail - Wire style */}
                             {article.image ? (
                                 <img
                                     src={article.image}
                                     alt={article.title}
-                                    style={{
-                                        flexShrink: 0,
-                                        width: "50px",
-                                        height: "40px",
-                                        objectFit: "cover"
-                                    }}
+                                    className="article-thumbnail thumbnail-wire"
                                 />
                             ) : (
                                 <div
-                                    className="image-placeholder"
-                                    style={{
-                                        flexShrink: 0,
-                                        width: "50px",
-                                        height: "40px",
-                                        fontSize: "8px"
-                                    }}
+                                    className="thumbnail-placeholder thumbnail-wire"
                                     role="img"
                                     aria-label={`Thumbnail for: ${article.title}`}
                                 >
@@ -135,22 +124,16 @@ function PoliticsLayout({ articles, sectionSlug }: { articles: SectionArticle[];
                             gap: "0.625rem",
                             padding: "0.5rem 0"
                         }}>
-                            {/* Small Image */}
+                            {/* Small Thumbnail - Politics style */}
                             {article.image ? (
                                 <img
                                     src={article.image}
                                     alt={article.title}
-                                    style={{
-                                        flexShrink: 0,
-                                        width: "60px",
-                                        height: "40px",
-                                        objectFit: "cover"
-                                    }}
+                                    className="article-thumbnail thumbnail-politics"
                                 />
                             ) : (
                                 <div
-                                    className="image-placeholder"
-                                    style={{ flexShrink: 0, width: "60px", height: "40px", fontSize: "8px" }}
+                                    className="thumbnail-placeholder thumbnail-politics"
                                     role="img"
                                     aria-label={`Thumbnail for: ${article.title}`}
                                 >
@@ -210,24 +193,24 @@ function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticl
                 return (
                     <Link key={article.id} href={articleUrl} className="article-link">
                         <article style={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
-                            {/* Image-led */}
-                            {article.image ? (
-                                <img
-                                    src={article.image}
-                                    alt={article.title}
-                                    className="article-image"
-                                    style={{ aspectRatio: "16/10", width: "100%", marginBottom: "0.625rem", objectFit: "cover" }}
-                                />
-                            ) : (
-                                <div
-                                    className="image-placeholder article-image"
-                                    style={{ aspectRatio: "16/10", width: "100%", marginBottom: "0.625rem", fontSize: "10px" }}
-                                    role="img"
-                                    aria-label={`Illustration for: ${article.title}`}
-                                >
-                                    Editorial Image
-                                </div>
-                            )}
+                            {/* Thumbnail - World Affairs style */}
+                            <div className="thumbnail-container" style={{ marginBottom: "0.625rem" }}>
+                                {article.image ? (
+                                    <img
+                                        src={article.image}
+                                        alt={article.title}
+                                        className="article-thumbnail thumbnail-world"
+                                    />
+                                ) : (
+                                    <div
+                                        className="thumbnail-placeholder thumbnail-world"
+                                        role="img"
+                                        aria-label={`Illustration for: ${article.title}`}
+                                    >
+                                        IMG
+                                    </div>
+                                )}
+                            </div>
 
                             {/* Headline */}
                             <h3 className="headline-sm" style={{
@@ -263,49 +246,77 @@ function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticl
     );
 }
 
-// Opinion layout - Serious, analytical, not light
+// Opinion layout - Consistent with global design guidelines
 function OpinionLayout({ articles, sectionSlug }: { articles: SectionArticle[]; sectionSlug: string }) {
     return (
-        <div style={{ display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8">
             {articles.slice(0, 4).map((article) => {
                 const articleUrl = `/${sectionSlug}/${article.id}`;
-                const authorName = article.subtitle.split("—")[0]?.trim() || "The Hint Editorial";
+                let authorName = "";
+                let excerpt = article.subtitle;
+
+                if (article.subtitle.includes("—")) {
+                    const parts = article.subtitle.split("—");
+                    authorName = parts[0].trim();
+                    excerpt = parts[1]?.trim() || "";
+                }
+
+                const formattedDate = new Date(article.publishedAt).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric"
+                });
 
                 return (
-                    <Link key={article.id} href={articleUrl} className="article-link">
-                        <article style={{ textAlign: "center", paddingBottom: "0.5rem" }}>
-                            {/* Author Avatar - Tight spacing */}
-                            <div
-                                className="opinion-avatar image-placeholder"
-                                role="img"
-                                aria-label={`Photo of ${authorName}`}
-                                style={{
-                                    width: "36px",
-                                    height: "36px",
-                                    borderRadius: "50%",
-                                    margin: "0 auto 0.5rem",
-                                    fontSize: "8px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center"
-                                }}
-                            >
-                                👤
+                    <Link key={article.id} href={articleUrl} className="article-link group block h-full">
+                        <article className="flex flex-col h-full">
+                            {/* Image Container */}
+                            <div className="thumbnail-container mb-2.5 aspect-[3/2] w-full">
+                                {article.image ? (
+                                    <img
+                                        src={article.image}
+                                        alt={article.title}
+                                        className="article-thumbnail thumbnail-world w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <div
+                                        className="thumbnail-placeholder thumbnail-world w-full h-full"
+                                        role="img"
+                                        aria-label={`Thumbnail for: ${article.title}`}
+                                    >
+                                        IMG
+                                    </div>
+                                )}
                             </div>
 
-                            {/* Stronger Headline */}
-                            <h3 className="headline-sm" style={{
-                                marginBottom: "0.25rem",
-                                lineHeight: 1.2,
-                                fontWeight: 600
-                            }}>
-                                {article.title}
-                            </h3>
+                            {/* Content */}
+                            <div className="flex flex-col min-w-0 flex-grow">
+                                {/* Author (Opinion specific) */}
+                                {authorName && (
+                                    <span className="meta-text text-ink font-medium mb-1 block truncate">
+                                        {authorName}
+                                    </span>
+                                )}
 
-                            {/* Byline */}
-                            <p className="byline" style={{ fontSize: "11px", margin: 0 }}>
-                                {authorName}
-                            </p>
+                                {/* Headline - using global class */}
+                                <h3 className="headline-sm mb-1 line-clamp-3">
+                                    {article.title}
+                                </h3>
+
+                                {/* Excerpt - Desktop only */}
+                                {excerpt && (
+                                    <p className="caption-text hidden md:block mb-2 line-clamp-3">
+                                        {excerpt}
+                                    </p>
+                                )}
+
+                                {/* Meta Group */}
+                                <div className="mt-auto flex flex-col gap-0.5">
+                                    <time className="meta-text">
+                                        {formattedDate}
+                                    </time>
+                                </div>
+                            </div>
                         </article>
                     </Link>
                 );

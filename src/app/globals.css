@@ -313,11 +313,135 @@ button {
   width: 100%;
   height: auto;
   object-fit: cover;
-  transition: filter 0.2s ease;
+  object-position: center top;
+  /* Focus on top portion of image */
+  transition: filter 0.2s ease, transform 0.3s ease;
 }
 
 .article-link:hover .article-image {
   filter: brightness(0.92);
+}
+
+/* ----------------------------------------------------------------------------
+   THUMBNAIL SYSTEM
+   Optimized thumbnail images for article cards and listings
+   Rule: Article's first image is used as thumbnail, positioned at top
+   Larger sizes to display more image content visually
+   ---------------------------------------------------------------------------- */
+.article-thumbnail {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center top;
+  /* Always show top portion of thumbnail */
+  background-color: var(--color-border);
+  transition: filter 0.2s ease, transform 0.3s ease;
+}
+
+/* Lead story thumbnail - larger, hero presence */
+.thumbnail-lead {
+  aspect-ratio: 16 / 9;
+  max-height: 450px;
+  min-height: 280px;
+}
+
+/* Top stories thumbnail - prominent visual */
+.thumbnail-top {
+  aspect-ratio: 4 / 3;
+  max-height: 180px;
+  min-height: 120px;
+}
+
+/* Section block thumbnail - medium wire style */
+.thumbnail-wire {
+  width: 80px;
+  height: 60px;
+  min-width: 80px;
+  aspect-ratio: auto;
+  flex-shrink: 0;
+}
+
+/* Politics section thumbnail - larger for visibility */
+.thumbnail-politics {
+  width: 90px;
+  height: 65px;
+  min-width: 90px;
+  aspect-ratio: auto;
+  flex-shrink: 0;
+}
+
+/* World affairs thumbnail - card style with more visibility */
+.thumbnail-world {
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  min-height: 140px;
+}
+
+/* Story list page thumbnail - larger for readability */
+.thumbnail-list {
+  aspect-ratio: 16 / 10;
+  min-height: 180px;
+}
+
+.thumbnail-list-compact {
+  width: 120px;
+  height: 90px;
+  min-width: 120px;
+  aspect-ratio: auto;
+}
+
+/* Continue Reading / Recommendations thumbnails */
+.thumbnail-recommendation {
+  aspect-ratio: 16 / 10;
+  min-height: 160px;
+  max-height: 200px;
+}
+
+/* Hover effects for thumbnails */
+.article-link:hover .article-thumbnail {
+  filter: brightness(0.92);
+  transform: scale(1.02);
+}
+
+/* Thumbnail container for overflow control */
+.thumbnail-container {
+  overflow: hidden;
+  background-color: var(--color-border);
+  border-radius: 2px;
+}
+
+/* Placeholder styling for missing thumbnails */
+.thumbnail-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-border);
+  color: var(--color-muted);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ----------------------------------------------------------------------------
+   KEYWORD TAGS
+   ---------------------------------------------------------------------------- */
+.keyword-tag {
+  font-family: var(--font-serif);
+  font-size: 0.875rem;
+  color: var(--color-ink);
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  cursor: default;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.keyword-tag:hover {
+  border-color: var(--color-ink);
+  background-color: var(--color-paper);
 }
 
 /* ----------------------------------------------------------------------------

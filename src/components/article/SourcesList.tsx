@@ -1,10 +1,8 @@
 /**
  * SourcesList Component
  * 
- * Renders the list of sources/citations for the article.
- * Provides transparency about information origins.
- * 
- * NO business logic, NO imports from lib/content.
+ * Minimal, editorial design matching The Hint's broadsheet theme.
+ * Clean typography, simple borders, no distractions.
  */
 
 interface SourcesListProps {
@@ -17,11 +15,39 @@ export function SourcesList({ sources }: SourcesListProps) {
     }
 
     return (
-        <aside className="border-t border-current pt-8 mb-12">
-            <h2 className="text-lg font-bold mb-4">Sources</h2>
-            <ul className="list-none space-y-2">
+        <aside style={{ marginTop: '1.5rem' }}>
+            {/* Simple label */}
+            <h3 style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: '0.6875rem',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: '#595959',
+                marginBottom: '0.75rem',
+            }}>
+                Sources
+            </h3>
+
+            {/* Clean list */}
+            <ul style={{
+                listStyle: 'none',
+                padding: 0,
+                margin: 0,
+                borderTop: '1px solid #D9D9D9',
+                paddingTop: '0.75rem',
+            }}>
                 {sources.map((source, index) => (
-                    <li key={index} className="text-base">
+                    <li
+                        key={index}
+                        style={{
+                            fontFamily: 'var(--font-serif)',
+                            fontSize: '0.875rem',
+                            lineHeight: 1.5,
+                            color: '#2B2B2B',
+                            marginBottom: '0.5rem',
+                        }}
+                    >
                         {source}
                     </li>
                 ))}

@@ -120,6 +120,66 @@ export function ArticleEditor({
         });
     };
 
+    /**
+     * Thumbnail Upload Logic
+     */
+    const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
+    const [thumbnailError, setThumbnailError] = useState<string | null>(null);
+    const thumbnailInputRef = useRef<HTMLInputElement>(null);
+
+    const handleThumbnailSelect = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setThumbnailError(null);
+
+        // Validate file type (simple check)
+        const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
+        if (!validTypes.includes(file.type)) {
+            setThumbnailError('Invalid file type. Please use JPEG, PNG, WebP, or AVIF.');
+            return;
+        }
+
+        // Validate file size (5MB)
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+            setThumbnailError('File is too large. Maximum size is 5MB.');
+            return;
+        }
+
+        setIsUploadingThumbnail(true);
+
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch('/api/media/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+
+            if (result.success && result.data) {
+                onFormChange({ ...formDataRef.current, thumbnail: result.data.url });
+            } else {
+                setThumbnailError(result.error || 'Upload failed');
+            }
+        } catch (error) {
+            setThumbnailError('Network error during upload');
+        } finally {
+            setIsUploadingThumbnail(false);
+            // Reset input
+            if (thumbnailInputRef.current) {
+                thumbnailInputRef.current.value = '';
+            }
+        }
+    }, [onFormChange]);
+
+    const handleRemoveThumbnail = useCallback(() => {
+        onFormChange({ ...formDataRef.current, thumbnail: '' });
+    }, [onFormChange]);
+
     return (
         <div className={`${styles.editorLayout} ${isMobile ? styles.mobile : ''}`}>
             {/* LEFT COLUMN: WRITING CANVAS */}
@@ -164,22 +224,74 @@ export function ArticleEditor({
 
                 {/* Body Editor */}
                 <div className={styles.fieldWrapper}>
-                    {/* Editor Mode Toggle */}
-                    <div className={styles.editorModeToggle}>
-                        <button
-                            type="button"
-                            className={`${styles.modeButton} ${editorMode === 'blocks' ? styles.modeActive : ''}`}
-                            onClick={() => setEditorMode('blocks')}
-                        >
-                            Visual Editor
-                        </button>
-                        <button
-                            type="button"
-                            className={`${styles.modeButton} ${editorMode === 'markdown' ? styles.modeActive : ''}`}
-                            onClick={() => setEditorMode('markdown')}
-                        >
-                            Markdown
-                        </button>
+                    {/* Editor Toolbar (Modes + Thumbnail) */}
+                    <div className={styles.editorToolbar}>
+                        <div className={styles.editorModeToggle}>
+                            <button
+                                type="button"
+                                className={`${styles.modeButton} ${editorMode === 'blocks' ? styles.modeActive : ''}`}
+                                onClick={() => setEditorMode('blocks')}
+                            >
+                                Visual Editor
+                            </button>
+                            <button
+                                type="button"
+                                className={`${styles.modeButton} ${editorMode === 'markdown' ? styles.modeActive : ''}`}
+                                onClick={() => setEditorMode('markdown')}
+                            >
+                                Markdown
+                            </button>
+                        </div>
+
+                        {/* Thumbnail Controls */}
+                        <div className={styles.thumbnailControls}>
+                            <input
+                                ref={thumbnailInputRef}
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp,image/avif"
+                                onChange={handleThumbnailSelect}
+                                className={styles.hiddenInput}
+                                style={{ display: 'none' }}
+                            />
+
+                            {formData.thumbnail ? (
+                                <div className={styles.thumbnailStatus}>
+                                    <span className={styles.statusIcon}>✓</span>
+                                    <span className={styles.statusText}>Thumbnail Set</span>
+                                    <button
+                                        type="button"
+                                        onClick={handleRemoveThumbnail}
+                                        className={styles.removeThumbnailText}
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => thumbnailInputRef.current?.click()}
+                                    disabled={isUploadingThumbnail}
+                                    className={styles.uploadButtonSimple}
+                                >
+                                    {isUploadingThumbnail ? (
+                                        <span className={styles.uploadLoader}>•••</span>
+                                    ) : (
+                                        <>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                                <polyline points="21 15 16 10 5 21"></polyline>
+                                            </svg>
+                                            <span>Add Thumbnail</span>
+                                        </>
+                                    )}
+                                </button>
+                            )}
+
+                            {thumbnailError && (
+                                <span className={styles.toolbarError}>{thumbnailError}</span>
+                            )}
+                        </div>
                     </div>
 
                     {/* Block-based Editor */}
@@ -233,6 +345,15 @@ videoId: dQw4w9WgXcQ
                                 <button type="button" className={styles.closeButton} onClick={onClosePreview}>×</button>
                             </div>
                             <div className={styles.previewContent}>
+                                {formData.thumbnail && (
+                                    <div className={styles.previewHeroImage}>
+                                        <img
+                                            src={formData.thumbnail}
+                                            alt="Article thumbnail"
+                                            className={styles.previewImageFull}
+                                        />
+                                    </div>
+                                )}
                                 <div className={styles.previewSection}>{previewData.section.toUpperCase()}</div>
                                 <h1 className={styles.previewHeadline}>{previewData.headline}</h1>
                                 {previewData.subheadline && (

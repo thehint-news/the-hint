@@ -30,26 +30,8 @@ export function LeadStory({ article }: LeadStoryProps) {
         return null;
     }
 
-    // Helper to extract first image from markdown body if featured image is missing
-    // Helper to extract first image from markdown body if featured image is missing
-    const getFirstBodyImage = (body: string) => {
-        // Match custom :::image block syntax
-        const customBlockMatch = body.match(/:::image[\s\S]*?src:\s*([^\s]+)/);
-        if (customBlockMatch && customBlockMatch[1]) return customBlockMatch[1].trim();
-
-        // Match Markdown image syntax ![alt](url)
-        const markdownMatch = body.match(/!\[.*?\]\((.*?)\)/);
-        if (markdownMatch && markdownMatch[1]) return markdownMatch[1];
-
-        // Match HTML image syntax <img src="url" />
-        const htmlMatch = body.match(/<img[^>]+src=["'](.*?)["']/);
-        if (htmlMatch && htmlMatch[1]) return htmlMatch[1];
-
-        return undefined;
-    };
-
-    // Use featured image or fallback to first image in body
-    const displayImage = article.image || (article.body ? getFirstBodyImage(article.body) : undefined);
+    // Thumbnail is now guaranteed through the data layer (reader.ts)
+    // which extracts first body image if no explicit image is set
 
     const formattedDate = formatSafeDate(article.publishedAt, {
         weekday: "long",
@@ -83,34 +65,25 @@ export function LeadStory({ article }: LeadStoryProps) {
                     </h2>
                 </Link>
 
-                {/* Hero Image - Taller for front-page presence */}
-                <Link href={articleUrl} className="article-link" style={{ display: "block", marginBottom: "0.35rem" }}>
-                    {displayImage ? (
-                        <img
-                            src={displayImage}
-                            alt={article.title}
-                            className="article-image"
-                            style={{
-                                aspectRatio: "2.2/1",
-                                width: "100%",
-                                maxHeight: "350px",
-                                objectFit: "cover"
-                            }}
-                        />
-                    ) : (
-                        <div
-                            className="image-placeholder article-image"
-                            style={{
-                                aspectRatio: "2.2/1",
-                                width: "100%",
-                                maxHeight: "350px"
-                            }}
-                            role="img"
-                            aria-label={`Illustration for: ${article.title}`}
-                        >
-                            <span>Editorial Image</span>
-                        </div>
-                    )}
+                {/* Hero Thumbnail - Large, top-focused, more image visibility */}
+                <Link href={articleUrl} className="article-link" style={{ display: "block", marginBottom: "0.5rem" }}>
+                    <div className="thumbnail-container">
+                        {article.image ? (
+                            <img
+                                src={article.image}
+                                alt={article.title}
+                                className="article-thumbnail thumbnail-lead"
+                            />
+                        ) : (
+                            <div
+                                className="thumbnail-placeholder thumbnail-lead"
+                                role="img"
+                                aria-label={`Illustration for: ${article.title}`}
+                            >
+                                <span>Featured Image</span>
+                            </div>
+                        )}
+                    </div>
                 </Link>
 
                 {/* Caption/Subtitle - Tight grouping with image */}

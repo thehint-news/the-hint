@@ -584,18 +584,33 @@
         gap: 0.75rem;
     }
 
-    /* Make insert button more prominent on mobile */
+    /* Restore desktop-style insert button for mobile */
     .insertButton {
-        padding: 1rem;
-        font-size: 0.9375rem;
-        min-height: 48px;
-        border: 2px dashed #d0d0d0;
-        border-radius: 8px;
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        min-height: 0;
+        border: 1px solid #e0e0e0;
+        border-radius: 50%;
+        background: white;
+        color: #999;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1 !important;
+        /* Always visible on mobile */
+        z-index: 10;
     }
 
     .insertButton:active {
-        background: #f0f0f0;
-        border-color: #999;
+        background: #1a1a1a;
+        border-color: #1a1a1a;
+        color: white;
     }
 
     /* Insert menu as bottom sheet style on mobile */

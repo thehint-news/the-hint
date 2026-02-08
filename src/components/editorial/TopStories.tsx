@@ -58,34 +58,25 @@ export function TopStories({ articles }: TopStoriesProps) {
 
                     return (
                         <article key={article.id} style={{ paddingBottom: "0.75rem" }}>
-                            {/* Smaller Image */}
+                            {/* Thumbnail - Larger, more visible */}
                             <Link href={articleUrl} className="article-link" style={{ display: "block", marginBottom: "0.5rem" }}>
-                                {article.image ? (
-                                    <img
-                                        src={article.image}
-                                        alt={article.title}
-                                        className="article-image"
-                                        style={{
-                                            aspectRatio: "16/9",
-                                            width: "100%",
-                                            maxHeight: "130px",
-                                            objectFit: "cover"
-                                        }}
-                                    />
-                                ) : (
-                                    <div
-                                        className="image-placeholder article-image"
-                                        style={{
-                                            aspectRatio: "16/9",
-                                            width: "100%",
-                                            maxHeight: "130px",
-                                        }}
-                                        role="img"
-                                        aria-label={`Illustration for: ${article.title}`}
-                                    >
-                                        <span style={{ fontSize: "11px" }}>Editorial Image</span>
-                                    </div>
-                                )}
+                                <div className="thumbnail-container">
+                                    {article.image ? (
+                                        <img
+                                            src={article.image}
+                                            alt={article.title}
+                                            className="article-thumbnail thumbnail-top"
+                                        />
+                                    ) : (
+                                        <div
+                                            className="thumbnail-placeholder thumbnail-top"
+                                            role="img"
+                                            aria-label={`Illustration for: ${article.title}`}
+                                        >
+                                            <span>IMG</span>
+                                        </div>
+                                    )}
+                                </div>
                             </Link>
 
                             {/* Smaller Headline - Secondary to lead */}

@@ -203,26 +203,8 @@ export function BlockEditor({
         block: ContentBlock,
         index: number
     ) => {
-        // Enter at end of block = new paragraph
-        if (e.key === 'Enter' && !e.shiftKey) {
-            const target = e.target as HTMLTextAreaElement;
-            const content = 'content' in block ? block.content : '';
-
-            // If at end of content, create new block
-            if (target.selectionStart === content.length) {
-                e.preventDefault();
-                const newBlock = createParagraphBlock('', index + 1);
-                setBlocks(prev => {
-                    const updated = [...prev];
-                    updated.splice(index + 1, 0, newBlock);
-                    return reorderBlocks(updated);
-                });
-                // Focus the new block
-                setTimeout(() => {
-                    setFocusedBlockId(newBlock.id);
-                }, 10);
-            }
-        }
+        // Enter = New line (default behavior), do NOT create new block
+        // User requested manual block creation only
 
         // Backspace at start of empty block = delete block
         if (e.key === 'Backspace') {

@@ -4,7 +4,7 @@
  * Renders the main article content from Markdown.
  * Optimized for long-form reading with clean typography.
  * 
- * NO business logic, NO imports from lib/content.
+ * All images display at their full original size and aspect ratio.
  */
 
 import { marked } from 'marked';
@@ -14,18 +14,21 @@ import { VideoBlockRenderer } from './VideoBlock';
 import {
     isImageBlock,
     isVideoBlock,
-    isParagraphBlock,
     isSubheadingBlock,
     isQuoteBlock
 } from '@/lib/content/media-types';
 
 interface ArticleBodyProps {
     content: string;
+    featuredImage?: string;
 }
 
-export function ArticleBody({ content }: ArticleBodyProps) {
+export function ArticleBody({ content, featuredImage }: ArticleBodyProps) {
     // Parse content into blocks
     const { blocks } = parseBodyToBlocks(content);
+
+    // Identify the first image block index to potentially skip it
+    const firstImageIndex = blocks.findIndex(isImageBlock);
 
     return (
         <div className="mb-12">
@@ -42,8 +45,13 @@ export function ArticleBody({ content }: ArticleBodyProps) {
                     prose-blockquote:border-l-2 prose-blockquote:border-[#111] prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-[#444]">
 
                 {blocks.map((block, index) => {
-                    // Image Block
+                    // Image Block - Display full image, no skipping
                     if (isImageBlock(block)) {
+                        // Skip the first image ONLY if it matches the featured image
+                        if (featuredImage && index === firstImageIndex && block.src === featuredImage) {
+                            return null;
+                        }
+
                         return (
                             <div key={block.id} className="not-prose my-8">
                                 <ImageBlockRenderer
@@ -63,27 +71,66 @@ export function ArticleBody({ content }: ArticleBodyProps) {
                         );
                     }
 
-                    // Subheading
+                    // Subheading - Bold, black text for clear visual hierarchy
                     if (isSubheadingBlock(block)) {
                         return (
-                            <h2 key={block.id}>{block.content}</h2>
+                            <h2
+                                key={block.id}
+                                style={{
+                                    fontWeight: 700,
+                                    color: '#111111',
+                                    fontSize: '1.5rem',
+                                    lineHeight: 1.3,
+                                    marginTop: '2.5rem',
+                                    marginBottom: '1rem',
+                                    fontFamily: 'var(--font-serif)'
+                                }}
+                            >
+                                {block.content}
+                            </h2>
                         );
                     }
 
-                    // Quote
+                    // Quote - Styled for editorial emphasis
                     if (isQuoteBlock(block)) {
                         return (
-                            <blockquote key={block.id}>
-                                <p>{block.content}</p>
+                            <blockquote
+                                key={block.id}
+                                style={{
+                                    borderLeft: '3px solid #111111',
+                                    paddingLeft: '1.5rem',
+                                    marginTop: '2rem',
+                                    marginBottom: '2rem',
+                                    marginLeft: 0,
+                                    marginRight: 0,
+                                }}
+                            >
+                                <p style={{
+                                    fontStyle: 'italic',
+                                    fontSize: '1.25rem',
+                                    lineHeight: 1.6,
+                                    color: '#2B2B2B',
+                                    fontFamily: 'var(--font-serif)',
+                                    margin: 0,
+                                }}>
+                                    "{block.content}"
+                                </p>
                                 {block.attribution && (
-                                    <footer>— {block.attribution}</footer>
+                                    <footer style={{
+                                        marginTop: '0.75rem',
+                                        fontSize: '0.875rem',
+                                        color: '#595959',
+                                        fontStyle: 'normal',
+                                        fontWeight: 500,
+                                    }}>
+                                        — {block.attribution}
+                                    </footer>
                                 )}
                             </blockquote>
                         );
                     }
 
-                    // Paragraph (Default)
-                    // Render markdown content
+                    // Paragraph (Default) - Styled for optimal reading
                     const htmlContent = marked.parse(block.content, {
                         async: false,
                         gfm: true,
@@ -93,6 +140,13 @@ export function ArticleBody({ content }: ArticleBodyProps) {
                     return (
                         <div
                             key={block.id}
+                            style={{
+                                fontFamily: 'var(--font-serif)',
+                                fontSize: '1.125rem',
+                                lineHeight: 1.75,
+                                color: '#111111',
+                                marginBottom: '1.5rem',
+                            }}
                             dangerouslySetInnerHTML={{ __html: htmlContent }}
                         />
                     );

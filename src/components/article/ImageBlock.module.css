@@ -1,5 +1,6 @@
 /**
  * Image Block Styles
+ * Full image display - no cropping or height constraints
  */
 
 .figure {
@@ -11,35 +12,34 @@
     display: block;
     width: 100%;
     height: auto;
-    max-height: 600px;
-    object-fit: contain;
-    background: #f5f5f5;
-    border-radius: 2px;
+    /* No max-height - show full image */
 }
 
 .caption {
     margin-top: 0.75rem;
     padding-top: 0.5rem;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid var(--color-border, #D9D9D9);
+    font-family: var(--font-sans);
     font-size: 0.875rem;
     line-height: 1.5;
-    color: #666;
+    color: var(--color-muted, #595959);
 }
 
 .captionText {
     display: block;
+    font-style: italic;
 }
 
 .credit {
     display: block;
     margin-top: 0.25rem;
     font-size: 0.75rem;
-    font-style: italic;
-    color: #888;
+    color: var(--color-muted, #595959);
 }
 
 .credit::before {
     content: 'Photo: ';
+    font-weight: 600;
 }
 
 /* Responsive adjustments */
@@ -47,10 +47,6 @@
     .figure {
         margin-left: -1rem;
         margin-right: -1rem;
-    }
-
-    .image {
-        border-radius: 0;
     }
 
     .caption {

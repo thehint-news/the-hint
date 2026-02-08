@@ -176,6 +176,7 @@ export interface PublishArticleInput {
     status: unknown;
     sources: unknown;
     slug?: unknown;
+    thumbnail?: unknown;
 }
 
 /**
@@ -190,6 +191,7 @@ export interface DraftArticleInput {
     tags?: unknown;
     placement?: unknown;
     sources?: unknown;
+    thumbnail?: unknown;
     draftId?: unknown;
 }
 
@@ -207,6 +209,7 @@ export interface ValidatedArticleData {
     status: ArticleStatus;
     sources: string[];
     slug: string;
+    thumbnail?: string;
 }
 
 /**
@@ -222,6 +225,7 @@ export interface ValidatedDraftData {
     tags: string[];
     placement: Placement;
     sources: string[];
+    thumbnail?: string;
     savedAt: string;
 }
 
@@ -334,6 +338,11 @@ export function validateArticleInput(input: PublishArticleInput): ValidationResu
         errors.push({ field: 'sources', message: 'Sources must be an array of strings' });
     }
 
+    // THUMBNAIL validation
+    if (!input.thumbnail || typeof input.thumbnail !== 'string' || !input.thumbnail.trim()) {
+        errors.push({ field: 'thumbnail', message: 'Thumbnail image is required' });
+    }
+
     return {
         isValid: errors.length === 0,
         errors,
@@ -399,6 +408,7 @@ export function transformToValidatedData(input: PublishArticleInput): ValidatedA
     const tags = normalizeTags(input.tags);
     const sources = sanitizeStringArray(input.sources);
     const slug = generateSlug(headline);
+    const thumbnail = typeof input.thumbnail === 'string' ? input.thumbnail : undefined;
 
     return {
         headline,
@@ -411,6 +421,7 @@ export function transformToValidatedData(input: PublishArticleInput): ValidatedA
         status,
         sources,
         slug,
+        thumbnail,
     };
 }
 
@@ -426,6 +437,7 @@ export function transformToDraftData(input: DraftArticleInput, draftId?: string)
     const placement = isValidPlacement(input.placement) ? input.placement : 'standard';
     const tags = normalizeTags(input.tags);
     const sources = sanitizeStringArray(input.sources);
+    const thumbnail = typeof input.thumbnail === 'string' ? input.thumbnail : undefined;
 
     return {
         draftId: draftId || generateDraftId(),
@@ -437,6 +449,7 @@ export function transformToDraftData(input: DraftArticleInput, draftId?: string)
         tags,
         placement,
         sources,
+        thumbnail,
         savedAt: new Date().toISOString(),
     };
 }

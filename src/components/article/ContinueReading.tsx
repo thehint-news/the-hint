@@ -37,17 +37,8 @@ const Icons = {
     )
 };
 
-// Helper to extract the first image from the article body if featured image is missing
-function getArticleImage(article: { image?: string; body: string }) {
-    if (article.image) return article.image;
-    const customBlockMatch = article.body.match(/:::image[\s\S]*?src:\s*([^\s]+)/);
-    if (customBlockMatch && customBlockMatch[1]) return customBlockMatch[1].trim();
-    const markdownMatch = article.body.match(/!\[.*?\]\((.*?)\)/);
-    if (markdownMatch && markdownMatch[1]) return markdownMatch[1];
-    const htmlMatch = article.body.match(/<img[^>]+src=["'](.*?)["']/);
-    if (htmlMatch && htmlMatch[1]) return htmlMatch[1];
-    return undefined;
-}
+// Thumbnail extraction is now centralized in the data layer (reader.ts)
+// article.image is guaranteed to be populated with first body image if no explicit image
 
 export function ContinueReading({ items }: ContinueReadingProps) {
     if (!items || items.length === 0) return null;
@@ -88,7 +79,7 @@ export function ContinueReading({ items }: ContinueReadingProps) {
                 {/* Cards Grid */}
                 <div className="text-left grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-6">
                     {items.map((item, index) => {
-                        const imageUrl = getArticleImage(item.article);
+                        const imageUrl = item.article.image;
                         const isLeadLayout = item.type === 'lead';
 
                         // SPECIAL LAYOUT: LEAD STORY (Only if type is explicitly 'lead')

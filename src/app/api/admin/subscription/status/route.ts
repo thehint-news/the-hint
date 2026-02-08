@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { queueManager } from '@/lib/subscription/queue';
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
     try {
         const status = queueManager.getStatus();
         return NextResponse.json({

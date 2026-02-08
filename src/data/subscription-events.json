@@ -247,5 +247,59 @@
     ],
     "lastAttemptAt": "2026-02-05T09:07:21.375Z",
     "totalSubscribers": 1
+  },
+  {
+    "id": "e59a9774-11fe-4b16-892a-d8c79687fd59",
+    "articleSlug": "opinionshgshdnsndswsdwwwfewfewfewwefewfwffwfwefffweewedcwcwcwcwc",
+    "section": "opinion",
+    "headline": "opinionshgshdnsndswsdwwwfewfewfewwefewfwffwfwefffweewedcwcwcwcwc",
+    "summary": "ewwedweewfcefewfwwwwwwwwwwwwwfwefewfwweewwwewwwwwwwwwwwwwwwfwdwdwedfwcwcwe",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-08T05:29:40.020Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-08T05:29:45.106Z",
+    "totalSubscribers": 1
+  },
+  {
+    "id": "1f33d764-a32b-477b-ae92-e1651ec2d8a8",
+    "articleSlug": "moltbook-the-birth-of-an-alternate-mind",
+    "section": "opinion",
+    "headline": "MOLTBOOK — THE BIRTH OF AN ALTERNATE MIND",
+    "summary": "The First True Collision of Consciousness",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-08T05:41:42.461Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-08T05:41:47.779Z",
+    "totalSubscribers": 1
+  },
+  {
+    "id": "da1f55a4-9f84-4cb0-9fae-a4d7f4b21e87",
+    "articleSlug": "moltbook-the-birth-of-an-alternate-mind",
+    "section": "opinion",
+    "headline": "MOLTBOOK — THE BIRTH OF AN ALTERNATE MIND",
+    "summary": "The First True Collision of Consciousness",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-08T06:01:51.804Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-08T06:01:59.514Z",
+    "totalSubscribers": 1
   }
 ]

@@ -103,6 +103,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 tags: draftData.tags,
                 sources: draftData.sources,
                 placement: draftData.placement,
+                thumbnail: draftData.thumbnail,
             },
             existingDraftId
         );
