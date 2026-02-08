@@ -10,7 +10,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import { ArticleEntry, WorkspaceMode, SECTIONS } from '../types';
+import { ArticleEntry, SECTIONS } from '../types';
 import { ConfirmDialog } from './ConfirmDialog';
 import { ArticleDatabaseSkeleton } from '@/components/skeleton';
 import styles from './ArticleDatabase.module.css';
@@ -18,8 +18,6 @@ import styles from './ArticleDatabase.module.css';
 interface ArticleDatabaseProps {
     /** List of articles to display */
     articles: ArticleEntry[];
-    /** Current workspace mode (for filtering) */
-    mode: WorkspaceMode;
     /** Whether data is loading */
     isLoading: boolean;
     /** Handler for editing an article */
@@ -27,22 +25,18 @@ interface ArticleDatabaseProps {
     /** Handler for duplicating an article */
     onDuplicate: (article: ArticleEntry) => void;
     /** Handler for deleting an article */
-    /** Handler for deleting an article */
     onDelete: (article: ArticleEntry) => void;
-    /** Handler for removing homepage placement */
-    onRemovePlacement: (article: ArticleEntry) => void;
 }
 
 export function ArticleDatabase({
     articles,
-    mode,
     isLoading,
     onEdit,
     onDuplicate,
     onDelete,
-    onRemovePlacement,
 }: ArticleDatabaseProps) {
     // Filter state
+    const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'published'>('all');
     const [sectionFilter, setSectionFilter] = useState<string>('all');
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -94,11 +88,9 @@ export function ArticleDatabase({
     const filteredArticles = useMemo(() => {
         let result = articles;
 
-        // Filter by status based on mode
-        if (mode === 'drafts') {
-            result = result.filter(a => a.status === 'draft');
-        } else if (mode === 'published') {
-            result = result.filter(a => a.status === 'published');
+        // Filter by status
+        if (statusFilter !== 'all') {
+            result = result.filter(a => a.status === statusFilter);
         }
 
         // Filter by section
@@ -115,7 +107,7 @@ export function ArticleDatabase({
         }
 
         return result;
-    }, [articles, mode, sectionFilter, searchQuery]);
+    }, [articles, statusFilter, sectionFilter, searchQuery]);
 
     /**
      * Get section label
@@ -167,6 +159,47 @@ export function ArticleDatabase({
                     </select>
                 </div>
 
+                {/* Status Filter - Dropdown for desktop */}
+                <div className={`${styles.filterGroup} ${styles.statusSelectGroup}`}>
+                    <label className={styles.filterLabel}>Status</label>
+                    <select
+                        className={styles.filterSelect}
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value as 'all' | 'draft' | 'published')}
+                    >
+                        <option value="all">All Status</option>
+                        <option value="draft">Drafts</option>
+                        <option value="published">Published</option>
+                    </select>
+                </div>
+
+                {/* Status Filter - Pills for mobile (more touch-friendly) */}
+                <div className={`${styles.filterGroup} ${styles.statusPillsGroup}`}>
+                    <div className={styles.statusPills}>
+                        <button
+                            type="button"
+                            className={`${styles.statusPill} ${statusFilter === 'all' ? styles.statusPillActive : ''}`}
+                            onClick={() => setStatusFilter('all')}
+                        >
+                            All
+                        </button>
+                        <button
+                            type="button"
+                            className={`${styles.statusPill} ${statusFilter === 'draft' ? styles.statusPillActive : ''}`}
+                            onClick={() => setStatusFilter('draft')}
+                        >
+                            Drafts
+                        </button>
+                        <button
+                            type="button"
+                            className={`${styles.statusPill} ${statusFilter === 'published' ? styles.statusPillActive : ''}`}
+                            onClick={() => setStatusFilter('published')}
+                        >
+                            Published
+                        </button>
+                    </div>
+                </div>
+
                 <div className={styles.filterGroup}>
                     <label className={styles.filterLabel}>Search</label>
                     <input
@@ -189,13 +222,9 @@ export function ArticleDatabase({
                     <ArticleDatabaseSkeleton />
                 ) : filteredArticles.length === 0 ? (
                     <div className={styles.empty}>
-                        {searchQuery || sectionFilter !== 'all'
+                        {searchQuery || sectionFilter !== 'all' || statusFilter !== 'all'
                             ? 'No articles match your filters.'
-                            : mode === 'drafts'
-                                ? 'No drafts found.'
-                                : mode === 'published'
-                                    ? 'No published articles found.'
-                                    : 'No articles found.'}
+                            : 'No articles found.'}
                     </div>
                 ) : (
                     <table className={styles.table}>

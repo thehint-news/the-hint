@@ -48,19 +48,24 @@ import styles from './page.module.css';
 function getClientHints(formData: ArticleFormData): Record<string, string> {
     const hints: Record<string, string> = {};
 
-    if (formData.headline && formData.headline.length < 10) {
-        hints.headline = `${10 - formData.headline.length} more characters needed`;
+    // Safely access fields with null-checks to prevent crashes on undefined data
+    const headline = formData?.headline || '';
+    const subheadline = formData?.subheadline || '';
+    const thumbnail = formData?.thumbnail || '';
+
+    if (headline && headline.length < 10) {
+        hints.headline = `${10 - headline.length} more characters needed`;
     }
-    if (formData.headline.length > 150) {
-        hints.headline = `${formData.headline.length - 150} characters over limit`;
+    if (headline.length > 150) {
+        hints.headline = `${headline.length - 150} characters over limit`;
     }
-    if (formData.subheadline.length > 200) {
-        hints.subheadline = `${formData.subheadline.length - 200} characters over limit`;
+    if (subheadline.length > 200) {
+        hints.subheadline = `${subheadline.length - 200} characters over limit`;
     }
-    if (formData.contentType === 'opinion' && formData.section !== 'opinion') {
+    if (formData?.contentType === 'opinion' && formData?.section !== 'opinion') {
         hints.contentType = 'Opinion articles must be in Opinion section';
     }
-    if (!formData.thumbnail) {
+    if (!thumbnail) {
         hints.thumbnail = 'Thumbnail is required for publishing';
     }
 
@@ -70,11 +75,11 @@ function getClientHints(formData: ArticleFormData): Record<string, string> {
 /** Check if form has minimum required fields for publishing */
 function canPublish(formData: ArticleFormData): boolean {
     return !!(
-        formData.headline.trim() &&
-        formData.subheadline.trim() &&
-        formData.body.trim() &&
-        formData.section &&
-        formData.thumbnail // Thumbnail is now mandatory
+        (formData?.headline || '').trim() &&
+        (formData?.subheadline || '').trim() &&
+        (formData?.body || '').trim() &&
+        formData?.section &&
+        formData?.thumbnail
     );
 }
 
@@ -218,8 +223,8 @@ export default function PublishPage() {
      */
     useEffect(() => {
         if (mode !== 'editor') {
-            const filter = mode === 'drafts' ? 'drafts' : mode === 'published' ? 'published' : undefined;
-            fetchArticles(filter);
+            // Fetch all articles - filtering is now done client-side in ArticleDatabase
+            fetchArticles();
         }
     }, [mode, fetchArticles]);
 
@@ -401,24 +406,27 @@ export default function PublishPage() {
      */
     const handleEdit = useCallback((article: ArticleEntry) => {
         const a = article as any;
+        // The API returns article content nested in the 'data' property
+        const data = a.data || a; // Fallback to article itself if no data property
+
         // Map article data to form data
-        // API returns tags/sources as arrays, form expects comma-separated strings
-        const tags = Array.isArray(a.tags) ? (a.tags as string[]).join(', ') : '';
-        const sources = Array.isArray(a.sources) ? (a.sources as string[]).join(', ') : '';
+        // API returns tags/sources as comma-separated strings in data
+        const tags = data.tags || '';
+        const sources = data.sources || '';
 
         setFormData({
-            headline: a.headline,
-            subheadline: a.subheadline,
-            section: a.section,
-            contentType: a.contentType,
-            body: a.body || '',
-            tags,
-            sources,
-            placement: a.placement || 'standard',
-            thumbnail: a.thumbnail || '',
-            draftId: a.type === 'draft' ? a.id : undefined,
-            status: a.type === 'published' ? 'published' : 'draft',
-            slug: a.slug,
+            headline: data.headline || a.title || '',
+            subheadline: data.subheadline || '',
+            section: data.section || a.section || 'politics',
+            contentType: data.contentType || 'news',
+            body: data.body || '',
+            tags: typeof tags === 'string' ? tags : (Array.isArray(tags) ? tags.join(', ') : ''),
+            sources: typeof sources === 'string' ? sources : (Array.isArray(sources) ? sources.join(', ') : ''),
+            placement: data.placement || a.placement || 'standard',
+            thumbnail: data.thumbnail || '',
+            draftId: a.status === 'draft' ? a.id : (data.draftId || undefined),
+            status: a.status === 'published' ? 'published' : 'draft',
+            slug: data.slug || a.slug || '',
         });
         setFieldErrors({});
         setShowPreview(false);
@@ -436,7 +444,7 @@ export default function PublishPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     id: a.id,
-                    type: a.type, // API returns 'type', use that
+                    type: a.type,
                     section: a.section,
                     slug: a.slug,
                 }),
@@ -446,9 +454,8 @@ export default function PublishPage() {
 
             if (result.success) {
                 showToast('success', `Created a copy of "${result.data?.headline}"`);
-                // Refresh articles list
-                const filter = mode === 'drafts' ? 'drafts' : mode === 'published' ? 'published' : undefined;
-                fetchArticles(filter);
+                // Refresh all articles
+                fetchArticles();
             } else {
                 showErrorFromCode(ErrorCodes.CONTENT_SAVE_FAILED);
             }
@@ -456,59 +463,7 @@ export default function PublishPage() {
             logger.error('Duplicate failed', error);
             showErrorFromCode(ErrorCodes.NETWORK_REQUEST_FAILED);
         }
-    }, [mode, fetchArticles, showToast, showErrorFromCode]);
-
-    /**
-     * Remove Placement
-     */
-    const handleRemovePlacement = useCallback(async (article: ArticleEntry) => {
-        const a = article as any;
-        // Use headline/title for confirmation
-        const title = a.headline || a.title || 'Untitled';
-        const placement = a.placement || 'standard';
-
-        if (!confirm(`Remove "${title}" from ${placement === 'lead' ? 'Lead Story' : 'Top Story'}?`)) {
-            return;
-        }
-
-        try {
-            // Reconstruct payload from flat article data
-            const payload = {
-                headline: a.headline,
-                subheadline: a.subheadline,
-                section: a.section,
-                contentType: a.contentType,
-                body: a.body || '',
-                tags: a.tags || [],
-                sources: a.sources || [],
-                placement: 'standard',
-                draftId: a.type === 'draft' ? a.id : undefined,
-                status: a.type === 'published' ? 'published' : 'draft',
-                slug: a.slug,
-            };
-
-            const endpoint = a.type === 'published' ? '/api/publish' : '/api/publish/draft';
-
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            });
-
-            const result: ApiResponse = await response.json();
-
-            if (result.success) {
-                showToast('success', 'Placement updated');
-                const filter = mode === 'drafts' ? 'drafts' : mode === 'published' ? 'published' : undefined;
-                fetchArticles(filter);
-            } else {
-                showErrorFromCode(ErrorCodes.CONTENT_SAVE_FAILED);
-            }
-        } catch (error) {
-            logger.error('Remove placement failed', error);
-            showErrorFromCode(ErrorCodes.NETWORK_REQUEST_FAILED);
-        }
-    }, [mode, fetchArticles, showToast, showErrorFromCode]);
+    }, [fetchArticles, showToast, showErrorFromCode]);
 
     /**
      * Delete article
@@ -531,9 +486,8 @@ export default function PublishPage() {
 
             if (result.success) {
                 showSuccessFromCode(SuccessCodes.ARTICLE_DELETED);
-                // Refresh articles list
-                const filter = mode === 'drafts' ? 'drafts' : mode === 'published' ? 'published' : undefined;
-                fetchArticles(filter);
+                // Refresh all articles
+                fetchArticles();
             } else {
                 showErrorFromCode(ErrorCodes.CONTENT_DELETE_FAILED);
             }
@@ -541,7 +495,7 @@ export default function PublishPage() {
             logger.error('Delete failed', error);
             showErrorFromCode(ErrorCodes.NETWORK_REQUEST_FAILED);
         }
-    }, [mode, fetchArticles, showSuccessFromCode, showErrorFromCode]);
+    }, [fetchArticles, showSuccessFromCode, showErrorFromCode]);
 
     /**
      * Close preview
@@ -569,7 +523,6 @@ export default function PublishPage() {
                 isSaving={isSaving}
                 isPreviewLoading={isPreviewLoading}
                 isPublishing={isPublishing}
-                canPublish={canPublish(formData)}
                 draftId={formData.draftId}
                 isMobile={isMobile}
             />
@@ -590,12 +543,10 @@ export default function PublishPage() {
                 ) : (
                     <ArticleDatabase
                         articles={articles}
-                        mode={mode}
                         isLoading={isLoadingArticles}
                         onEdit={handleEdit}
                         onDuplicate={handleDuplicate}
                         onDelete={handleDelete}
-                        onRemovePlacement={handleRemovePlacement}
                     />
                 )}
             </main>

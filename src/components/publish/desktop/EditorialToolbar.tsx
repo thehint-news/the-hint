@@ -4,7 +4,7 @@
  * Editorial Toolbar
  * Persistent navigation and action bar for the publishing console
  * 
- * Left group: Navigation tabs (New Article, All Articles, Drafts, Published)
+ * Left group: Navigation tabs (New Article, All Articles)
  * Right group: Actions (Save Draft, Preview, Publish, Logout)
  */
 
@@ -32,8 +32,6 @@ interface EditorialToolbarProps {
     isPreviewLoading: boolean;
     /** Whether publish is in progress */
     isPublishing: boolean;
-    /** Whether publish button should be disabled */
-    canPublish: boolean;
     /** Current draft ID if editing */
     draftId: string | null;
     /** Whether in mobile viewport */
@@ -51,7 +49,6 @@ export function EditorialToolbar({
     isSaving,
     isPreviewLoading,
     isPublishing,
-    canPublish,
     draftId,
     isMobile = false,
 }: EditorialToolbarProps) {
@@ -59,7 +56,7 @@ export function EditorialToolbar({
 
     return (
         <div className={`${styles.toolbar} ${isMobile ? styles.mobile : ''}`}>
-            {/* Left group: Navigation */}
+            {/* Left group: Navigation - only New Article and All Articles */}
             <div className={styles.navGroup}>
                 <button
                     type="button"
@@ -74,20 +71,6 @@ export function EditorialToolbar({
                     onClick={() => onModeChange('all')}
                 >
                     {isMobile ? 'All' : 'All Articles'}
-                </button>
-                <button
-                    type="button"
-                    className={`${styles.navTab} ${mode === 'drafts' ? styles.active : ''}`}
-                    onClick={() => onModeChange('drafts')}
-                >
-                    Drafts
-                </button>
-                <button
-                    type="button"
-                    className={`${styles.navTab} ${mode === 'published' ? styles.active : ''}`}
-                    onClick={() => onModeChange('published')}
-                >
-                    {isMobile ? 'Live' : 'Published'}
                 </button>
             </div>
 
@@ -132,8 +115,15 @@ export function EditorialToolbar({
                     type="button"
                     className={`${styles.actionButton} ${styles.logoutAction}`}
                     onClick={onLogout}
+                    aria-label="Logout"
                 >
-                    {isMobile ? '⎋' : 'Logout'}
+                    {isMobile ? (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                    ) : 'Logout'}
                 </button>
             </div>
         </div>

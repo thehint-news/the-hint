@@ -82,6 +82,59 @@
     color: var(--color-muted);
 }
 
+/* Status Pills - Touch-friendly segmented control */
+.statusPills {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.statusPill {
+    padding: 0.45rem 0.85rem;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.statusPill:not(:last-child) {
+    border-right: 1px solid var(--color-border);
+}
+
+.statusPill:hover {
+    background: #e8e8e8;
+}
+
+.statusPillActive {
+    background: var(--color-ink);
+    color: white;
+}
+
+.statusPillActive:hover {
+    background: var(--color-ink);
+}
+
+/* Hide status dropdown on mobile, show pills instead */
+.statusSelectGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.statusPillsGroup {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 /* ----------------------------------------------------------------------------
    TABLE
    ---------------------------------------------------------------------------- */
@@ -321,10 +374,32 @@
     .filters {
         flex-wrap: wrap;
         padding: 1rem;
+        gap: 0.75rem;
     }
 
     .filterGroup {
         width: 100%;
+    }
+
+    /* Hide dropdown on mobile, show pills */
+    .statusSelectGroup {
+        display: none;
+    }
+
+    .statusPillsGroup {
+        display: flex;
+        width: 100%;
+    }
+
+    .statusPills {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .statusPill {
+        flex: 1;
+        text-align: center;
+        padding: 0.6rem 0.5rem;
     }
 
     .searchInput {
@@ -334,6 +409,7 @@
     .resultCount {
         width: 100%;
         text-align: center;
+        padding-top: 0.25rem;
     }
 
     .tableContainer {

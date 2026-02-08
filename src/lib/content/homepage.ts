@@ -95,13 +95,7 @@ function filterBySection(articles: Article[], section: Section): Article[] {
     return articles.filter(article => article.section === section);
 }
 
-/**
- * Exclude specific article from array by ID
- */
-function excludeArticle(articles: Article[], excludeId: string | null): Article[] {
-    if (excludeId === null) return articles;
-    return articles.filter(article => article.id !== excludeId);
-}
+
 
 /**
  * Take first N articles from array
@@ -137,66 +131,6 @@ function selectLeadStory(articles: Article[]): Article | null {
     // Sort by publishedAt descending and take the first
     const sorted = sortByPublishedAtDesc(candidates);
     return sorted[0];
-}
-
-/**
- * Select top stories based on editorial rules:
- * - Exclude the lead story
- * - Exclude opinion articles
- * - Maximum 5 articles
- * - Sorted by publishedAt descending
- */
-function selectTopStories(
-    articles: Article[],
-    leadStoryId: string | null
-): Article[] {
-    // Filter: not opinion, not lead story
-    const candidates = articles
-        .filter(article => !isOpinion(article))
-        .filter(article => article.id !== leadStoryId);
-
-    // Sort and take first 5
-    const sorted = sortByPublishedAtDesc(candidates);
-    return takeFirst(sorted, 5);
-}
-
-/**
- * Select articles for a non-opinion section block:
- * - Latest 3 articles from the section
- * - Exclude opinion (enforced by section selection)
- * - Exclude lead story
- */
-function selectSectionArticles(
-    articles: Article[],
-    section: Section,
-    leadStoryId: string | null
-): Article[] {
-    // Get section articles
-    const sectionArticles = filterBySection(articles, section);
-
-    // Exclude opinion (shouldn't be in non-opinion sections, but be explicit)
-    const nonOpinion = sectionArticles.filter(article => !isOpinion(article));
-
-    // Exclude lead story
-    const candidates = excludeArticle(nonOpinion, leadStoryId);
-
-    // Sort and take first 3
-    const sorted = sortByPublishedAtDesc(candidates);
-    return takeFirst(sorted, 3);
-}
-
-/**
- * Select opinion articles:
- * - Latest 3 articles
- * - Only contentType === "opinion"
- */
-function selectOpinionArticles(articles: Article[]): Article[] {
-    // Filter: only opinion
-    const opinionArticles = articles.filter(article => isOpinion(article));
-
-    // Sort and take first 3
-    const sorted = sortByPublishedAtDesc(opinionArticles);
-    return takeFirst(sorted, 3);
 }
 
 // ============================================================================
@@ -283,7 +217,7 @@ export function getHomepageData(): HomepageData {
         return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
     });
 
-    const topStories = takeFirst(sortedTopStories, 5);
+    const topStories = takeFirst(sortedTopStories, 2);
     markUsed(topStories);
 
     // Build section blocks (each excluding previously used articles)

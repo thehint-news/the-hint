@@ -351,22 +351,14 @@ export function validateArticleInput(input: PublishArticleInput): ValidationResu
 
 /**
  * Validate fields for DRAFT saving.
- * More lenient - only requires headline and body.
+ * COMPLETELY LENIENT - no mandatory fields.
+ * Any edit can be saved. Only validates format if values are provided.
  */
 export function validateDraftInput(input: DraftArticleInput): ValidationResult {
     const errors: FieldValidationError[] = [];
-    const headline = sanitizeString(input.headline);
-    const body = sanitizeString(input.body);
 
-    // HEADLINE - required for draft
-    if (!headline) {
-        errors.push({ field: 'headline', message: 'Headline is required to save a draft' });
-    }
-
-    // BODY - required for draft
-    if (!body) {
-        errors.push({ field: 'body', message: 'Article body is required to save a draft' });
-    }
+    // No mandatory fields for drafts - any edit can be saved
+    // Only validate format of optional fields if provided
 
     // If section provided, validate it
     if (input.section !== undefined && input.section !== null && input.section !== '') {

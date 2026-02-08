@@ -5,6 +5,7 @@
  * Optimized for long-form reading with clean typography.
  * 
  * All images display at their full original size and aspect ratio.
+ * NOTE: Thumbnail is separate from body images - they don't interact.
  */
 
 import { marked } from 'marked';
@@ -20,15 +21,11 @@ import {
 
 interface ArticleBodyProps {
     content: string;
-    featuredImage?: string;
 }
 
-export function ArticleBody({ content, featuredImage }: ArticleBodyProps) {
+export function ArticleBody({ content }: ArticleBodyProps) {
     // Parse content into blocks
     const { blocks } = parseBodyToBlocks(content);
-
-    // Identify the first image block index to potentially skip it
-    const firstImageIndex = blocks.findIndex(isImageBlock);
 
     return (
         <div className="mb-12">
@@ -45,13 +42,8 @@ export function ArticleBody({ content, featuredImage }: ArticleBodyProps) {
                     prose-blockquote:border-l-2 prose-blockquote:border-[#111] prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-[#444]">
 
                 {blocks.map((block, index) => {
-                    // Image Block - Display full image, no skipping
+                    // Image Block - Display all body images
                     if (isImageBlock(block)) {
-                        // Skip the first image ONLY if it matches the featured image
-                        if (featuredImage && index === firstImageIndex && block.src === featuredImage) {
-                            return null;
-                        }
-
                         return (
                             <div key={block.id} className="not-prose my-8">
                                 <ImageBlockRenderer

@@ -32,6 +32,7 @@ interface ArticleEntry {
         slug?: string;
         publishedAt?: string;
         lastEdited?: string;
+        thumbnail?: string;
     };
 }
 
@@ -47,17 +48,18 @@ function transformDraftToEntry(draft: DraftData): ArticleEntry {
         placement: (draft.placement as 'lead' | 'top' | 'standard') || 'standard',
         lastEdited: draft.savedAt,
         data: {
-            headline: draft.headline,
-            subheadline: draft.subheadline,
-            section: draft.section,
-            contentType: draft.contentType,
-            body: draft.body,
+            headline: draft.headline || '',
+            subheadline: draft.subheadline || '',
+            section: draft.section || 'politics',
+            contentType: draft.contentType || 'news',
+            body: draft.body || '',
             tags: Array.isArray(draft.tags) ? draft.tags.join(', ') : '',
             placement: (draft.placement as 'lead' | 'top' | 'standard') || 'standard',
             sources: Array.isArray(draft.sources) ? draft.sources.join(', ') : '',
             draftId: draft.draftId,
             status: 'draft',
             lastEdited: draft.savedAt,
+            thumbnail: draft.thumbnail || '',
         },
     };
 }
@@ -76,11 +78,11 @@ function transformPublishedToEntry(article: PublishedArticleData): ArticleEntry 
         publishedAt: article.publishedAt,
         slug: article.slug,
         data: {
-            headline: article.title,
-            subheadline: article.subtitle,
-            section: article.section,
-            contentType: article.contentType,
-            body: article.body,
+            headline: article.title || '',
+            subheadline: article.subtitle || '',
+            section: article.section || 'politics',
+            contentType: article.contentType || 'news',
+            body: article.body || '',
             tags: Array.isArray(article.tags) ? article.tags.join(', ') : '',
             placement: (article.placement as 'lead' | 'top' | 'standard') || 'standard',
             sources: Array.isArray(article.sources) ? article.sources.join(', ') : '',
@@ -89,6 +91,7 @@ function transformPublishedToEntry(article: PublishedArticleData): ArticleEntry 
             slug: article.slug,
             publishedAt: article.publishedAt,
             lastEdited: article.updatedAt || article.publishedAt,
+            thumbnail: article.image || '',
         },
     };
 }

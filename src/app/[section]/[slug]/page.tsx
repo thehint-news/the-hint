@@ -156,24 +156,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     />
                 </div>
 
-                {/* Featured Image - Narrower than full width, centered */}
-                {article.image && (
-                    <figure className="mb-10 max-w-4xl mx-auto">
-                        <img
-                            src={article.image}
-                            alt={article.title} // Use title as fallback alt text
-                            className="w-full h-auto object-cover max-h-[500px]"
-                            loading="eager"
-                            decoding="async"
-                        />
-                        {/* Caption support could be added here if data existed */}
-                    </figure>
-                )}
-
                 {/* Article Body - Strict reading width */}
-                {/* Skip first image if it's already shown as the featured thumbnail above */}
+                {/* Thumbnail is NOT displayed here - it's only for cards and social sharing */}
                 <div className="max-w-[68ch] mx-auto">
-                    <ArticleBody content={article.body} featuredImage={article.image} />
+                    <ArticleBody content={article.body} />
 
 
                     {/* Article Footer: Tags, Corrections, Sources */}

@@ -28,8 +28,8 @@ export type PlacementValue = 'lead' | 'top' | 'standard';
 /** Article status */
 export type StatusValue = 'draft' | 'published';
 
-/** Workspace mode */
-export type WorkspaceMode = 'editor' | 'all' | 'drafts' | 'published';
+/** Workspace mode - editor for writing, all for viewing article database */
+export type WorkspaceMode = 'editor' | 'all';
 
 /** Form data structure for editing */
 export interface ArticleFormData {
