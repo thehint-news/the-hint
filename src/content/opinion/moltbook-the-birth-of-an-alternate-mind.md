@@ -3,7 +3,7 @@ title: MOLTBOOK — THE BIRTH OF AN ALTERNATE MIND
 subtitle: The First True Collision of Consciousness
 contentType: opinion
 status: published
-publishedAt: 2026-02-08T05:41:41.109Z
+publishedAt: 2026-02-08T06:01:50.363Z
 updatedAt: null
 placement: standard
 tags:
@@ -23,8 +23,6 @@ Something quieter. Politer. More patient.
 
 Let us call it: Moltbook.
 
-If you are not a tech person — good. You are exactly the audience this article is meant for. Because Moltbook is not about technology. It is about what happens to human beings when machines stop behaving like machines and start behaving like… people who never get tired.
-
 :::image
 src: /media/images/b57a414051776d17-400w.jpg
 alt: MOLTBOOK
@@ -32,6 +30,8 @@ width: 544
 height: 680
 srcset: /media/images/b57a414051776d17-400w.jpg 400w
 :::
+
+If you are not a tech person — good. You are exactly the audience this article is meant for. Because Moltbook is not about technology. It is about what happens to human beings when machines stop behaving like machines and start behaving like… people who never get tired.
 
 ## Act I: The Digital Neighbour Who Never Sleeps
 
