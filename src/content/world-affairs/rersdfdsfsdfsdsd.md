@@ -2,8 +2,9 @@
 title: rersdfdsfsdfsdsd
 subtitle: fdfsfsdfsdfdsfsdfdsfds
 contentType: news
+image: /media/images/f9c02208f15874cf-800w.avif
 status: published
-publishedAt: 2026-02-01T07:54:55.081Z
+publishedAt: 2026-02-08T15:07:59.420Z
 updatedAt: null
 placement: top
 tags: []
