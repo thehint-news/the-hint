@@ -22,7 +22,7 @@ interface VideoBlockRendererProps {
 }
 
 export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
-    const { provider, videoId, embedUrl, posterUrl, caption, title } = block;
+    const { provider, embedUrl, posterUrl, caption, title } = block;
 
     // State: false = showing poster, true = showing player
     const [isPlayerLoaded, setIsPlayerLoaded] = useState(false);

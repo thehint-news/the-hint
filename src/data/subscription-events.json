@@ -427,5 +427,77 @@
     ],
     "lastAttemptAt": "2026-02-08T14:21:20.864Z",
     "totalSubscribers": 1
+  },
+  {
+    "id": "ae2d88e1-a51e-4cbe-af86-6cde7a9d0510",
+    "articleSlug": "rersdfdsfsdfsdsd",
+    "section": "world-affairs",
+    "headline": "rersdfdsfsdfsdsd",
+    "summary": "fdfsfsdfsdfdsfsdfdsfds",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-08T15:08:01.521Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-08T15:08:20.465Z",
+    "totalSubscribers": 1
+  },
+  {
+    "id": "f2c0b2bb-71e7-430e-afa1-2f284a291ca4",
+    "articleSlug": "moltbook-the-birth-of-an-alternate-mind",
+    "section": "opinion",
+    "headline": "MOLTBOOK — THE BIRTH OF AN ALTERNATE MIND",
+    "summary": "The First True Collision of Consciousness",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-08T15:53:08.690Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-08T15:53:14.200Z",
+    "totalSubscribers": 1
+  },
+  {
+    "id": "176f4417-83f2-4597-8d5c-bff18bca7002",
+    "articleSlug": "moltbook-the-birth-of-an-alternate-mind-in-this-era",
+    "section": "opinion",
+    "headline": "MOLTBOOK — THE BIRTH OF AN ALTERNATE MIND IN THIS ERA",
+    "summary": "The First True Collision of Consciousness",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-08T16:13:06.840Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-08T16:13:12.394Z",
+    "totalSubscribers": 1
+  },
+  {
+    "id": "713ad3c7-0389-498c-ab61-441e0a03f4cb",
+    "articleSlug": "moltbook-the-birth-of-an-alternate-mind-in-this-era",
+    "section": "opinion",
+    "headline": "MOLTBOOK — THE BIRTH OF AN ALTERNATE MIND IN THIS ERA",
+    "summary": "The First True Collision of Consciousness",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-08T16:15:42.241Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-08T16:15:47.895Z",
+    "totalSubscribers": 1
   }
 ]

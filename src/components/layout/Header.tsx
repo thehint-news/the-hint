@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { SubscribeModal } from "../features/SubscribeModal";
+import { SearchOverlay } from "../features/SearchOverlay";
 
 
 const NAVIGATION_ITEMS = [
@@ -37,6 +38,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
     const [currentDate, setCurrentDate] = useState<string>("");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const pathname = usePathname();
 
     // Format fixed date for masthead
@@ -83,6 +85,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
     return (
         <>
             <SubscribeModal isOpen={isSubscribeOpen} onClose={() => setIsSubscribeOpen(false)} />
+            <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
             <header role="banner" className="sticky top-0 z-50 bg-[#F7F6F2]">
                 {/* Skip Link for Accessibility */}
@@ -99,36 +102,76 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                         aria-hidden="true"
                     />
 
-                    {/* Vertical Rail Menu */}
+                    {/* Vertical Rail Menu - Redesigned */}
                     <div
-                        className={`fixed inset-y-0 left-0 z-40 w-[85vw] max-w-[300px] bg-[#F7F6F2] border-r border-[#111111] pt-4 pb-8 flex flex-col transform transition-transform duration-300 ease-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+                        className={`fixed inset-y-0 left-0 z-40 w-[90vw] max-w-[360px] bg-[#F7F6F2] border-r border-[#111111] flex flex-col transform transition-transform duration-300 ease-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
                             }`}
                     >
-                        <div className="px-6 pb-6 border-b border-[#D9D9D9] flex justify-between items-center">
-                            <span className="font-serif font-black text-xl">The Hint</span>
-                            <button onClick={() => setIsMenuOpen(false)} className="text-2xl leading-none">&times;</button>
+                        {/* Drawer Header */}
+                        <div className="px-6 pt-8 pb-6 flex justify-between items-start">
+                            <div className="flex flex-col gap-1">
+                                <span className="font-serif text-3xl font-black tracking-tight leading-none text-[#111]">
+                                    The Hint
+                                </span>
+                                <span className="font-sans text-[11px] font-medium text-[#666] uppercase tracking-wide pl-0.5">
+                                    {currentDate}
+                                </span>
+                            </div>
+                            <button
+                                onClick={() => setIsMenuOpen(false)}
+                                className="p-2 -mr-2 text-[#111] opacity-60 hover:opacity-100 transition-opacity"
+                                aria-label="Close menu"
+                            >
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
                         </div>
 
-                        {/* Mobile Links */}
-                        <nav className="flex-1 overflow-y-auto py-4 px-6 space-y-4">
-                            {NAVIGATION_ITEMS.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className="block font-sans text-lg font-medium text-[#111111] border-b border-[#E5E5E5] py-2"
-                                    onClick={() => setIsMenuOpen(false)}
-                                >
-                                    {item.label}
-                                </Link>
-                            ))}
+                        {/* Search Field Stylized Button */}
+                        <div className="px-6 pb-6">
+                            <button
+                                onClick={() => { setIsSearchOpen(true); setIsMenuOpen(false); }}
+                                className="w-full flex items-center gap-3 bg-white border border-[#E5E5E5] px-4 py-3 text-[#888] hover:border-[#111] hover:text-[#111] transition-colors group shadow-sm"
+                            >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#AAA] group-hover:text-[#111] transition-colors">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                <span className="font-sans text-sm font-medium pt-0.5">Search coverage...</span>
+                            </button>
+                        </div>
 
-                            <div className="pt-4 space-y-4">
-                                <Link href="/" onClick={() => setIsMenuOpen(false)} className="block font-serif italic text-[#6B6B6B]">
-                                    Today's Paper
+                        {/* Navigation Links */}
+                        <nav className="flex-1 overflow-y-auto px-6">
+                            <ul className="space-y-0 border-t border-[#E5E5E5]/60">
+                                {NAVIGATION_ITEMS.map((item) => (
+                                    <li key={item.href}>
+                                        <Link
+                                            href={item.href}
+                                            className="block font-serif text-lg text-[#111] py-3 border-b border-[#E5E5E5]/60 hover:pl-3 transition-all duration-300"
+                                            onClick={() => setIsMenuOpen(false)}
+                                        >
+                                            {item.label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <div className="mt-8 mb-8 space-y-6">
+                                <Link
+                                    href="/"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="flex items-center gap-2 font-sans text-xs font-bold uppercase tracking-widest text-[#6B6B6B] hover:text-[#111] group"
+                                >
+                                    See what others miss
+                                    <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all">→</span>
                                 </Link>
+
                                 <button
                                     onClick={() => { setIsSubscribeOpen(true); setIsMenuOpen(false); }}
-                                    className="w-full bg-[#111] text-[#F7F6F2] font-sans font-bold uppercase tracking-widest text-xs py-3 hover:bg-[#333] transition-colors mb-4"
+                                    className="w-full bg-[#111] text-[#F7F6F2] font-sans font-bold uppercase tracking-widest text-xs py-4 hover:bg-[#333] transition-colors shadow-sm"
                                 >
                                     Subscribe for Updates
                                 </button>
@@ -169,7 +212,17 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                         </Link>
 
                         {/* Mobile Subscribe Icon Replacement or Spacer */}
-                        <div className="w-5"></div>
+                        {/* Mobile Search Icon */}
+                        <button
+                            onClick={() => setIsSearchOpen(true)}
+                            className="p-2 -mr-2 text-[#111]"
+                            aria-label="Search"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </button>
                     </div>
 
                     {/* Desktop Masthead Content */}
@@ -208,11 +261,25 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                             })}
                         </ul>
 
-                        {/* Subscribe Button - Absolute Right */}
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2">
+                        {/* Search & Subscribe - Separate Actions */}
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-4">
+                            <button
+                                onClick={() => setIsSearchOpen(true)}
+                                className="flex items-center gap-2 px-3 py-2 rounded-full text-[#444] hover:bg-[#E5E5E5] hover:text-[#111] transition-all duration-200 group"
+                                aria-label="Search"
+                            >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70 group-hover:opacity-100">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                <span className="font-sans text-[11px] font-bold uppercase tracking-widest">
+                                    Search
+                                </span>
+                            </button>
+
                             <button
                                 onClick={() => setIsSubscribeOpen(true)}
-                                className="bg-[#111] text-[#F7F6F2] font-sans text-[11px] font-bold uppercase tracking-widest px-5 py-2 hover:bg-[#333] transition-colors shadow-sm"
+                                className="bg-[#111] text-[#F7F6F2] font-sans text-[11px] font-bold uppercase tracking-widest px-6 py-2 rounded-full hover:bg-[#333] transition-colors shadow-sm"
                             >
                                 Subscribe
                             </button>
