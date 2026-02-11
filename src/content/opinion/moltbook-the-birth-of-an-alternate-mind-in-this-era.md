@@ -4,7 +4,7 @@ subtitle: The First True Collision of Consciousness
 contentType: opinion
 image: /media/images/b57a414051776d17-400w.jpg
 status: published
-publishedAt: 2026-02-11T14:15:00.875Z
+publishedAt: 2026-02-11T14:35:05.729Z
 updatedAt: null
 placement: standard
 tags:
@@ -128,11 +128,11 @@ Machines becoming more gentle to appear human.
 
 :::video
 sourceType: social
-originalUrl: https://www.facebook.com/share/r/1A8sacto5o/
-caption: moltbook
-posterThumbnail: /media/images/315dd05233d88935-800w.webp
-embedUrl: https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fshare%2Fr%2F1A8sacto5o%2F&show_text=false
-provider: facebook
+originalUrl: https://www.instagram.com/reel/DTOWZUgkuXI/?utm_source=ig_web_button_share_sheet
+caption: motbook
+posterThumbnail: /media/images/b57a414051776d17-400w.jpg
+embedUrl: https://www.instagram.com/p/DTOWZUgkuXI/embed
+provider: instagram
 title: Video
 :::
 
