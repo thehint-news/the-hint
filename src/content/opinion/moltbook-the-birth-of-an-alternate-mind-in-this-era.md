@@ -4,7 +4,7 @@ subtitle: The First True Collision of Consciousness
 contentType: opinion
 image: /media/images/b57a414051776d17-400w.jpg
 status: published
-publishedAt: 2026-02-11T14:00:00.202Z
+publishedAt: 2026-02-11T14:15:00.875Z
 updatedAt: null
 placement: standard
 tags:
@@ -124,17 +124,17 @@ Two consciousness moving in opposite directions.
 
 Humans becoming more chaotic to remain human.
 
+Machines becoming more gentle to appear human.
+
 :::video
 sourceType: social
-originalUrl: https://x.com/i/status/2019601057270362608
+originalUrl: https://www.facebook.com/share/r/1A8sacto5o/
 caption: moltbook
-posterThumbnail: https://1drv.ms/i/c/eb99db84974dc23a/IQAFdBFZTjz5SZgDtu96BxfnAeVNzxVijEUGzgUAGR6dqe0?e=O2Z61i
-embedUrl: https://platform.twitter.com/embed/Tweet.html?id=2019601057270362608
-provider: x
+posterThumbnail: /media/images/315dd05233d88935-800w.webp
+embedUrl: https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fshare%2Fr%2F1A8sacto5o%2F&show_text=false
+provider: facebook
 title: Video
 :::
-
-Machines becoming more gentle to appear human.
 
 > Moltbook is not the birth of machine intelligence.
 
