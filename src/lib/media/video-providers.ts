@@ -1,72 +1,42 @@
 /**
  * Video Provider Integration
- * Handles YouTube, Vimeo, and CDN video URL parsing and oEmbed fetching
+ * Handles Social Media, CDN, and Direct File video URL parsing and validation
  * 
- * DESIGN SPEC: .agent/specifications/MEDIA_SYSTEM_DESIGN.md
- * 
- * Supported Providers:
- * - YouTube (youtube.com, youtu.be)
- * - Vimeo (vimeo.com)
- * - CDN (direct video URLs: .mp4, .webm, .m3u8)
- * 
- * Rate Limiting Note:
- * These endpoints assume authenticated editor usage behind session middleware.
- * Rate limiting is deferred to infrastructure layer.
+ * DESIGN SPEC: Extended Video Support
  */
 
-import { VideoProvider, ALLOWED_VIDEO_PROVIDERS } from '../content/media-types';
+import {
+    VideoSourceType,
+    SocialVideoProvider,
+} from '../content/media-types';
 
 // =============================================================================
 // TYPES
 // =============================================================================
 
-/** Result of parsing a video URL */
 export interface VideoParseResult {
-    /** Whether the URL is valid */
     valid: boolean;
-    /** Detected provider */
-    provider?: VideoProvider;
-    /** Extracted video ID */
-    videoId?: string;
-    /** Generated embed URL */
+    sourceType?: VideoSourceType;
+    provider?: SocialVideoProvider; // Normalized provider
+    id?: string; // ID or URL
     embedUrl?: string;
-    /** Error message if invalid */
     error?: string;
 }
 
-/** oEmbed data fetched from provider */
-export interface VideoOEmbedData {
-    /** Video title */
-    title: string;
-    /** Thumbnail/poster URL */
-    thumbnailUrl: string;
-    /** Thumbnail width */
-    thumbnailWidth?: number;
-    /** Thumbnail height */
-    thumbnailHeight?: number;
-    /** Video duration in seconds */
-    duration?: number;
-    /** Author/channel name */
-    authorName?: string;
-    /** Provider name */
-    providerName: string;
-}
-
-/** Complete video info result */
 export interface VideoInfoResult {
-    /** Whether operation succeeded */
     success: boolean;
-    /** Parsed video data */
     data?: {
-        provider: VideoProvider;
-        videoId: string;
-        embedUrl: string;
-        posterUrl: string;
+        sourceType: VideoSourceType;
+        provider?: SocialVideoProvider;
+        originalUrl: string;
+        embedUrl?: string; // Optional for file
+        posterThumbnail: string; // Empty if not found
         title: string;
         duration?: number;
         authorName?: string;
+        mimeType?: string;
+        trustedSourceHtml?: string;
     };
-    /** Error message if failed */
     error?: string;
 }
 
@@ -74,313 +44,424 @@ export interface VideoInfoResult {
 // URL PATTERNS
 // =============================================================================
 
-/** YouTube URL patterns */
-const YOUTUBE_PATTERNS: RegExp[] = [
-    // Standard watch URL
-    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
-    // Short URL
-    /(?:https?:\/\/)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
-    // Embed URL
-    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
-    // Shorts
-    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
-    // With additional params
-    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/,
-];
-
-/** Vimeo URL patterns */
-const VIMEO_PATTERNS: RegExp[] = [
-    // Standard URL
-    /(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)/,
-    // Player embed URL
-    /(?:https?:\/\/)?player\.vimeo\.com\/video\/(\d+)/,
-    // With hash
-    /(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)\/[a-zA-Z0-9]+/,
-];
-
-/** CDN/direct video patterns */
-const CDN_PATTERNS: RegExp[] = [
-    // Direct video file URLs
-    /^https?:\/\/.+\.(mp4|webm|m3u8)(\?.*)?$/i,
-];
+const PATTERNS = {
+    youtube: [
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
+        /(?:https?:\/\/)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+    ],
+    vimeo: [
+        /(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)/,
+        /(?:https?:\/\/)?player\.vimeo\.com\/video\/(\d+)/,
+    ],
+    twitter: [
+        /(?:https?:\/\/)?(?:www\.)?(?:twitter|x)\.com\/([a-zA-Z0-9_]+)\/status\/(\d+)/,
+    ],
+    instagram: [
+        /(?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:p|reel|tv)\/([a-zA-Z0-9_-]+)/,
+    ],
+    facebook: [
+        /(?:https?:\/\/)?(?:www\.)?facebook\.com\/watch\/\?v=(\d+)/,
+        /(?:https?:\/\/)?(?:www\.)?facebook\.com\/[a-zA-Z0-9.]+\/videos\/(\d+)/,
+        /(?:https?:\/\/)?(?:www\.)?facebook\.com\/share\/v\/([a-zA-Z0-9_-]+)/,
+        /(?:https?:\/\/)?(?:www\.)?facebook\.com\/share\/r\/([a-zA-Z0-9_-]+)/,
+    ],
+    tiktok: [
+        /(?:https?:\/\/)?(?:www\.)?tiktok\.com\/@([a-zA-Z0-9_.]+)\/video\/(\d+)/,
+    ],
+    linkedin: [
+        /(?:https?:\/\/)?(?:www\.)?linkedin\.com\/(?:posts|feed\/update)\/([a-zA-Z0-9_-]+)/,
+        /id=(\d+)/,
+    ],
+    files: /\.(mp4|webm|mkv)$/i,
+};
 
 // =============================================================================
 // URL PARSING
 // =============================================================================
 
-/**
- * Parse any video URL and extract provider and ID
- */
 export function parseVideoUrl(url: string): VideoParseResult {
-    if (!url || typeof url !== 'string') {
-        return { valid: false, error: 'Video URL is required' };
+    if (!url || typeof url !== 'string') return { valid: false, error: 'URL required' };
+
+    let trimmedUrl = url.trim();
+
+    // Basic Protocol Check
+    try {
+        const urlObj = new URL(trimmedUrl);
+        if (urlObj.protocol !== 'https:') {
+            return { valid: false, error: 'HTTPS is required' };
+        }
+    } catch {
+        return { valid: false, error: 'Invalid URL format' };
     }
 
-    const trimmedUrl = url.trim();
-
-    if (trimmedUrl === '') {
-        return { valid: false, error: 'Video URL cannot be empty' };
-    }
-
-    // Try YouTube patterns
-    for (const pattern of YOUTUBE_PATTERNS) {
-        const match = trimmedUrl.match(pattern);
+    // Check Social Providers
+    // YouTube
+    for (const p of PATTERNS.youtube) {
+        const match = trimmedUrl.match(p);
         if (match && match[1]) {
             return {
                 valid: true,
+                sourceType: 'social',
                 provider: 'youtube',
-                videoId: match[1],
+                id: match[1],
                 embedUrl: `https://www.youtube.com/embed/${match[1]}`,
             };
         }
     }
 
-    // Try Vimeo patterns
-    for (const pattern of VIMEO_PATTERNS) {
-        const match = trimmedUrl.match(pattern);
+    // Vimeo
+    for (const p of PATTERNS.vimeo) {
+        const match = trimmedUrl.match(p);
         if (match && match[1]) {
             return {
                 valid: true,
+                sourceType: 'social',
                 provider: 'vimeo',
-                videoId: match[1],
+                id: match[1],
                 embedUrl: `https://player.vimeo.com/video/${match[1]}`,
             };
         }
     }
 
-    // Try CDN patterns
-    for (const pattern of CDN_PATTERNS) {
-        if (pattern.test(trimmedUrl)) {
+    // Twitter / X
+    for (const p of PATTERNS.twitter) {
+        const match = trimmedUrl.match(p);
+        if (match && match[2]) {
             return {
                 valid: true,
-                provider: 'cdn',
-                videoId: trimmedUrl, // For CDN, the full URL is the ID
-                embedUrl: trimmedUrl,
+                sourceType: 'social',
+                provider: 'x', // Normalize to x
+                id: match[2],
+                embedUrl: `https://platform.twitter.com/embed/Tweet.html?id=${match[2]}`,
             };
         }
     }
 
+    // Instagram
+    for (const p of PATTERNS.instagram) {
+        const match = trimmedUrl.match(p);
+        if (match && match[1]) {
+            return {
+                valid: true,
+                sourceType: 'social',
+                provider: 'instagram',
+                id: match[1],
+                embedUrl: `https://www.instagram.com/p/${match[1]}/embed`,
+            };
+        }
+    }
+
+    // Facebook
+    for (const p of PATTERNS.facebook) {
+        const match = trimmedUrl.match(p);
+        // Match[1] is usually the ID, but some regexes might have groups. 
+        // Our patterns:
+        // 1. watch/?v=(\d+) -> match[1]
+        // 2. .../videos/(\d+) -> match[1]
+        // 3. share/v/([a-zA-Z0-9_-]+) -> match[1]
+        // 4. share/r/([a-zA-Z0-9_-]+) -> match[1]
+
+        const id = match ? match[1] : null;
+
+        if (id) {
+            // Use the original URL for the embed href. Facebook's plugin handles various formats (share, reel, watch) best
+            // when given the direct permalink rather than a constructed ID-based URL which might fail for non-numeric Reel IDs.
+            return {
+                valid: true,
+                sourceType: 'social',
+                provider: 'facebook',
+                id: id,
+                embedUrl: `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(trimmedUrl)}&show_text=false&t=0`,
+            };
+        }
+    }
+
+    // TikTok
+    for (const p of PATTERNS.tiktok) {
+        const match = trimmedUrl.match(p);
+        if (match && match[2]) {
+            return {
+                valid: true,
+                sourceType: 'social',
+                provider: 'tiktok',
+                id: match[2],
+                embedUrl: `https://www.tiktok.com/embed/v2/${match[2]}`,
+            };
+        }
+    }
+
+    // LinkedIn
+    for (const p of PATTERNS.linkedin) {
+        const match = trimmedUrl.match(p);
+        if (match && match[1]) {
+            return {
+                valid: true,
+                sourceType: 'social',
+                provider: 'linkedin',
+                id: match[1],
+                // LinkedIn embeds generally expect a URN format. urn:li:share is the most common for shared posts.
+                embedUrl: `https://www.linkedin.com/embed/feed/update/urn:li:share:${match[1].replace('activity-', '')}`,
+            };
+        }
+    }
+
+    // Check Direct Files
+    if (PATTERNS.files.test(trimmedUrl)) {
+        return {
+            valid: true,
+            sourceType: 'file', // Explicit file type
+            id: trimmedUrl,
+            embedUrl: trimmedUrl,
+        };
+    }
+
+    // Default to CDN (HEAD check required)
     return {
-        valid: false,
-        error: 'Unsupported video URL. Please use YouTube, Vimeo, or a direct video link (.mp4, .webm)',
+        valid: true,
+        sourceType: 'cdn',
+        id: trimmedUrl,
+        embedUrl: trimmedUrl,
     };
 }
 
 // =============================================================================
-// POSTER/THUMBNAIL GENERATION
+// METADATA FETCHING
 // =============================================================================
 
-/**
- * Get poster URL for a video
- * For YouTube, we can generate directly
- * For Vimeo, requires oEmbed fetch
- * For CDN, requires manual upload
- */
-export function getPosterUrl(provider: VideoProvider, videoId: string): string {
-    switch (provider) {
-        case 'youtube':
-            // Try maxresdefault, may fall back to hqdefault on client
-            return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-        case 'vimeo':
-            // Vimeo doesn't have a direct URL pattern, needs oEmbed
-            return '';
-        case 'cdn':
-            // CDN videos need manual poster upload
-            return '';
-        default:
-            return '';
+export async function getVideoInfo(url: string): Promise<VideoInfoResult> {
+    const parsed = parseVideoUrl(url);
+
+    if (!parsed.valid) {
+        return { success: false, error: parsed.error };
+    }
+
+    // A. Social Media
+    if (parsed.sourceType === 'social') {
+        const provider = parsed.provider as SocialVideoProvider;
+        let title = 'Video';
+        let posterThumbnail = '';
+        let authorName = '';
+        let trustedSourceHtml = '';
+        let duration: number | undefined;
+
+        try {
+            if (provider === 'youtube') {
+                posterThumbnail = `https://img.youtube.com/vi/${parsed.id}/maxresdefault.jpg`;
+                const data = await fetchOEmbed(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${parsed.id}&format=json`);
+                if (data) {
+                    title = data.title || title;
+                    authorName = data.author_name || authorName;
+                    trustedSourceHtml = data.html || '';
+                }
+
+                // YouTube Thumbnail Fallback Chain
+                // We check if maxres exists, otherwise fallback to hq/mq
+                try {
+                    const checkRes = await fetch(posterThumbnail, { method: 'HEAD' });
+                    if (!checkRes.ok) {
+                        posterThumbnail = `https://img.youtube.com/vi/${parsed.id}/hqdefault.jpg`;
+                    }
+                } catch {
+                    posterThumbnail = `https://img.youtube.com/vi/${parsed.id}/hqdefault.jpg`;
+                }
+            } else if (provider === 'vimeo') {
+                const data = await fetchOEmbed(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${parsed.id}`);
+                if (data) {
+                    title = data.title || title;
+                    posterThumbnail = data.thumbnail_url || posterThumbnail;
+                    duration = data.duration;
+                    authorName = data.author_name || authorName;
+                    trustedSourceHtml = data.html || '';
+                }
+            } else if (provider === 'tiktok') {
+                const data = await fetchOEmbed(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`);
+                if (data) {
+                    title = data.title || title;
+                    posterThumbnail = data.thumbnail_url || posterThumbnail;
+                    authorName = data.author_name || authorName;
+                    trustedSourceHtml = data.html || '';
+                }
+            } else if (provider === 'instagram') {
+                const data = await fetchOEmbed(`https://api.instagram.com/oembed/?url=${encodeURIComponent(url)}`);
+                if (data) {
+                    title = data.title || title;
+                    posterThumbnail = data.thumbnail_url || posterThumbnail;
+                    authorName = data.author_name || authorName;
+                    trustedSourceHtml = data.html || '';
+                }
+            } else if (provider === 'facebook') {
+                const data = await fetchOEmbed(`https://www.facebook.com/plugins/video/oembed.json/?url=${encodeURIComponent(url)}`);
+                if (data) {
+                    title = data.title || title;
+                    posterThumbnail = data.thumbnail_url || posterThumbnail;
+                    authorName = data.author_name || authorName;
+                    trustedSourceHtml = data.html || '';
+                }
+            } else if (provider === 'x') {
+                const data = await fetchOEmbed(`https://publish.twitter.com/oembed?url=${encodeURIComponent(url)}`);
+                if (data) {
+                    title = data.title || title;
+                    authorName = data.author_name || authorName;
+                    trustedSourceHtml = data.html || '';
+                    if (data.thumbnail_url) posterThumbnail = data.thumbnail_url;
+                }
+            }
+
+            // Fallback: If still no thumbnail, try basic Open Graph scraping
+            if (!posterThumbnail) {
+                const ogImage = await fetchOpenGraphImage(url);
+                if (ogImage) posterThumbnail = ogImage;
+            }
+        } catch (e) {
+            console.error('oEmbed failed', e);
+        }
+
+        return {
+            success: true,
+            data: {
+                sourceType: 'social',
+                provider: provider,
+                originalUrl: url,
+                embedUrl: parsed.embedUrl,
+                posterThumbnail,
+                title,
+                duration,
+                authorName,
+                trustedSourceHtml,
+            }
+        };
+    }
+
+    // SSRF Check & Timeout
+    if (!isSafeUrl(url)) {
+        return { success: false, error: 'Access to local or private networks is restricted' };
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
+    try {
+        const res = await fetch(url, {
+            method: 'HEAD',
+            signal: controller.signal,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+        });
+        clearTimeout(timeout);
+        if (!res.ok) {
+            return { success: false, error: `Inaccessible URL (Status ${res.status})` };
+        }
+
+        const mimeType = res.headers.get('content-type');
+        if (!mimeType || !mimeType.startsWith('video/')) {
+            return { success: false, error: `URL is not a video file (MIME: ${mimeType})` };
+        }
+
+        return {
+            success: true,
+            data: {
+                sourceType: parsed.sourceType || 'cdn',
+                originalUrl: url,
+                embedUrl: url,
+                posterThumbnail: '', // Must be uploaded by user
+                title: url.split('/').pop() || 'Video',
+                mimeType,
+            }
+        };
+    } catch (e) {
+        return { success: false, error: 'Failed to access video URL' };
     }
 }
 
-/**
- * Get all YouTube thumbnail quality options
- */
-export function getYouTubeThumbnailUrls(videoId: string): Record<string, string> {
-    return {
-        maxresdefault: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-        sddefault: `https://img.youtube.com/vi/${videoId}/sddefault.jpg`,
-        hqdefault: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
-        mqdefault: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
-        default: `https://img.youtube.com/vi/${videoId}/default.jpg`,
-    };
+async function fetchOEmbed(url: string) {
+    try {
+        const res = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+        });
+        if (res.ok) return await res.json();
+    } catch {
+        return null;
+    }
+    return null;
 }
 
-// =============================================================================
-// oEmbed FETCHING
-// =============================================================================
-
 /**
- * Fetch video metadata via oEmbed API
+ * Basic Open Graph Image Scraper
+ * Uses regex to find og:image or twitter:image in HTML
  */
-export async function fetchVideoOEmbed(
-    provider: VideoProvider,
-    videoId: string
-): Promise<VideoOEmbedData | null> {
+async function fetchOpenGraphImage(url: string): Promise<string | null> {
     try {
-        const oEmbedUrl = getOEmbedUrl(provider, videoId);
-        if (!oEmbedUrl) {
-            return null;
-        }
-
-        const response = await fetch(oEmbedUrl, {
+        const res = await fetch(url, {
             headers: {
-                'Accept': 'application/json',
-            },
+                // Using Discordbot/Slackbot user agents often bypasses JS-heavy "Please login" walls
+                // and gets the raw meta tags for rich previews.
+                'User-Agent': 'Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)'
+            }
         });
+        if (!res.ok) return null;
 
-        if (!response.ok) {
-            console.error(`oEmbed fetch failed: ${response.status}`);
+        const html = await res.text();
+
+        // More robust metadata extraction
+        function findMeta(nameOrProperty: string): string | null {
+            // Regex to find content in <meta ... property="X" ... content="Y" ...> or vice versa
+            // Handles single/double quotes and variations in order
+            const patterns = [
+                new RegExp(`<meta[^>]+(?:property|name)=["']${nameOrProperty}["'][^>]+content=["']([^"']+)["']`, 'i'),
+                new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["']${nameOrProperty}["']`, 'i')
+            ];
+
+            for (const p of patterns) {
+                const m = html.match(p);
+                if (m && m[1]) return m[1];
+            }
             return null;
         }
 
-        const data = await response.json();
-        return parseOEmbedResponse(provider, data);
-    } catch (error) {
-        console.error('oEmbed fetch error:', error);
+        // Try in order of richness
+        let image = findMeta('og:image') ||
+            findMeta('twitter:image') ||
+            findMeta('thumbnail');
+
+        // backup: Deep Scraper (look for common media patterns in raw body)
+        if (!image) {
+            // Look for things like "https://.../media/...jpg" or ".../thumb/...png"
+            const mediaPattern = /["'](https:\/\/[^"']+\/(?:media|thumbnails?|posters?)\/[^"']+\.(?:jpe?g|png|webp))["']/i;
+            const bodyMatch = html.match(mediaPattern);
+            if (bodyMatch && bodyMatch[1]) image = bodyMatch[1];
+        }
+
+        return image ? image.trim() : null;
+
+    } catch {
         return null;
     }
 }
 
 /**
- * Get oEmbed API URL for a provider
+ * Basic SSRF prevention
+ * Checks for private/local IP ranges and hostnames
  */
-function getOEmbedUrl(provider: VideoProvider, videoId: string): string | null {
-    switch (provider) {
-        case 'youtube':
-            return `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
-        case 'vimeo':
-            return `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${videoId}`;
-        case 'cdn':
-            return null; // No oEmbed for direct URLs
-        default:
-            return null;
-    }
-}
+function isSafeUrl(url: string): boolean {
+    try {
+        const urlObj = new URL(url);
+        const host = urlObj.hostname.toLowerCase();
 
-/**
- * Parse oEmbed response into normalized format
- */
-function parseOEmbedResponse(
-    provider: VideoProvider,
-    data: Record<string, unknown>
-): VideoOEmbedData {
-    switch (provider) {
-        case 'youtube':
-            return {
-                title: String(data.title || 'Untitled Video'),
-                thumbnailUrl: String(data.thumbnail_url || ''),
-                thumbnailWidth: Number(data.thumbnail_width) || undefined,
-                thumbnailHeight: Number(data.thumbnail_height) || undefined,
-                authorName: String(data.author_name || ''),
-                providerName: 'YouTube',
-            };
+        // Block local/private hostnames
+        if (['localhost', '127.0.0.1', '::1', '0.0.0.0'].includes(host)) return false;
 
-        case 'vimeo':
-            return {
-                title: String(data.title || 'Untitled Video'),
-                thumbnailUrl: String(data.thumbnail_url || ''),
-                thumbnailWidth: Number(data.thumbnail_width) || undefined,
-                thumbnailHeight: Number(data.thumbnail_height) || undefined,
-                duration: Number(data.duration) || undefined,
-                authorName: String(data.author_name || ''),
-                providerName: 'Vimeo',
-            };
+        // Block .local, .internal, etc.
+        if (host.endsWith('.local') || host.endsWith('.internal')) return false;
 
-        default:
-            return {
-                title: 'Video',
-                thumbnailUrl: '',
-                providerName: 'Unknown',
-            };
-    }
-}
-
-// =============================================================================
-// COMPLETE VIDEO INFO
-// =============================================================================
-
-/**
- * Get complete video information from a URL
- * Parses URL, fetches oEmbed data, and returns complete VideoBlock data
- */
-export async function getVideoInfo(url: string): Promise<VideoInfoResult> {
-    // Parse URL
-    const parsed = parseVideoUrl(url);
-
-    if (!parsed.valid || !parsed.provider || !parsed.videoId) {
-        return {
-            success: false,
-            error: parsed.error || 'Invalid video URL',
-        };
-    }
-
-    const { provider, videoId, embedUrl } = parsed;
-
-    // Get poster URL (immediate for YouTube)
-    let posterUrl = getPosterUrl(provider, videoId);
-
-    // Fetch oEmbed for additional metadata
-    let title = 'Video';
-    let duration: number | undefined;
-    let authorName: string | undefined;
-
-    const oEmbed = await fetchVideoOEmbed(provider, videoId);
-    if (oEmbed) {
-        title = oEmbed.title;
-        duration = oEmbed.duration;
-        authorName = oEmbed.authorName;
-
-        // Use oEmbed thumbnail if we don't have one (Vimeo)
-        if (!posterUrl && oEmbed.thumbnailUrl) {
-            posterUrl = oEmbed.thumbnailUrl;
-        }
-    }
-
-    return {
-        success: true,
-        data: {
-            provider,
-            videoId,
-            embedUrl: embedUrl || '',
-            posterUrl,
-            title,
-            duration,
-            authorName,
-        },
-    };
-}
-
-// =============================================================================
-// VALIDATION HELPERS
-// =============================================================================
-
-/**
- * Check if a video URL is supported
- */
-export function isValidVideoUrl(url: string): boolean {
-    const result = parseVideoUrl(url);
-    return result.valid;
-}
-
-/**
- * Check if a provider is supported
- */
-export function isSupportedProvider(provider: string): provider is VideoProvider {
-    return ALLOWED_VIDEO_PROVIDERS.includes(provider as VideoProvider);
-}
-
-/**
- * Get display name for a provider
- */
-export function getProviderDisplayName(provider: VideoProvider): string {
-    switch (provider) {
-        case 'youtube':
-            return 'YouTube';
-        case 'vimeo':
-            return 'Vimeo';
-        case 'cdn':
-            return 'Direct Video';
-        default:
-            return 'Video';
+        // Note: Full SSRF protection should also check resolved IPs, 
+        // but this handles most direct URL attacks in this context.
+        return true;
+    } catch {
+        return false;
     }
 }

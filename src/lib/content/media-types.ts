@@ -104,26 +104,45 @@ export interface ImageBlock extends BaseBlock {
 // VIDEO BLOCK
 // =============================================================================
 
-/** Allowed video providers - NO self-hosted in v1 */
-export type VideoProvider = 'youtube' | 'vimeo' | 'cdn';
+/** Video source categories */
+export type VideoSourceType = 'file' | 'social' | 'cdn';
 
-/** Video block - external sources only */
+/** Allowed social video providers */
+export type SocialVideoProvider =
+    | 'youtube'
+    | 'vimeo'
+    | 'twitter'
+    | 'x'
+    | 'instagram'
+    | 'facebook'
+    | 'tiktok'
+    | 'linkedin';
+
+/** Video block - Universal structure for all video types */
 export interface VideoBlock extends BaseBlock {
     type: 'video';
-    /** Video hosting provider */
-    provider: VideoProvider;
-    /** Platform-specific video ID */
-    videoId: string;
-    /** Full embed URL for the iframe */
-    embedUrl: string;
-    /** Thumbnail/poster image URL (required for facade) */
-    posterUrl: string;
-    /** Optional caption */
-    caption?: string;
-    /** Video duration in seconds (for display) */
+    /** Source category determines rendering strategy */
+    sourceType: VideoSourceType;
+    /** Original input URL */
+    originalUrl: string;
+    /** Embed URL for social/iframe content (if applicable) */
+    embedUrl?: string;
+    /** Poster/Thumbnail image URL (required) */
+    posterThumbnail: string;
+    /** MIME type for direct files */
+    mimeType?: string;
+    /** Provider name for social videos */
+    provider?: SocialVideoProvider;
+    /** Video duration in seconds */
     duration?: number;
-    /** Video title (from oEmbed) */
+    /** Caption - REQUIRED for editorial standards */
+    caption: string;
+    /** Source credit/attribution */
+    credit?: string;
+    /** Video title (metadata) */
     title?: string;
+    /** Raw, trusted oEmbed HTML for rich social previews (Entire Post) */
+    trustedSourceHtml?: string;
 }
 
 // =============================================================================
@@ -152,10 +171,10 @@ export type ContentBlock =
 export const MEDIA_LIMITS = {
     /** Maximum images per article - HARD LIMIT (blocked at editor) */
     MAX_IMAGES: 3,
-    /** Maximum videos per article - SOFT LIMIT (warning, not block) */
+    /** Maximum videos per article - HARD LIMIT */
     MAX_VIDEOS: 1,
     /** How video limit is enforced */
-    VIDEO_LIMIT_TYPE: 'soft' as const,
+    VIDEO_LIMIT_TYPE: 'hard' as const,
     /** How image limit is enforced */
     IMAGE_LIMIT_TYPE: 'hard' as const,
 } as const;
@@ -173,8 +192,17 @@ export type AllowedImageFormat = typeof ALLOWED_IMAGE_FORMATS[number];
 /** Maximum image file size in bytes (5MB) */
 export const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 
-/** Allowed video providers */
-export const ALLOWED_VIDEO_PROVIDERS: VideoProvider[] = ['youtube', 'vimeo', 'cdn'];
+/** Allowed social video providers */
+export const SOCIAL_VIDEO_PROVIDERS: SocialVideoProvider[] = [
+    'youtube',
+    'vimeo',
+    'twitter',
+    'x',
+    'instagram',
+    'facebook',
+    'tiktok',
+    'linkedin'
+];
 
 // =============================================================================
 // MEDIA ASSET REGISTRY TYPES

@@ -4,53 +4,96 @@
  */
 
 .figure {
-    margin: 2rem 0;
-    max-width: 100%;
+    margin: 4rem 0;
+    width: 100%;
+    position: relative;
+    /* Move transitions to wrapper to avoid layout shift issues */
+}
+
+.imageWrapper {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-border);
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    /* Minimal definition */
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .image {
     display: block;
     width: 100%;
     height: auto;
-    /* No max-height - show full image */
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.figure:hover .imageWrapper {
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+}
+
+.figure:hover .image {
+    transform: scale(1.02);
 }
 
 .caption {
-    margin-top: 0.75rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--color-border, #D9D9D9);
+    margin-top: 1.5rem;
+    padding-left: 1.25rem;
+    border-left: 3px solid var(--color-ink);
     font-family: var(--font-sans);
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: var(--color-muted, #595959);
+    line-height: 1.6;
+    max-width: 620px;
 }
 
 .captionText {
     display: block;
-    font-style: italic;
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+    font-weight: 500;
+    letter-spacing: -0.01em;
 }
 
 .credit {
     display: block;
-    margin-top: 0.25rem;
-    font-size: 0.75rem;
-    color: var(--color-muted, #595959);
+    margin-top: 0.5rem;
+    font-size: 0.6875rem;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
 }
 
 .credit::before {
     content: 'Photo: ';
-    font-weight: 600;
+    opacity: 0.5;
+}
+
+/* Premium Out-dent Layout for Desktop */
+@media (min-width: 1024px) {
+    .figure {
+        width: 115%;
+        margin-left: -7.5%;
+        margin-top: 5rem;
+        margin-bottom: 5rem;
+    }
 }
 
 /* Responsive adjustments */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .figure {
-        margin-left: -1rem;
-        margin-right: -1rem;
+        margin: 3rem -1.5rem;
+        width: calc(100% + 3rem);
+    }
+
+    .imageWrapper {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
     }
 
     .caption {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        border-left-width: 2px;
     }
 }

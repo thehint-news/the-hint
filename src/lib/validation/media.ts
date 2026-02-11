@@ -23,13 +23,77 @@ import {
     MEDIA_LIMITS,
     ALLOWED_IMAGE_FORMATS,
     MAX_IMAGE_SIZE_BYTES,
-    ALLOWED_VIDEO_PROVIDERS,
+    SOCIAL_VIDEO_PROVIDERS,
     isTextBlock,
     isImageBlock,
     isVideoBlock,
     AllowedImageFormat,
-    VideoProvider,
 } from '../content/media-types';
+
+// ... (skipping types section which I will update in next chunk if needed or just use imports)
+
+// =============================================================================
+// VIDEO BLOCK VALIDATION
+// =============================================================================
+
+/**
+ * Validate a single video block
+ */
+function validateVideoBlock(
+    block: VideoBlock,
+    index: number,
+    errors: MediaValidationError[]
+): void {
+    // Original URL required
+    if (!block.originalUrl || block.originalUrl.trim() === '') {
+        errors.push({
+            type: 'invalid_video_url',
+            message: 'Video URL is required',
+            blockId: block.id,
+            blockIndex: index,
+        });
+    }
+
+    // Source Type required
+    if (!block.sourceType) {
+        errors.push({
+            type: 'invalid_video_url',
+            message: 'Video source type is required',
+            blockId: block.id,
+            blockIndex: index,
+        });
+    }
+
+    // Poster Thumbnail check
+    // Required for File/CDN sources (to show before play).
+    // Optional for Social sources (iframe can self-render preview).
+    if (block.sourceType !== 'social' && (!block.posterThumbnail || block.posterThumbnail.trim() === '')) {
+        errors.push({
+            type: 'missing_poster_url',
+            message: 'Video requires a poster/thumbnail image',
+            blockId: block.id,
+            blockIndex: index,
+        });
+    }
+
+    // Caption REQUIRED
+    if (!block.caption || block.caption.trim() === '') {
+        errors.push({
+            type: 'missing_caption', // We can reuse this type or make it error
+            message: 'Video caption is required',
+            blockId: block.id,
+            blockIndex: index,
+        });
+    }
+
+    // Provider validation (only if social)
+    if (block.sourceType === 'social' && block.provider) {
+        // Optional check if we want to enforce provider list
+        if (typeof block.provider === 'string' && !SOCIAL_VIDEO_PROVIDERS.includes(block.provider as any)) {
+            // Maybe warning or just ignore
+        }
+    }
+}
 
 // =============================================================================
 // VALIDATION RESULT TYPES
@@ -55,6 +119,7 @@ export type MediaValidationErrorType =
     | 'invalid_video_provider'
     | 'missing_poster_url'
     | 'empty_blocks'
+    | 'missing_caption'
     | 'media_only_article';
 
 /** Warning types for media validation */
@@ -134,30 +199,85 @@ export function validateMediaBlocks(blocks: ContentBlock[]): MediaValidationResu
         });
     }
 
-    // HARD LIMIT: Max 3 images
+    // HARD LIMITS (Hard Blocks)
     if (imageBlocks.length > MEDIA_LIMITS.MAX_IMAGES) {
         errors.push({
             type: 'image_limit_exceeded',
-            message: `Maximum ${MEDIA_LIMITS.MAX_IMAGES} images allowed per article. Found: ${imageBlocks.length}`,
+            message: `Maximum ${MEDIA_LIMITS.MAX_IMAGES} images allowed per article. Found: ${imageBlocks.length}.`,
         });
     }
 
-    // SOFT LIMIT: Max 1 video (warning, not error)
     if (videoBlocks.length > MEDIA_LIMITS.MAX_VIDEOS) {
-        warnings.push({
-            type: 'video_soft_limit',
-            message: `Recommended maximum is ${MEDIA_LIMITS.MAX_VIDEOS} video per article. Found: ${videoBlocks.length}. This may impact page performance.`,
+        errors.push({
+            type: 'video_limit_exceeded',
+            message: `Maximum ${MEDIA_LIMITS.MAX_VIDEOS} video allowed per article. Found: ${videoBlocks.length}.`,
         });
     }
 
-    // Validate individual blocks (Context/Consecutive rules removed per "no minimum rule")
+    // Validate blocks and enforce placement rules
     for (let i = 0; i < blocks.length; i++) {
         const block = blocks[i];
+
+        // 1. Individual block validation
         if (isImageBlock(block)) {
             validateImageBlock(block, i, errors, warnings);
         }
         if (isVideoBlock(block)) {
-            validateVideoBlock(block, i, errors, warnings);
+            validateVideoBlock(block, i, errors);
+        }
+
+        // 2. Structural/Placement Rules (Re-enabled per Master Checklist)
+        if (isImageBlock(block) || isVideoBlock(block)) {
+            // Cannot be first
+            if (i === 0) {
+                errors.push({
+                    type: 'article_starts_with_media',
+                    message: `${block.type.charAt(0).toUpperCase() + block.type.slice(1)} cannot be the first block in an article.`,
+                    blockId: block.id,
+                    blockIndex: i
+                });
+            }
+
+            // Cannot be last
+            if (i === blocks.length - 1) {
+                errors.push({
+                    type: 'article_ends_with_media',
+                    message: `${block.type.charAt(0).toUpperCase() + block.type.slice(1)} cannot be the last block in an article.`,
+                    blockId: block.id,
+                    blockIndex: i
+                });
+            }
+
+            // Cannot be consecutive
+            if (i > 0 && (isImageBlock(blocks[i - 1]) || isVideoBlock(blocks[i - 1]))) {
+                errors.push({
+                    type: 'consecutive_media_blocks',
+                    message: 'Consecutive media blocks are not allowed. Add text context between images or videos.',
+                    blockId: block.id,
+                    blockIndex: i
+                });
+            }
+
+            // Must have text context
+            const prevIsText = i > 0 && isTextBlock(blocks[i - 1]);
+            const nextIsText = i < blocks.length - 1 && isTextBlock(blocks[i + 1]);
+
+            if (!prevIsText && i > 0) {
+                errors.push({
+                    type: 'no_text_context_before',
+                    message: `${block.type.charAt(0).toUpperCase() + block.type.slice(1)} must be preceded by a text paragraph.`,
+                    blockId: block.id,
+                    blockIndex: i
+                });
+            }
+            if (!nextIsText && i < blocks.length - 1) {
+                errors.push({
+                    type: 'no_text_context_after',
+                    message: `${block.type.charAt(0).toUpperCase() + block.type.slice(1)} must be followed by a text paragraph.`,
+                    blockId: block.id,
+                    blockIndex: i
+                });
+            }
         }
     }
 
@@ -248,213 +368,6 @@ function validateImageBlock(
 }
 
 // =============================================================================
-// VIDEO BLOCK VALIDATION
-// =============================================================================
-
-/**
- * Validate a single video block
- */
-function validateVideoBlock(
-    block: VideoBlock,
-    index: number,
-    errors: MediaValidationError[],
-    warnings: MediaValidationWarning[]
-): void {
-    // Provider must be valid
-    if (!block.provider || !ALLOWED_VIDEO_PROVIDERS.includes(block.provider)) {
-        errors.push({
-            type: 'invalid_video_provider',
-            message: `Video provider must be one of: ${ALLOWED_VIDEO_PROVIDERS.join(', ')}`,
-            blockId: block.id,
-            blockIndex: index,
-        });
-    }
-
-    // Video ID required
-    if (!block.videoId || block.videoId.trim() === '') {
-        errors.push({
-            type: 'invalid_video_url',
-            message: 'Video ID is required',
-            blockId: block.id,
-            blockIndex: index,
-        });
-    }
-
-    // Embed URL required
-    if (!block.embedUrl || block.embedUrl.trim() === '') {
-        errors.push({
-            type: 'invalid_video_url',
-            message: 'Video embed URL is required',
-            blockId: block.id,
-            blockIndex: index,
-        });
-    }
-
-    // Poster URL required (for facade pattern)
-    if (!block.posterUrl || block.posterUrl.trim() === '') {
-        errors.push({
-            type: 'missing_poster_url',
-            message: 'Video requires a poster/thumbnail image',
-            blockId: block.id,
-            blockIndex: index,
-        });
-    }
-
-    // Caption warning
-    if (!block.caption || block.caption.trim() === '') {
-        warnings.push({
-            type: 'missing_caption',
-            message: 'Consider adding a caption to describe the video content',
-            blockId: block.id,
-            blockIndex: index,
-        });
-    }
-}
-
-// =============================================================================
-// FILE UPLOAD VALIDATION
-// =============================================================================
-
-/**
- * Validate an image file before upload
- */
-export function validateImageFile(
-    file: { size: number; type: string; name: string }
-): MediaValidationResult {
-    const errors: MediaValidationError[] = [];
-    const warnings: MediaValidationWarning[] = [];
-
-    // Check file size
-    if (file.size > MAX_IMAGE_SIZE_BYTES) {
-        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-        const maxMB = (MAX_IMAGE_SIZE_BYTES / (1024 * 1024)).toFixed(0);
-        errors.push({
-            type: 'image_too_large',
-            message: `Image file is ${sizeMB}MB. Maximum allowed is ${maxMB}MB.`,
-        });
-    }
-
-    // Check file type
-    if (!ALLOWED_IMAGE_FORMATS.includes(file.type as AllowedImageFormat)) {
-        errors.push({
-            type: 'invalid_image_format',
-            message: `Image format "${file.type}" is not supported. Allowed: JPEG, PNG, WebP, AVIF`,
-        });
-    }
-
-    return {
-        isValid: errors.length === 0,
-        errors,
-        warnings,
-    };
-}
-
-// =============================================================================
-// VIDEO URL VALIDATION
-// =============================================================================
-
-/** YouTube URL patterns */
-const YOUTUBE_PATTERNS = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
-    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
-];
-
-/** Vimeo URL patterns */
-const VIMEO_PATTERNS = [
-    /vimeo\.com\/(\d+)/,
-    /player\.vimeo\.com\/video\/(\d+)/,
-];
-
-/**
- * Parse a video URL and extract provider and ID
- */
-export function parseVideoUrl(url: string): {
-    valid: boolean;
-    provider?: VideoProvider;
-    videoId?: string;
-    error?: string;
-} {
-    if (!url || url.trim() === '') {
-        return { valid: false, error: 'Video URL is required' };
-    }
-
-    const trimmedUrl = url.trim();
-
-    // Check YouTube patterns
-    for (const pattern of YOUTUBE_PATTERNS) {
-        const match = trimmedUrl.match(pattern);
-        if (match && match[1]) {
-            return {
-                valid: true,
-                provider: 'youtube',
-                videoId: match[1],
-            };
-        }
-    }
-
-    // Check Vimeo patterns
-    for (const pattern of VIMEO_PATTERNS) {
-        const match = trimmedUrl.match(pattern);
-        if (match && match[1]) {
-            return {
-                valid: true,
-                provider: 'vimeo',
-                videoId: match[1],
-            };
-        }
-    }
-
-    // Check if it's a direct video URL (CDN)
-    if (/\.(mp4|webm|m3u8)(\?|$)/i.test(trimmedUrl)) {
-        return {
-            valid: true,
-            provider: 'cdn',
-            videoId: trimmedUrl, // For CDN, videoId is the full URL
-        };
-    }
-
-    return {
-        valid: false,
-        error: 'Unsupported video URL. Use YouTube, Vimeo, or direct video links.',
-    };
-}
-
-/**
- * Generate embed URL from provider and video ID
- */
-export function generateEmbedUrl(provider: VideoProvider, videoId: string): string {
-    switch (provider) {
-        case 'youtube':
-            return `https://www.youtube.com/embed/${videoId}`;
-        case 'vimeo':
-            return `https://player.vimeo.com/video/${videoId}`;
-        case 'cdn':
-            return videoId; // CDN uses the direct URL
-        default:
-            return '';
-    }
-}
-
-/**
- * Generate poster URL for video (YouTube/Vimeo thumbnails)
- */
-export function generatePosterUrl(provider: VideoProvider, videoId: string): string {
-    switch (provider) {
-        case 'youtube':
-            // Use maxresdefault with fallback to hqdefault
-            return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-        case 'vimeo':
-            // Vimeo requires API call - return placeholder, will be fetched via oEmbed
-            return '';
-        case 'cdn':
-            // CDN videos need manual poster upload
-            return '';
-        default:
-            return '';
-    }
-}
-
-// =============================================================================
 // BLOCK ORDER VALIDATION (for drag-drop)
 // =============================================================================
 
@@ -501,5 +414,50 @@ export function canInsertMediaAt(
         }
     }
 
+    if (mediaType === 'video') {
+        const videoCount = blocks.filter(isVideoBlock).length;
+        if (videoCount >= MEDIA_LIMITS.MAX_VIDEOS) {
+            return { valid: false, reason: `Maximum ${MEDIA_LIMITS.MAX_VIDEOS} video allowed per article` };
+        }
+    }
+
     return { valid: true };
+}
+
+// =============================================================================
+// FILE UPLOAD VALIDATION
+// =============================================================================
+
+/**
+ * Validate an image file before upload
+ */
+export function validateImageFile(
+    file: { size: number; type: string; name: string }
+): MediaValidationResult {
+    const errors: MediaValidationError[] = [];
+    const warnings: MediaValidationWarning[] = [];
+
+    // Check file size
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        const maxMB = (MAX_IMAGE_SIZE_BYTES / (1024 * 1024)).toFixed(0);
+        errors.push({
+            type: 'image_too_large',
+            message: `Image file is ${sizeMB}MB. Maximum allowed is ${maxMB}MB.`,
+        });
+    }
+
+    // Check file type
+    if (!ALLOWED_IMAGE_FORMATS.includes(file.type as AllowedImageFormat)) {
+        errors.push({
+            type: 'invalid_image_format',
+            message: `Image format "${file.type}" is not supported. Allowed: JPEG, PNG, WebP, AVIF`,
+        });
+    }
+
+    return {
+        isValid: errors.length === 0,
+        errors,
+        warnings,
+    };
 }

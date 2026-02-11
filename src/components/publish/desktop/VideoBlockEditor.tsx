@@ -2,18 +2,19 @@
  * Video Block Editor Modal
  * Modal for adding and configuring video blocks
  * 
- * DESIGN SPEC: .agent/specifications/MEDIA_SYSTEM_DESIGN.md
+ * DESIGN SPEC: Extended Video Support
  * 
- * Supported providers:
- * - YouTube (youtube.com, youtu.be)
- * - Vimeo (vimeo.com)
- * - CDN (direct video URLs)
+ * Features:
+ * - URL paste & auto-detection
+ * - 1 Video Limit Enforcement
+ * - Required Metadata (Caption, Credit)
+ * - Custom Thumbnail Support
  */
 
 'use client';
 
 import { useState, useCallback } from 'react';
-import type { VideoBlock, VideoProvider } from '@/lib/content/media-types';
+import type { VideoBlock, VideoSourceType, SocialVideoProvider } from '@/lib/content/media-types';
 import { MEDIA_LIMITS } from '@/lib/content/media-types';
 import styles from './VideoBlockEditor.module.css';
 
@@ -24,13 +25,17 @@ interface VideoBlockEditorProps {
     currentVideoCount: number;
     /** Callback when save is clicked */
     onSave: (data: {
-        provider: VideoProvider;
-        videoId: string;
-        embedUrl: string;
-        posterUrl: string;
-        caption?: string;
+        sourceType: VideoSourceType;
+        originalUrl: string;
+        embedUrl?: string;
+        posterThumbnail: string;
+        caption: string;
+        credit?: string;
         title?: string;
         duration?: number;
+        provider?: SocialVideoProvider;
+        mimeType?: string;
+        trustedSourceHtml?: string;
     }) => void;
     /** Callback when cancel is clicked */
     onCancel: () => void;
@@ -42,33 +47,83 @@ export function VideoBlockEditor({
     onSave,
     onCancel
 }: VideoBlockEditorProps) {
-    // Form state
-    const [url, setUrl] = useState('');
+    // Basic Form State
+    const [url, setUrl] = useState(block?.originalUrl || '');
     const [caption, setCaption] = useState(block?.caption || '');
+    const [credit, setCredit] = useState(block?.credit || '');
+    const [customThumbnail, setCustomThumbnail] = useState(block?.posterThumbnail || '');
 
-    // Fetched data
+    // Video Metadata State
     const [videoData, setVideoData] = useState<{
-        provider: VideoProvider;
-        videoId: string;
-        embedUrl: string;
-        posterUrl: string;
-        title: string;
+        sourceType: VideoSourceType;
+        originalUrl: string;
+        embedUrl?: string;
+        posterThumbnail: string;
+        title?: string;
         duration?: number;
+        provider?: SocialVideoProvider;
+        mimeType?: string;
+        trustedSourceHtml?: string;
     } | null>(block ? {
-        provider: block.provider,
-        videoId: block.videoId,
+        sourceType: block.sourceType,
+        originalUrl: block.originalUrl,
         embedUrl: block.embedUrl,
-        posterUrl: block.posterUrl,
-        title: block.title || '',
+        posterThumbnail: block.posterThumbnail,
+        title: block.title,
         duration: block.duration,
+        provider: block.provider,
+        mimeType: block.mimeType,
+        trustedSourceHtml: block.trustedSourceHtml,
     } : null);
 
-    // Fetch state
+    // UX State
     const [isFetching, setIsFetching] = useState(false);
     const [fetchError, setFetchError] = useState<string | null>(null);
+    const [touched, setTouched] = useState(false);
 
-    // Warning state
-    const showSoftLimitWarning = currentVideoCount >= MEDIA_LIMITS.MAX_VIDEOS && !block;
+    // Thumbnail Upload State
+    const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
+    const [thumbnailError, setThumbnailError] = useState<string | null>(null);
+
+    // Limit Check (Hard Limit: 1)
+    const canAddVideo = block || currentVideoCount < MEDIA_LIMITS.MAX_VIDEOS;
+
+    /**
+     * Handle Thumbnail Upload
+     */
+    const handleThumbnailUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setThumbnailError(null);
+        setIsUploadingThumbnail(true);
+
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch('/api/media/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success && result.data) {
+                    setCustomThumbnail(result.data.url);
+                } else {
+                    setThumbnailError(result.error || 'Upload failed');
+                }
+            } else {
+                const errorText = await response.text().catch(() => 'Upload failed');
+                setThumbnailError(`Server error (${response.status}): ${errorText.slice(0, 100)}`);
+            }
+        } catch (error) {
+            setThumbnailError('Network error during upload');
+        } finally {
+            setIsUploadingThumbnail(false);
+        }
+    }, []);
 
     /**
      * Fetch video info from URL
@@ -93,82 +148,133 @@ export function VideoBlockEditor({
 
             if (result.success && result.data) {
                 setVideoData({
-                    provider: result.data.provider,
-                    videoId: result.data.videoId,
+                    sourceType: result.data.sourceType,
+                    originalUrl: result.data.originalUrl,
                     embedUrl: result.data.embedUrl,
-                    posterUrl: result.data.posterUrl,
+                    posterThumbnail: result.data.posterThumbnail,
                     title: result.data.title,
                     duration: result.data.duration,
+                    provider: result.data.provider,
+                    mimeType: result.data.mimeType,
+                    trustedSourceHtml: result.data.trustedSourceHtml,
                 });
+
+                // Build default caption if empty (preserving user-typed content)
+                if (!caption && result.data.title && result.data.title !== 'Video') {
+                    setCaption(result.data.title);
+                }
+
+                // Build credit if author name available
+                if (!credit && result.data.authorName) {
+                    setCredit(result.data.authorName);
+                }
+
+                // If no poster returned (common for direct files), clear it or keep current
+                if (result.data.posterThumbnail) {
+                    setCustomThumbnail(result.data.posterThumbnail);
+                } else {
+                    setCustomThumbnail('');
+                }
+
             } else {
                 setFetchError(result.error || 'Failed to fetch video info');
+                setVideoData(null);
             }
         } catch (error) {
-            setFetchError('Network error while fetching video info');
+            setFetchError('Network error while processing video');
         } finally {
             setIsFetching(false);
         }
-    }, [url]);
+    }, [url, caption, credit]);
 
     /**
      * Handle save
      */
     const handleSave = useCallback(() => {
-        if (!videoData) {
-            setFetchError('Please add a video first');
+        setTouched(true);
+
+        if (!videoData) return;
+
+        // Validation
+        if (!caption.trim()) {
+            return; // Caption required
+        }
+
+        // Thumbnail validation (Required for file/cdn, optional for social)
+        const finalThumbnail = customThumbnail.trim() || videoData.posterThumbnail;
+        if (!finalThumbnail && videoData.sourceType !== 'social') {
             return;
         }
 
         onSave({
-            provider: videoData.provider,
-            videoId: videoData.videoId,
+            sourceType: videoData.sourceType,
+            originalUrl: videoData.originalUrl,
             embedUrl: videoData.embedUrl,
-            posterUrl: videoData.posterUrl,
-            caption: caption.trim() || undefined,
-            title: videoData.title || undefined,
+            posterThumbnail: finalThumbnail,
+            caption: caption.trim(),
+            credit: credit.trim() || undefined,
+            title: videoData.title,
             duration: videoData.duration,
+            provider: videoData.provider,
+            mimeType: videoData.mimeType,
+            trustedSourceHtml: videoData.trustedSourceHtml,
         });
-    }, [videoData, caption, onSave]);
+    }, [videoData, caption, credit, customThumbnail, onSave]);
 
     /**
-     * Clear video data to start over
+     * Reset
      */
     const handleClear = useCallback(() => {
         setVideoData(null);
         setUrl('');
         setFetchError(null);
+        setCustomThumbnail('');
+        setCaption('');
+        setCredit('');
+        setTouched(false);
     }, []);
 
-    /**
-     * Format duration for display
-     */
-    const formatDuration = (seconds: number): string => {
+    const formatDuration = (seconds?: number): string => {
+        if (!seconds) return '';
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    /**
-     * Get provider display name
-     */
-    const getProviderName = (provider: VideoProvider): string => {
-        switch (provider) {
-            case 'youtube': return 'YouTube';
-            case 'vimeo': return 'Vimeo';
-            case 'cdn': return 'Direct Video';
-            default: return 'Video';
-        }
-    };
+    // If limits exceeded and not editing
+    if (!canAddVideo) {
+        return (
+            <div className={styles.overlay} onClick={onCancel}>
+                <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                    <div className={styles.header}>
+                        <h3 className={styles.title}>Video Limit Reached</h3>
+                        <button type="button" className={styles.closeButton} onClick={onCancel} aria-label="Close">×</button>
+                    </div>
+                    <div className={styles.content}>
+                        <div className={styles.limitMessage}>
+                            <span className={styles.limitIcon}>🎬</span>
+                            <p>This article already has a video. Standard post format allows only one video to maintain readability and performance.</p>
+                        </div>
+                    </div>
+                    <div className={styles.footer}>
+                        <button type="button" className={styles.cancelButton} onClick={onCancel}>Close</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     const isEditing = !!block;
-    const canSave = !!videoData && !isFetching;
+    const hasThumbnail = !!(customThumbnail || videoData?.posterThumbnail);
+    // Valid if: (Data exists) AND (Caption exists) AND (Thumbnail exists OR (No thumbnail BUT it is social))
+    const valid = !!videoData && !!caption.trim() && (hasThumbnail || (videoData?.sourceType === 'social'));
 
     return (
         <div className={styles.overlay} onClick={onCancel}>
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.header}>
                     <h3 className={styles.title}>
-                        {isEditing ? 'Edit Video' : 'Insert Video'}
+                        {isEditing ? 'Edit Video' : 'Add Video'}
                     </h3>
                     <button
                         type="button"
@@ -181,79 +287,19 @@ export function VideoBlockEditor({
                 </div>
 
                 <div className={styles.content}>
-                    {/* Soft limit warning */}
-                    {showSoftLimitWarning && (
-                        <div className={styles.warning}>
-                            <span className={styles.warningIcon}>⚠️</span>
-                            <span>
-                                Article already has {currentVideoCount} video.
-                                Adding more may impact page performance.
-                            </span>
-                        </div>
-                    )}
-
-                    {/* Video Preview / URL Input */}
-                    {videoData ? (
-                        <div className={styles.preview}>
-                            <div className={styles.thumbnail}>
-                                {videoData.posterUrl ? (
-                                    <img
-                                        src={videoData.posterUrl}
-                                        alt={videoData.title || 'Video thumbnail'}
-                                        className={styles.thumbnailImage}
-                                        onError={(e) => {
-                                            // Fallback if maxres doesn't exist
-                                            const img = e.target as HTMLImageElement;
-                                            if (videoData.provider === 'youtube' && img.src.includes('maxresdefault')) {
-                                                img.src = img.src.replace('maxresdefault', 'hqdefault');
-                                            }
-                                        }}
-                                    />
-                                ) : (
-                                    <div className={styles.thumbnailPlaceholder}>
-                                        <span>🎬</span>
-                                    </div>
-                                )}
-                                <div className={styles.playButton}>▶</div>
-                            </div>
-
-                            <div className={styles.videoInfo}>
-                                <span className={styles.provider}>
-                                    {getProviderName(videoData.provider)}
-                                </span>
-                                <h4 className={styles.videoTitle}>
-                                    {videoData.title || 'Untitled Video'}
-                                </h4>
-                                {videoData.duration && (
-                                    <span className={styles.duration}>
-                                        {formatDuration(videoData.duration)}
-                                    </span>
-                                )}
-                            </div>
-
-                            {!isEditing && (
-                                <button
-                                    type="button"
-                                    className={styles.clearButton}
-                                    onClick={handleClear}
-                                >
-                                    Change
-                                </button>
-                            )}
-                        </div>
-                    ) : (
-                        <div className={styles.urlInput}>
+                    {/* STEP 1: URL Input (if no data) */}
+                    {!videoData ? (
+                        <div className={styles.urlInputSection}>
                             <label className={styles.label}>Video URL</label>
                             <div className={styles.inputGroup}>
                                 <input
                                     type="text"
                                     value={url}
                                     onChange={(e) => setUrl(e.target.value)}
-                                    placeholder="Paste YouTube or Vimeo URL..."
+                                    placeholder="Paste URL (YouTube, Vimeo, Twitter, direct .mp4, etc.)"
                                     className={styles.input}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') handleFetchVideo();
-                                    }}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleFetchVideo()}
+                                    autoFocus
                                 />
                                 <button
                                     type="button"
@@ -261,34 +307,135 @@ export function VideoBlockEditor({
                                     onClick={handleFetchVideo}
                                     disabled={isFetching || !url.trim()}
                                 >
-                                    {isFetching ? 'Fetching…' : 'Fetch'}
+                                    {isFetching ? 'Checking...' : 'Add'}
                                 </button>
                             </div>
-                            <span className={styles.hint}>
-                                Supports YouTube and Vimeo links
-                            </span>
+                            {fetchError && <div className={styles.error}>{fetchError}</div>}
+                            <div className={styles.supportedHint}>
+                                Supports: YouTube, Vimeo, X (Twitter), Instagram, Facebook, TikTok, LinkedIn, and direct video files (.mp4, .webm).
+                            </div>
+                        </div>
+                    ) : (
+                        /* STEP 2: Preview & Metadata */
+                        <div className={styles.previewSection}>
+
+                            {/* Preview Card */}
+                            <div className={styles.previewCard}>
+                                <div className={styles.thumbnailContainer}>
+                                    {hasThumbnail ? (
+                                        <img
+                                            src={customThumbnail || videoData.posterThumbnail}
+                                            alt="Preview"
+                                            className={styles.thumbnailImage}
+                                        />
+                                    ) : (
+                                        <div className={styles.missingThumbnail}>
+                                            <span style={{ fontSize: '24px' }}>🎬</span>
+                                            <span style={{ fontSize: '12px', marginTop: '4px' }}>Embed Preview</span>
+                                        </div>
+                                    )}
+                                    {videoData.duration && (
+                                        <span className={styles.durationBadge}>
+                                            {formatDuration(videoData.duration)}
+                                        </span>
+                                    )}
+                                </div>
+                                <div className={styles.previewInfo}>
+                                    <div className={styles.providerBadge}>
+                                        {videoData.provider || videoData.sourceType}
+                                    </div>
+                                    <h4 className={styles.previewTitle}>
+                                        {videoData.title || 'Untitled Video'}
+                                    </h4>
+                                    <div className={styles.previewActions}>
+                                        <button
+                                            type="button"
+                                            className={styles.changeButton}
+                                            onClick={handleClear}
+                                        >
+                                            Replace Video
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={styles.fetchMetadataButton}
+                                            onClick={handleFetchVideo}
+                                            disabled={isFetching}
+                                            title="Auto-fetch thumbnail and title from platform"
+                                        >
+                                            {isFetching ? 'Fetching...' : 'Fetch Metadata'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Thumbnail Overlay Input (Optional Override) */}
+                            {(!hasThumbnail || videoData.sourceType !== 'social') && (
+                                <div className={styles.field}>
+                                    <label className={styles.label}>
+                                        {videoData.sourceType === 'social' ? 'Add Custom Poster' : 'Poster Thumbnail'}
+                                        {(!hasThumbnail && videoData.sourceType !== 'social') && <span className={styles.required}>* Required</span>}
+                                        {videoData.sourceType === 'social' && <span className={styles.optional}>(Optional)</span>}
+                                    </label>
+
+                                    <div className={styles.thumbnailUpload}>
+                                        <div
+                                            className={styles.thumbnailDropzone}
+                                            onClick={() => document.getElementById('thumbnail-upload')?.click()}
+                                        >
+                                            <span className={styles.dropicon}>🖼️</span>
+                                            <span className={styles.droptext}>
+                                                {isUploadingThumbnail ? 'Uploading...' : 'Click to upload custom poster'}
+                                            </span>
+                                        </div>
+                                        <input
+                                            id="thumbnail-upload"
+                                            type="file"
+                                            accept="image/jpeg,image/png,image/webp"
+                                            className={styles.hiddenInput}
+                                            onChange={handleThumbnailUpload}
+                                            disabled={isUploadingThumbnail}
+                                        />
+                                    </div>
+
+                                    {!hasThumbnail && videoData.sourceType !== 'social' && (
+                                        <p className={styles.fieldHint}>
+                                            This video requires a poster thumbnail. Please upload one.
+                                        </p>
+                                    )}
+                                    {thumbnailError && <div className={styles.error}>{thumbnailError}</div>}
+                                </div>
+                            )}
+
+                            {/* Caption Input */}
+                            <div className={styles.field}>
+                                <label className={styles.label}>
+                                    Caption <span className={styles.required}>* Required</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={caption}
+                                    onChange={(e) => setCaption(e.target.value)}
+                                    placeholder="Describe this video for readers..."
+                                    className={`${styles.input} ${(touched && !caption.trim()) ? styles.inputError : ''}`}
+                                />
+                            </div>
+
+                            {/* Credit Input */}
+                            <div className={styles.field}>
+                                <label className={styles.label}>
+                                    Source / Credit <span className={styles.optional}>(Optional)</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={credit}
+                                    onChange={(e) => setCredit(e.target.value)}
+                                    placeholder="e.g. Courtesy of NASA"
+                                    className={styles.input}
+                                />
+                            </div>
+
                         </div>
                     )}
-
-                    {fetchError && (
-                        <div className={styles.error}>
-                            {fetchError}
-                        </div>
-                    )}
-
-                    {/* Caption Field */}
-                    <div className={styles.field}>
-                        <label className={styles.label}>
-                            Caption <span className={styles.optional}>(optional)</span>
-                        </label>
-                        <input
-                            type="text"
-                            value={caption}
-                            onChange={(e) => setCaption(e.target.value)}
-                            placeholder="Caption displayed below the video"
-                            className={styles.input}
-                        />
-                    </div>
                 </div>
 
                 <div className={styles.footer}>
@@ -303,7 +450,7 @@ export function VideoBlockEditor({
                         type="button"
                         className={styles.saveButton}
                         onClick={handleSave}
-                        disabled={!canSave}
+                        disabled={!valid}
                     >
                         {isEditing ? 'Save Changes' : 'Insert Video'}
                     </button>

@@ -20,14 +20,7 @@ export {
 // Video provider utilities
 export {
     parseVideoUrl,
-    getPosterUrl,
-    getYouTubeThumbnailUrls,
-    fetchVideoOEmbed,
     getVideoInfo,
-    isValidVideoUrl,
-    isSupportedProvider,
-    getProviderDisplayName,
     type VideoParseResult,
-    type VideoOEmbedData,
     type VideoInfoResult,
 } from './video-providers';

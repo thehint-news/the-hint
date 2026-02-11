@@ -4,8 +4,8 @@
  */
 
 .figure {
-    margin: 2rem 0;
-    max-width: 100%;
+    margin: 4rem 0;
+    width: 100%;
 }
 
 .wrapper {
@@ -13,8 +13,11 @@
     width: 100%;
     padding-top: 56.25%;
     /* 16:9 aspect ratio */
-    background: #111111;
+    background: var(--color-paper);
     overflow: hidden;
+    border-radius: 2px;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
 }
 
 /* Facade (poster + play button) */
@@ -33,9 +36,19 @@
     justify-content: center;
 }
 
-.facade:focus {
-    outline: 2px solid #fff;
-    outline-offset: -2px;
+.facade::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.03);
+    transition: background 0.4s ease;
+}
+
+.facade:hover::after {
+    background: rgba(0, 0, 0, 0);
 }
 
 .poster {
@@ -45,6 +58,11 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.facade:hover .poster {
+    transform: scale(1.04);
 }
 
 .placeholderPoster {
@@ -56,12 +74,48 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #111111 0%, #2B2B2B 100%);
+    background: #111;
+    /* Dark neutral */
+}
+
+.placeholderContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 2;
 }
 
 .placeholderIcon {
-    font-size: 4rem;
-    opacity: 0.5;
+    font-size: 2rem;
+    color: white;
+    opacity: 0.8;
+}
+
+.placeholderText {
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: white;
+    opacity: 0.6;
+}
+
+.platformBadge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.625rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    backdrop-filter: blur(4px);
+    z-index: 5;
 }
 
 /* Play button overlay */
@@ -70,45 +124,54 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1;
+    z-index: 10;
 }
 
 .playButton {
-    width: 68px;
-    height: 48px;
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 8px;
+    width: 80px;
+    height: 80px;
+    background: rgba(17, 17, 17, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    color: white;
 }
 
 .facade:hover .playButton {
-    background: #111111;
+    background: var(--color-ink);
+    color: white;
     transform: scale(1.1);
+    border-color: var(--color-ink);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .playIcon {
-    width: 24px;
-    height: 24px;
-    color: white;
-    margin-left: 3px;
+    width: 36px;
+    height: 36px;
+    margin-left: 5px;
 }
 
 /* Provider badge */
 .providerBadge {
     position: absolute;
-    top: 12px;
-    left: 12px;
-    padding: 4px 8px;
-    background: rgba(0, 0, 0, 0.7);
+    top: 2rem;
+    left: 2rem;
+    padding: 6px 14px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(6px);
     color: white;
     font-family: var(--font-sans);
-    font-size: 0.6875rem;
-    font-weight: 600;
+    font-size: 0.625rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.15em;
+    z-index: 5;
+    border-radius: 1px;
+    border-left: 2px solid white;
 }
 
 /* Player container (shown after click) */
@@ -139,37 +202,115 @@
     background: #000;
 }
 
-/* Caption */
+/* Caption matches ImageBlock */
 .caption {
-    margin-top: 0.75rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--color-border, #D9D9D9);
+    margin-top: 1.5rem;
+    padding-left: 1.25rem;
+    border-left: 3px solid var(--color-ink);
     font-family: var(--font-sans);
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: var(--color-muted, #595959);
-    font-style: italic;
+    line-height: 1.6;
+}
+
+.captionText {
+    display: block;
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+.credit {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.6875rem;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+}
+
+/* Social Embed Flow (X/Twitter, Instagram, etc.) */
+.socialFigure {
+    margin: 3rem auto;
+    max-width: 550px;
+    /* Standard editorial feed width for embeds */
+}
+
+.socialWrapper {
+    width: 100%;
+    /* No aspect ratio padding for social posts - they have variable height */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.socialPlayerContainer {
+    width: 100%;
+    position: relative;
+    height: auto;
+    min-height: 200px;
+}
+
+.nativeSocialEmbed {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.socialPlayerContainer .iframe {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 300px;
+    border: none;
+}
+
+.credit::before {
+    content: 'Source: ';
+    opacity: 0.5;
+}
+
+/* Premium Out-dent Layout for Desktop */
+@media (min-width: 1024px) {
+    .figure {
+        width: 115%;
+        margin-left: -7.5%;
+        margin-top: 5rem;
+        margin-bottom: 5rem;
+    }
 }
 
 /* Responsive adjustments */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .figure {
-        margin-left: -1rem;
-        margin-right: -1rem;
+        margin: 3rem -1.5rem;
+        width: calc(100% + 3rem);
+    }
+
+    .wrapper {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
     }
 
     .caption {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        border-left-width: 2px;
     }
 
     .playButton {
-        width: 56px;
-        height: 40px;
+        width: 64px;
+        height: 64px;
     }
 
     .playIcon {
-        width: 20px;
-        height: 20px;
+        width: 28px;
+        height: 28px;
+    }
+
+    .providerBadge {
+        top: 1.25rem;
+        left: 1.25rem;
     }
 }

@@ -14,7 +14,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth/session';
 import { getVideoInfo, parseVideoUrl } from '@/lib/media/video-providers';
-import type { VideoProvider } from '@/lib/content/media-types';
+import { VideoSourceType, SocialVideoProvider } from '@/lib/content/media-types';
 
 // =============================================================================
 // API RESPONSE TYPES
@@ -23,13 +23,15 @@ import type { VideoProvider } from '@/lib/content/media-types';
 interface VideoInfoSuccessResponse {
     success: true;
     data: {
-        provider: VideoProvider;
-        videoId: string;
-        embedUrl: string;
-        posterUrl: string;
+        sourceType: VideoSourceType;
+        provider?: SocialVideoProvider;
+        originalUrl: string;
+        embedUrl?: string;
+        posterThumbnail: string;
         title: string;
         duration?: number;
         authorName?: string;
+        mimeType?: string;
     };
 }
 

@@ -45,7 +45,7 @@ export function ArticleBody({ content }: ArticleBodyProps) {
                     // Image Block - Display all body images
                     if (isImageBlock(block)) {
                         return (
-                            <div key={block.id} className="not-prose my-8">
+                            <div key={block.id} className="not-prose">
                                 <ImageBlockRenderer
                                     block={block}
                                     isAboveFold={index < 2}
@@ -57,7 +57,7 @@ export function ArticleBody({ content }: ArticleBodyProps) {
                     // Video Block
                     if (isVideoBlock(block)) {
                         return (
-                            <div key={block.id} className="not-prose my-8">
+                            <div key={block.id} className="not-prose">
                                 <VideoBlockRenderer block={block} />
                             </div>
                         );

@@ -42,3 +42,6 @@ next-env.d.ts
 
 # drafts (ephemeral content, not for version control)
 /src/drafts/*.json
+
+# auth tokens
+/src/lib/auth/used-tokens.json

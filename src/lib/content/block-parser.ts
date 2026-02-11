@@ -37,10 +37,10 @@ import {
     ImageBlock,
     VideoBlock,
     ImageAspectRatio,
-    VideoProvider,
+    VideoSourceType,
+    SocialVideoProvider,
     generateBlockId,
     reorderBlocks,
-    ALLOWED_VIDEO_PROVIDERS,
 } from './media-types';
 
 // =============================================================================
@@ -539,6 +539,9 @@ function createImageBlockFromFence(
 /**
  * Create VideoBlock from parsed fence properties
  */
+/**
+ * Create VideoBlock from parsed fence properties
+ */
 function createVideoBlockFromFence(
     fence: ParsedFence,
     order: number,
@@ -546,54 +549,85 @@ function createVideoBlockFromFence(
 ): VideoBlock | null {
     const { properties, startLine } = fence;
 
-    // Required properties
-    if (!properties.provider) {
+    // Legacy migration: If provider exists but sourceType doesn't
+    let sourceType = properties.sourceType as VideoSourceType;
+    if (!sourceType && properties.provider) {
+        if (['cdn', 'file'].includes(properties.provider)) {
+            sourceType = 'cdn';
+        } else {
+            sourceType = 'social';
+        }
+    }
+
+    if (!sourceType && properties.originalUrl) {
+        // Infer from extension if possible, or default to social if not file
+        if (/\.(mp4|webm|mkv)$/i.test(properties.originalUrl)) {
+            sourceType = 'cdn'; // Normalize file extensions to cdn for consistent handling
+        } else {
+            sourceType = 'social';
+        }
+    }
+
+    // Default if still unknown (should not happen in valid blocks)
+    if (!sourceType) {
         errors.push({
             line: startLine + 1,
-            message: 'Video block missing required "provider" property',
+            message: 'Video block missing required "sourceType" or legacy "provider"',
+        });
+        return null; // Strict validation for new blocks
+    }
+
+    // REQUIRED: originalUrl (or construct from videoId for legacy)
+    let originalUrl = properties.originalUrl;
+    if (!originalUrl && properties.videoId && properties.provider) {
+        // Construct legacy URL
+        if (properties.provider === 'youtube') originalUrl = `https://youtube.com/watch?v=${properties.videoId}`;
+        else if (properties.provider === 'vimeo') originalUrl = `https://vimeo.com/${properties.videoId}`;
+        else originalUrl = properties.videoId; // CDN or others
+    }
+
+    if (!originalUrl) {
+        errors.push({
+            line: startLine + 1,
+            message: 'Video block missing required "originalUrl"',
         });
         return null;
     }
 
-    if (!ALLOWED_VIDEO_PROVIDERS.includes(properties.provider as VideoProvider)) {
+    // REQUIRED: posterThumbnail (legacy: posterUrl)
+    const posterThumbnail = properties.posterThumbnail || properties.posterUrl;
+    if (!posterThumbnail && sourceType !== 'social') {
         errors.push({
             line: startLine + 1,
-            message: `Invalid video provider: ${properties.provider}. Must be: ${ALLOWED_VIDEO_PROVIDERS.join(', ')}`,
+            message: 'Video block missing required "posterThumbnail" for non-social video source',
         });
-        return null;
+        // We allow it to continue to prevent total parse failure, but it is invalid
     }
 
-    if (!properties.videoId) {
+    // REQUIRED: caption
+    if (!properties.caption) {
         errors.push({
             line: startLine + 1,
-            message: 'Video block missing required "videoId" property',
+            message: 'Video block missing required "caption"',
         });
         return null;
-    }
-
-    // Generate embed URL if not provided
-    const embedUrl = properties.embedUrl || generateDefaultEmbedUrl(
-        properties.provider as VideoProvider,
-        properties.videoId
-    );
-
-    // Poster URL is encouraged but we can generate default for YouTube
-    let posterUrl = properties.posterUrl || '';
-    if (!posterUrl && properties.provider === 'youtube') {
-        posterUrl = `https://img.youtube.com/vi/${properties.videoId}/maxresdefault.jpg`;
     }
 
     return {
         id: generateBlockId('video'),
         type: 'video',
         order,
-        provider: properties.provider as VideoProvider,
-        videoId: properties.videoId,
-        embedUrl,
-        posterUrl,
+        sourceType,
+        originalUrl,
+        posterThumbnail: posterThumbnail || '',
+        embedUrl: properties.embedUrl,
         caption: properties.caption,
+        credit: properties.credit,
+        provider: properties.provider as SocialVideoProvider,
+        mimeType: properties.mimeType,
         duration: properties.duration ? parseInt(properties.duration, 10) : undefined,
         title: properties.title,
+        trustedSourceHtml: properties.trustedSourceHtml,
     };
 }
 
@@ -646,13 +680,17 @@ export function serializeBlocksToMarkdown(blocks: ContentBlock[]): string {
 
             case 'video':
                 lines.push(':::video');
-                lines.push(`provider: ${block.provider}`);
-                lines.push(`videoId: ${block.videoId}`);
-                lines.push(`embedUrl: ${block.embedUrl}`);
-                lines.push(`posterUrl: ${block.posterUrl}`);
-                if (block.caption) lines.push(`caption: ${block.caption}`);
+                lines.push(`sourceType: ${block.sourceType}`);
+                lines.push(`originalUrl: ${block.originalUrl}`);
+                lines.push(`caption: ${block.caption}`); // Required first for readability
+                if (block.posterThumbnail) lines.push(`posterThumbnail: ${block.posterThumbnail}`);
+                if (block.embedUrl) lines.push(`embedUrl: ${block.embedUrl}`);
+                if (block.provider) lines.push(`provider: ${block.provider}`);
+                if (block.credit) lines.push(`credit: ${block.credit}`);
+                if (block.mimeType) lines.push(`mimeType: ${block.mimeType}`);
                 if (block.duration) lines.push(`duration: ${block.duration}`);
                 if (block.title) lines.push(`title: ${block.title}`);
+                if (block.trustedSourceHtml) lines.push(`trustedSourceHtml: ${block.trustedSourceHtml}`);
                 lines.push(':::');
                 lines.push('');
                 break;
@@ -681,22 +719,6 @@ function calculateAspectRatio(width: number, height: number): ImageAspectRatio {
     if (Math.abs(ratio - 9 / 16) < 0.1) return '9:16';
 
     return 'original';
-}
-
-/**
- * Generate default embed URL for video providers
- */
-function generateDefaultEmbedUrl(provider: VideoProvider, videoId: string): string {
-    switch (provider) {
-        case 'youtube':
-            return `https://www.youtube.com/embed/${videoId}`;
-        case 'vimeo':
-            return `https://player.vimeo.com/video/${videoId}`;
-        case 'cdn':
-            return videoId;
-        default:
-            return '';
-    }
 }
 
 // =============================================================================

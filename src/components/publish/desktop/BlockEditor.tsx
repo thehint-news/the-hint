@@ -29,14 +29,13 @@ import {
     reorderBlocks,
     isImageBlock,
     isVideoBlock,
-    isMediaBlock,
     MEDIA_LIMITS,
 } from '@/lib/content/media-types';
 import { canInsertMediaAt, isValidBlockOrder } from '@/lib/validation/media';
 import { MediaCounter } from '../common/MediaCounter';
 import { ImageBlockEditor } from './ImageBlockEditor';
 import { VideoBlockEditor } from './VideoBlockEditor';
-import type { ImageAspectRatio, VideoProvider } from '@/lib/content/media-types';
+import type { ImageAspectRatio, VideoSourceType, SocialVideoProvider } from '@/lib/content/media-types';
 import styles from './BlockEditor.module.css';
 
 // =============================================================================
@@ -325,13 +324,17 @@ export function BlockEditor({
      * Handle video save from editor
      */
     const handleVideoSave = useCallback((data: {
-        provider: VideoProvider;
-        videoId: string;
-        embedUrl: string;
-        posterUrl: string;
-        caption?: string;
+        sourceType: VideoSourceType;
+        originalUrl: string;
+        embedUrl?: string;
+        posterThumbnail: string;
+        caption: string;
+        credit?: string;
         title?: string;
         duration?: number;
+        provider?: SocialVideoProvider;
+        mimeType?: string;
+        trustedSourceHtml?: string;
     }) => {
         if (editingBlock && isVideoBlock(editingBlock)) {
             // Update existing block
@@ -591,9 +594,9 @@ export function BlockEditor({
 
                 <div className={styles.mediaBlock}>
                     <div className={styles.mediaPreview}>
-                        {block.posterUrl ? (
+                        {block.posterThumbnail ? (
                             <img
-                                src={block.posterUrl}
+                                src={block.posterThumbnail}
                                 alt={block.title || 'Video thumbnail'}
                                 className={styles.mediaImage}
                             />
@@ -604,13 +607,14 @@ export function BlockEditor({
                     </div>
                     <div className={styles.mediaInfo}>
                         <span className={styles.mediaType}>
-                            🎬 {block.provider.charAt(0).toUpperCase() + block.provider.slice(1)}
+                            🎬 {block.provider || block.sourceType}
                         </span>
                         {block.title && (
                             <span className={styles.mediaTitle}>{block.title}</span>
                         )}
-                        {block.caption && (
-                            <span className={styles.mediaCaption}>{block.caption}</span>
+                        <span className={styles.mediaCaption}>{block.caption}</span>
+                        {block.credit && (
+                            <span className={styles.mediaCredit}>Source: {block.credit}</span>
                         )}
                     </div>
                     <div className={styles.mediaActions}>

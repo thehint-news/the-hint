@@ -7,9 +7,10 @@ import { describe, it, expect } from 'vitest';
 import {
     validateMediaBlocks,
     validateImageFile,
-    parseVideoUrl,
     canInsertMediaAt,
 } from '../media';
+
+import { parseVideoUrl } from '../../media/video-providers';
 
 import {
     ContentBlock,
@@ -19,7 +20,6 @@ import {
     createParagraphBlock,
     createImageBlock,
     createVideoBlock,
-    MEDIA_LIMITS,
 } from '../../content/media-types';
 
 // =============================================================================
@@ -42,10 +42,12 @@ function makeImage(order: number, alt = 'Test alt text'): ImageBlock {
 
 function makeVideo(order: number): VideoBlock {
     return createVideoBlock(order, {
+        sourceType: 'social',
         provider: 'youtube',
-        videoId: 'dQw4w9WgXcQ',
+        originalUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
         embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-        posterUrl: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+        posterThumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+        caption: 'Test video caption',
     });
 }
 
@@ -165,19 +167,18 @@ describe('validateMediaBlocks', () => {
             expect(result.isValid).toBe(true);
         });
 
-        it('should warn (not error) for video soft limit', () => {
+        it('should fail (hard block) when video limit exceeded', () => {
             const blocks: ContentBlock[] = [
                 makeParagraph(0),
                 makeVideo(1),
                 makeParagraph(2),
-                makeVideo(3), // 2nd video - soft limit
+                makeVideo(3), // 2nd video - hard limit
                 makeParagraph(4),
             ];
 
             const result = validateMediaBlocks(blocks);
-            // Should still be valid (soft limit)
-            expect(result.isValid).toBe(true);
-            expect(result.warnings.some(w => w.type === 'video_soft_limit')).toBe(true);
+            expect(result.isValid).toBe(false);
+            expect(result.errors.some(e => e.type === 'video_limit_exceeded')).toBe(true);
         });
     });
 
@@ -224,6 +225,43 @@ describe('validateMediaBlocks', () => {
             expect(result.errors.some(e => e.type === 'media_only_article')).toBe(true);
         });
     });
+    describe('video block validation', () => {
+        it('should pass for social video without poster thumbnail', () => {
+            const blocks: ContentBlock[] = [
+                makeParagraph(0),
+                createVideoBlock(1, {
+                    sourceType: 'social',
+                    provider: 'facebook',
+                    originalUrl: 'https://fb.watch/123',
+                    embedUrl: 'https://facebook.com/plugins/video.php',
+                    posterThumbnail: '', // Empty
+                    caption: 'Test caption',
+                }),
+                makeParagraph(2),
+            ];
+
+            const result = validateMediaBlocks(blocks);
+            expect(result.isValid).toBe(true);
+            expect(result.errors.some(e => e.type === 'missing_poster_url')).toBe(false);
+        });
+
+        it('should fail for file video without poster thumbnail', () => {
+            const blocks: ContentBlock[] = [
+                makeParagraph(0),
+                createVideoBlock(1, {
+                    sourceType: 'file',
+                    originalUrl: 'https://example.com/video.mp4',
+                    posterThumbnail: '', // Empty
+                    caption: 'Test caption',
+                }),
+                makeParagraph(2),
+            ];
+
+            const result = validateMediaBlocks(blocks);
+            expect(result.isValid).toBe(false);
+            expect(result.errors.some(e => e.type === 'missing_poster_url')).toBe(true);
+        });
+    });
 });
 
 // =============================================================================
@@ -236,28 +274,28 @@ describe('parseVideoUrl', () => {
             const result = parseVideoUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
             expect(result.valid).toBe(true);
             expect(result.provider).toBe('youtube');
-            expect(result.videoId).toBe('dQw4w9WgXcQ');
+            expect(result.id).toBe('dQw4w9WgXcQ');
         });
 
         it('should parse short youtu.be URL', () => {
             const result = parseVideoUrl('https://youtu.be/dQw4w9WgXcQ');
             expect(result.valid).toBe(true);
             expect(result.provider).toBe('youtube');
-            expect(result.videoId).toBe('dQw4w9WgXcQ');
+            expect(result.id).toBe('dQw4w9WgXcQ');
         });
 
         it('should parse embed URL', () => {
             const result = parseVideoUrl('https://www.youtube.com/embed/dQw4w9WgXcQ');
             expect(result.valid).toBe(true);
             expect(result.provider).toBe('youtube');
-            expect(result.videoId).toBe('dQw4w9WgXcQ');
+            expect(result.id).toBe('dQw4w9WgXcQ');
         });
 
         it('should parse shorts URL', () => {
             const result = parseVideoUrl('https://www.youtube.com/shorts/dQw4w9WgXcQ');
             expect(result.valid).toBe(true);
             expect(result.provider).toBe('youtube');
-            expect(result.videoId).toBe('dQw4w9WgXcQ');
+            expect(result.id).toBe('dQw4w9WgXcQ');
         });
     });
 
@@ -266,14 +304,14 @@ describe('parseVideoUrl', () => {
             const result = parseVideoUrl('https://vimeo.com/123456789');
             expect(result.valid).toBe(true);
             expect(result.provider).toBe('vimeo');
-            expect(result.videoId).toBe('123456789');
+            expect(result.id).toBe('123456789');
         });
 
         it('should parse player Vimeo URL', () => {
             const result = parseVideoUrl('https://player.vimeo.com/video/123456789');
             expect(result.valid).toBe(true);
             expect(result.provider).toBe('vimeo');
-            expect(result.videoId).toBe('123456789');
+            expect(result.id).toBe('123456789');
         });
     });
 
@@ -281,13 +319,13 @@ describe('parseVideoUrl', () => {
         it('should parse mp4 URL', () => {
             const result = parseVideoUrl('https://cdn.example.com/video.mp4');
             expect(result.valid).toBe(true);
-            expect(result.provider).toBe('cdn');
+            expect(result.sourceType).toBe('file');
         });
 
         it('should parse webm URL', () => {
             const result = parseVideoUrl('https://cdn.example.com/video.webm');
             expect(result.valid).toBe(true);
-            expect(result.provider).toBe('cdn');
+            expect(result.sourceType).toBe('file');
         });
     });
 
@@ -297,9 +335,10 @@ describe('parseVideoUrl', () => {
             expect(result.valid).toBe(false);
         });
 
-        it('should reject unsupported URL', () => {
+        it('should treat unknown HTTPS URLs as CDN sources', () => {
             const result = parseVideoUrl('https://example.com/video');
-            expect(result.valid).toBe(false);
+            expect(result.valid).toBe(true);
+            expect(result.sourceType).toBe('cdn');
         });
     });
 });

@@ -51,9 +51,6 @@ export type {
 export {
     validateMediaBlocks,
     validateImageFile,
-    parseVideoUrl,
-    generateEmbedUrl,
-    generatePosterUrl,
     isValidBlockOrder,
     canInsertMediaAt,
 } from './media';

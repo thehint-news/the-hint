@@ -10,7 +10,8 @@
  * Email-based contact only. No forms, icons, or decorative elements.
  */
 
-import { Metadata } from "next";
+import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: "Contact | The Hint",
@@ -28,6 +29,17 @@ export default function ContactPage() {
         <main id="main-content" className="flex-1">
             <article className="contact-page">
                 <div className="container-editorial">
+                    {/* Back Navigation */}
+                    <nav className="page-nav">
+                        <Link href="/" className="back-link">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                            Back to Home
+                        </Link>
+                    </nav>
+
                     {/* Page Header */}
                     <header className="contact-header">
                         <h1 className="contact-title">Contact</h1>

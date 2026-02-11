@@ -538,6 +538,7 @@ export default function PublishPage() {
                         previewData={previewData}
                         showPreview={showPreview}
                         onClosePreview={handleClosePreview}
+                        onBackToList={() => handleModeChange('all')}
                         isMobile={isMobile}
                     />
                 ) : (

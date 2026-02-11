@@ -32,24 +32,26 @@ export function ImageBlockRenderer({ block, isAboveFold = false }: ImageBlockRen
 
     return (
         <figure className={styles.figure} data-block-id={block.id}>
-            <picture>
-                {srcset && (
-                    <source
-                        srcSet={srcset}
-                        sizes={sizes}
-                        type="image/webp"
+            <div className={styles.imageWrapper}>
+                <picture>
+                    {srcset && (
+                        <source
+                            srcSet={srcset}
+                            sizes={sizes}
+                            type="image/webp"
+                        />
+                    )}
+                    <img
+                        src={src}
+                        alt={alt}
+                        width={width}
+                        height={height}
+                        loading={loading}
+                        decoding={decoding}
+                        className={styles.image}
                     />
-                )}
-                <img
-                    src={src}
-                    alt={alt}
-                    width={width}
-                    height={height}
-                    loading={loading}
-                    decoding={decoding}
-                    className={styles.image}
-                />
-            </picture>
+                </picture>
+            </div>
 
             {(caption || credit) && (
                 <figcaption className={styles.caption}>

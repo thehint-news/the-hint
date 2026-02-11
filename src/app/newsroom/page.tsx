@@ -77,6 +77,13 @@ function LoginForm() {
             <div className="container">
                 {/* Masthead */}
                 <header className="header">
+                    <a href="/" className="back-to-site">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Back to site
+                    </a>
                     <h1 className="logo">THE HINT</h1>
                     <span className="divider"></span>
                     <p className="subtitle">Newsroom</p>
@@ -166,6 +173,24 @@ function LoginForm() {
 
                 .header {
                     margin-bottom: 32px;
+                    position: relative;
+                }
+
+                .back-to-site {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 11px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    color: #888;
+                    text-decoration: none;
+                    margin-bottom: 24px;
+                    transition: color 0.15s ease;
+                }
+
+                .back-to-site:hover {
+                    color: #111;
                 }
 
                 .logo {

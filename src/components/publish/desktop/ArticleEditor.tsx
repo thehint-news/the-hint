@@ -46,6 +46,8 @@ interface ArticleEditorProps {
     showPreview: boolean;
     /** Close preview panel */
     onClosePreview: () => void;
+    /** Handler for going back to list */
+    onBackToList: () => void;
     /** Whether in mobile viewport */
     isMobile?: boolean;
 }
@@ -58,6 +60,7 @@ export function ArticleEditor({
     previewData,
     showPreview,
     onClosePreview,
+    onBackToList,
     isMobile = false,
 }: ArticleEditorProps) {
     /**
@@ -184,6 +187,22 @@ export function ArticleEditor({
         <div className={`${styles.editorLayout} ${isMobile ? styles.mobile : ''}`}>
             {/* LEFT COLUMN: WRITING CANVAS */}
             <div className={styles.writingCanvas}>
+                {/* Contextual Navigation */}
+                <div className={styles.contextNav}>
+                    <button
+                        type="button"
+                        className={styles.backButton}
+                        onClick={onBackToList}
+                        title="Back to Article List"
+                    >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        <span>Back to Articles</span>
+                    </button>
+                </div>
+
                 {/* Headline */}
                 <div className={styles.fieldWrapper}>
                     <input
@@ -320,8 +339,9 @@ height: 800
 :::
 
 :::video
-provider: youtube
-videoId: dQw4w9WgXcQ
+originalUrl: https://youtube.com/watch?v=...
+caption: Description of video
+posterThumbnail: https://path/to/image.jpg
 :::"
                                 value={formData.body}
                                 onChange={handleInputChange}

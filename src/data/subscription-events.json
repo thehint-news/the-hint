@@ -499,5 +499,129 @@
     ],
     "lastAttemptAt": "2026-02-08T16:15:47.895Z",
     "totalSubscribers": 1
+  },
+  {
+    "id": "40c21a62-16aa-4434-b7d5-43f75bfc684d",
+    "articleSlug": "moltbook-the-birth-of-an-alternate-mind-in-this-era",
+    "section": "opinion",
+    "headline": "MOLTBOOK — THE BIRTH OF AN ALTERNATE MIND IN THIS ERA",
+    "summary": "The First True Collision of Consciousness",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-11T14:00:02.193Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-11T14:00:07.375Z",
+    "totalSubscribers": 1
+  },
+  {
+    "id": "d5a89061-8a44-4350-a7b4-1f2c675e64eb",
+    "articleSlug": "moltbook-the-birth-of-an-alternate-mind-in-this-era",
+    "section": "opinion",
+    "headline": "MOLTBOOK — THE BIRTH OF AN ALTERNATE MIND IN THIS ERA",
+    "summary": "The First True Collision of Consciousness",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-11T14:15:02.624Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-11T14:15:08.239Z",
+    "totalSubscribers": 1
+  },
+  {
+    "id": "125dbd4e-e625-4497-a78f-b4c84fde1532",
+    "articleSlug": "moltbook-the-birth-of-an-alternate-mind-in-this-era",
+    "section": "opinion",
+    "headline": "MOLTBOOK — THE BIRTH OF AN ALTERNATE MIND IN THIS ERA",
+    "summary": "The First True Collision of Consciousness",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-11T14:35:07.030Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-11T14:35:12.376Z",
+    "totalSubscribers": 1
+  },
+  {
+    "id": "677f92c0-fd83-4309-91aa-0f20a61feef0",
+    "articleSlug": "moltbook-the-birth-of-an-alternate-mind-in-this-era",
+    "section": "opinion",
+    "headline": "MOLTBOOK — THE BIRTH OF AN ALTERNATE MIND IN THIS ERA",
+    "summary": "The First True Collision of Consciousness",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-11T14:41:16.589Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-11T14:41:22.227Z",
+    "totalSubscribers": 1
+  },
+  {
+    "id": "67d87436-caa9-48c5-9859-c711a3145474",
+    "articleSlug": "moltbook-the-birth-of-an-alternate-mind-in-this-era",
+    "section": "opinion",
+    "headline": "MOLTBOOK — THE BIRTH OF AN ALTERNATE MIND IN THIS ERA",
+    "summary": "The First True Collision of Consciousness",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-11T15:53:00.907Z",
+    "status": "failed",
+    "attempts": 1,
+    "processedCount": 0,
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-11T15:53:01.511Z",
+    "totalSubscribers": 1
+  },
+  {
+    "id": "3bd0a3f8-39a1-44fc-92b2-c36786ce9210",
+    "articleSlug": "moltbook-the-birth-of-an-alternate-mind-in-this-era",
+    "section": "opinion",
+    "headline": "MOLTBOOK — THE BIRTH OF AN ALTERNATE MIND IN THIS ERA",
+    "summary": "The First True Collision of Consciousness",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-11T15:55:52.391Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-11T15:55:59.986Z",
+    "totalSubscribers": 1
+  },
+  {
+    "id": "af0ec183-aff1-4039-a690-42ecb24ffc09",
+    "articleSlug": "fgdgfdgfdgdgdf",
+    "section": "world-affairs",
+    "headline": "fgdgfdgfdgdgdf",
+    "summary": "gfdgfdgfdgfdgfdgfdg",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-11T16:23:31.167Z",
+    "status": "sent",
+    "attempts": 0,
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-11T16:23:49.886Z",
+    "totalSubscribers": 1
   }
 ]
