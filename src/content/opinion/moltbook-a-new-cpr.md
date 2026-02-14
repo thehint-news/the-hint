@@ -4,7 +4,7 @@ subtitle: i dont know butrperfect
 contentType: opinion
 image: /media/images/315dd05233d88935-800w.webp
 status: published
-publishedAt: 2026-02-14T11:28:10.712Z
+publishedAt: 2026-02-14T11:28:59.762Z
 updatedAt: null
 placement: standard
 tags:
@@ -31,12 +31,12 @@ srcset: /media/images/315dd05233d88935-400w.webp 400w, /media/images/315dd05233d
 
 :::video
 sourceType: social
-originalUrl: https://www.linkedin.com/posts/rupesh-kushwaha-27791932a_fullstackdeveloper-mernstack-webdevelopment-activity-7424331361152512000-g52H?utm_source=social_share_video_v2&utm_medium=android_app&rcm=ACoAAE96WrUB4jXQMC3EAEF1_j2kPjPPNkr7bQ0&utm_campaign=copy_link
+originalUrl: https://www.linkedin.com/posts/chiranjeevi005_aiforbharat-buildathon-nxtwave-activity-7403408633868349440-TzeO?utm_source=share&utm_medium=member_desktop&rcm=ACoAAE96WrUB4jXQMC3EAEF1_j2kPjPPNkr7bQ0
 caption: LinkedIn Content
-posterThumbnail: https://dms.licdn.com/playlist/vid/v2/D4D05AQGx9L0019b1xg/thumbnail-with-play-button-overlay-high/B4DZwiF_CqG8DU-/0/1770098522200?e=2147483647&amp;v=beta&amp;t=GX-MxtZ1VPqb5Qizct0gSWSdfkbYZS9THO-Y9kZ1lKs
-embedUrl: https://www.linkedin.com/embed/feed/update/urn:li:activity:7424331361152512000
+posterThumbnail: https://media.licdn.com/dms/image/v2/D5622AQEkhCVhKlHKcQ/feedshare-shrink_800/B56Zr4w2LoK4Ag-/0/1765110146133?e=2147483647&amp;v=beta&amp;t=Yxyr8cdX46OfQEoUAR1okmRY7Dt7vq8jqfx-78w_JXU
+embedUrl: https://www.linkedin.com/embed/feed/update/urn:li:activity:7403408633868349440
 provider: linkedin
-title: #fullstackdeveloper #mernstack #webdevelopment #mongodb #restapi #reactjs #nodejs #auth #uiux #sheriyanscodingschool #developerjourney | Rupesh Kushwaha
+title: #aiforbharat #buildathon #nxtwave #openai #indiaai #futureofsaas #dataintelligence #automationagent #startupjourney #smeinnovation #techforgood #youthbuilders #datapilotai #innovationmindset… | ChiranJeevi PK
 :::
 
 > seee you soon
