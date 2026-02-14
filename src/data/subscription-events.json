@@ -766,5 +766,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-02-14T10:07:49.379Z",
     "totalSubscribers": 0
+  },
+  {
+    "id": "36a45938-69e1-4e24-b626-eceba0300ec8",
+    "articleSlug": "test-article-1234",
+    "section": "politics",
+    "headline": "Test Article 1234",
+    "summary": "This is a test subheadline.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-14T10:11:16.897Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
