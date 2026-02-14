@@ -862,11 +862,13 @@
     "contentType": "opinion",
     "priority": "normal",
     "createdAt": "2026-02-14T12:10:29.907Z",
-    "status": "processing",
+    "status": "sent",
     "attempts": 0,
-    "processedCount": 0,
-    "sentEmails": [],
-    "lastAttemptAt": "2026-02-14T13:12:52.810Z",
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-14T13:13:06.230Z",
     "totalSubscribers": 1
   },
   {
