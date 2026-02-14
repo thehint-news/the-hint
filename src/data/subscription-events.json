@@ -726,11 +726,13 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-14T07:30:28.655Z",
-    "status": "processing",
+    "status": "sent",
     "attempts": 0,
-    "processedCount": 0,
-    "sentEmails": [],
-    "lastAttemptAt": "2026-02-14T07:30:32.291Z",
+    "processedCount": 1,
+    "sentEmails": [
+      "smartinboxauto@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-14T07:30:45.182Z",
     "totalSubscribers": 1
   }
 ]
