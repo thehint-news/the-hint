@@ -868,5 +868,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-02-14T16:29:20.314Z",
     "totalSubscribers": 1
+  },
+  {
+    "id": "faef2f7b-9790-4013-9129-f7007d0c5fb8",
+    "articleSlug": "budget-2026-live-updates",
+    "section": "politics",
+    "headline": "Budget 2026 Live Updates: ಕೇಂದ್ರ ಬಜೆಟ್‌ಗೆ ಮುನ್ನ ಕರ್ತವ್ಯ ಭವನ ತಲುಪಿದ ನಿರ್ಮಲಾ ಸೀತಾರಾಮನ್",
+    "summary": "Union Budget 2026 Live Updates: ಕೇಂದ್ರ ಬಜೆಟ್ ದುರ್ಬಲ ಮತ್ತು ಹಿಂದುಳಿದವರನ್ನು ಸಬಲೀಕರಣಗೊಳಿಸಲು ಕ್ರಮಗಳನ್ನು ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ ಎಂದು ನಿರೀಕ್ಷಿಸಲಾಗಿದ್ದರೂ, ಹಣದುಬ್ಬರ ನಿಯಂತ್ರಣ, ತೆರಿಗೆ ಸರಳೀಕರಣ ಮತ್ತು ವ್ಯವಹಾರ ಪರಿಹಾರ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-14T16:31:29.248Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
