@@ -2,10 +2,10 @@
 title: moltbook a new AI
 subtitle: i dont know butrperfect
 contentType: opinion
-image: /media/images/3a473b173959f5da-800w.jpg
+image: /media/images/315dd05233d88935-800w.webp
 status: published
 publishedAt: 2026-02-14T11:56:39.024Z
-updatedAt: 2026-02-14T12:08:38.105Z
+updatedAt: 2026-02-14T12:10:01.429Z
 placement: standard
 tags:
   - nothing
