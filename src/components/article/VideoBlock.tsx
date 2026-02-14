@@ -30,24 +30,28 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
         caption,
         title,
         credit,
-        trustedSourceHtml
-    } = block as any; // Cast for renaming migration
+        trustedSourceHtml,
+        isRestricted
+    } = block;
 
     // State: false = showing poster, true = showing player
     const [isPlayerLoaded, setIsPlayerLoaded] = useState(false);
 
+    // Determines if we should use the Fallback Link Preview instead of an embed
+    // Forced for Facebook/Restricted to avoid "Video Unavailable" errors.
+    const useFallbackMode = isRestricted === true;
+
     // Determine if this should be rendered as a full "social post" embed or a performance-optimized "video facade"
     // - Social Posts (X, Instagram, LinkedIn): Immediate load, variable height.
     // - Videos (YouTube, Vimeo): Facade first, fixed 16:9 aspect ratio.
-    // - Facebook: ALWAYS use SDK-based "Social Post" style for robustness. Iframe is flaky.
-    const isSocialPost = sourceType === 'social' && (
+    const isSocialPost = sourceType === 'social' && !useFallbackMode && (
         ['x', 'twitter', 'instagram', 'tiktok', 'linkedin', 'facebook'].includes(provider || '')
     );
 
     // Performance logic: 
     // - DIRECT VIDEOS (YouTube, Vimeo, Files): Use facade (image + play button) for speed.
     // - SOCIAL POSTS (Facebook, X, Instagram): Display the entire social context immediately (or via SDK).
-    const shouldUseFacade = !isSocialPost && !isPlayerLoaded;
+    const shouldUseFacade = !isSocialPost && !useFallbackMode && !isPlayerLoaded;
 
     /**
      * Re-initialize social widgets when content changes
@@ -124,8 +128,58 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
             className={`${styles.figure} ${isSocialPost ? styles.socialFigure : ''}`}
             data-block-id={block.id}
         >
-            <div className={isSocialPost ? styles.socialWrapper : styles.wrapper}>
-                {shouldUseFacade ? (
+            <div className={(isSocialPost || useFallbackMode) ? styles.socialWrapper : styles.wrapper}>
+                {useFallbackMode ? (
+                    /* FALLBACK MODE: High-fidelity link preview for restricted platforms (Facebook/Insta) */
+                    <div className={styles.fallbackPreview}>
+                        <div className={styles.fallbackContent}>
+                            {posterThumbnail ? (
+                                <img
+                                    src={posterThumbnail}
+                                    alt={title || 'Video preview'}
+                                    className={styles.fallbackPoster}
+                                    loading="lazy"
+                                />
+                            ) : (
+                                <div className={styles.fallbackPlaceholder}>
+                                    <span>🎬</span>
+                                </div>
+                            )}
+
+                            {/* Branded Play Button Overlay */}
+                            <div className={styles.fallbackOverlay}>
+                                <div className={styles.fallbackPlayButton}>
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div className={styles.fallbackBranding}>
+                                {getProviderName()}
+                            </div>
+                        </div>
+
+                        {/* Watch on [Platform] CTA */}
+                        {originalUrl && (
+                            <div className={styles.fallbackCtaContainer}>
+                                <a
+                                    href={originalUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles.fallbackCta}
+                                >
+                                    <span>Watch on {getProviderName()}</span>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                        <polyline points="15 3 21 3 21 9"></polyline>
+                                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                                    </svg>
+                                </a>
+                            </div>
+                        )}
+                    </div>
+                ) : shouldUseFacade ? (
                     // FACADE: Only poster or placeholder image until user clicks.
                     <button
                         type="button"

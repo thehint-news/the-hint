@@ -17,35 +17,38 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export async function processSubscriptionQueue(): Promise<{ processed: number; errors: number; remaining: boolean }> {
     // 1. Check if paused
-    if (queueManager.isPaused()) {
+    if (await queueManager.isPaused()) {
         logger.info('[QUEUE] Subscription queue is PAUSED.');
         return { processed: 0, errors: 0, remaining: true };
     }
 
     // 2. Get next event
-    const event = queueManager.getNextPending();
+    const event = await queueManager.getNextPending();
     if (!event) {
         return { processed: 0, errors: 0, remaining: false };
     }
 
     // 3. Mark as processing (or continue processing)
     if (event.status === 'pending') {
-        queueManager.updateEvent(event.id, { status: 'processing', lastAttemptAt: new Date().toISOString() });
+        await queueManager.updateEvent(event.id, { status: 'processing', lastAttemptAt: new Date().toISOString() });
     }
 
     // 4. Get recipients
-    const allSubscribers = getActiveSubscribers();
+    const allSubscribers = await getActiveSubscribers();
+
+    // Snapshot total subscribers if not set to ensure stable completion target
+    let totalTarget = event.totalSubscribers;
+    if (!totalTarget) {
+        totalTarget = allSubscribers.length;
+        await queueManager.updateEvent(event.id, { totalSubscribers: totalTarget });
+    }
+
     // Filter out those who already received it
     const recipients = allSubscribers.filter(email => !event.sentEmails.includes(email));
 
-    // Snapshot total subscribers if not set
-    if (!event.totalSubscribers) {
-        queueManager.updateEvent(event.id, { totalSubscribers: allSubscribers.length });
-    }
-
     if (recipients.length === 0) {
         // All sent
-        queueManager.updateEvent(event.id, { status: 'sent', lastAttemptAt: new Date().toISOString() });
+        await queueManager.updateEvent(event.id, { status: 'sent', lastAttemptAt: new Date().toISOString() });
         return { processed: 0, errors: 0, remaining: false };
     }
 
@@ -78,8 +81,8 @@ export async function processSubscriptionQueue(): Promise<{ processed: number; e
         // Circuit Breaker
         if (consecutiveFailures >= CONFIG.circuitBreakerThreshold) {
             logger.error('[QUEUE] Circuit breaker tripped! Pausing queue.');
-            queueManager.pauseQueue();
-            queueManager.updateEvent(event.id, {
+            await queueManager.pauseQueue();
+            await queueManager.updateEvent(event.id, {
                 status: 'failed',
                 failureReason: 'Circuit breaker tripped due to consecutive provider failures.'
             });
@@ -98,17 +101,17 @@ export async function processSubscriptionQueue(): Promise<{ processed: number; e
     };
 
     // Check if completely done
-    if (updatedSentEmails.length >= allSubscribers.length) {
+    if (updatedSentEmails.length >= totalTarget) {
         updates.status = 'sent';
     }
     // If we tripped circuit breaker, status is already failed/paused
     // Otherwise leave as processing/pending
 
-    queueManager.updateEvent(event.id, updates);
+    await queueManager.updateEvent(event.id, updates);
 
     return {
         processed,
         errors,
-        remaining: updatedSentEmails.length < allSubscribers.length
+        remaining: updatedSentEmails.length < totalTarget
     };
 }

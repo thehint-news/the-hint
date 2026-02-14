@@ -13,7 +13,7 @@
  * - No silent failures
  */
 
-import { gitService, GitOperationError, GitErrorType, Section } from './service';
+import { gitService, GitOperationError, GitErrorType, Section, createGitStaging } from './service';
 import { logger } from '../feedback/console-guard';
 import path from 'path';
 
@@ -29,6 +29,7 @@ export interface DraftData {
     sources: string[];
     placement: string;
     thumbnail?: string;
+    slug?: string;
     savedAt: string;
     createdAt: string;
 }
@@ -68,6 +69,7 @@ export interface ContentOperationResult<T = void> {
     success: boolean;
     data?: T;
     userMessage: string;
+    errorType?: GitErrorType;
     error?: GitOperationError;
 }
 
@@ -81,8 +83,6 @@ const VALID_SECTIONS = ['politics', 'world-affairs', 'crime', 'court', 'opinion'
 class ContentGit {
     /**
      * CREATE: Save a new draft
-     * Generates a unique draftId if not provided
-     * Commits with message: "Draft created: {{headline}}"
      */
     async createDraft(draft: Omit<DraftData, 'draftId' | 'savedAt' | 'createdAt'>, existingDraftId?: string): Promise<ContentOperationResult<{ draftId: string; savedAt: string }>> {
         try {
@@ -93,7 +93,7 @@ class ContentGit {
             let createdAt = now;
             if (existingDraftId) {
                 const existingDraftPath = gitService.getDraftPath(existingDraftId);
-                const existingContent = gitService.readFile(existingDraftPath);
+                const existingContent = await gitService.readFile(existingDraftPath);
                 if (existingContent) {
                     try {
                         const existingDraft = JSON.parse(existingContent) as DraftData;
@@ -114,17 +114,20 @@ class ContentGit {
             const absolutePath = gitService.getDraftPath(draftId);
             const relativePath = gitService.getDraftRelativePath(draftId);
 
-            // Write file atomically
-            await gitService.writeFileAtomic(absolutePath, JSON.stringify(draftData, null, 2));
+            // Create staging context for this operation
+            const staging = createGitStaging();
+
+            // Write file atomically (stage)
+            await gitService.writeFileAtomic(absolutePath, JSON.stringify(draftData, null, 2), staging);
 
             // Determine commit message
-            const isUpdate = existingDraftId && gitService.fileExists(absolutePath);
+            const isUpdate = existingDraftId && await gitService.fileExists(absolutePath, staging);
             const commitMessage = isUpdate
                 ? `Draft updated: ${draft.headline || 'Untitled'}`
                 : `Draft created: ${draft.headline || 'Untitled'}`;
 
             // Commit the change
-            await gitService.commitFile(relativePath, commitMessage);
+            await gitService.commitFile(relativePath, commitMessage, staging);
 
             // Push to remote (non-blocking, will retry)
             this.pushAsync();
@@ -151,7 +154,7 @@ class ContentGit {
     async loadDraft(draftId: string): Promise<ContentOperationResult<DraftData>> {
         try {
             const absolutePath = gitService.getDraftPath(draftId);
-            const content = gitService.readFile(absolutePath);
+            const content = await gitService.readFile(absolutePath);
 
             if (!content) {
                 return {
@@ -189,7 +192,8 @@ class ContentGit {
     async listDrafts(): Promise<ContentOperationResult<DraftData[]>> {
         try {
             const draftsPath = path.join(process.cwd(), 'src', 'content', 'drafts');
-            const files = gitService.listFiles(draftsPath, '.json');
+            // This reads directory via API now
+            const files = await gitService.listFiles(draftsPath, '.json');
 
             const drafts: DraftData[] = [];
 
@@ -197,7 +201,7 @@ class ContentGit {
                 if (filename === '.gitkeep') continue;
 
                 const absolutePath = path.join(draftsPath, filename);
-                const content = gitService.readFile(absolutePath);
+                const content = await gitService.readFile(absolutePath);
 
                 if (content) {
                     try {
@@ -237,11 +241,11 @@ class ContentGit {
 
             for (const section of VALID_SECTIONS) {
                 const sectionPath = path.join(process.cwd(), 'src', 'content', section);
-                const files = gitService.listFiles(sectionPath, '.md');
+                const files = await gitService.listFiles(sectionPath, '.md');
 
                 for (const filename of files) {
                     const absolutePath = path.join(sectionPath, filename);
-                    const content = gitService.readFile(absolutePath);
+                    const content = await gitService.readFile(absolutePath);
 
                     if (content) {
                         try {
@@ -290,21 +294,25 @@ class ContentGit {
             }
 
             // Merge updates
+            const existingData = loadResult.data as DraftData;
             const updatedDraft: DraftData = {
-                ...loadResult.data,
+                ...existingData,
                 ...updates,
                 draftId, // Preserve original ID
                 savedAt: new Date().toISOString(),
             };
+            const headline = updatedDraft.headline || 'Untitled';
 
             const absolutePath = gitService.getDraftPath(draftId);
             const relativePath = gitService.getDraftRelativePath(draftId);
 
-            // Write file atomically
-            await gitService.writeFileAtomic(absolutePath, JSON.stringify(updatedDraft, null, 2));
+            const staging = createGitStaging();
+
+            // Write updated draft
+            await gitService.writeFileAtomic(absolutePath, JSON.stringify(updatedDraft, null, 2), staging);
 
             // Commit
-            await gitService.commitFile(relativePath, `Draft updated: ${updatedDraft.headline || 'Untitled'}`);
+            await gitService.commitFile(relativePath, `Update draft: ${headline}`, staging);
 
             // Push async
             this.pushAsync();
@@ -327,7 +335,6 @@ class ContentGit {
 
     /**
      * DELETE: Remove a draft
-     * Commits with message: "Draft deleted: {{headline}}"
      */
     async deleteDraft(draftId: string): Promise<ContentOperationResult> {
         try {
@@ -338,18 +345,19 @@ class ContentGit {
             const absolutePath = gitService.getDraftPath(draftId);
             const relativePath = gitService.getDraftRelativePath(draftId);
 
-            if (!gitService.fileExists(absolutePath)) {
+            if (!await gitService.fileExists(absolutePath)) {
                 return {
                     success: false,
                     userMessage: 'Draft not found.',
                 };
             }
 
-            // Delete file
-            await gitService.deleteFile(absolutePath);
+            const staging = createGitStaging();
+            // Delete file (stage)
+            await gitService.deleteFile(absolutePath, staging);
 
             // Commit deletion
-            await gitService.commitDeletion(relativePath, `Draft deleted: ${headline}`);
+            await gitService.commitDeletion(relativePath, `Remove draft: ${headline}`, staging);
 
             // Push async
             this.pushAsync();
@@ -371,14 +379,13 @@ class ContentGit {
 
     /**
      * DELETE: Remove a published article
-     * Commits with message: "Remove article: {{headline}}"
      */
     async deletePublishedArticle(section: Section, slug: string): Promise<ContentOperationResult> {
         try {
             const absolutePath = gitService.getPublishedPath(section, slug);
             const relativePath = gitService.getPublishedRelativePath(section, slug);
 
-            if (!gitService.fileExists(absolutePath)) {
+            if (!await gitService.fileExists(absolutePath)) {
                 return {
                     success: false,
                     userMessage: 'Article not found.',
@@ -386,7 +393,7 @@ class ContentGit {
             }
 
             // Read to get headline for commit message
-            const content = gitService.readFile(absolutePath);
+            const content = await gitService.readFile(absolutePath);
             let headline = slug;
             if (content) {
                 const article = this.parseMarkdownFrontmatter(content, section, slug);
@@ -396,10 +403,11 @@ class ContentGit {
             }
 
             // Delete file
-            await gitService.deleteFile(absolutePath);
+            const staging = createGitStaging();
+            await gitService.deleteFile(absolutePath, staging);
 
             // Commit deletion
-            await gitService.commitDeletion(relativePath, `Remove article: ${headline}`);
+            await gitService.commitDeletion(relativePath, `Remove article: ${headline}`, staging);
 
             // Push async
             this.pushAsync();
@@ -421,11 +429,6 @@ class ContentGit {
 
     /**
      * PUBLISH: Atomic publish operation
-     * 1. Validate content server-side
-     * 2. Generate final slug
-     * 3. Write markdown to /content/{section}/{slug}.md
-     * 4. Delete corresponding draft file
-     * 5. Commit atomically with message: "Publish: {{headline}}"
      */
     async publish(articleData: {
         headline: string;
@@ -439,43 +442,81 @@ class ContentGit {
         slug: string;
         thumbnail?: string;
         draftId?: string;
-    }): Promise<ContentOperationResult<{ slug: string; section: string; url: string; publishedAt: string }>> {
+    }): Promise<ContentOperationResult<{ slug: string; section: string; url: string; publishedAt: string; mode: 'create' | 'update' }>> {
         try {
-            const { section, slug, draftId } = articleData;
-            const publishedAt = new Date().toISOString();
+            const { section, slug, draftId, headline } = articleData;
 
-            // Generate markdown content
+            // 1. Check If File Exists (Detect Mode)
+            const articleRelativePath = gitService.getPublishedRelativePath(section, slug);
+            const { content: existingFile, sha: existingSha } = await gitService.getFileInfo(articleRelativePath);
+
+            const mode = existingSha ? 'update' : 'create';
+            let publishedAt = new Date().toISOString();
+            let originalSlug: string | undefined;
+
+            // 2. Draft Safety Check: Ensure draft matches intended slug
+            if (draftId) {
+                const draftPath = gitService.getDraftPath(draftId);
+                const draftContent = await gitService.readFile(draftPath);
+                if (draftContent) {
+                    try {
+                        const draftData = JSON.parse(draftContent) as DraftData;
+                        originalSlug = draftData.slug;
+
+                        // Safety check: Prevents arbitrary overwrite via manual slug injection
+                        if (originalSlug && originalSlug !== slug) {
+                            return {
+                                success: false,
+                                userMessage: "Slug mismatch between draft and publication. Update blocked for safety.",
+                                errorType: GitErrorType.VALIDATION_ERROR,
+                                data: { mode: 'update' } as any
+                            };
+                        }
+                    } catch (e) {
+                        logger.warn(`Failed to parse draft ${draftId} during safety check`, e);
+                    }
+                }
+            }
+
+            // 3. Preserve Metadata for Update Mode
+            if (mode === 'update' && existingFile) {
+                const existingArticle = this.parseMarkdownFrontmatter(existingFile, section, slug);
+                if (existingArticle) {
+                    // SLUG STABILITY: Use original publication date
+                    publishedAt = existingArticle.publishedAt;
+                }
+            }
+
+            // 4. Generate markdown content
             const markdownContent = this.generateMarkdownContent({
                 ...articleData,
                 image: articleData.thumbnail,
                 publishedAt,
+                updatedAt: mode === 'update' ? new Date().toISOString() : undefined,
             });
 
             const articlePath = gitService.getPublishedPath(section, slug);
-            const articleRelativePath = gitService.getPublishedRelativePath(section, slug);
 
-            // Write article file atomically
-            await gitService.writeFileAtomic(articlePath, markdownContent);
+            // 4. Atomic Staging (Delete draft + Write article)
+            const staging = createGitStaging();
+            const pathsToCommit: string[] = [articleRelativePath];
 
-            // Prepare files to commit
-            const filesToCommit = [articleRelativePath];
-
-            // If there was a draft, delete it
             if (draftId) {
                 const draftPath = gitService.getDraftPath(draftId);
-                const draftRelativePath = gitService.getDraftRelativePath(draftId);
-
-                if (gitService.fileExists(draftPath)) {
-                    await gitService.deleteFile(draftPath);
-                    filesToCommit.push(draftRelativePath);
+                const draftRelPath = gitService.getDraftRelativePath(draftId);
+                // Check again to be sure
+                if (await gitService.fileExists(draftPath)) { // Check without staging context first
+                    await gitService.deleteFile(draftPath, staging);
+                    pathsToCommit.push(draftRelPath);
                 }
             }
 
-            // Commit all changes atomically
-            const commitMessage = `Publish: ${articleData.headline}`;
+            // Write article
+            await gitService.writeFileAtomic(articlePath, markdownContent, staging);
 
-            // Stage article first
-            await gitService.commitFiles(filesToCommit, commitMessage);
+            // 5. Commit all
+            const commitMessage = (mode === 'create' ? 'Publish article: ' : 'Update article: ') + headline;
+            await gitService.commitFiles(pathsToCommit, commitMessage, staging);
 
             // Push async
             this.pushAsync();
@@ -487,15 +528,16 @@ class ContentGit {
                     section,
                     url: `/${section}/${slug}`,
                     publishedAt,
+                    mode,
                 },
-                userMessage: 'Article published successfully.',
+                userMessage: mode === 'update' ? 'Article updated successfully.' : 'Article published successfully.',
             };
         } catch (error) {
             logger.error('Failed to publish article', error);
             const gitError = gitService.translateError(error);
             return {
                 success: false,
-                userMessage: 'Publishing didn\'t complete. Please try again.',
+                userMessage: gitError.userMessage,
                 error: gitError,
             };
         }
@@ -503,7 +545,6 @@ class ContentGit {
 
     /**
      * UPDATE: Update a published article
-     * Commits with message: "Update: {{headline}}"
      */
     async updatePublishedArticle(
         section: Section,
@@ -522,7 +563,7 @@ class ContentGit {
             const absolutePath = gitService.getPublishedPath(section, slug);
             const relativePath = gitService.getPublishedRelativePath(section, slug);
 
-            if (!gitService.fileExists(absolutePath)) {
+            if (!await gitService.fileExists(absolutePath)) {
                 return {
                     success: false,
                     userMessage: 'Article not found.',
@@ -530,7 +571,7 @@ class ContentGit {
             }
 
             // Read existing content
-            const existingContent = gitService.readFile(absolutePath);
+            const existingContent = await gitService.readFile(absolutePath);
             if (!existingContent) {
                 return {
                     success: false,
@@ -567,11 +608,12 @@ class ContentGit {
             // Generate updated markdown
             const markdownContent = this.generateMarkdownContent(updatedArticle);
 
-            // Write atomically
-            await gitService.writeFileAtomic(absolutePath, markdownContent);
+            // Write atomically (stage)
+            const staging = createGitStaging();
+            await gitService.writeFileAtomic(absolutePath, markdownContent, staging);
 
             // Commit
-            await gitService.commitFile(relativePath, `Update: ${updatedArticle.headline}`);
+            await gitService.commitFile(relativePath, `Update: ${updatedArticle.headline}`, staging);
 
             // Push async
             this.pushAsync();
@@ -595,17 +637,17 @@ class ContentGit {
     /**
      * Check if a slug already exists
      */
-    slugExists(section: Section, slug: string): boolean {
+    async slugExists(section: Section, slug: string): Promise<boolean> {
         const absolutePath = gitService.getPublishedPath(section, slug);
-        return gitService.fileExists(absolutePath);
+        return await gitService.fileExists(absolutePath);
     }
 
     /**
      * Check if a draft exists
      */
-    draftExists(draftId: string): boolean {
+    async draftExists(draftId: string): Promise<boolean> {
         const absolutePath = gitService.getDraftPath(draftId);
-        return gitService.fileExists(absolutePath);
+        return await gitService.fileExists(absolutePath);
     }
 
     /**
@@ -752,12 +794,10 @@ class ContentGit {
 
     /**
      * Push changes to remote asynchronously
-     * Non-blocking, logs errors but doesn't fail the operation
      */
     private pushAsync(): void {
         gitService.push().catch(error => {
             logger.error('Background push failed', error);
-            // TODO: Queue for retry
         });
     }
 }

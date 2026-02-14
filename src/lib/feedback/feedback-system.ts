@@ -20,8 +20,6 @@ import {
 import {
     getErrorMessage,
     getSuccessMessage,
-    getFullErrorText,
-    errorTranslations,
 } from './translations';
 
 /**

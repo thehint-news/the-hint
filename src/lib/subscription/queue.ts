@@ -1,26 +1,18 @@
-
-import fs from 'fs';
-import path from 'path';
-import { SubscriptionEvent, EventStatus, EventPriority, QueueStatus } from './types';
+import { gitService, createGitStaging } from '../git/service';
+import { SubscriptionEvent, QueueStatus } from './types';
 import { v4 as uuidv4 } from 'uuid';
+import { Mutex } from 'async-mutex';
 
-const DATA_DIR = path.join(process.cwd(), 'src', 'data');
-const QUEUE_FILE = path.join(DATA_DIR, 'subscription-events.json');
-
-// Ensure data directory exists
-if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-}
-
-// Initialize queue file if not exists
-if (!fs.existsSync(QUEUE_FILE)) {
-    fs.writeFileSync(QUEUE_FILE, JSON.stringify([], null, 2));
-}
+const QUEUE_PATH = 'src/data/subscription-events.json';
+const LOCK_PATH = 'src/data/queue.lock';
 
 class SubscriptionQueue {
-    private getEvents(): SubscriptionEvent[] {
+    private mutex = new Mutex();
+
+    private async getEvents(): Promise<SubscriptionEvent[]> {
         try {
-            const data = fs.readFileSync(QUEUE_FILE, 'utf-8');
+            const data = await gitService.readFile(QUEUE_PATH);
+            if (!data) return [];
             return JSON.parse(data) as SubscriptionEvent[];
         } catch (error) {
             console.error('Failed to read subscription queue:', error);
@@ -28,112 +20,104 @@ class SubscriptionQueue {
         }
     }
 
-    private saveEvents(events: SubscriptionEvent[]): void {
+    private async saveEvents(events: SubscriptionEvent[], message: string): Promise<void> {
         try {
-            // Atomic write pattern: write to tmp then rename
-            const tempFile = `${QUEUE_FILE}.tmp`;
-            fs.writeFileSync(tempFile, JSON.stringify(events, null, 2));
-            fs.renameSync(tempFile, QUEUE_FILE);
+            await gitService.saveFile(QUEUE_PATH, JSON.stringify(events, null, 2), message);
         } catch (error) {
             console.error('Failed to save subscription queue:', error);
-            // Don't throw, just log. This is critical but we don't want to crash the app if possible, 
-            // though typically this should bubble up.
+            throw error; // Re-throw to inform caller of failure
         }
     }
 
     /**
      * Enqueue a new publication event.
-     * This is the ONLY entry point from the Publishing Layer.
-     * It must be fast and never block.
      */
-    public enqueue(
+    public async enqueue(
         data: Omit<SubscriptionEvent, 'id' | 'createdAt' | 'status' | 'attempts' | 'processedCount' | 'sentEmails'>
-    ): SubscriptionEvent {
-        const event: SubscriptionEvent = {
-            id: uuidv4(),
-            ...data,
-            createdAt: new Date().toISOString(),
-            status: 'pending',
-            attempts: 0,
-            processedCount: 0,
-            sentEmails: [],
-        };
+    ): Promise<SubscriptionEvent> {
+        return await this.mutex.runExclusive(async () => {
+            const event: SubscriptionEvent = {
+                id: uuidv4(),
+                ...data,
+                createdAt: new Date().toISOString(),
+                status: 'pending',
+                attempts: 0,
+                processedCount: 0,
+                sentEmails: [],
+            };
 
-        const events = this.getEvents();
-        events.push(event);
-        this.saveEvents(events);
+            const events = await this.getEvents();
+            events.push(event);
+            await this.saveEvents(events, `Enqueue: subscription event ${event.id}`);
 
-        return event;
+            return event;
+        });
     }
 
     /**
      * Get the next pending event respecting priority.
-     * Priority: breaking > important > normal
      */
-    public getNextPending(): SubscriptionEvent | null {
-        const events = this.getEvents();
+    public async getNextPending(): Promise<SubscriptionEvent | null> {
+        const events = await this.getEvents();
 
-        // Sort by priority and time
         const pending = events.filter(e => e.status === 'pending');
 
         if (pending.length === 0) return null;
 
-        // Custom sort: breaking first, then important, then normal. Within that, older first (FIFO).
         pending.sort((a, b) => {
             const priorityScore = { breaking: 3, important: 2, normal: 1 };
-            const scoreA = priorityScore[a.priority];
-            const scoreB = priorityScore[b.priority];
+            const scoreA = priorityScore[a.priority as keyof typeof priorityScore];
+            const scoreB = priorityScore[b.priority as keyof typeof priorityScore];
 
-            if (scoreA !== scoreB) return scoreB - scoreA; // High score first
+            if (scoreA !== scoreB) return (scoreB || 0) - (scoreA || 0);
 
-            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(); // Oldest first
+            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
         });
 
         return pending[0];
     }
 
-    public updateEvent(id: string, updates: Partial<SubscriptionEvent>): void {
-        const events = this.getEvents();
-        const index = events.findIndex(e => e.id === id);
+    public async updateEvent(id: string, updates: Partial<SubscriptionEvent>): Promise<void> {
+        return await this.mutex.runExclusive(async () => {
+            const events = await this.getEvents();
+            const index = events.findIndex(e => e.id === id);
 
-        if (index !== -1) {
+            if (index === -1) {
+                throw new Error(`Subscription event with ID ${id} not found for update.`);
+            }
+
             events[index] = { ...events[index], ...updates };
-            this.saveEvents(events);
-        }
+            await this.saveEvents(events, `Update event ${id}: ${updates.status || 'data update'}`);
+        });
     }
 
-    public getStatus(): QueueStatus {
-        const events = this.getEvents();
+    public async getStatus(): Promise<QueueStatus> {
+        const events = await this.getEvents();
         return {
             length: events.length,
             pending: events.filter(e => e.status === 'pending').length,
             processing: events.filter(e => e.status === 'processing').length,
             failed: events.filter(e => e.status === 'failed').length,
-            paused: events.some(e => e.status === 'paused'), // Global pause logic might need a separate flag
+            paused: await this.isPaused(),
         };
     }
 
-    public getEvent(id: string): SubscriptionEvent | undefined {
-        return this.getEvents().find(e => e.id === id);
+    public async getEvent(id: string): Promise<SubscriptionEvent | undefined> {
+        return (await this.getEvents()).find(e => e.id === id);
     }
 
-    public pauseQueue(): void {
-        // Implement global pause logic if needed, possibly a separate lock file or flag in the event?
-        // For now, we can use a lock file.
-        const lockFile = path.join(DATA_DIR, 'queue.lock');
-        fs.writeFileSync(lockFile, 'PAUSED');
+    public async pauseQueue(): Promise<void> {
+        await gitService.saveFile(LOCK_PATH, 'PAUSED', 'Pause subscription queue');
     }
 
-    public resumeQueue(): void {
-        const lockFile = path.join(DATA_DIR, 'queue.lock');
-        if (fs.existsSync(lockFile)) {
-            fs.unlinkSync(lockFile);
-        }
+    public async resumeQueue(): Promise<void> {
+        const staging = createGitStaging();
+        await gitService.deleteFile(LOCK_PATH, staging);
+        await gitService.commitDeletion(LOCK_PATH, 'Resume subscription queue', staging);
     }
 
-    public isPaused(): boolean {
-        const lockFile = path.join(DATA_DIR, 'queue.lock');
-        return fs.existsSync(lockFile);
+    public async isPaused(): Promise<boolean> {
+        return await gitService.fileExists(LOCK_PATH);
     }
 }
 

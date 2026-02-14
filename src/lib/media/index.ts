@@ -7,7 +7,6 @@
 export {
     processImageUpload,
     generateImageHash,
-    ensureMediaDirectories,
     getImageDimensions,
     loadMediaRegistry,
     saveMediaRegistry,

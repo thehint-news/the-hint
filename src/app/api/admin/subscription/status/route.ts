@@ -4,7 +4,7 @@ import { queueManager } from '@/lib/subscription/queue';
 
 export async function GET(_request: NextRequest): Promise<NextResponse> {
     try {
-        const status = queueManager.getStatus();
+        const status = await queueManager.getStatus();
         return NextResponse.json({
             success: true,
             status,
@@ -23,10 +23,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const { action } = body;
 
         if (action === 'pause') {
-            queueManager.pauseQueue();
+            await queueManager.pauseQueue();
             return NextResponse.json({ success: true, message: 'Queue paused' });
         } else if (action === 'resume') {
-            queueManager.resumeQueue();
+            await queueManager.resumeQueue();
             return NextResponse.json({ success: true, message: 'Queue resumed' });
         } else {
             return NextResponse.json(

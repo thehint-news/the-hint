@@ -800,89 +800,57 @@
     "totalSubscribers": 0
   },
   {
-    "id": "28df9c70-c102-4940-8b28-1f5126fd58ae",
-    "articleSlug": "moltbook-a-new-ai",
+    "id": "9a0c5e5e-5f1e-471a-b213-9f358929b35d",
+    "articleSlug": "moltbook-a-new-cpr",
     "section": "opinion",
-    "headline": "moltbook a new AI",
+    "headline": "moltbook a new cpr",
     "summary": "i dont know butrperfect",
     "contentType": "opinion",
     "priority": "normal",
-    "createdAt": "2026-02-14T11:56:44.171Z",
+    "createdAt": "2026-02-14T11:24:02.445Z",
     "status": "sent",
     "attempts": 0,
     "processedCount": 1,
     "sentEmails": [
-      "smartinboxauto@gmail.com"
+      "subscriber@example.com"
     ],
-    "lastAttemptAt": "2026-02-14T11:56:59.641Z",
+    "lastAttemptAt": "2026-02-14T11:24:07.508Z",
     "totalSubscribers": 1
   },
   {
-    "id": "7e5768a9-8435-4e82-98d3-31297c0e74cf",
-    "articleSlug": "moltbook-a-new-ai",
+    "id": "38aff458-9872-4e77-99e7-99900d553826",
+    "articleSlug": "moltbook-a-new-cpr",
     "section": "opinion",
-    "headline": "moltbook a new AI",
+    "headline": "moltbook a new cpr",
     "summary": "i dont know butrperfect",
     "contentType": "opinion",
     "priority": "normal",
-    "createdAt": "2026-02-14T12:08:42.077Z",
+    "createdAt": "2026-02-14T11:28:10.935Z",
     "status": "sent",
     "attempts": 0,
     "processedCount": 1,
     "sentEmails": [
-      "smartinboxauto@gmail.com"
+      "subscriber@example.com"
     ],
-    "lastAttemptAt": "2026-02-14T12:08:57.146Z",
+    "lastAttemptAt": "2026-02-14T11:28:17.754Z",
     "totalSubscribers": 1
   },
   {
-    "id": "d511dabb-27f4-41a3-bfcd-368ba40376f1",
-    "articleSlug": "moltbook-a-new-ai",
+    "id": "e529a234-cc98-402e-985e-d3b8d4b15ad7",
+    "articleSlug": "moltbook-a-new-cpr",
     "section": "opinion",
-    "headline": "moltbook a new AI",
+    "headline": "moltbook a new cpr",
     "summary": "i dont know butrperfect",
     "contentType": "opinion",
     "priority": "normal",
-    "createdAt": "2026-02-14T12:10:05.277Z",
+    "createdAt": "2026-02-14T11:29:00.017Z",
     "status": "sent",
     "attempts": 0,
     "processedCount": 1,
     "sentEmails": [
-      "smartinboxauto@gmail.com"
+      "subscriber@example.com"
     ],
-    "lastAttemptAt": "2026-02-14T12:10:20.191Z",
+    "lastAttemptAt": "2026-02-14T11:29:05.043Z",
     "totalSubscribers": 1
-  },
-  {
-    "id": "423c3441-cb82-43bf-bbd4-f61e3f09b470",
-    "articleSlug": "moltbook-a-new-ai",
-    "section": "opinion",
-    "headline": "moltbook a new AI",
-    "summary": "i dont know but perfect",
-    "contentType": "opinion",
-    "priority": "normal",
-    "createdAt": "2026-02-14T12:10:29.907Z",
-    "status": "sent",
-    "attempts": 0,
-    "processedCount": 1,
-    "sentEmails": [
-      "smartinboxauto@gmail.com"
-    ],
-    "lastAttemptAt": "2026-02-14T13:13:06.230Z",
-    "totalSubscribers": 1
-  },
-  {
-    "id": "7c8186da-e314-4732-b354-7b49afecda3e",
-    "articleSlug": "moltbook-a-new-ai",
-    "section": "opinion",
-    "headline": "moltbook a new AI",
-    "summary": "i dont know but perfect",
-    "contentType": "opinion",
-    "priority": "normal",
-    "createdAt": "2026-02-14T13:12:48.009Z",
-    "status": "pending",
-    "attempts": 0,
-    "processedCount": 0,
-    "sentEmails": []
   }
 ]

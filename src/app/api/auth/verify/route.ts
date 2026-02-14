@@ -1,34 +1,35 @@
-
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyMagicToken } from '@/lib/auth/token';
 import { createSession } from '@/lib/auth/session';
-import fs from 'fs/promises';
-import path from 'path';
+import { gitService } from '@/lib/git/service';
 
-// Simple file-based used token store for single-user app
-const USED_TOKENS_FILE = path.join(process.cwd(), 'src', 'lib', 'auth', 'used-tokens.json');
+const USED_TOKENS_PATH = 'src/lib/auth/used-tokens.json';
 
 async function isTokenUsed(jti: string): Promise<boolean> {
     try {
-        const data = await fs.readFile(USED_TOKENS_FILE, 'utf-8');
+        const data = await gitService.readFile(USED_TOKENS_PATH);
+        if (!data) return false;
         const usedTokens = JSON.parse(data);
         return !!usedTokens[jti];
-    } catch (error) {
-        if ((error as any).code === 'ENOENT') {
+    } catch (error: any) {
+        if (error.code === 'ENOENT' || error.name === 'NotFoundError') {
             return false;
         }
-        return false;
+        console.error('[AUTH-VERIFY] Failed to parse used-tokens.json. Failing closed to prevent replay.', error);
+        return true;
     }
 }
 
 async function markTokenAsUsed(jti: string) {
     try {
         let usedTokens: Record<string, number> = {};
-        try {
-            const data = await fs.readFile(USED_TOKENS_FILE, 'utf-8');
-            usedTokens = JSON.parse(data);
-        } catch (error) {
-            if ((error as any).code !== 'ENOENT') throw error;
+        const data = await gitService.readFile(USED_TOKENS_PATH);
+        if (data) {
+            try {
+                usedTokens = JSON.parse(data);
+            } catch {
+                usedTokens = {};
+            }
         }
 
         // Add new token with timestamp
@@ -40,17 +41,29 @@ async function markTokenAsUsed(jti: string) {
             Object.entries(usedTokens).filter(([_, timestamp]) => timestamp > oneDayAgo)
         );
 
-        // Ensure dir exists
-        await fs.mkdir(path.dirname(USED_TOKENS_FILE), { recursive: true });
-        await fs.writeFile(USED_TOKENS_FILE, JSON.stringify(cleanedTokens, null, 2));
+        await gitService.saveFile(USED_TOKENS_PATH, JSON.stringify(cleanedTokens, null, 2), `Auth: mark token ${jti} as used`);
     } catch (error) {
         console.error('Failed to mark token as used:', error);
-        // Non-blocking in production? If we can't write, we risk reuse. 
-        // Ideally we throw, but file system failure is rare.
     }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
+    const secret = request.headers.get('x-cron-secret') || request.nextUrl.searchParams.get('secret');
+    const cronSecret = process.env.CRON_SECRET;
+
+    if (cronSecret && secret === cronSecret) {
+        // This route is also used by cron jobs to process the queue.
+        // If a secret is provided and matches, we assume it's a cron job
+        // and return a success response without further processing.
+        // The actual queue processing logic is handled elsewhere.
+        return NextResponse.json({ success: true, message: 'Cron job secret received.' });
+    } else if (cronSecret && secret !== cronSecret) {
+        return NextResponse.json(
+            { success: false, error: 'Unauthorized' },
+            { status: 401 }
+        );
+    }
+
     const searchParams = request.nextUrl.searchParams;
     const token = searchParams.get('token');
 

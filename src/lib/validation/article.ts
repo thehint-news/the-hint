@@ -226,6 +226,7 @@ export interface ValidatedDraftData {
     placement: Placement;
     sources: string[];
     thumbnail?: string;
+    slug?: string;
     savedAt: string;
 }
 
@@ -399,7 +400,7 @@ export function transformToValidatedData(input: PublishArticleInput): ValidatedA
     const status = input.status as ArticleStatus;
     const tags = normalizeTags(input.tags);
     const sources = sanitizeStringArray(input.sources);
-    const slug = generateSlug(headline);
+    const slug = typeof input.slug === 'string' && input.slug ? input.slug : generateSlug(headline);
     const thumbnail = typeof input.thumbnail === 'string' ? input.thumbnail : undefined;
 
     return {
@@ -430,6 +431,7 @@ export function transformToDraftData(input: DraftArticleInput, draftId?: string)
     const tags = normalizeTags(input.tags);
     const sources = sanitizeStringArray(input.sources);
     const thumbnail = typeof input.thumbnail === 'string' ? input.thumbnail : undefined;
+    const slug = typeof (input as any).slug === 'string' ? (input as any).slug : undefined;
 
     return {
         draftId: draftId || generateDraftId(),
@@ -442,6 +444,7 @@ export function transformToDraftData(input: DraftArticleInput, draftId?: string)
         placement,
         sources,
         thumbnail,
+        slug,
         savedAt: new Date().toISOString(),
     };
 }

@@ -4,11 +4,12 @@
  */
 
 export { gitService, GitOperationError, GitErrorType } from './service';
-export type { GitCommitResult, GitOperationResult, Section } from './service';
+export type { GitCommitResult, Section } from './service';
 export { contentGit } from './content';
 export type {
     DraftData,
     PublishedArticleData,
     ArticleListItem,
+    ContentOperationResult as GitOperationResult,
     ContentOperationResult
 } from './content';

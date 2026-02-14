@@ -36,6 +36,7 @@ interface VideoBlockEditorProps {
         provider?: SocialVideoProvider;
         mimeType?: string;
         trustedSourceHtml?: string;
+        isRestricted?: boolean;
     }) => void;
     /** Callback when cancel is clicked */
     onCancel: () => void;
@@ -64,6 +65,7 @@ export function VideoBlockEditor({
         provider?: SocialVideoProvider;
         mimeType?: string;
         trustedSourceHtml?: string;
+        isRestricted?: boolean;
     } | null>(block ? {
         sourceType: block.sourceType,
         originalUrl: block.originalUrl,
@@ -74,6 +76,7 @@ export function VideoBlockEditor({
         provider: block.provider,
         mimeType: block.mimeType,
         trustedSourceHtml: block.trustedSourceHtml,
+        isRestricted: block.isRestricted,
     } : null);
 
     // UX State
@@ -157,6 +160,7 @@ export function VideoBlockEditor({
                     provider: result.data.provider,
                     mimeType: result.data.mimeType,
                     trustedSourceHtml: result.data.trustedSourceHtml,
+                    isRestricted: result.data.isRestricted,
                 });
 
                 // Build default caption if empty (preserving user-typed content)
@@ -202,7 +206,7 @@ export function VideoBlockEditor({
 
         // Thumbnail validation (Required for file/cdn, optional for social)
         const finalThumbnail = customThumbnail.trim() || videoData.posterThumbnail;
-        if (!finalThumbnail && videoData.sourceType !== 'social') {
+        if (!finalThumbnail && (videoData.sourceType !== 'social' || videoData.isRestricted)) {
             return;
         }
 
@@ -218,6 +222,7 @@ export function VideoBlockEditor({
             provider: videoData.provider,
             mimeType: videoData.mimeType,
             trustedSourceHtml: videoData.trustedSourceHtml,
+            isRestricted: videoData.isRestricted,
         });
     }, [videoData, caption, credit, customThumbnail, onSave]);
 
@@ -270,7 +275,7 @@ export function VideoBlockEditor({
     const valid = !!videoData && !!caption.trim() && (hasThumbnail || (videoData?.sourceType === 'social'));
 
     return (
-        <div className={styles.overlay} onClick={onCancel}>
+        <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onCancel()}>
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.header}>
                     <h3 className={styles.title}>
@@ -299,12 +304,13 @@ export function VideoBlockEditor({
                                     placeholder="Paste URL (YouTube, Vimeo, Twitter, direct .mp4, etc.)"
                                     className={styles.input}
                                     onKeyDown={(e) => e.key === 'Enter' && handleFetchVideo()}
+                                    onClick={(e) => e.stopPropagation()}
                                     autoFocus
                                 />
                                 <button
                                     type="button"
                                     className={styles.fetchButton}
-                                    onClick={handleFetchVideo}
+                                    onClick={(e) => { e.stopPropagation(); handleFetchVideo(); }}
                                     disabled={isFetching || !url.trim()}
                                 >
                                     {isFetching ? 'Checking...' : 'Add'}
@@ -319,6 +325,16 @@ export function VideoBlockEditor({
                         /* STEP 2: Preview & Metadata */
                         <div className={styles.previewSection}>
 
+                            {/* Editorial Warning for Restricted Platforms */}
+                            {videoData.isRestricted && (
+                                <div className={styles.restrictedWarning}>
+                                    <span className={styles.warningIcon}>ℹ️</span>
+                                    <p className={styles.warningText}>
+                                        This platform restricts external playback.
+                                    </p>
+                                </div>
+                            )}
+
                             {/* Preview Card */}
                             <div className={styles.previewCard}>
                                 <div className={styles.thumbnailContainer}>
@@ -331,7 +347,7 @@ export function VideoBlockEditor({
                                     ) : (
                                         <div className={styles.missingThumbnail}>
                                             <span style={{ fontSize: '24px' }}>🎬</span>
-                                            <span style={{ fontSize: '12px', marginTop: '4px' }}>Embed Preview</span>
+                                            <span style={{ fontSize: '12px', marginTop: '4px' }}>Link Preview</span>
                                         </div>
                                     )}
                                     {videoData.duration && (
@@ -351,14 +367,14 @@ export function VideoBlockEditor({
                                         <button
                                             type="button"
                                             className={styles.changeButton}
-                                            onClick={handleClear}
+                                            onClick={(e) => { e.stopPropagation(); handleClear(); }}
                                         >
                                             Replace Video
                                         </button>
                                         <button
                                             type="button"
                                             className={styles.fetchMetadataButton}
-                                            onClick={handleFetchVideo}
+                                            onClick={(e) => { e.stopPropagation(); handleFetchVideo(); }}
                                             disabled={isFetching}
                                             title="Auto-fetch thumbnail and title from platform"
                                         >
@@ -369,22 +385,22 @@ export function VideoBlockEditor({
                             </div>
 
                             {/* Thumbnail Overlay Input (Optional Override) */}
-                            {(!hasThumbnail || videoData.sourceType !== 'social') && (
+                            {(!hasThumbnail || videoData.sourceType !== 'social' || videoData.isRestricted) && (
                                 <div className={styles.field}>
                                     <label className={styles.label}>
-                                        {videoData.sourceType === 'social' ? 'Add Custom Poster' : 'Poster Thumbnail'}
-                                        {(!hasThumbnail && videoData.sourceType !== 'social') && <span className={styles.required}>* Required</span>}
-                                        {videoData.sourceType === 'social' && <span className={styles.optional}>(Optional)</span>}
+                                        {videoData.sourceType === 'social' ? 'Poster Thumbnail' : 'Poster Thumbnail'}
+                                        {(!hasThumbnail && (videoData.sourceType !== 'social' || videoData.isRestricted)) && <span className={styles.required}>* Required</span>}
+                                        {(videoData.sourceType === 'social' && !videoData.isRestricted) && <span className={styles.optional}>(Optional)</span>}
                                     </label>
 
                                     <div className={styles.thumbnailUpload}>
                                         <div
                                             className={styles.thumbnailDropzone}
-                                            onClick={() => document.getElementById('thumbnail-upload')?.click()}
+                                            onClick={(e) => { e.stopPropagation(); document.getElementById('thumbnail-upload')?.click(); }}
                                         >
                                             <span className={styles.dropicon}>🖼️</span>
                                             <span className={styles.droptext}>
-                                                {isUploadingThumbnail ? 'Uploading...' : 'Click to upload custom poster'}
+                                                {isUploadingThumbnail ? 'Uploading...' : 'Click to upload poster thumbnail'}
                                             </span>
                                         </div>
                                         <input
@@ -397,9 +413,9 @@ export function VideoBlockEditor({
                                         />
                                     </div>
 
-                                    {!hasThumbnail && videoData.sourceType !== 'social' && (
+                                    {!hasThumbnail && (videoData.sourceType !== 'social' || videoData.isRestricted) && (
                                         <p className={styles.fieldHint}>
-                                            This video requires a poster thumbnail. Please upload one.
+                                            This video requires a poster thumbnail for the link preview. Please upload one.
                                         </p>
                                     )}
                                     {thumbnailError && <div className={styles.error}>{thumbnailError}</div>}
@@ -411,12 +427,13 @@ export function VideoBlockEditor({
                                 <label className={styles.label}>
                                     Caption <span className={styles.required}>* Required</span>
                                 </label>
-                                <input
-                                    type="text"
+                                <textarea
                                     value={caption}
                                     onChange={(e) => setCaption(e.target.value)}
                                     placeholder="Describe this video for readers..."
-                                    className={`${styles.input} ${(touched && !caption.trim()) ? styles.inputError : ''}`}
+                                    className={`${styles.captionTextarea} ${(touched && !caption.trim()) ? styles.inputError : ''}`}
+                                    onClick={(e) => e.stopPropagation()}
+                                    rows={3}
                                 />
                             </div>
 
@@ -431,6 +448,7 @@ export function VideoBlockEditor({
                                     onChange={(e) => setCredit(e.target.value)}
                                     placeholder="e.g. Courtesy of NASA"
                                     className={styles.input}
+                                    onClick={(e) => e.stopPropagation()}
                                 />
                             </div>
 
@@ -442,19 +460,20 @@ export function VideoBlockEditor({
                     <button
                         type="button"
                         className={styles.cancelButton}
-                        onClick={onCancel}
+                        onClick={(e) => { e.stopPropagation(); onCancel(); }}
                     >
                         Cancel
                     </button>
                     <button
                         type="button"
                         className={styles.saveButton}
-                        onClick={handleSave}
+                        onClick={(e) => { e.stopPropagation(); handleSave(); }}
                         disabled={!valid}
                     >
                         {isEditing ? 'Save Changes' : 'Insert Video'}
                     </button>
                 </div>
+
             </div>
         </div>
     );

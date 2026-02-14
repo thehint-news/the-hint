@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 
     let article;
     try {
-        const data = getArticlePageData(section, slug);
+        const data = await getArticlePageData(section, slug);
         article = data.article;
     } catch {
         return {
@@ -82,7 +82,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     // Fetch article data
     let articleData;
     try {
-        articleData = getArticlePageData(section, slug);
+        articleData = await getArticlePageData(section, slug);
     } catch (error) {
         // Handle known error cases
         if (
@@ -99,7 +99,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     const { article } = articleData;
 
     // Get recommendations
-    const recommendations = getContinueReadingArticles(article);
+    const recommendations = await getContinueReadingArticles(article);
 
     // Prepare section label (format slug to display name)
     const sectionLabel = article.section

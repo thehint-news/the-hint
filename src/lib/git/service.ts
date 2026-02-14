@@ -1,18 +1,16 @@
 /**
  * Git Service
- * Low-level Git operations for the editorial system.
+ * Git operations using Octokit (GitHub API).
+ * Replaces simple-git/fs for serverless compatibility.
  * 
  * RULES:
- * - All operations are atomic
- * - All operations are committed
- * - All errors are caught and translated to user-friendly messages
- * - No Git terminology exposed to frontend
+ * - All operations are atomic via API
+ * - No local filesystem write persistence
  * - Repository credentials loaded from environment
  */
 
-import { simpleGit, SimpleGit, SimpleGitOptions } from 'simple-git';
+import { Octokit } from 'octokit';
 import path from 'path';
-import fs from 'fs';
 
 /** Git error types for internal classification */
 export enum GitErrorType {
@@ -21,6 +19,7 @@ export enum GitErrorType {
     NETWORK = 'NETWORK',
     NOT_FOUND = 'NOT_FOUND',
     INVALID_STATE = 'INVALID_STATE',
+    VALIDATION_ERROR = 'VALIDATION_ERROR',
     UNKNOWN = 'UNKNOWN',
 }
 
@@ -37,440 +36,446 @@ export class GitOperationError extends Error {
     }
 }
 
-/** Result of a Git commit operation */
 export interface GitCommitResult {
     success: boolean;
     commitHash?: string;
     message: string;
 }
 
-/** Result of a Git operation */
-export interface GitOperationResult<T = void> {
-    success: boolean;
-    data?: T;
-    error?: GitOperationError;
+/** Staging area for atomic operations */
+export interface GitStaging {
+    pendingWrites: Map<string, string | Buffer>;
+    pendingDeletes: Set<string>;
 }
 
-/** Base path for the repository */
-const REPO_BASE_PATH = process.cwd();
+/** Helper to create a new staging context */
+export function createGitStaging(): GitStaging {
+    return {
+        pendingWrites: new Map(),
+        pendingDeletes: new Set(),
+    };
+}
 
-/** Content directories */
-const CONTENT_DIR = 'src/content';
-const DRAFTS_DIR = path.join(CONTENT_DIR, 'drafts');
-const PUBLISHED_DIR = 'src/content'; // Published content is directly in section folders
+const REPO_OWNER = process.env.GIT_REPO_OWNER || '';
+const REPO_NAME = process.env.GIT_REPO_NAME || '';
+
+if (!REPO_OWNER || !REPO_NAME) {
+    console.warn('[GIT-SERVICE] Warning: GIT_REPO_OWNER or GIT_REPO_NAME missing. Git operations will fail.');
+}
+const BRANCH = 'main';
 
 /** Valid sections for published content */
 const VALID_SECTIONS = ['politics', 'world-affairs', 'crime', 'court', 'opinion'] as const;
 export type Section = typeof VALID_SECTIONS[number];
 
-/** Git service singleton */
 class GitService {
-    private git: SimpleGit;
-    private isInitialized: boolean = false;
-    private initializationError: Error | null = null;
+    private octokit: Octokit;
 
     constructor() {
-        const options: Partial<SimpleGitOptions> = {
-            baseDir: REPO_BASE_PATH,
-            binary: 'git',
-            maxConcurrentProcesses: 1, // Serialize operations for safety
-            trimmed: true,
-        };
+        const token = process.env.GIT_TOKEN;
+        if (!token) {
+            throw new Error('[GIT-SERVICE] Missing GIT_TOKEN environment variable.');
+        }
 
-        this.git = simpleGit(options);
+        this.octokit = new Octokit({
+            auth: token,
+        });
+    }
+
+    // Helper to get relative path
+    private getRelativePath(absolutePath: string): string {
+        if (path.isAbsolute(absolutePath)) {
+            // Strip up to (and including) root, or just take 'src' onwards if in project
+            const rel = path.relative(process.cwd(), absolutePath).replace(/\\/g, '/');
+            return rel;
+        }
+        return absolutePath.replace(/\\/g, '/');
+    }
+
+    // Path helpers mapping to virtual structure
+    getDraftPath(draftId: string): string {
+        return path.join(process.cwd(), 'src/content/drafts', `${draftId}.json`);
+    }
+
+    getDraftRelativePath(draftId: string): string {
+        return `src/content/drafts/${draftId}.json`;
+    }
+
+    getPublishedPath(section: string, slug: string): string {
+        return path.join(process.cwd(), 'src/content', section, `${slug}.md`);
+    }
+
+    getPublishedRelativePath(section: string, slug: string): string {
+        return `src/content/${section}/${slug}.md`;
+    }
+
+    async initialize() {
+        // No-op for API client
+    }
+
+    async getCurrentBranch(): Promise<string> {
+        return BRANCH;
+    }
+
+    async hasUncommittedChanges(staging?: GitStaging): Promise<boolean> {
+        if (!staging) return false;
+        return staging.pendingWrites.size > 0 || staging.pendingDeletes.size > 0;
     }
 
     /**
-     * Initialize Git service and verify repository state
+     * Read file content from GitHub API
      */
-    async initialize(): Promise<void> {
-        if (this.isInitialized) return;
-        if (this.initializationError) throw this.initializationError;
-
+    async readFile(filePath: string, staging?: GitStaging): Promise<string | null> {
         try {
-            // Check if we're in a Git repository
-            const isRepo = await this.git.checkIsRepo();
-            if (!isRepo) {
-                throw new GitOperationError(
-                    'Not a Git repository',
-                    GitErrorType.INVALID_STATE,
-                    'Content system is not properly configured.'
-                );
-            }
+            const relPath = this.getRelativePath(filePath);
 
-            // Configure Git author from environment variables
-            const authorName = process.env.GIT_AUTHOR_NAME;
-            const authorEmail = process.env.GIT_AUTHOR_EMAIL;
-
-            if (authorName) {
-                await this.git.addConfig('user.name', authorName, false, 'local');
-            }
-            if (authorEmail) {
-                await this.git.addConfig('user.email', authorEmail, false, 'local');
-            }
-
-            // Configure remote URL if provided (for token-based auth)
-            const remoteUrl = process.env.GIT_REMOTE_URL;
-            if (remoteUrl) {
-                try {
-                    // Check if origin exists
-                    const remotes = await this.git.getRemotes(true);
-                    const hasOrigin = remotes.some(r => r.name === 'origin');
-
-                    if (hasOrigin) {
-                        // Update existing origin
-                        await this.git.remote(['set-url', 'origin', remoteUrl]);
-                    } else {
-                        // Add origin
-                        await this.git.addRemote('origin', remoteUrl);
-                    }
-                } catch (remoteError) {
-                    console.warn('Could not configure Git remote:', remoteError);
-                    // Non-fatal - continue without remote
+            // Check pending writes first (consistency within transaction scope)
+            if (staging && staging.pendingWrites.has(relPath)) {
+                const pending = staging.pendingWrites.get(relPath);
+                if (Buffer.isBuffer(pending)) {
+                    return pending.toString('utf-8');
                 }
+                return pending !== undefined ? (pending as string) : null;
+            }
+            if (staging && staging.pendingDeletes.has(relPath)) {
+                return null;
             }
 
-            // Ensure drafts directory exists
-            const draftsPath = path.join(REPO_BASE_PATH, DRAFTS_DIR);
-            if (!fs.existsSync(draftsPath)) {
-                fs.mkdirSync(draftsPath, { recursive: true });
-                // Create .gitkeep to track empty directory
-                fs.writeFileSync(path.join(draftsPath, '.gitkeep'), '# Keep this directory\n');
-            }
+            const response = await this.octokit.rest.repos.getContent({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                path: relPath,
+                ref: BRANCH,
+            });
 
-            // Ensure all section directories exist
-            for (const section of VALID_SECTIONS) {
-                const sectionPath = path.join(REPO_BASE_PATH, PUBLISHED_DIR, section);
-                if (!fs.existsSync(sectionPath)) {
-                    fs.mkdirSync(sectionPath, { recursive: true });
-                }
-            }
+            if (Array.isArray(response.data)) return null;
 
-            this.isInitialized = true;
-        } catch (error) {
-            this.initializationError = error instanceof Error ? error : new Error(String(error));
-            throw this.initializationError;
+            if ('content' in response.data && response.data.content) {
+                return Buffer.from(response.data.content, 'base64').toString('utf-8');
+            }
+            return null;
+        } catch (error: any) {
+            if (error.status === 404) return null;
+            console.error(`Git readFile error for ${filePath}:`, error.message);
+            return null;
         }
     }
 
-    /**
-     * Get the absolute path for a draft file
-     */
-    getDraftPath(draftId: string): string {
-        // Sanitize draftId to prevent path traversal
-        const safeDraftId = draftId.replace(/[^a-z0-9-]/gi, '');
-        return path.join(REPO_BASE_PATH, DRAFTS_DIR, `${safeDraftId}.json`);
+    async fileExists(filePath: string, staging?: GitStaging): Promise<boolean> {
+        return (await this.readFile(filePath, staging)) !== null;
     }
 
-    /**
-     * Get the relative path for a draft file (for Git operations)
-     */
-    getDraftRelativePath(draftId: string): string {
-        const safeDraftId = draftId.replace(/[^a-z0-9-]/gi, '');
-        return path.join(DRAFTS_DIR, `${safeDraftId}.json`);
-    }
-
-    /**
-     * Get the absolute path for a published article
-     */
-    getPublishedPath(section: Section, slug: string): string {
-        const safeSlug = slug.replace(/[^a-z0-9-]/gi, '-');
-        return path.join(REPO_BASE_PATH, PUBLISHED_DIR, section, `${safeSlug}.md`);
-    }
-
-    /**
-     * Get the relative path for a published article (for Git operations)
-     */
-    getPublishedRelativePath(section: Section, slug: string): string {
-        const safeSlug = slug.replace(/[^a-z0-9-]/gi, '-');
-        return path.join(PUBLISHED_DIR, section, `${safeSlug}.md`);
-    }
-
-    /**
-     * Write a file atomically
-     */
-    async writeFileAtomic(absolutePath: string, content: string): Promise<void> {
-        const tempPath = `${absolutePath}.tmp`;
+    async listFiles(dirPath: string, extension?: string): Promise<string[]> {
         try {
-            // Ensure directory exists
-            const dir = path.dirname(absolutePath);
-            if (!fs.existsSync(dir)) {
-                fs.mkdirSync(dir, { recursive: true });
+            const relPath = this.getRelativePath(dirPath);
+            const response = await this.octokit.rest.repos.getContent({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                path: relPath,
+                ref: BRANCH,
+            });
+
+            if (!Array.isArray(response.data)) return [];
+
+            let files = response.data
+                .filter(item => item.type === 'file')
+                .map(item => item.name);
+
+            if (extension) {
+                files = files.filter(f => f.endsWith(extension));
+            }
+            return files;
+        } catch (error: any) {
+            if (error.status === 404) return [];
+            return [];
+        }
+    }
+
+    async getFileInfo(filePath: string): Promise<{ content: string | null; sha: string | null }> {
+        try {
+            const relPath = this.getRelativePath(filePath);
+
+            const response = await this.octokit.rest.repos.getContent({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                path: relPath,
+                ref: BRANCH,
+            });
+
+            if (Array.isArray(response.data)) return { content: null, sha: null };
+
+            let content: string | null = null;
+            if ('content' in response.data && response.data.content) {
+                content = Buffer.from(response.data.content, 'base64').toString('utf-8');
             }
 
-            // Write to temp file first
-            fs.writeFileSync(tempPath, content, { encoding: 'utf-8' });
-
-            // Rename (atomic on most file systems)
-            fs.renameSync(tempPath, absolutePath);
-        } catch (error) {
-            // Cleanup temp file if it exists
-            try {
-                if (fs.existsSync(tempPath)) {
-                    fs.unlinkSync(tempPath);
-                }
-            } catch {
-                // Ignore cleanup errors
-            }
+            return {
+                content,
+                sha: response.data.sha || null
+            };
+        } catch (error: any) {
+            if (error.status === 404) return { content: null, sha: null };
             throw error;
         }
     }
 
     /**
-     * Delete a file if it exists
+     * Stage a file write (in-memory)
      */
-    async deleteFile(absolutePath: string): Promise<boolean> {
-        try {
-            if (fs.existsSync(absolutePath)) {
-                fs.unlinkSync(absolutePath);
-                return true;
-            }
-            return false;
-        } catch (error) {
-            throw new GitOperationError(
-                `Failed to delete file: ${absolutePath}`,
-                GitErrorType.PERMISSION,
-                'We couldn\'t complete this action right now.',
-                error instanceof Error ? error : undefined
-            );
-        }
+    async writeFileAtomic(absolutePath: string, content: string | Buffer, staging: GitStaging): Promise<void> {
+        const relPath = this.getRelativePath(absolutePath);
+        staging.pendingWrites.set(relPath, content);
+        staging.pendingDeletes.delete(relPath);
     }
 
     /**
-     * Stage and commit a single file
+     * Stage a file delete (in-memory)
      */
-    async commitFile(relativePath: string, message: string): Promise<GitCommitResult> {
-        await this.initialize();
-
-        try {
-            // Stage the file
-            await this.git.add(relativePath);
-
-            // Commit
-            const result = await this.git.commit(message);
-
-            return {
-                success: true,
-                commitHash: result.commit,
-                message: message,
-            };
-        } catch (error) {
-            console.error('Git commit failed:', error);
-            throw new GitOperationError(
-                `Commit failed: ${error}`,
-                GitErrorType.UNKNOWN,
-                'We couldn\'t save your changes right now. Please try again.',
-                error instanceof Error ? error : undefined
-            );
-        }
+    async deleteFile(absolutePath: string, staging: GitStaging): Promise<boolean> {
+        const relPath = this.getRelativePath(absolutePath);
+        staging.pendingDeletes.add(relPath);
+        staging.pendingWrites.delete(relPath);
+        return true;
     }
 
     /**
-     * Stage and commit multiple files atomically
+     * Commit a single file (write or update)
      */
-    async commitFiles(relativePaths: string[], message: string): Promise<GitCommitResult> {
-        await this.initialize();
+    async commitFile(relativePath: string, message: string, staging: GitStaging, retryCount = 0): Promise<GitCommitResult> {
+        const content = staging.pendingWrites.get(relativePath);
+        if (content === undefined) {
+            throw new Error(`No pending content for ${relativePath} to commit.`);
+        }
 
         try {
-            // Stage all files
-            for (const relativePath of relativePaths) {
-                await this.git.add(relativePath);
+            let sha: string | undefined;
+            try {
+                const { data } = await this.octokit.rest.repos.getContent({
+                    owner: REPO_OWNER,
+                    repo: REPO_NAME,
+                    path: relativePath,
+                    ref: BRANCH,
+                });
+                if (!Array.isArray(data) && 'sha' in data) {
+                    sha = data.sha;
+                }
+            } catch (e: any) {
+                if (e.status !== 404) throw e;
             }
 
-            // Commit
-            const result = await this.git.commit(message);
+            const contentBase64 = Buffer.isBuffer(content)
+                ? content.toString('base64')
+                : Buffer.from(content, 'utf-8').toString('base64');
+
+            const res = await this.octokit.rest.repos.createOrUpdateFileContents({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                path: relativePath,
+                message,
+                content: contentBase64,
+                branch: BRANCH,
+                sha,
+                committer: {
+                    name: process.env.GIT_AUTHOR_NAME || 'Editor',
+                    email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
+                },
+                author: {
+                    name: process.env.GIT_AUTHOR_NAME || 'Editor',
+                    email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
+                }
+            });
+
+            staging.pendingWrites.delete(relativePath);
 
             return {
                 success: true,
-                commitHash: result.commit,
-                message: message,
+                commitHash: res.data.commit.sha,
+                message
             };
-        } catch (error) {
-            console.error('Git commit failed:', error);
-            throw new GitOperationError(
-                `Commit failed: ${error}`,
-                GitErrorType.UNKNOWN,
-                'We couldn\'t save your changes right now. Please try again.',
-                error instanceof Error ? error : undefined
-            );
+        } catch (error: any) {
+            if (error.status === 409 && retryCount < 1) {
+                return this.commitFile(relativePath, message, staging, retryCount + 1);
+            }
+            throw this.translateError(error);
         }
     }
 
     /**
-     * Stage a file for deletion and commit
+     * Convenience method to save and commit a file in one go
      */
-    async commitDeletion(relativePath: string, message: string): Promise<GitCommitResult> {
-        await this.initialize();
+    async saveFile(filePath: string, content: string | Buffer, message: string): Promise<GitCommitResult> {
+        const relPath = this.getRelativePath(filePath);
+        const staging = createGitStaging();
+        await this.writeFileAtomic(filePath, content, staging);
+        return await this.commitFile(relPath, message, staging);
+    }
+
+    /**
+     * Commit a single deletion
+     */
+    async commitDeletion(relativePath: string, message: string, staging: GitStaging): Promise<GitCommitResult> {
+        if (!staging.pendingDeletes.has(relativePath)) {
+            throw new GitOperationError(
+                `File not staged for deletion: ${relativePath}`,
+                GitErrorType.INVALID_STATE,
+                'File deletion not staged'
+            );
+        }
 
         try {
-            // Stage the deletion
-            await this.git.rm(relativePath);
+            const { data } = await this.octokit.rest.repos.getContent({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                path: relativePath,
+                ref: BRANCH,
+            });
 
-            // Commit
-            const result = await this.git.commit(message);
+            if (Array.isArray(data) || !('sha' in data)) {
+                throw new Error('Path is a directory or invalid');
+            }
+
+            const res = await this.octokit.rest.repos.deleteFile({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                path: relativePath,
+                message,
+                sha: data.sha,
+                branch: BRANCH,
+                committer: {
+                    name: process.env.GIT_AUTHOR_NAME || 'Editor',
+                    email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
+                },
+                author: {
+                    name: process.env.GIT_AUTHOR_NAME || 'Editor',
+                    email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
+                }
+            });
+
+            staging.pendingDeletes.delete(relativePath);
 
             return {
                 success: true,
-                commitHash: result.commit,
-                message: message,
+                commitHash: res.data.commit.sha,
+                message
             };
-        } catch (error) {
-            console.error('Git delete commit failed:', error);
-            throw new GitOperationError(
-                `Delete commit failed: ${error}`,
-                GitErrorType.UNKNOWN,
-                'We couldn\'t complete this action right now. Please try again.',
-                error instanceof Error ? error : undefined
-            );
+        } catch (error: any) {
+            throw this.translateError(error);
         }
     }
 
     /**
-     * Push changes to the remote repository
+     * Commit multiple changes atomically using Git Data API (Tree)
      */
+    async commitFiles(filesPaths: string[], message: string, staging: GitStaging, retryCount = 0): Promise<GitCommitResult> {
+        try {
+            const ref = `heads/${BRANCH}`;
+            const { data: refData } = await this.octokit.rest.git.getRef({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                ref,
+            });
+            const latestCommitSha = refData.object.sha;
+
+            const { data: commitData } = await this.octokit.rest.git.getCommit({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                commit_sha: latestCommitSha,
+            });
+            const baseTreeSha = commitData.tree.sha;
+
+            const treeItems: any[] = [];
+            for (const p of filesPaths) {
+                const relP = p;
+                if (staging.pendingWrites.has(relP)) {
+                    const content = staging.pendingWrites.get(relP)!;
+                    treeItems.push({
+                        path: relP,
+                        mode: '100644',
+                        type: 'blob',
+                        content: Buffer.isBuffer(content) ? content.toString('utf-8') : content
+                    });
+                } else if (staging.pendingDeletes.has(relP)) {
+                    treeItems.push({
+                        path: relP,
+                        mode: '100644',
+                        type: 'blob',
+                        sha: null
+                    });
+                }
+            }
+
+            if (treeItems.length === 0) {
+                return { success: true, message: 'No changes to commit' };
+            }
+
+            const { data: treeData } = await this.octokit.rest.git.createTree({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                base_tree: baseTreeSha,
+                tree: treeItems,
+            });
+
+            const { data: newCommitData } = await this.octokit.rest.git.createCommit({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                message,
+                tree: treeData.sha,
+                parents: [latestCommitSha],
+                author: {
+                    name: process.env.GIT_AUTHOR_NAME || 'Editor',
+                    email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
+                }
+            });
+
+            await this.octokit.rest.git.updateRef({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                ref,
+                sha: newCommitData.sha,
+            });
+
+            for (const p of filesPaths) {
+                staging.pendingWrites.delete(p);
+                staging.pendingDeletes.delete(p);
+            }
+
+            return {
+                success: true,
+                commitHash: newCommitData.sha,
+                message
+            };
+        } catch (error: any) {
+            if ((error.status === 409 || error.status === 422) && retryCount < 1) {
+                return this.commitFiles(filesPaths, message, staging, retryCount + 1);
+            }
+            throw this.translateError(error);
+        }
+    }
+
     async push(): Promise<void> {
-        await this.initialize();
-
-        try {
-            await this.git.push();
-        } catch (error) {
-            console.error('Git push failed:', error);
-            throw new GitOperationError(
-                `Push failed: ${error}`,
-                GitErrorType.NETWORK,
-                'Changes saved locally but couldn\'t sync. Will retry automatically.',
-                error instanceof Error ? error : undefined
-            );
-        }
+        // No-op for API
     }
 
-    /**
-     * Pull latest changes from remote
-     */
     async pull(): Promise<void> {
-        await this.initialize();
-
-        try {
-            await this.git.pull();
-        } catch (error) {
-            console.error('Git pull failed:', error);
-            throw new GitOperationError(
-                `Pull failed: ${error}`,
-                GitErrorType.NETWORK,
-                'Couldn\'t fetch latest content. Using local version.',
-                error instanceof Error ? error : undefined
-            );
-        }
+        // No-op
     }
 
-    /**
-     * Check if the repository has uncommitted changes
-     */
-    async hasUncommittedChanges(): Promise<boolean> {
-        await this.initialize();
-        const status = await this.git.status();
-        return !status.isClean();
-    }
+    translateError(error: any): GitOperationError {
+        const msg = error.message || String(error);
+        const status = error.status;
 
-    /**
-     * Get the current branch name
-     */
-    async getCurrentBranch(): Promise<string> {
-        await this.initialize();
-        const branch = await this.git.revparse(['--abbrev-ref', 'HEAD']);
-        return branch;
-    }
-
-    /**
-     * Read a file from the repository
-     */
-    readFile(absolutePath: string): string | null {
-        try {
-            if (!fs.existsSync(absolutePath)) {
-                return null;
-            }
-            return fs.readFileSync(absolutePath, 'utf-8');
-        } catch (error) {
-            console.error(`Failed to read file: ${absolutePath}`, error);
-            return null;
+        if (status === 409 || msg.includes('Conflict')) {
+            return new GitOperationError(msg, GitErrorType.CONFLICT, 'Concurrent modification detected. Please refresh and try again.', error);
         }
-    }
-
-    /**
-     * Check if a file exists
-     */
-    fileExists(absolutePath: string): boolean {
-        return fs.existsSync(absolutePath);
-    }
-
-    /**
-     * List all files in a directory
-     */
-    listFiles(absolutePath: string, extension?: string): string[] {
-        try {
-            if (!fs.existsSync(absolutePath)) {
-                return [];
-            }
-
-            const files = fs.readdirSync(absolutePath);
-
-            if (extension) {
-                return files.filter(f => f.endsWith(extension));
-            }
-
-            return files;
-        } catch (error) {
-            console.error(`Failed to list files: ${absolutePath}`, error);
-            return [];
+        if (status === 404 || msg.includes('Not Found')) {
+            return new GitOperationError(msg, GitErrorType.NOT_FOUND, 'File not found.', error);
         }
-    }
-
-    /**
-     * Translate Git errors to user-friendly messages
-     */
-    translateError(error: unknown): GitOperationError {
-        if (error instanceof GitOperationError) {
-            return error;
+        if (status === 401 || msg.includes('Unauthorized')) {
+            return new GitOperationError(msg, GitErrorType.PERMISSION, 'Authentication issue. CMS session may have expired.', error);
         }
 
-        const errorMessage = error instanceof Error ? error.message : String(error);
-
-        // Detect common error patterns
-        if (errorMessage.includes('CONFLICT') || errorMessage.includes('conflict')) {
-            return new GitOperationError(
-                errorMessage,
-                GitErrorType.CONFLICT,
-                'Someone else may have made changes. Please refresh and try again.',
-                error instanceof Error ? error : undefined
-            );
-        }
-
-        if (errorMessage.includes('permission denied') || errorMessage.includes('Permission denied')) {
-            return new GitOperationError(
-                errorMessage,
-                GitErrorType.PERMISSION,
-                'You don\'t have permission to complete this action.',
-                error instanceof Error ? error : undefined
-            );
-        }
-
-        if (errorMessage.includes('network') || errorMessage.includes('Could not resolve')) {
-            return new GitOperationError(
-                errorMessage,
-                GitErrorType.NETWORK,
-                'Connection issue. Your changes are saved locally.',
-                error instanceof Error ? error : undefined
-            );
-        }
-
-        return new GitOperationError(
-            errorMessage,
-            GitErrorType.UNKNOWN,
-            'Something went wrong. Please try again.',
-            error instanceof Error ? error : undefined
-        );
+        return new GitOperationError(msg, GitErrorType.UNKNOWN, "We couldn't complete publishing. Please try again.", error);
     }
 }
 
-// Export singleton instance
 export const gitService = new GitService();

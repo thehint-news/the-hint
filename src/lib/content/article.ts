@@ -7,8 +7,8 @@
  * NO JSX, NO TAILWIND, NO UI LAYER IMPORTS.
  */
 
-import { getArticleBySlug, getValidSections, getArticlesBySection } from './reader';
-import { Article, Section, ContentValidationError } from './types';
+import { getArticleBySlug, getValidSections } from './reader';
+import { Article, Section } from './types';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -148,8 +148,8 @@ function validateSlug(slug: string): string {
  * @throws ArticleNotFoundError if article doesn't exist
  * @throws SectionMismatchError if article section doesn't match
  */
-function fetchArticle(section: Section, slug: string): Article {
-    const article = getArticleBySlug(section, slug);
+async function fetchArticle(section: Section, slug: string): Promise<Article> {
+    const article = await getArticleBySlug(section, slug);
 
     if (!article) {
         throw new ArticleNotFoundError(section, slug);
@@ -187,7 +187,7 @@ function fetchArticle(section: Section, slug: string): Article {
  * @throws ArticleNotFoundError if article doesn't exist
  * @throws SectionMismatchError if article section doesn't match requested section
  */
-export function getArticlePageData(section: string, slug: string): ArticlePageData {
+export async function getArticlePageData(section: string, slug: string): Promise<ArticlePageData> {
     // Validate section (throws if invalid)
     const validatedSection = validateSection(section);
 
@@ -195,7 +195,7 @@ export function getArticlePageData(section: string, slug: string): ArticlePageDa
     const validatedSlug = validateSlug(slug);
 
     // Fetch article (throws if not found or section mismatch)
-    const article = fetchArticle(validatedSection, validatedSlug);
+    const article = await fetchArticle(validatedSection, validatedSlug);
 
     return {
         article,

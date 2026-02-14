@@ -52,7 +52,9 @@ export {
     MEDIA_LIMITS,
     ALLOWED_IMAGE_FORMATS,
     MAX_IMAGE_SIZE_BYTES,
-    ALLOWED_VIDEO_PROVIDERS,
+    SOCIAL_VIDEO_PROVIDERS,
+    /** @deprecated Use SOCIAL_VIDEO_PROVIDERS instead */
+    SOCIAL_VIDEO_PROVIDERS as ALLOWED_VIDEO_PROVIDERS,
     isTextBlock,
     isMediaBlock,
     isImageBlock,
@@ -80,7 +82,9 @@ export type {
     TextBlock,
     MediaBlock,
     ImageAspectRatio,
-    VideoProvider,
+    SocialVideoProvider,
+    /** @deprecated Use SocialVideoProvider instead */
+    SocialVideoProvider as VideoProvider,
     AllowedImageFormat,
     MediaAsset,
     FeaturedImage,

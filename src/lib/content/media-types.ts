@@ -143,6 +143,8 @@ export interface VideoBlock extends BaseBlock {
     title?: string;
     /** Raw, trusted oEmbed HTML for rich social previews (Entire Post) */
     trustedSourceHtml?: string;
+    /** Flag to force fallback link-preview mode for restricted platforms (e.g. Facebook) */
+    isRestricted?: boolean;
 }
 
 // =============================================================================

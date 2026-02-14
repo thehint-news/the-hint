@@ -134,9 +134,9 @@ function getSectionInfo(section: Section): SectionInfo {
  * Get articles for a section, properly sorted
  * Articles are sorted by publishedAt descending (newest first)
  */
-function getSectionArticles(section: Section): Article[] {
+async function getSectionArticles(section: Section): Promise<Article[]> {
     // getArticlesBySection already returns sorted articles
-    return getArticlesBySection(section);
+    return await getArticlesBySection(section);
 }
 
 // ============================================================================
@@ -158,7 +158,7 @@ function getSectionArticles(section: Section): Article[] {
  * @returns SectionPageData object with section info and articles
  * @throws InvalidSectionError if section is not valid
  */
-export function getSectionPageData(section: string): SectionPageData {
+export async function getSectionPageData(section: string): Promise<SectionPageData> {
     // Validate section (throws if invalid)
     const validatedSection = validateSection(section);
 
@@ -166,7 +166,7 @@ export function getSectionPageData(section: string): SectionPageData {
     const sectionInfo = getSectionInfo(validatedSection);
 
     // Get articles for this section
-    const articles = getSectionArticles(validatedSection);
+    const articles = await getSectionArticles(validatedSection);
 
     return {
         section: sectionInfo,

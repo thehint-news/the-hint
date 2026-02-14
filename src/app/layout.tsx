@@ -69,7 +69,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // Fetch articles for global UI elements (Ticker, Updated Indicator)
-  const allArticles = getAllArticles();
+  const allArticles = await getAllArticles();
 
   // Latest update timestamp (from any article)
   const latestUpdate = allArticles.length > 0 ? allArticles[0].publishedAt : undefined;

@@ -1,10 +1,9 @@
 /**
- * Content Reader Utility
- * Reads and validates Markdown articles from /src/content/{section}/
+ * Content Reader Utility (Git-Backed)
+ * Reads and validates Markdown articles from Git via GitService.
  */
 
-import fs from 'fs';
-import path from 'path';
+import { gitService } from '../git/service';
 import { parseMarkdown } from './parser';
 import {
     Article,
@@ -12,6 +11,7 @@ import {
     ContentValidationError,
     ContentParseError,
 } from './types';
+import path from 'path';
 
 /** Valid section folder names */
 const VALID_SECTIONS: Section[] = [
@@ -21,9 +21,6 @@ const VALID_SECTIONS: Section[] = [
     'opinion',
     'world-affairs',
 ];
-
-/** Base path for content files */
-const CONTENT_BASE_PATH = path.join(process.cwd(), 'src', 'content');
 
 /**
  * Validate that a section string is a valid Section type
@@ -40,34 +37,22 @@ function getSlugFromFilename(filename: string): string {
 }
 
 /**
- * Get relative path from content root for error messages
+ * Read and parse a single article file from Git
  */
-function getRelativePath(filePath: string): string {
-    return path.relative(CONTENT_BASE_PATH, filePath);
-}
+async function readArticleFile(filePath: string, expectedSection: Section): Promise<Article> {
+    const relPath = filePath; // GitService handles relative paths
 
-/**
- * Read and parse a single article file
- * @param filePath - Absolute path to the Markdown file
- * @param expectedSection - Section folder the file should belong to
- * @returns Validated Article object
- */
-function readArticleFile(filePath: string, expectedSection: Section): Article {
-    const relativePath = getRelativePath(filePath);
-
-    // Read file content
-    let content: string;
-    try {
-        content = fs.readFileSync(filePath, 'utf-8');
-    } catch (error) {
+    // Read file content from Git
+    const content = await gitService.readFile(filePath);
+    if (content === null) {
         throw new ContentParseError(
-            `Failed to read file: ${(error as Error).message}`,
-            relativePath
+            `Failed to read file: Not found in Git`,
+            relPath
         );
     }
 
     // Parse markdown and frontmatter
-    const parsed = parseMarkdown(content, relativePath);
+    const parsed = parseMarkdown(content, relPath);
     const { frontmatter, body } = parsed;
 
     // Extract slug from filename
@@ -77,18 +62,17 @@ function readArticleFile(filePath: string, expectedSection: Section): Article {
     // Validate: opinion contentType can only appear in opinion section
     if (frontmatter.contentType === 'opinion' && expectedSection !== 'opinion') {
         throw new ContentValidationError(
-            `Opinion articles can only be placed in the /opinion section. ` +
-            `Found opinion article in /${expectedSection}`,
-            relativePath,
+            `Opinion articles can only be placed in the /opinion section. Found opinion article in /${expectedSection}`,
+            relPath,
             'contentType'
         );
     }
 
-    // Validate: status must be published (or undefined/null assumed published for legacy, but we strictly check publishedAt)
+    // Validate: status must be published
     if (frontmatter.status === 'draft') {
         throw new ContentValidationError(
             'Article is a draft',
-            relativePath,
+            relPath,
             'status'
         );
     }
@@ -97,7 +81,7 @@ function readArticleFile(filePath: string, expectedSection: Section): Article {
     if (!frontmatter.publishedAt) {
         throw new ContentValidationError(
             'Article missing publishedAt date',
-            relativePath,
+            relPath,
             'publishedAt'
         );
     }
@@ -106,27 +90,24 @@ function readArticleFile(filePath: string, expectedSection: Section): Article {
     if (!body || body.trim().length === 0) {
         throw new ContentValidationError(
             'Article body cannot be empty',
-            relativePath,
+            relPath,
             'body'
         );
     }
 
-    // Valid placements
+    // Placements
     const validPlacements = ['lead', 'top', 'standard'];
     let placement = frontmatter.placement;
 
-    // Backward compatibility: map featured=true to placement=lead
     if (!placement && (frontmatter as any).featured === true) {
         placement = 'lead';
     }
 
-    // Default to 'standard'
     if (!placement || !validPlacements.includes(placement)) {
         placement = 'standard';
     }
 
-    // Construct validated article
-    const article: Article = {
+    return {
         id: slug,
         section: expectedSection,
         title: frontmatter.title,
@@ -140,43 +121,27 @@ function readArticleFile(filePath: string, expectedSection: Section): Article {
         image: frontmatter.image,
         body: body,
     };
-
-    return article;
 }
 
 /**
- * Read all articles from a specific section
- * @param section - Section folder name
- * @returns Array of validated articles
+ * Read all articles from a specific section in Git
  */
-function readSectionArticles(section: Section): Article[] {
-    const sectionPath = path.join(CONTENT_BASE_PATH, section);
+async function readSectionArticles(section: Section): Promise<Article[]> {
+    const sectionPath = `src/content/${section}`;
 
-    // Check if section directory exists
-    if (!fs.existsSync(sectionPath)) {
-        return [];
-    }
-
-    // Read all .md files in the section
-    const files = fs.readdirSync(sectionPath);
-    const mdFiles = files.filter(f => f.endsWith('.md'));
+    // Read directory from Git
+    const files = await gitService.listFiles(sectionPath, '.md');
 
     const articles: Article[] = [];
 
-    for (const filename of mdFiles) {
-        const filePath = path.join(sectionPath, filename);
+    for (const filename of files) {
+        const filePath = `${sectionPath}/${filename}`;
 
-        // Skip directories (shouldn't happen but safety check)
         try {
-            const stat = fs.statSync(filePath);
-            if (!stat.isFile()) continue;
-
-            const article = readArticleFile(filePath, section);
+            const article = await readArticleFile(filePath, section);
             articles.push(article);
         } catch (error) {
-            // Warn but continue for individual file errors
             console.warn(`Skipping invalid article ${filename}: ${(error as Error).message}`);
-            continue;
         }
     }
 
@@ -185,15 +150,13 @@ function readSectionArticles(section: Section): Article[] {
 
 /**
  * Get all articles from all sections
- * @returns Array of all validated articles, sorted by publishedAt (newest first)
  */
-export function getAllArticles(): Article[] {
-    const allArticles: Article[] = [];
+export async function getAllArticles(): Promise<Article[]> {
+    const results = await Promise.all(
+        VALID_SECTIONS.map(section => readSectionArticles(section))
+    );
 
-    for (const section of VALID_SECTIONS) {
-        const sectionArticles = readSectionArticles(section);
-        allArticles.push(...sectionArticles);
-    }
+    const allArticles = results.flat();
 
     // Sort by publishedAt descending (newest first)
     allArticles.sort((a, b) => {
@@ -207,13 +170,8 @@ export function getAllArticles(): Article[] {
 
 /**
  * Get a single article by section and slug
- * @param section - Section folder name
- * @param slug - Article slug (filename without .md)
- * @returns Article if found, null otherwise
- * @throws ContentValidationError if section is invalid
  */
-export function getArticleBySlug(section: string, slug: string): Article | null {
-    // Validate section
+export async function getArticleBySlug(section: string, slug: string): Promise<Article | null> {
     if (!isValidSection(section)) {
         throw new ContentValidationError(
             `Invalid section: "${section}". Valid sections are: ${VALID_SECTIONS.join(', ')}`,
@@ -222,24 +180,23 @@ export function getArticleBySlug(section: string, slug: string): Article | null 
         );
     }
 
-    const filePath = path.join(CONTENT_BASE_PATH, section, `${slug}.md`);
+    const filePath = `src/content/${section}/${slug}.md`;
 
-    // Check if file exists
-    if (!fs.existsSync(filePath)) {
-        return null;
+    try {
+        if (!await gitService.fileExists(filePath)) {
+            return null;
+        }
+        return await readArticleFile(filePath, section);
+    } catch (err) {
+        console.error(`[READER] Failed to read article file at ${filePath} in section ${section}:`, err);
+        throw err;
     }
-
-    return readArticleFile(filePath, section);
 }
 
 /**
  * Get all articles from a specific section
- * @param section - Section folder name
- * @returns Array of articles in that section, sorted by publishedAt (newest first)
- * @throws ContentValidationError if section is invalid
  */
-export function getArticlesBySection(section: string): Article[] {
-    // Validate section
+export async function getArticlesBySection(section: string): Promise<Article[]> {
     if (!isValidSection(section)) {
         throw new ContentValidationError(
             `Invalid section: "${section}". Valid sections are: ${VALID_SECTIONS.join(', ')}`,
@@ -248,9 +205,8 @@ export function getArticlesBySection(section: string): Article[] {
         );
     }
 
-    const articles = readSectionArticles(section);
+    const articles = await readSectionArticles(section);
 
-    // Sort by publishedAt descending (newest first)
     articles.sort((a, b) => {
         const dateA = new Date(a.publishedAt).getTime();
         const dateB = new Date(b.publishedAt).getTime();
@@ -261,30 +217,28 @@ export function getArticlesBySection(section: string): Article[] {
 }
 
 /**
- * Get all lead (formerly featured) articles across all sections
- * @returns Array of lead articles, sorted by publishedAt (newest first)
+ * Get all lead (formerly featured) articles
  */
-export function getLeadArticles(): Article[] {
-    return getAllArticles().filter(article => article.placement === 'lead');
+export async function getLeadArticles(): Promise<Article[]> {
+    const all = await getAllArticles();
+    return all.filter(article => article.placement === 'lead');
 }
 
 /**
  * Get articles by tag
- * @param tag - Tag to filter by
- * @returns Array of articles with the specified tag
  */
-export function getArticlesByTag(tag: string): Article[] {
-    return getAllArticles().filter(article =>
+export async function getArticlesByTag(tag: string): Promise<Article[]> {
+    const all = await getAllArticles();
+    return all.filter(article =>
         article.tags.some(t => t.toLowerCase() === tag.toLowerCase())
     );
 }
 
 /**
- * Get all unique tags across all articles
- * @returns Array of unique tags, sorted alphabetically
+ * Get all unique tags
  */
-export function getAllTags(): string[] {
-    const allArticles = getAllArticles();
+export async function getAllTags(): Promise<string[]> {
+    const allArticles = await getAllArticles();
     const tagSet = new Set<string>();
 
     for (const article of allArticles) {
@@ -298,7 +252,6 @@ export function getAllTags(): string[] {
 
 /**
  * Get list of all valid sections
- * @returns Array of valid section names
  */
 export function getValidSections(): Section[] {
     return [...VALID_SECTIONS];

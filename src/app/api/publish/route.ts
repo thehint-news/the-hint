@@ -124,7 +124,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const inputSlug = typeof input.slug === 'string' && input.slug ? input.slug : null;
         const isSelfUpdate = inputSlug && inputSlug === targetSlug;
 
-        if (!isSelfUpdate && contentGit.slugExists(articleData.section as Section, targetSlug)) {
+        if (!isSelfUpdate && await contentGit.slugExists(articleData.section as Section, targetSlug)) {
             return userResponse(
                 false,
                 `An article with this title already exists in ${articleData.section}.`,
@@ -170,7 +170,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         // Initialize Subscription Event (Control Plane) - fire and forget
         try {
             const { queueManager } = await import('@/lib/subscription/queue');
-            queueManager.enqueue({
+            await queueManager.enqueue({
                 articleSlug: targetSlug,
                 section: articleData.section,
                 headline: articleData.headline,
@@ -194,14 +194,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
         return userResponse(
             true,
-            'Article published successfully.',
+            result.userMessage || 'Article published successfully.',
             {
                 slug: result.data?.slug,
                 section: result.data?.section,
                 url: result.data?.url,
                 publishedAt: result.data?.publishedAt,
+                mode: result.data?.mode,
             },
-            201
+            result.data?.mode === 'create' ? 201 : 200
         );
 
     } catch (error) {
@@ -245,7 +246,7 @@ export async function GET(): Promise<NextResponse> {
                 thumbnail: d.thumbnail,
                 savedAt: d.savedAt,
                 publishedAt: undefined as undefined,
-                slug: generateSlug(d.headline),
+                slug: d.slug || generateSlug(d.headline),
             })),
             ...published.map((p: PublishedArticleData) => ({
                 id: `published-${p.section}-${p.slug}`,

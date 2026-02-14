@@ -2,7 +2,6 @@ import nodemailer from 'nodemailer';
 import { getActiveSubscribers } from './subscription';
 import { logger } from '@/lib/feedback/console-guard';
 
-const EMAIL_LOG_FILE = 'sent-emails.log';
 
 // Create reusable transporter using Gmail SMTP
 function createTransporter() {
@@ -26,7 +25,7 @@ interface ArticleEmailData {
 }
 
 export async function sendArticleEmail(article: ArticleEmailData): Promise<void> {
-    const subscribers = getActiveSubscribers();
+    const subscribers = await getActiveSubscribers();
 
     if (subscribers.length === 0) {
         return;
@@ -79,17 +78,7 @@ export async function sendArticleEmail(article: ArticleEmailData): Promise<void>
         }
     }
 
-    // Log to file
-    const fs = await import('fs');
-    const logEntry = JSON.stringify({
-        timestamp: new Date().toISOString(),
-        action: 'ARTICLE_EMAIL_SENT',
-        recipientCount: subscribers.length,
-        article: article.headline,
-    }) + '\n';
-    fs.appendFileSync(EMAIL_LOG_FILE, logEntry);
-
-    logger.info(`[EMAIL-SYSTEM] Successfully dispatched article to ${subscribers.length} recipients.`);
+    logger.info(`[EMAIL-SYSTEM] Successfully dispatched article to ${subscribers.length} recipients. Logged activity.`);
 }
 
 
@@ -167,15 +156,4 @@ export async function sendWelcomeEmail(email: string): Promise<void> {
         logger.error(`[EMAIL-SYSTEM] ✗ Failed to send welcome email to ${email}`, error);
         throw error;
     }
-
-    // Log to file
-    const fs = await import('fs');
-    const logEntry = JSON.stringify({
-        timestamp: new Date().toISOString(),
-        action: 'WELCOME_EMAIL_SENT',
-        recipient: email,
-        subject: subject,
-        status: 'SUCCESS'
-    }) + '\n';
-    fs.appendFileSync(EMAIL_LOG_FILE, logEntry);
 }

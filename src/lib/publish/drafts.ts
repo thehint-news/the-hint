@@ -38,6 +38,7 @@ export async function saveDraft(draft: ValidatedDraftData): Promise<{ success: b
                 tags: draft.tags,
                 sources: draft.sources,
                 placement: draft.placement,
+                thumbnail: draft.thumbnail,
             },
             draft.draftId
         );
@@ -88,6 +89,7 @@ export async function loadDraft(draftId: string): Promise<ValidatedDraftData | n
             sources: draft.sources,
             placement: draft.placement as Placement,
             savedAt: draft.savedAt,
+            thumbnail: draft.thumbnail,
         };
     } catch (error) {
         logger.error('Failed to load draft', error);
@@ -137,31 +139,6 @@ export async function getDraftHistory(): Promise<DraftHistoryEntry[]> {
 /**
  * Check if a draft ID exists (Git-backed)
  */
-export function draftExists(draftId: string): boolean {
-    return contentGit.draftExists(draftId);
-}
-
-// Synchronous versions for backward compatibility where async isn't expected
-// These wrap the async functions but may not work perfectly in all contexts
-
-/**
- * @deprecated Use async saveDraft instead
- */
-export function saveDraftSync(draft: ValidatedDraftData): { success: boolean; draftId: string; error?: string } {
-    // This is a synchronous wrapper - Git operations are still async internally
-    // Not recommended for production use
-    logger.warn('saveDraftSync is deprecated. Use async saveDraft instead.');
-
-    // Return a pending result - actual save happens async
-    saveDraft(draft).catch(err => logger.error('saveDraftSync failed', err));
-
-    return { success: true, draftId: draft.draftId };
-}
-
-/**
- * @deprecated Use async getDraftHistory instead
- */
-export function getDraftHistorySync(): DraftHistoryEntry[] {
-    logger.warn('getDraftHistorySync is deprecated. Use async getDraftHistory instead.');
-    return [];
+export async function draftExists(draftId: string): Promise<boolean> {
+    return await contentGit.draftExists(draftId);
 }

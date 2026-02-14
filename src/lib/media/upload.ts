@@ -1,5 +1,5 @@
 /**
- * Media Upload Utilities
+ * Media Upload Utilities (Git-Backed)
  * Server-side image upload processing and storage
  * 
  * DESIGN SPEC: .agent/specifications/MEDIA_SYSTEM_DESIGN.md
@@ -7,22 +7,13 @@
  * Features:
  * - Image validation (format, size)
  * - Hash-based naming for deduplication
- * - Responsive size generation (400w, 800w, 1200w)
- * - WebP conversion (if not already WebP/AVIF)
- * - Storage in /public/media/images/
- * 
- * Rate Limiting Note:
- * Endpoints assume authenticated editor usage behind session middleware.
- * Rate limiting is deferred to infrastructure layer.
+ * - Storage in /public/media/images/ via Git commits
+ * - NO local filesystem persistence
  */
 
 import { createHash } from 'crypto';
-import { writeFile, mkdir, readFile, access } from 'fs/promises';
-import { join, extname } from 'path';
+import { gitService, createGitStaging } from '../git/service';
 import {
-    ALLOWED_IMAGE_FORMATS,
-    MAX_IMAGE_SIZE_BYTES,
-    AllowedImageFormat,
     MediaAsset,
     ImageDimensions,
 } from '../content/media-types';
@@ -59,7 +50,6 @@ export interface ImageUploadResult {
     validationErrors?: MediaValidationResult['errors'];
 }
 
-
 /** Responsive size configuration */
 interface ResponsiveSize {
     name: string;
@@ -70,11 +60,11 @@ interface ResponsiveSize {
 // CONFIGURATION
 // =============================================================================
 
-/** Base directory for media storage (relative to project root) */
+/** Base directory for media storage (relative to repo root) */
 const MEDIA_BASE_DIR = 'public/media';
 const IMAGES_DIR = 'images';
 
-/** Responsive sizes to generate */
+/** Responsive sizes to generate (config only - resizing requires sharp which we avoid for simplicity in this pass) */
 const RESPONSIVE_SIZES: ResponsiveSize[] = [
     { name: '400w', width: 400 },
     { name: '800w', width: 800 },
@@ -98,43 +88,18 @@ export function generateImageHash(buffer: Buffer): string {
 }
 
 // =============================================================================
-// DIRECTORY MANAGEMENT
-// =============================================================================
-
-/**
- * Ensure media directories exist
- */
-export async function ensureMediaDirectories(): Promise<void> {
-    const imagesPath = join(process.cwd(), MEDIA_BASE_DIR, IMAGES_DIR);
-
-    try {
-        await access(imagesPath);
-    } catch {
-        await mkdir(imagesPath, { recursive: true });
-    }
-}
-
-// =============================================================================
-// IMAGE PROCESSING (PLACEHOLDER)
+// IMAGE PROCESSING (BASIC)
 // =============================================================================
 
 /**
  * Get image dimensions from buffer
- * 
- * NOTE: In production, use a library like 'sharp' or 'image-size'
- * This is a simplified placeholder that reads basic image headers
  */
 export async function getImageDimensions(
     buffer: Buffer,
     mimeType: string
 ): Promise<ImageDimensions | undefined> {
     try {
-        // Simple dimension extraction for common formats
-        // In production, use: const sharp = require('sharp');
-        //                     const metadata = await sharp(buffer).metadata();
-
         if (mimeType === 'image/png') {
-            // PNG: width at bytes 16-19, height at 20-23 (big-endian)
             if (buffer.length > 24 && buffer.toString('ascii', 1, 4) === 'PNG') {
                 const width = buffer.readUInt32BE(16);
                 const height = buffer.readUInt32BE(20);
@@ -143,33 +108,19 @@ export async function getImageDimensions(
         }
 
         if (mimeType === 'image/jpeg') {
-            // JPEG: scan for SOF0/SOF2 markers
             let offset = 2;
             while (offset < buffer.length) {
                 if (buffer[offset] !== 0xFF) break;
                 const marker = buffer[offset + 1];
-
-                // SOF0 (0xC0) or SOF2 (0xC2)
                 if (marker === 0xC0 || marker === 0xC2) {
                     const height = buffer.readUInt16BE(offset + 5);
                     const width = buffer.readUInt16BE(offset + 7);
                     return { width, height };
                 }
-
-                // Skip to next marker
                 const length = buffer.readUInt16BE(offset + 2);
                 offset += 2 + length;
             }
         }
-
-        // For WebP and AVIF, return placeholder dimensions
-        // In production, use sharp for accurate extraction
-        if (mimeType === 'image/webp' || mimeType === 'image/avif') {
-            // These formats require proper library support
-            // Return undefined to indicate dimensions need external extraction
-            return undefined;
-        }
-
         return undefined;
     } catch (error) {
         console.error('Error extracting image dimensions:', error);
@@ -178,59 +129,15 @@ export async function getImageDimensions(
 }
 
 /**
- * Generate responsive image sizes
- * 
- * NOTE: In production, use 'sharp' for actual image resizing:
- * await sharp(buffer).resize(targetWidth).webp().toBuffer()
- * 
- * For now, this is a placeholder that copies the original
- */
-export async function generateResponsiveSizes(
-    buffer: Buffer,
-    hash: string,
-    originalWidth: number,
-    mimeType: string
-): Promise<Record<string, string>> {
-    const sizes: Record<string, string> = {};
-
-    // In a real implementation, use sharp to resize:
-    // for (const size of RESPONSIVE_SIZES) {
-    //     if (size.width <= originalWidth) {
-    //         const resized = await sharp(buffer).resize(size.width).webp().toBuffer();
-    //         const filename = `${hash}-${size.name}.webp`;
-    //         await writeFile(path, resized);
-    //         sizes[size.name] = `${MEDIA_URL_PREFIX}/${filename}`;
-    //     }
-    // }
-
-    // For now, create size records pointing to original
-    // (actual resizing would happen in production with sharp)
-    const ext = getExtensionForMimeType(mimeType);
-
-    for (const size of RESPONSIVE_SIZES) {
-        if (size.width <= originalWidth) {
-            sizes[size.name] = `${MEDIA_URL_PREFIX}/${hash}-${size.name}${ext}`;
-        }
-    }
-
-    return sizes;
-}
-
-/**
  * Get file extension for MIME type
  */
 function getExtensionForMimeType(mimeType: string): string {
     switch (mimeType) {
-        case 'image/jpeg':
-            return '.jpg';
-        case 'image/png':
-            return '.png';
-        case 'image/webp':
-            return '.webp';
-        case 'image/avif':
-            return '.avif';
-        default:
-            return '.jpg';
+        case 'image/jpeg': return '.jpg';
+        case 'image/png': return '.png';
+        case 'image/webp': return '.webp';
+        case 'image/avif': return '.avif';
+        default: return '.jpg';
     }
 }
 
@@ -239,12 +146,7 @@ function getExtensionForMimeType(mimeType: string): string {
 // =============================================================================
 
 /**
- * Process and store an uploaded image
- * 
- * @param buffer - Image file buffer
- * @param filename - Original filename
- * @param mimeType - MIME type of the image
- * @param providedDimensions - Optional pre-known dimensions (from client)
+ * Process and store an uploaded image using GitService
  */
 export async function processImageUpload(
     buffer: Buffer,
@@ -268,55 +170,56 @@ export async function processImageUpload(
     }
 
     try {
-        // Ensure directories exist
-        await ensureMediaDirectories();
-
         // Generate hash-based ID
         const hash = generateImageHash(buffer);
 
         // Get dimensions
-        let dimensions = providedDimensions;
-        if (!dimensions) {
-            dimensions = await getImageDimensions(buffer, mimeType);
-        }
-
-        if (!dimensions) {
-            // Default dimensions if extraction fails
-            // In production, this should be an error or use sharp
-            dimensions = { width: 1200, height: 800 };
-        }
+        let dimensions = providedDimensions || await getImageDimensions(buffer, mimeType) || { width: 1200, height: 800 };
 
         // Determine file extension
         const ext = getExtensionForMimeType(mimeType);
 
-        // Save original file
+        // Save original file to Git
         const originalFilename = `${hash}-original${ext}`;
-        const originalPath = join(process.cwd(), MEDIA_BASE_DIR, IMAGES_DIR, originalFilename);
-        await writeFile(originalPath, buffer);
+        const relativePath = `${MEDIA_BASE_DIR}/${IMAGES_DIR}/${originalFilename}`;
 
-        // Generate responsive sizes (placeholder - would use sharp in production)
-        const sizes = await generateResponsiveSizes(buffer, hash, dimensions.width, mimeType);
+        const staging = createGitStaging();
+        // Stage original
+        await gitService.writeFileAtomic(relativePath, buffer, staging);
 
-        // For now, also save at the sizes paths (same file - would be resized in production)
-        for (const [sizeName, url] of Object.entries(sizes)) {
-            const sizeFilename = `${hash}-${sizeName}${ext}`;
-            const sizePath = join(process.cwd(), MEDIA_BASE_DIR, IMAGES_DIR, sizeFilename);
-            // In production: write resized version
-            // For now: copy original to each path
-            await writeFile(sizePath, buffer);
-        }
+        const filesToCommit = [relativePath];
+        const originalUrl = `${MEDIA_URL_PREFIX}/${originalFilename}`;
 
-        // Build srcset string
         const srcsetParts: string[] = [];
-        for (const [sizeName, url] of Object.entries(sizes)) {
-            const width = sizeName.replace('w', '');
-            srcsetParts.push(`${url} ${width}w`);
-        }
-        const srcset = srcsetParts.join(', ');
+        let bestResponsiveUrl: string | null = null;
 
-        // Primary URL (use 800w as default, or largest available)
-        const primaryUrl = sizes['800w'] || sizes['1200w'] || sizes['400w'] ||
-            `${MEDIA_URL_PREFIX}/${originalFilename}`;
+        for (const size of RESPONSIVE_SIZES) {
+            if (size.width <= dimensions.width) {
+                const sizeFilename = `${hash}-${size.name}${ext}`;
+                const sizePath = `${MEDIA_BASE_DIR}/${IMAGES_DIR}/${sizeFilename}`;
+
+                // Stage "resized" (copied) file
+                await gitService.writeFileAtomic(sizePath, buffer, staging);
+                filesToCommit.push(sizePath);
+
+                const url = `${MEDIA_URL_PREFIX}/${sizeFilename}`;
+                srcsetParts.push(`${url} ${size.width}w`);
+
+                // If this is the 800w size, mark as primary
+                if (size.width === 800) {
+                    bestResponsiveUrl = url;
+                }
+            }
+        }
+
+        // Always include original as fallback in srcset
+        srcsetParts.push(`${originalUrl} ${dimensions.width}w`);
+
+        // Commit all media files
+        await gitService.commitFiles(filesToCommit, `Media: upload ${filename} (${hash})`, staging);
+
+        const primaryUrl = bestResponsiveUrl || originalUrl;
+        const srcset = srcsetParts.join(', ');
 
         return {
             success: true,
@@ -340,18 +243,18 @@ export async function processImageUpload(
 }
 
 // =============================================================================
-// ASSET REGISTRY (Simple JSON-based for v1)
+// ASSET REGISTRY (Git-Backed)
 // =============================================================================
 
-const REGISTRY_PATH = join(process.cwd(), MEDIA_BASE_DIR, 'registry.json');
+const REGISTRY_PATH = `${MEDIA_BASE_DIR}/registry.json`;
 
 /**
- * Load media registry
+ * Load media registry from Git
  */
 export async function loadMediaRegistry(): Promise<MediaAsset[]> {
     try {
-        await access(REGISTRY_PATH);
-        const data = await readFile(REGISTRY_PATH, 'utf-8');
+        const data = await gitService.readFile(REGISTRY_PATH);
+        if (!data) return [];
         return JSON.parse(data);
     } catch {
         return [];
@@ -359,11 +262,10 @@ export async function loadMediaRegistry(): Promise<MediaAsset[]> {
 }
 
 /**
- * Save media registry
+ * Save media registry to Git
  */
 export async function saveMediaRegistry(assets: MediaAsset[]): Promise<void> {
-    await ensureMediaDirectories();
-    await writeFile(REGISTRY_PATH, JSON.stringify(assets, null, 2));
+    await gitService.saveFile(REGISTRY_PATH, JSON.stringify(assets, null, 2), 'Media: update registry');
 }
 
 /**
@@ -373,18 +275,9 @@ export async function registerMediaAsset(
     asset: Omit<MediaAsset, 'usedBy'>
 ): Promise<void> {
     const registry = await loadMediaRegistry();
+    if (registry.find(a => a.id === asset.id)) return;
 
-    // Check if asset already exists
-    const existing = registry.find(a => a.id === asset.id);
-    if (existing) {
-        return; // Already registered
-    }
-
-    registry.push({
-        ...asset,
-        usedBy: [],
-    });
-
+    registry.push({ ...asset, usedBy: [] });
     await saveMediaRegistry(registry);
 }
 
@@ -399,9 +292,7 @@ export async function updateAssetUsage(
     const registry = await loadMediaRegistry();
     const asset = registry.find(a => a.id === assetId);
 
-    if (!asset) {
-        return;
-    }
+    if (!asset) return;
 
     if (action === 'add') {
         if (!asset.usedBy.includes(articleSlug)) {
@@ -415,8 +306,7 @@ export async function updateAssetUsage(
 }
 
 /**
- * Get orphaned assets (not used by any article)
- * Useful for future cleanup tool
+ * Get orphaned assets
  */
 export async function getOrphanedAssets(): Promise<MediaAsset[]> {
     const registry = await loadMediaRegistry();

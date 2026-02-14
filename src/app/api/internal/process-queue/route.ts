@@ -7,10 +7,15 @@ import { processSubscriptionQueue } from '@/lib/subscription/processor';
  * Can be called via Cron or manually.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-    // Basic security check (optional, but good practice)
-    const authHeader = request.headers.get('authorization');
-    // For now, allow local or if Secret matches (if we had one). 
-    // Just simpler to return 200.
+    const secret = request.headers.get('x-cron-secret') || request.nextUrl.searchParams.get('secret');
+    const cronSecret = process.env.CRON_SECRET;
+
+    if (!cronSecret || secret !== cronSecret) {
+        return NextResponse.json(
+            { success: false, error: 'Unauthorized' },
+            { status: 401 }
+        );
+    }
 
     try {
         const result = await processSubscriptionQueue();

@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { getAllArticles, getValidSections } from '@/lib/content/reader';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thehint.news';
     const currentDate = new Date().toISOString();
 
@@ -49,7 +49,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }));
 
     // 3. Article Pages
-    const allArticles = getAllArticles();
+    const allArticles = await getAllArticles();
     const articleRoutes: MetadataRoute.Sitemap = allArticles.map((article) => ({
         url: `${baseUrl}/${article.section}/${article.id}`,
         lastModified: article.updatedAt ? new Date(article.updatedAt).toISOString() : new Date(article.publishedAt).toISOString(),

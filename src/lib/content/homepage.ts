@@ -170,9 +170,9 @@ function selectLeadStory(articles: Article[]): Article | null {
  * @returns HomepageData object with all curated content
  * @throws Error if article data is malformed (invalid dates)
  */
-export function getHomepageData(): HomepageData {
+export async function getHomepageData(): Promise<HomepageData> {
     // Fetch all articles from the content reader
-    const allArticles = getAllArticles();
+    const allArticles = await getAllArticles();
 
     // Validate we have articles to work with
     if (!Array.isArray(allArticles)) {

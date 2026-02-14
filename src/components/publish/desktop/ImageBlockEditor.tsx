@@ -78,11 +78,16 @@ export function ImageBlockEditor({ block, onSave, onCancel }: ImageBlockEditorPr
 
         // Get image dimensions
         const img = new Image();
+        const objectUrl = URL.createObjectURL(file);
         img.onload = () => {
             setWidth(img.naturalWidth);
             setHeight(img.naturalHeight);
+            URL.revokeObjectURL(objectUrl);
         };
-        img.src = URL.createObjectURL(file);
+        img.src = objectUrl;
+
+        // Reset input value so the same file can be selected again
+        e.target.value = '';
 
         // Upload file
         setIsUploading(true);
@@ -170,22 +175,38 @@ export function ImageBlockEditor({ block, onSave, onCancel }: ImageBlockEditorPr
                     {/* Image Preview / Upload Area */}
                     <div className={styles.uploadArea}>
                         {previewUrl ? (
-                            <div className={styles.preview}>
-                                <img
-                                    src={previewUrl}
-                                    alt="Preview"
-                                    className={styles.previewImage}
-                                />
-                                {!isEditing && (
+                            <div className={styles.imagePreviewContainer}>
+                                <div className={styles.preview}>
+                                    <img
+                                        src={previewUrl}
+                                        alt="Preview"
+                                        className={styles.previewImage}
+                                    />
+                                </div>
+                                <div className={styles.previewActions}>
                                     <button
                                         type="button"
                                         className={styles.changeButton}
                                         onClick={() => fileInputRef.current?.click()}
                                         disabled={isUploading}
                                     >
-                                        Change Image
+                                        {isUploading ? (
+                                            <>
+                                                <div className={styles.spinner} />
+                                                <span>Uploading...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                                    <circle cx="12" cy="13" r="4"></circle>
+                                                </svg>
+                                                <span>Replace Image</span>
+                                            </>
+                                        )}
                                     </button>
-                                )}
+                                    <span className={styles.actionHint}>Click to upload a different photo</span>
+                                </div>
                             </div>
                         ) : (
                             <div

@@ -24,9 +24,9 @@ import { LeadStory, TopStories, SectionBlock } from "@/components/editorial";
 // Revalidate homepage every 60 seconds
 export const revalidate = 60;
 
-export default function HomePage() {
+export default async function HomePage() {
   // Get all homepage data in a single call
-  const { leadStory, topStories, sections } = getHomepageData();
+  const { leadStory, topStories, sections } = await getHomepageData();
 
   return (
     <main id="main-content" className="flex-1">

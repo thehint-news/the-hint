@@ -47,6 +47,7 @@ function transformDraftToEntry(draft: DraftData): ArticleEntry {
         status: 'draft',
         placement: (draft.placement as 'lead' | 'top' | 'standard') || 'standard',
         lastEdited: draft.savedAt,
+        slug: draft.slug,
         data: {
             headline: draft.headline || '',
             subheadline: draft.subheadline || '',
@@ -58,6 +59,7 @@ function transformDraftToEntry(draft: DraftData): ArticleEntry {
             sources: Array.isArray(draft.sources) ? draft.sources.join(', ') : '',
             draftId: draft.draftId,
             status: 'draft',
+            slug: draft.slug,
             lastEdited: draft.savedAt,
             thumbnail: draft.thumbnail || '',
         },

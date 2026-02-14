@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     }
 
     try {
-        const allArticles = getAllArticles();
+        const allArticles = await getAllArticles();
         const lowerQuery = query.toLowerCase();
 
         const results = allArticles

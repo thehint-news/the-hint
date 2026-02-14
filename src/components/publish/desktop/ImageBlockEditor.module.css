@@ -120,27 +120,86 @@
     object-fit: contain;
 }
 
-.changeButton {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 0.8125rem;
-    cursor: pointer;
-    transition: background-color 0.15s ease;
+.imagePreviewContainer {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
 }
 
-.changeButton:hover {
-    background: rgba(0, 0, 0, 0.85);
+.previewActions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: #fcfcfd;
+    border-top: 1px solid #f2f4f7;
+}
+
+.changeButton {
+    background: #ffffff;
+    color: #344054;
+    border: 1px solid #d0d5dd;
+    padding: 0.625rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+.changeButton:hover:not(:disabled) {
+    background: #f9fafb;
+    border-color: #d0d5dd;
+    color: #1a1a1a;
+    box-shadow: 0 4px 8px -2px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
+    transform: translateY(-1px);
+}
+
+.changeButton:active:not(:disabled) {
+    transform: translateY(0);
+    background: #f2f4f7;
+}
+
+.changeButton svg {
+    color: #667085;
+    transition: color 0.2s ease;
+}
+
+.changeButton:hover svg {
+    color: #1a1a1a;
+}
+
+.actionHint {
+    font-size: 0.75rem;
+    color: #667085;
+    font-weight: 400;
+    letter-spacing: -0.01em;
 }
 
 .changeButton:disabled {
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: not-allowed;
+    background: #f9fafb;
+}
+
+.spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #344054;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Status Messages */

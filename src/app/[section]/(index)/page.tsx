@@ -32,8 +32,8 @@ export async function generateMetadata({ params }: SectionPageProps): Promise<Me
     const { section: sectionSlug } = await params;
 
     try {
-        const { section } = getSectionPageData(sectionSlug);
-        
+        const { section } = await getSectionPageData(sectionSlug);
+
         return {
             title: `${section.name} News`,
             description: section.description,
@@ -61,7 +61,7 @@ export default async function SectionPage({ params, searchParams }: SectionPageP
     // Fetch section data (throws InvalidSectionError for invalid sections)
     let data;
     try {
-        data = getSectionPageData(sectionSlug);
+        data = await getSectionPageData(sectionSlug);
     } catch (error) {
         if (error instanceof InvalidSectionError) {
             notFound();

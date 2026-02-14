@@ -13,7 +13,9 @@ export async function sendMagicLinkEmail(email: string, token: string) {
     if (!smtpHost || !smtpPort || !smtpUser || !smtpPass || !fromEmail) {
         console.error('Missing SMTP configuration');
         // In dev, maybe log the link?
-        console.log(`[DEV] Magic Link: ${appUrl}/api/auth/verify?token=${token}`);
+        if (process.env.NODE_ENV !== 'production') {
+            console.log(`[DEV] Magic Link: ${appUrl}/api/auth/verify?token=${token}`);
+        }
 
         if (process.env.NODE_ENV === 'production') {
             throw new Error('SMTP configuration missing in production');
@@ -150,7 +152,9 @@ Didn't request this? You can safely ignore this email.
     } catch (error) {
         console.error('Failed to send email:', error);
         // Fallback log for debugging if email fails (crucial for setup verification)
-        console.log(`[FALLBACK ALERT] Email failed. Magic Link: ${link}`);
+        if (process.env.NODE_ENV !== 'production') {
+            console.log(`[FALLBACK ALERT] Email failed. Magic Link: ${link}`);
+        }
         throw new Error('Failed to send magic link email');
     }
 }

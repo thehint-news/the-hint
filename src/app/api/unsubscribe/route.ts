@@ -13,7 +13,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             );
         }
 
-        const result = unsubscribe(email);
+        const result = await unsubscribe(email);
 
         return NextResponse.json({
             success: result.success,
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         );
     }
 
-    const result = unsubscribe(email);
+    const result = await unsubscribe(email);
 
     // Redirect to unsubscribe confirmation page
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3002';

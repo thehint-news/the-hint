@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+
 
 // Define strict types for search results
 interface SearchResult {
@@ -25,7 +25,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
     const [hasSearched, setHasSearched] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
-    const router = useRouter();
+
 
     // Focus input when opened
     useEffect(() => {

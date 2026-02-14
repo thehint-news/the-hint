@@ -22,7 +22,7 @@ export interface Recommendation {
  * Get curated recommendations for a specific article
  * @param currentArticle - The article currently being read
  */
-export function getContinueReadingArticles(currentArticle: Article): Recommendation[] {
+export async function getContinueReadingArticles(currentArticle: Article): Promise<Recommendation[]> {
     const recommendations: Recommendation[] = [];
     const usedIds = new Set<string>();
 
@@ -31,7 +31,7 @@ export function getContinueReadingArticles(currentArticle: Article): Recommendat
 
     // Get fresh homepage data for Lead and Top stories
     // This ensures we're always showing the latest newsroom priorities
-    const homepageData = getHomepageData();
+    const homepageData = await getHomepageData();
 
     // 1️⃣ LEAD STORY (Global Priority)
     // Rule: Exclude if current article is the lead
@@ -65,7 +65,7 @@ export function getContinueReadingArticles(currentArticle: Article): Recommendat
     // 3️⃣ SAME SECTION (Recent Article)
     // Rule: Most recent article from same section. Exclude current.
     try {
-        const sectionArticles = getArticlesBySection(currentArticle.section);
+        const sectionArticles = await getArticlesBySection(currentArticle.section);
         const sectionStory = sectionArticles.find(story => !usedIds.has(story.id));
 
         if (sectionStory) {

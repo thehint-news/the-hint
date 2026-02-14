@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const result = addSubscriber(email);
+        const result = await addSubscriber(email);
 
         if (result.success && !result.isDuplicate) {
             // Send Welcome Email (async, fire and forget)

@@ -78,7 +78,7 @@ export function ContinueReading({ items }: ContinueReadingProps) {
 
                 {/* Cards Grid */}
                 <div className="text-left grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-6">
-                    {items.map((item, index) => {
+                    {items.map((item) => {
                         const imageUrl = item.article.image;
                         const isLeadLayout = item.type === 'lead';
 

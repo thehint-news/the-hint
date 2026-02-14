@@ -77,7 +77,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
             const draftId = id;
 
             // Check if draft exists
-            if (!contentGit.draftExists(draftId)) {
+            if (!await contentGit.draftExists(draftId)) {
                 return userResponse(
                     false,
                     'Draft not found. It may have already been deleted.',
@@ -121,7 +121,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
             const safeSlug = slug.replace(/[^a-z0-9-]/gi, '-');
 
             // Check if article exists
-            if (!contentGit.slugExists(section as Section, safeSlug)) {
+            if (!await contentGit.slugExists(section as Section, safeSlug)) {
                 return userResponse(
                     false,
                     'Article not found. It may have already been deleted.',
