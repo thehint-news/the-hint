@@ -10,6 +10,7 @@
  */
 
 import Link from "next/link";
+import Image from "next/image";
 import { formatSafeDate } from "@/lib/utils";
 
 interface LeadStoryProps {
@@ -69,10 +70,13 @@ export function LeadStory({ article }: LeadStoryProps) {
                 <Link href={articleUrl} className="article-link" style={{ display: "block", marginBottom: "0.5rem" }}>
                     <div className="thumbnail-container">
                         {article.image ? (
-                            <img
+                            <Image
                                 src={article.image}
                                 alt={article.title}
+                                fill
+                                sizes="(max-width: 1200px) 100vw, 1200px"
                                 className="article-thumbnail thumbnail-lead"
+                                priority={true}
                             />
                         ) : (
                             <div

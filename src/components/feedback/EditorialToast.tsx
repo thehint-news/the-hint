@@ -72,6 +72,15 @@ function getAriaRole(type: ToastType): 'alert' | 'status' {
 export function EditorialToast({ toast, onDismiss }: EditorialToastProps) {
     const [isExiting, setIsExiting] = useState(false);
 
+    // Handle dismiss with exit animation
+    const handleDismiss = useCallback(() => {
+        setIsExiting(true);
+        setTimeout(() => {
+            setIsExiting(false);
+            onDismiss();
+        }, 200); // Match CSS animation duration
+    }, [onDismiss]);
+
     // Handle auto-dismiss
     useEffect(() => {
         if (!toast) return;
@@ -82,16 +91,7 @@ export function EditorialToast({ toast, onDismiss }: EditorialToastProps) {
         }, timeout);
 
         return () => clearTimeout(timer);
-    }, [toast]);
-
-    // Handle dismiss with exit animation
-    const handleDismiss = useCallback(() => {
-        setIsExiting(true);
-        setTimeout(() => {
-            setIsExiting(false);
-            onDismiss();
-        }, 200); // Match CSS animation duration
-    }, [onDismiss]);
+    }, [toast, handleDismiss]);
 
     if (!toast) return null;
 

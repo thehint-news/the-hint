@@ -28,6 +28,7 @@ import {
     isImageBlock,
     isVideoBlock,
     AllowedImageFormat,
+    SocialVideoProvider,
 } from '../content/media-types';
 
 // ... (skipping types section which I will update in next chunk if needed or just use imports)
@@ -89,7 +90,7 @@ function validateVideoBlock(
     // Provider validation (only if social)
     if (block.sourceType === 'social' && block.provider) {
         // Optional check if we want to enforce provider list
-        if (typeof block.provider === 'string' && !SOCIAL_VIDEO_PROVIDERS.includes(block.provider as any)) {
+        if (typeof block.provider === 'string' && !SOCIAL_VIDEO_PROVIDERS.includes(block.provider as SocialVideoProvider)) {
             // Maybe warning or just ignore
         }
     }

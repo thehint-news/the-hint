@@ -55,7 +55,7 @@ export function SubscribeModal({ isOpen, onClose }: SubscribeModalProps) {
                 setStatus("error");
                 setMessage(data.error || "Something went wrong.");
             }
-        } catch (error) {
+        } catch {
             setStatus("error");
             setMessage("Failed to connect to server.");
         }

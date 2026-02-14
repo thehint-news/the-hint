@@ -12,6 +12,7 @@
  */
 
 import Link from "next/link";
+import Image from "next/image";
 
 interface SectionArticle {
     id: string;
@@ -49,11 +50,15 @@ function WireStyleLayout({ articles, sectionSlug }: { articles: SectionArticle[]
                         }}>
                             {/* Small Thumbnail - Wire style */}
                             {article.image ? (
-                                <img
-                                    src={article.image}
-                                    alt={article.title}
-                                    className="article-thumbnail thumbnail-wire"
-                                />
+                                <div className="thumbnail-container thumbnail-wire">
+                                    <Image
+                                        src={article.image}
+                                        alt={article.title}
+                                        width={80}
+                                        height={56}
+                                        className="article-thumbnail thumbnail-wire"
+                                    />
+                                </div>
                             ) : (
                                 <div
                                     className="thumbnail-placeholder thumbnail-wire"
@@ -126,11 +131,15 @@ function PoliticsLayout({ articles, sectionSlug }: { articles: SectionArticle[];
                         }}>
                             {/* Small Thumbnail - Politics style */}
                             {article.image ? (
-                                <img
-                                    src={article.image}
-                                    alt={article.title}
-                                    className="article-thumbnail thumbnail-politics"
-                                />
+                                <div className="thumbnail-container thumbnail-politics">
+                                    <Image
+                                        src={article.image}
+                                        alt={article.title}
+                                        width={90}
+                                        height={65}
+                                        className="article-thumbnail thumbnail-politics"
+                                    />
+                                </div>
                             ) : (
                                 <div
                                     className="thumbnail-placeholder thumbnail-politics"
@@ -196,9 +205,11 @@ function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticl
                             {/* Thumbnail - World Affairs style */}
                             <div className="thumbnail-container" style={{ marginBottom: "0.625rem" }}>
                                 {article.image ? (
-                                    <img
+                                    <Image
                                         src={article.image}
                                         alt={article.title}
+                                        fill
+                                        sizes="(max-width: 768px) 50vw, 400px"
                                         className="article-thumbnail thumbnail-world"
                                     />
                                 ) : (
@@ -273,9 +284,11 @@ function OpinionLayout({ articles, sectionSlug }: { articles: SectionArticle[]; 
                             {/* Image Container */}
                             <div className="thumbnail-container mb-2.5 aspect-[3/2] w-full">
                                 {article.image ? (
-                                    <img
+                                    <Image
                                         src={article.image}
                                         alt={article.title}
+                                        fill
+                                        sizes="(max-width: 768px) 50vw, 300px"
                                         className="article-thumbnail thumbnail-world w-full h-full object-cover"
                                     />
                                 ) : (

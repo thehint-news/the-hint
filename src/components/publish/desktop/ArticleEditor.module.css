@@ -937,7 +937,9 @@
    PREVIEW HERO IMAGE
    ---------------------------------------------------------------------------- */
 .previewHeroImage {
+    position: relative;
     width: 100%;
+    aspect-ratio: 16 / 9;
     margin-bottom: 1.5rem;
     border-radius: 4px;
     overflow: hidden;

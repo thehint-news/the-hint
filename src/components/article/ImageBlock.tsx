@@ -11,6 +11,7 @@
  */
 
 import type { ImageBlock } from '@/lib/content/media-types';
+import Image from 'next/image';
 import styles from './ImageBlock.module.css';
 
 interface ImageBlockRendererProps {
@@ -21,36 +22,23 @@ interface ImageBlockRendererProps {
 }
 
 export function ImageBlockRenderer({ block, isAboveFold = false }: ImageBlockRendererProps) {
-    const { src, alt, caption, credit, width, height, srcset } = block;
-
-    // Determine loading strategy
-    const loading = isAboveFold ? 'eager' : 'lazy';
-    const decoding = isAboveFold ? 'sync' : 'async';
+    const { src, alt, caption, credit, width, height } = block;
 
     // Build sizes attribute for responsive behavior
-    const sizes = '(max-width: 600px) 400px, (max-width: 1000px) 800px, 1200px';
+    const sizes = '(max-width: 600px) 100vw, (max-width: 1000px) 80vw, 1200px';
 
     return (
         <figure className={styles.figure} data-block-id={block.id}>
             <div className={styles.imageWrapper}>
-                <picture>
-                    {srcset && (
-                        <source
-                            srcSet={srcset}
-                            sizes={sizes}
-                            type="image/webp"
-                        />
-                    )}
-                    <img
-                        src={src}
-                        alt={alt}
-                        width={width}
-                        height={height}
-                        loading={loading}
-                        decoding={decoding}
-                        className={styles.image}
-                    />
-                </picture>
+                <Image
+                    src={src}
+                    alt={alt}
+                    width={width}
+                    height={height}
+                    priority={isAboveFold}
+                    sizes={sizes}
+                    className={styles.image}
+                />
             </div>
 
             {(caption || credit) && (

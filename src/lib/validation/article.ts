@@ -431,7 +431,7 @@ export function transformToDraftData(input: DraftArticleInput, draftId?: string)
     const tags = normalizeTags(input.tags);
     const sources = sanitizeStringArray(input.sources);
     const thumbnail = typeof input.thumbnail === 'string' ? input.thumbnail : undefined;
-    const slug = typeof (input as any).slug === 'string' ? (input as any).slug : undefined;
+    const slug = typeof (input as unknown as Record<string, unknown>).slug === 'string' ? (input as unknown as Record<string, unknown>).slug as string : undefined;
 
     return {
         draftId: draftId || generateDraftId(),

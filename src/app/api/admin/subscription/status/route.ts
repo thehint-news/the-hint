@@ -2,14 +2,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { queueManager } from '@/lib/subscription/queue';
 
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(): Promise<NextResponse> {
     try {
         const status = await queueManager.getStatus();
         return NextResponse.json({
             success: true,
             status,
         });
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             { success: false, error: 'Failed to retrieve status' },
             { status: 500 }
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 { status: 400 }
             );
         }
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             { success: false, error: 'Invalid request' },
             { status: 400 }

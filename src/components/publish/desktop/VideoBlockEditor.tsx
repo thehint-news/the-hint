@@ -14,6 +14,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import Image from 'next/image';
 import type { VideoBlock, VideoSourceType, SocialVideoProvider } from '@/lib/content/media-types';
 import { MEDIA_LIMITS } from '@/lib/content/media-types';
 import styles from './VideoBlockEditor.module.css';
@@ -121,7 +122,7 @@ export function VideoBlockEditor({
                 const errorText = await response.text().catch(() => 'Upload failed');
                 setThumbnailError(`Server error (${response.status}): ${errorText.slice(0, 100)}`);
             }
-        } catch (error) {
+        } catch {
             setThumbnailError('Network error during upload');
         } finally {
             setIsUploadingThumbnail(false);
@@ -184,7 +185,7 @@ export function VideoBlockEditor({
                 setFetchError(result.error || 'Failed to fetch video info');
                 setVideoData(null);
             }
-        } catch (error) {
+        } catch {
             setFetchError('Network error while processing video');
         } finally {
             setIsFetching(false);
@@ -258,7 +259,7 @@ export function VideoBlockEditor({
                     <div className={styles.content}>
                         <div className={styles.limitMessage}>
                             <span className={styles.limitIcon}>🎬</span>
-                            <p>This article already has a video. Standard post format allows only one video to maintain readability and performance.</p>
+                            <p>This article already has a video. Only one video is allowed.</p>
                         </div>
                     </div>
                     <div className={styles.footer}>
@@ -339,9 +340,11 @@ export function VideoBlockEditor({
                             <div className={styles.previewCard}>
                                 <div className={styles.thumbnailContainer}>
                                     {hasThumbnail ? (
-                                        <img
+                                        <Image
                                             src={customThumbnail || videoData.posterThumbnail}
                                             alt="Preview"
+                                            fill
+                                            sizes="160px"
                                             className={styles.thumbnailImage}
                                         />
                                     ) : (

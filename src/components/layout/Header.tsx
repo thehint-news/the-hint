@@ -190,7 +190,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
 
 
                     <Link href="/" className="font-sans text-[11px] font-medium uppercase tracking-widest text-[#6B6B6B] hover:text-[#111]">
-                        Today's Paper
+                        Today&apos;s Paper
                     </Link>
                 </div>
 

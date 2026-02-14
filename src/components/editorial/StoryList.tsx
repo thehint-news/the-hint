@@ -8,6 +8,7 @@
  */
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { formatSafeDate } from '@/lib/utils';
 
 interface StoryListArticle {
@@ -59,14 +60,16 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
                         {/* Image (Left) */}
                         {article.image && (
                             <div className={`
-                                shrink-0 overflow-hidden bg-neutral-100
+                                shrink-0 overflow-hidden bg-neutral-100 relative
                                 ${isCompact ? 'w-24 h-24' : 'w-48 aspect-[3/2]'}
                                 ${isOpinion ? 'w-32 aspect-[3/4]' : ''}
                             `}>
-                                <img
+                                <Image
                                     src={article.image}
                                     alt=""
-                                    className="w-full h-full object-cover transition-all duration-300 group-hover:brightness-90 group-hover:scale-105"
+                                    fill
+                                    sizes="(max-width: 768px) 100px, 200px"
+                                    className="object-cover transition-all duration-300 group-hover:brightness-90 group-hover:scale-105"
                                 />
                             </div>
                         )}

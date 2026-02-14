@@ -2,14 +2,13 @@
  * Media Upload API Route
  * POST /api/media/upload
  * 
- * Handles image file uploads for article media blocks.
- * 
- * DESIGN SPEC: .agent/specifications/MEDIA_SYSTEM_DESIGN.md
+ * Handles image file uploads to Cloudflare R2 storage.
+ * No local filesystem writes. No images in repository.
  * 
  * Security:
  * - Requires authenticated session (via middleware)
  * - Validates file type and size server-side
- * - Rate limiting deferred to infrastructure
+ * - Max 5MB, max 3 images per article
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -126,6 +125,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<UploadRes
         );
 
         if (!result.success) {
+            console.error('[UPLOAD ROUTE] Upload failed:', result.error, result.validationErrors);
             return NextResponse.json(
                 {
                     success: false,

@@ -1,6 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { Suspense, useState } from 'react';
 import { SkeletonBlock } from '@/components/skeleton';
 
@@ -46,7 +47,7 @@ function UnsubscribeContent() {
                 setFormStatus('error');
                 setFormMessage(data.error || data.message || 'Failed to unsubscribe.');
             }
-        } catch (error) {
+        } catch {
             setFormStatus('error');
             setFormMessage('An error occurred. Please try again.');
         }
@@ -214,7 +215,7 @@ function UnsubscribeContent() {
                     </>
                 )}
 
-                <a
+                <Link
                     href="/"
                     style={{
                         display: 'inline-block',
@@ -230,7 +231,7 @@ function UnsubscribeContent() {
                     }}
                 >
                     Return to Homepage
-                </a>
+                </Link>
 
                 {!isResultView && (
                     <p style={{
@@ -240,9 +241,9 @@ function UnsubscribeContent() {
                         fontFamily: 'Arial, sans-serif',
                     }}>
                         Changed your mind?{' '}
-                        <a href="/" style={{ color: '#666', textDecoration: 'underline' }}>
+                        <Link href="/" style={{ color: '#666', textDecoration: 'underline' }}>
                             Stay subscribed
-                        </a>
+                        </Link>
                     </p>
                 )}
             </div>

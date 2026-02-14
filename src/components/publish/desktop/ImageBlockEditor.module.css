@@ -107,6 +107,7 @@
 
 .preview {
     position: relative;
+    height: 300px;
     border-radius: 8px;
     overflow: hidden;
     background: #f0f0f0;

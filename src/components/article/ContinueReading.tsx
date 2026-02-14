@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Recommendation } from '@/lib/content/recommendations';
 
 interface ContinueReadingProps {
@@ -71,7 +72,7 @@ export function ContinueReading({ items }: ContinueReadingProps) {
                     </div>
                     <div className="md:col-span-1 md:text-right pl-0 md:pl-6 text-left">
                         <p className="font-serif text-neutral-500 text-sm md:text-base leading-relaxed italic border-l-2 md:border-l-0 md:border-r-2 border-[#8B0000] pl-4 md:pl-0 md:pr-4">
-                            "Curated stories you might have missed."
+                            &ldquo;Curated stories you might have missed.&rdquo;
                         </p>
                     </div>
                 </div>
@@ -97,10 +98,12 @@ export function ContinueReading({ items }: ContinueReadingProps) {
                                     "
                                 >
                                     {imageUrl && (
-                                        <img
+                                        <Image
                                             src={imageUrl}
                                             alt={item.article.title}
-                                            className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 md:group-hover:scale-105 transition-all duration-700 ease-out"
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, 300px"
+                                            className="object-cover opacity-90 group-hover:opacity-100 md:group-hover:scale-105 transition-all duration-700 ease-out"
                                         />
                                     )}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
@@ -145,10 +148,12 @@ export function ContinueReading({ items }: ContinueReadingProps) {
                             >
                                 <div className="relative h-32 w-full overflow-hidden bg-neutral-100 md:group-hover:brightness-105 transition-all">
                                     {imageUrl && (
-                                        <img
+                                        <Image
                                             src={imageUrl}
                                             alt={item.article.title}
-                                            className="w-full h-full object-cover md:group-hover:scale-105 transition-transform duration-700 ease-out"
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, 300px"
+                                            className="object-cover md:group-hover:scale-105 transition-transform duration-700 ease-out"
                                         />
                                     )}
                                     <div className="absolute top-3 left-3">

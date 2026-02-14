@@ -3,7 +3,7 @@ import { queueManager } from './queue';
 import { logger } from '../feedback/console-guard';
 import { sendEmailForEvent } from './email-service';
 import { getActiveSubscribers } from '../subscription';
-import { EmailWorkerConfig } from './types';
+import { EmailWorkerConfig, SubscriptionEvent } from './types';
 
 const CONFIG: EmailWorkerConfig = {
     maxEmailsPerMinute: 60, // 1 per second
@@ -94,7 +94,7 @@ export async function processSubscriptionQueue(): Promise<{ processed: number; e
     const updatedSentEmails = [...event.sentEmails, ...sentTo];
     const newProcessedCount = event.processedCount + processed;
 
-    const updates: any = {
+    const updates: Partial<SubscriptionEvent> = {
         sentEmails: updatedSentEmails,
         processedCount: newProcessedCount,
         lastAttemptAt: new Date().toISOString(),

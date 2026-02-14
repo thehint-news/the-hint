@@ -93,7 +93,7 @@ export default function AboutPage() {
                             Opinion and analysis content is clearly labelled and published separately
                             from news reporting. Readers can trust that news coverage is factual and
                             impartial, while opinion pieces represent clearly identified perspectives
-                            that are distinct from the publication's reporting.
+                            that are distinct from the publication&apos;s reporting.
                         </p>
                         <p className="about-body">
                             This separation between news and opinion is fundamental to maintaining
@@ -134,7 +134,7 @@ export default function AboutPage() {
                         </p>
                         <p className="about-body">
                             There are no hidden agendas. The Hint exists to inform, not to persuade.
-                            The publication's only loyalty is to the facts and to the readers who
+                            The publication&apos;s only loyalty is to the facts and to the readers who
                             depend on them.
                         </p>
                     </section>

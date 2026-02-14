@@ -20,9 +20,11 @@ import {
     ArticleHeader,
     ArticleBody,
     SourcesList,
-    CorrectionNotice,
     ContinueReading,
 } from '@/components/article';
+
+// ISR: Revalidate every 60 seconds
+export const revalidate = 60;
 
 interface ArticlePageProps {
     params: Promise<{
@@ -193,9 +195,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                                 </div>
                             </div>
                         )}
-
-                        {/* Correction Notice */}
-                        <CorrectionNotice updatedAt={article.updatedAt} />
 
                         {/* Sources */}
                         <SourcesList sources={article.sources} />

@@ -94,6 +94,8 @@ export default function PublishPage() {
     // Articles list for database mode
     const [articles, setArticles] = useState<ArticleEntry[]>([]);
     const [isLoadingArticles, setIsLoadingArticles] = useState(false);
+    const [articlesCached, setArticlesCached] = useState(false);
+    const [lastFetchTime, setLastFetchTime] = useState(0);
 
     // UI state
     const [isSaving, setIsSaving] = useState(false);
@@ -112,6 +114,9 @@ export default function PublishPage() {
 
     // Client hints
     const clientHints = getClientHints(formData);
+
+    // Cache staleness threshold (5 minutes)
+    const CACHE_TTL_MS = 5 * 60 * 1000;
 
     /**
      * Generate unique toast ID
@@ -197,16 +202,23 @@ export default function PublishPage() {
 
     /**
      * Fetch articles for database mode
+     * Uses client-side cache to avoid redundant API calls on tab switches
      */
-    const fetchArticles = useCallback(async (filter?: string) => {
+    const fetchArticles = useCallback(async (forceRefresh = false) => {
+        // Skip fetch if data is cached and fresh (unless force refresh)
+        if (!forceRefresh && articlesCached && (Date.now() - lastFetchTime) < CACHE_TTL_MS) {
+            return;
+        }
+
         setIsLoadingArticles(true);
         try {
-            const url = filter ? `/api/publish/articles?filter=${filter}` : '/api/publish/articles';
-            const response = await fetch(url);
+            const response = await fetch('/api/publish/articles');
             const result: ApiResponse = await response.json();
 
             if (result.success && result.data?.articles) {
                 setArticles(result.data.articles as ArticleEntry[]);
+                setArticlesCached(true);
+                setLastFetchTime(Date.now());
             } else {
                 showErrorFromCode(ErrorCodes.SERVER_INTERNAL_ERROR);
             }
@@ -216,14 +228,14 @@ export default function PublishPage() {
         } finally {
             setIsLoadingArticles(false);
         }
-    }, [showErrorFromCode]);
+    }, [showErrorFromCode, articlesCached, lastFetchTime, CACHE_TTL_MS]);
 
     /**
      * Load articles when switching to database mode
+     * Uses cached data if available — only fetches on first load or when stale
      */
     useEffect(() => {
         if (mode !== 'editor') {
-            // Fetch all articles - filtering is now done client-side in ArticleDatabase
             fetchArticles();
         }
     }, [mode, fetchArticles]);
@@ -356,6 +368,8 @@ export default function PublishPage() {
             if (result.success) {
                 setFormData(INITIAL_FORM_DATA);
                 setShowPreview(false);
+                // Invalidate articles cache so database view refreshes
+                setArticlesCached(false);
                 showSuccessFromCode(
                     SuccessCodes.ARTICLE_PUBLISHED,
                     result.data?.url ? { url: result.data.url, label: 'View Article' } : undefined
@@ -405,57 +419,51 @@ export default function PublishPage() {
      * Edit article (from database view)
      */
     const handleEdit = useCallback((article: ArticleEntry) => {
-        const a = article as any;
         // The API returns article content nested in the 'data' property
-        const data = a.data || a; // Fallback to article itself if no data property
-
-        // Map article data to form data
-        // API returns tags/sources as comma-separated strings in data
-        const tags = data.tags || '';
-        const sources = data.sources || '';
+        const data = article.data;
 
         setFormData({
-            headline: data.headline || a.title || '',
+            headline: data.headline || article.title || '',
             subheadline: data.subheadline || '',
-            section: data.section || a.section || 'politics',
+            section: data.section || article.section || 'politics',
             contentType: data.contentType || 'news',
             body: data.body || '',
-            tags: typeof tags === 'string' ? tags : (Array.isArray(tags) ? tags.join(', ') : ''),
-            sources: typeof sources === 'string' ? sources : (Array.isArray(sources) ? sources.join(', ') : ''),
-            placement: data.placement || a.placement || 'standard',
+            tags: typeof data.tags === 'string' ? data.tags : (Array.isArray(data.tags) ? (data.tags as string[]).join(', ') : ''),
+            sources: typeof data.sources === 'string' ? data.sources : (Array.isArray(data.sources) ? (data.sources as string[]).join(', ') : ''),
+            placement: data.placement || article.placement || 'standard',
             thumbnail: data.thumbnail || '',
-            draftId: a.status === 'draft' ? a.id : (data.draftId || undefined),
-            status: a.status === 'published' ? 'published' : 'draft',
-            slug: data.slug || a.slug || '',
+            draftId: article.status === 'draft' ? article.id : (data.draftId || null),
+            status: article.status === 'published' ? 'published' : 'draft',
+            slug: data.slug || article.slug || '',
         });
         setFieldErrors({});
         setShowPreview(false);
         setMode('editor');
     }, []);
 
+
     /**
      * Duplicate article
      */
     const handleDuplicate = useCallback(async (article: ArticleEntry) => {
-        const a = article as any;
         try {
             const response = await fetch('/api/publish/duplicate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    id: a.id,
-                    type: a.type,
-                    section: a.section,
-                    slug: a.slug,
+                    id: article.id,
+                    section: article.section,
+                    slug: article.slug,
                 }),
             });
+
 
             const result: ApiResponse = await response.json();
 
             if (result.success) {
                 showToast('success', `Created a copy of "${result.data?.headline}"`);
-                // Refresh all articles
-                fetchArticles();
+                // Force refresh after mutation
+                fetchArticles(true);
             } else {
                 showErrorFromCode(ErrorCodes.CONTENT_SAVE_FAILED);
             }
@@ -469,25 +477,24 @@ export default function PublishPage() {
      * Delete article
      */
     const handleDelete = useCallback(async (article: ArticleEntry) => {
-        const a = article as any;
         try {
             const response = await fetch('/api/publish/delete', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    id: a.id,
-                    type: a.type,
-                    section: a.section,
-                    slug: a.slug,
+                    id: article.id,
+                    section: article.section,
+                    slug: article.slug,
                 }),
             });
+
 
             const result: ApiResponse = await response.json();
 
             if (result.success) {
                 showSuccessFromCode(SuccessCodes.ARTICLE_DELETED);
-                // Refresh all articles
-                fetchArticles();
+                // Force refresh after mutation
+                fetchArticles(true);
             } else {
                 showErrorFromCode(ErrorCodes.CONTENT_DELETE_FAILED);
             }

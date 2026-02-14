@@ -99,7 +99,7 @@ async function readArticleFile(filePath: string, expectedSection: Section): Prom
     const validPlacements = ['lead', 'top', 'standard'];
     let placement = frontmatter.placement;
 
-    if (!placement && (frontmatter as any).featured === true) {
+    if (!placement && (frontmatter as unknown as Record<string, unknown>).featured === true) {
         placement = 'lead';
     }
 

@@ -1,21 +1,44 @@
+/**
+ * Email Service — Resend
+ *
+ * Sends article notification emails using the Resend API (free tier).
+ *
+ * RULES:
+ * - Email sending MUST NOT block publishing
+ * - Fire-and-forget pattern: log silently on failure
+ * - No nodemailer, no SMTP
+ * - Summary limited to 150 chars max
+ * - CTA links to full article URL
+ */
 
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { SubscriptionEvent } from './types';
 
-// Create reusable transporter using Gmail SMTP
-function createTransporter() {
-    return nodemailer.createTransport({
-        host: process.env.SMTP_HOST || 'smtp.gmail.com',
-        port: parseInt(process.env.SMTP_PORT || '587'),
-        secure: false,
-        auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-        },
-    });
+// =============================================================================
+// CLIENT
+// =============================================================================
+
+function getResendClient(): Resend | null {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+        console.warn('[EMAIL] RESEND_API_KEY not configured. Email delivery disabled.');
+        return null;
+    }
+    return new Resend(apiKey);
 }
 
-// Get time-based greeting
+function getFromAddress(): string {
+    return process.env.EMAIL_FROM || 'The Hint <noreply@thehint.news>';
+}
+
+function getBaseUrl(): string {
+    return process.env.APP_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL || 'https://thehint.news';
+}
+
+// =============================================================================
+// EMAIL TEMPLATE
+// =============================================================================
+
 function getGreeting(): string {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -23,7 +46,6 @@ function getGreeting(): string {
     return 'Good evening';
 }
 
-// Get compelling intro based on content type
 function getIntroText(contentType: string, section: string): string {
     if (contentType === 'opinion') {
         return 'You might find this perspective interesting.';
@@ -31,24 +53,27 @@ function getIntroText(contentType: string, section: string): string {
 
     const sectionIntros: Record<string, string> = {
         'politics': "Here's something you should know about.",
-        'world': 'This story caught our attention today.',
+        'world-affairs': 'This story caught our attention today.',
         'crime': 'We wanted to bring this to you.',
         'court': "Here's what's happening in the courts.",
-        'business': 'This might be relevant to you.',
     };
 
     return sectionIntros[section] || "You have to see this.";
 }
 
-
+/** Truncate summary to 150 chars max */
+function truncateSummary(text: string): string {
+    if (text.length <= 150) return text;
+    return text.substring(0, 147) + '...';
+}
 
 function generateHtml(event: SubscriptionEvent, recipientEmail: string): string {
     const { headline, summary, section, contentType, createdAt, articleSlug } = event;
 
     const greeting = getGreeting();
     const introText = getIntroText(contentType, section);
+    const truncatedSummary = truncateSummary(summary);
 
-    // Format date elegantly
     const publishedDate = new Date(createdAt).toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
@@ -56,10 +81,9 @@ function generateHtml(event: SubscriptionEvent, recipientEmail: string): string 
         day: 'numeric'
     });
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3002';
+    const baseUrl = getBaseUrl();
     const fullArticleUrl = `${baseUrl}/${section}/${articleSlug}`;
 
-    // Opinion badge
     const opinionBadge = contentType === 'opinion'
         ? `<span style="display: inline-block; background-color: #7C3AED; color: white; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; margin-bottom: 15px;">Opinion</span><br>`
         : '';
@@ -106,22 +130,18 @@ function generateHtml(event: SubscriptionEvent, recipientEmail: string): string 
                                 <!-- Article Content -->
                                 <tr>
                                     <td style="padding: 0 40px;">
-                                        <!-- Decorative line -->
                                         <div style="width: 50px; height: 3px; background-color: #1a1a1a; margin-bottom: 20px;"></div>
                                         
                                         ${opinionBadge}
                                         
-                                        <!-- Headline -->
                                         <h2 style="font-family: Georgia, serif; font-size: 26px; font-weight: bold; line-height: 1.3; color: #1a1a1a; margin: 0 0 18px 0;">
                                             ${headline}
                                         </h2>
                                         
-                                        <!-- Summary -->
                                         <p style="font-family: Georgia, serif; font-size: 17px; line-height: 1.7; color: #444; margin: 0 0 8px 0;">
-                                            ${summary}
+                                            ${truncatedSummary}
                                         </p>
                                         
-                                        <!-- Section tag -->
                                         <p style="font-family: Arial, sans-serif; font-size: 12px; color: #999; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
                                             ${section}
                                         </p>
@@ -158,7 +178,7 @@ function generateHtml(event: SubscriptionEvent, recipientEmail: string): string 
                                 Visit The Hint →
                             </a>
                             <p style="margin: 20px 0 0 0;">
-                                <a href="${baseUrl}/api/unsubscribe?email=${encodeURIComponent(recipientEmail)}" style="font-family: Arial, sans-serif; font-size: 11px; color: #999; text-decoration: underline;">Unsubscribe</a>
+                                <a href="${baseUrl}/unsubscribe?email=${encodeURIComponent(recipientEmail)}" style="font-family: Arial, sans-serif; font-size: 11px; color: #999; text-decoration: underline;">Unsubscribe</a>
                             </p>
                         </td>
                     </tr>
@@ -172,48 +192,58 @@ function generateHtml(event: SubscriptionEvent, recipientEmail: string): string 
     `;
 }
 
-// Generate compelling subject lines
+// =============================================================================
+// SUBJECT LINE
+// =============================================================================
+
 function generateSubject(event: SubscriptionEvent): string {
-    const { headline, contentType, section } = event;
+    const { headline, contentType } = event;
 
-    // Shorter, more compelling subjects
-    const patterns = [
-        headline, // Sometimes just the headline is best
-        `Just in: ${headline}`,
-        `New from ${section}: ${headline}`,
-    ];
-
-    // For opinion pieces, be clear
     if (contentType === 'opinion') {
         return `Opinion: ${headline}`;
     }
 
-    // Rotate based on headline length for variety
-    const index = headline.length % 2;
-    return patterns[index];
+    // Rotate between patterns for variety
+    const patterns = [
+        headline,
+        `Just in: ${headline}`,
+    ];
+
+    return patterns[headline.length % 2];
 }
 
+// =============================================================================
+// SEND
+// =============================================================================
+
 /**
- * Send a single email safely.
+ * Send a single email safely using Resend API.
  * Returns true if successful, false otherwise.
- * MUST NOT throw errors.
+ * MUST NOT throw errors — fire-and-forget safe.
  */
 export async function sendEmailForEvent(recipient: string, event: SubscriptionEvent): Promise<boolean> {
     try {
-        const transporter = createTransporter();
-        const fromAddress = process.env.SMTP_FROM || 'The Hint <' + process.env.SMTP_USER + '>';
-        const subject = generateSubject(event);
+        const resend = getResendClient();
+        if (!resend) return false;
 
-        await transporter.sendMail({
-            from: fromAddress,
-            to: recipient,
-            subject: subject,
-            html: generateHtml(event, recipient),
+        const subject = generateSubject(event);
+        const html = generateHtml(event, recipient);
+
+        const { error } = await resend.emails.send({
+            from: getFromAddress(),
+            to: [recipient],
+            subject,
+            html,
         });
 
+        if (error) {
+            console.error(`[EMAIL] Resend error for ${recipient}:`, error.message);
+            return false;
+        }
+
         return true;
-    } catch (error) {
-        console.error(`[EMAIL] Failed to send to ${recipient}`, error);
+    } catch {
+        // Silent failure — never break publishing
         return false;
     }
 }

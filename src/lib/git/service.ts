@@ -65,7 +65,7 @@ if (!REPO_OWNER || !REPO_NAME) {
 const BRANCH = 'main';
 
 /** Valid sections for published content */
-const VALID_SECTIONS = ['politics', 'world-affairs', 'crime', 'court', 'opinion'] as const;
+export const VALID_SECTIONS = ['politics', 'world-affairs', 'crime', 'court', 'opinion'] as const;
 export type Section = typeof VALID_SECTIONS[number];
 
 class GitService {
@@ -154,9 +154,10 @@ class GitService {
                 return Buffer.from(response.data.content, 'base64').toString('utf-8');
             }
             return null;
-        } catch (error: any) {
-            if (error.status === 404) return null;
-            console.error(`Git readFile error for ${filePath}:`, error.message);
+        } catch (error: unknown) {
+            const err = error as { status?: number; message?: string };
+            if (err.status === 404) return null;
+            console.error(`Git readFile error for ${filePath}:`, err.message);
             return null;
         }
     }
@@ -185,8 +186,86 @@ class GitService {
                 files = files.filter(f => f.endsWith(extension));
             }
             return files;
-        } catch (error: any) {
-            if (error.status === 404) return [];
+        } catch (error: unknown) {
+            const err = error as { status?: number };
+            if (err.status === 404) return [];
+            return [];
+        }
+    }
+
+    /**
+     * List files AND their content in a single API call.
+     * GitHub Contents API returns base64 content for files < 1MB in directory listings.
+     * For larger files, fetches content in parallel.
+     * This eliminates the N+1 query problem of listFiles() + readFile() per file.
+     */
+    async listFilesWithContent(dirPath: string, extension?: string): Promise<{ name: string; content: string }[]> {
+        try {
+            const relPath = this.getRelativePath(dirPath);
+            const response = await this.octokit.rest.repos.getContent({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                path: relPath,
+                ref: BRANCH,
+            });
+
+            if (!Array.isArray(response.data)) return [];
+
+            let files = response.data.filter(item => item.type === 'file');
+
+            if (extension) {
+                files = files.filter(f => f.name.endsWith(extension));
+            }
+
+            // Separate files that have inline content from those that need fetching
+            const withContent: { name: string; content: string }[] = [];
+            const needsFetch: { name: string; path: string }[] = [];
+
+            for (const file of files) {
+                if ('content' in file && file.content) {
+                    // Content is available inline (base64)
+                    withContent.push({
+                        name: file.name,
+                        content: Buffer.from(file.content, 'base64').toString('utf-8'),
+                    });
+                } else {
+                    // Need separate fetch (file too large for inline content)
+                    needsFetch.push({ name: file.name, path: file.path });
+                }
+            }
+
+            // Fetch remaining files in parallel
+            if (needsFetch.length > 0) {
+                const fetchResults = await Promise.all(
+                    needsFetch.map(async (f) => {
+                        try {
+                            const res = await this.octokit.rest.repos.getContent({
+                                owner: REPO_OWNER,
+                                repo: REPO_NAME,
+                                path: f.path,
+                                ref: BRANCH,
+                            });
+                            if (!Array.isArray(res.data) && 'content' in res.data && res.data.content) {
+                                return {
+                                    name: f.name,
+                                    content: Buffer.from(res.data.content, 'base64').toString('utf-8'),
+                                };
+                            }
+                            return null;
+                        } catch {
+                            return null;
+                        }
+                    })
+                );
+                for (const result of fetchResults) {
+                    if (result) withContent.push(result);
+                }
+            }
+
+            return withContent;
+        } catch (error: unknown) {
+            const err = error as { status?: number };
+            if (err.status === 404) return [];
             return [];
         }
     }
@@ -213,8 +292,9 @@ class GitService {
                 content,
                 sha: response.data.sha || null
             };
-        } catch (error: any) {
-            if (error.status === 404) return { content: null, sha: null };
+        } catch (error: unknown) {
+            const err = error as { status?: number };
+            if (err.status === 404) return { content: null, sha: null };
             throw error;
         }
     }
@@ -259,8 +339,9 @@ class GitService {
                 if (!Array.isArray(data) && 'sha' in data) {
                     sha = data.sha;
                 }
-            } catch (e: any) {
-                if (e.status !== 404) throw e;
+            } catch (e: unknown) {
+                const err = e as { status?: number };
+                if (err.status !== 404) throw e;
             }
 
             const contentBase64 = Buffer.isBuffer(content)
@@ -292,8 +373,9 @@ class GitService {
                 commitHash: res.data.commit.sha,
                 message
             };
-        } catch (error: any) {
-            if (error.status === 409 && retryCount < 1) {
+        } catch (error: unknown) {
+            const err = error as { status?: number };
+            if (err.status === 409 && retryCount < 1) {
                 return this.commitFile(relativePath, message, staging, retryCount + 1);
             }
             throw this.translateError(error);
@@ -358,7 +440,7 @@ class GitService {
                 commitHash: res.data.commit.sha,
                 message
             };
-        } catch (error: any) {
+        } catch (error: unknown) {
             throw this.translateError(error);
         }
     }
@@ -383,7 +465,7 @@ class GitService {
             });
             const baseTreeSha = commitData.tree.sha;
 
-            const treeItems: any[] = [];
+            const treeItems: { path: string; mode: "100644" | "100755" | "040000" | "160000" | "120000"; type: "blob" | "tree" | "commit"; content?: string; sha?: string | null }[] = [];
             for (const p of filesPaths) {
                 const relP = p;
                 if (staging.pendingWrites.has(relP)) {
@@ -444,8 +526,9 @@ class GitService {
                 commitHash: newCommitData.sha,
                 message
             };
-        } catch (error: any) {
-            if ((error.status === 409 || error.status === 422) && retryCount < 1) {
+        } catch (error: unknown) {
+            const err = error as { status?: number };
+            if ((err.status === 409 || err.status === 422) && retryCount < 1) {
                 return this.commitFiles(filesPaths, message, staging, retryCount + 1);
             }
             throw this.translateError(error);
@@ -460,22 +543,24 @@ class GitService {
         // No-op
     }
 
-    translateError(error: any): GitOperationError {
-        const msg = error.message || String(error);
-        const status = error.status;
+    translateError(error: unknown): GitOperationError {
+        const err = error as { status?: number; message?: string };
+        const msg = err.message || String(error);
+        const status = err.status;
 
         if (status === 409 || msg.includes('Conflict')) {
-            return new GitOperationError(msg, GitErrorType.CONFLICT, 'Concurrent modification detected. Please refresh and try again.', error);
+            return new GitOperationError(msg, GitErrorType.CONFLICT, 'Concurrent modification detected. Please refresh and try again.', error as Error);
         }
         if (status === 404 || msg.includes('Not Found')) {
-            return new GitOperationError(msg, GitErrorType.NOT_FOUND, 'File not found.', error);
+            return new GitOperationError(msg, GitErrorType.NOT_FOUND, 'File not found.', error as Error);
         }
         if (status === 401 || msg.includes('Unauthorized')) {
-            return new GitOperationError(msg, GitErrorType.PERMISSION, 'Authentication issue. CMS session may have expired.', error);
+            return new GitOperationError(msg, GitErrorType.PERMISSION, 'Authentication issue. CMS session may have expired.', error as Error);
         }
 
-        return new GitOperationError(msg, GitErrorType.UNKNOWN, "We couldn't complete publishing. Please try again.", error);
+        return new GitOperationError(msg, GitErrorType.UNKNOWN, "We couldn't complete publishing. Please try again.", error as Error);
     }
+
 }
 
 export const gitService = new GitService();

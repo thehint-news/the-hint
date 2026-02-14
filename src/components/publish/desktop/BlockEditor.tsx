@@ -14,6 +14,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import Image from 'next/image';
 import { parseBodyToBlocks, serializeBlocksToMarkdown } from '@/lib/content/block-parser';
 import {
     ContentBlock,
@@ -512,9 +513,11 @@ export function BlockEditor({
 
                 <div className={styles.mediaBlock}>
                     <div className={styles.mediaPreview}>
-                        <img
+                        <Image
                             src={block.src}
                             alt={block.alt}
+                            fill
+                            sizes="120px"
                             className={styles.mediaImage}
                         />
                     </div>
@@ -595,9 +598,11 @@ export function BlockEditor({
                 <div className={styles.mediaBlock}>
                     <div className={styles.mediaPreview}>
                         {block.posterThumbnail ? (
-                            <img
+                            <Image
                                 src={block.posterThumbnail}
                                 alt={block.title || 'Video thumbnail'}
+                                fill
+                                sizes="120px"
                                 className={styles.mediaImage}
                             />
                         ) : (

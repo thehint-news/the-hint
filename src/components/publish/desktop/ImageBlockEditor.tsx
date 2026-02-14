@@ -8,6 +8,7 @@
 'use client';
 
 import { useState, useRef, useCallback, ChangeEvent } from 'react';
+import NextImage from 'next/image';
 import type { ImageBlock, ImageAspectRatio } from '@/lib/content/media-types';
 import { ALLOWED_IMAGE_FORMATS, MAX_IMAGE_SIZE_BYTES } from '@/lib/content/media-types';
 import styles from './ImageBlockEditor.module.css';
@@ -110,7 +111,7 @@ export function ImageBlockEditor({ block, onSave, onCancel }: ImageBlockEditorPr
             } else {
                 setUploadError(result.error || 'Upload failed');
             }
-        } catch (error) {
+        } catch {
             setUploadError('Network error during upload');
         } finally {
             setIsUploading(false);
@@ -177,9 +178,11 @@ export function ImageBlockEditor({ block, onSave, onCancel }: ImageBlockEditorPr
                         {previewUrl ? (
                             <div className={styles.imagePreviewContainer}>
                                 <div className={styles.preview}>
-                                    <img
+                                    <NextImage
                                         src={previewUrl}
                                         alt="Preview"
+                                        fill
+                                        sizes="(max-width: 600px) 100vw, 600px"
                                         className={styles.previewImage}
                                     />
                                 </div>

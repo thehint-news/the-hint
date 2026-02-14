@@ -27,6 +27,7 @@ import {
     CONTENT_TYPES,
 } from '../types';
 import { BlockEditor } from './BlockEditor';
+import Image from 'next/image';
 import { ArticleBody } from '@/components/article/ArticleBody';
 import styles from './ArticleEditor.module.css';
 
@@ -168,7 +169,7 @@ export function ArticleEditor({
             } else {
                 setThumbnailError(result.error || 'Upload failed');
             }
-        } catch (error) {
+        } catch {
             setThumbnailError('Network error during upload');
         } finally {
             setIsUploadingThumbnail(false);
@@ -367,9 +368,11 @@ posterThumbnail: https://path/to/image.jpg
                             <div className={styles.previewContent}>
                                 {formData.thumbnail && (
                                     <div className={styles.previewHeroImage}>
-                                        <img
+                                        <Image
                                             src={formData.thumbnail}
                                             alt="Article thumbnail"
+                                            fill
+                                            sizes="(max-width: 400px) 100vw, 400px"
                                             className={styles.previewImageFull}
                                         />
                                     </div>

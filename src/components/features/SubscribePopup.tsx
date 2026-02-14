@@ -38,14 +38,12 @@ export function SubscribePopup() {
         }
 
         // Triggers
-        let timer: NodeJS.Timeout;
-
         const showPopup = () => {
             setIsOpen(true);
         };
 
         // 1. Time Trigger: 8 seconds (per user request "every 8 seconds")
-        timer = setTimeout(showPopup, 8000);
+        const timer = setTimeout(showPopup, 8000);
 
         // 2. Scroll Trigger: 35-40% scroll (Keeping as alternative trigger)
         const handleScroll = () => {

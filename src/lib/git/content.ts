@@ -188,28 +188,24 @@ class ContentGit {
 
     /**
      * READ: Get all drafts
+     * Uses batch file+content fetch to avoid N+1 API calls
      */
     async listDrafts(): Promise<ContentOperationResult<DraftData[]>> {
         try {
             const draftsPath = path.join(process.cwd(), 'src', 'content', 'drafts');
-            // This reads directory via API now
-            const files = await gitService.listFiles(draftsPath, '.json');
+            // Single API call: get all filenames + content together
+            const filesWithContent = await gitService.listFilesWithContent(draftsPath, '.json');
 
             const drafts: DraftData[] = [];
 
-            for (const filename of files) {
-                if (filename === '.gitkeep') continue;
+            for (const file of filesWithContent) {
+                if (file.name === '.gitkeep') continue;
 
-                const absolutePath = path.join(draftsPath, filename);
-                const content = await gitService.readFile(absolutePath);
-
-                if (content) {
-                    try {
-                        const draft = JSON.parse(content) as DraftData;
-                        drafts.push(draft);
-                    } catch {
-                        logger.warn(`Skipping invalid draft file: ${filename}`);
-                    }
+                try {
+                    const draft = JSON.parse(file.content) as DraftData;
+                    drafts.push(draft);
+                } catch {
+                    logger.warn(`Skipping invalid draft file: ${file.name}`);
                 }
             }
 
@@ -234,31 +230,38 @@ class ContentGit {
 
     /**
      * READ: Get all published articles
+     * Fetches ALL sections in parallel, with batch file+content fetch per section
      */
     async listPublishedArticles(): Promise<ContentOperationResult<PublishedArticleData[]>> {
         try {
-            const articles: PublishedArticleData[] = [];
+            // Fetch all sections in PARALLEL (was sequential before)
+            const sectionResults = await Promise.all(
+                VALID_SECTIONS.map(async (section) => {
+                    const sectionPath = path.join(process.cwd(), 'src', 'content', section);
+                    // Single API call per section: get all filenames + content
+                    const filesWithContent = await gitService.listFilesWithContent(sectionPath, '.md');
 
-            for (const section of VALID_SECTIONS) {
-                const sectionPath = path.join(process.cwd(), 'src', 'content', section);
-                const files = await gitService.listFiles(sectionPath, '.md');
-
-                for (const filename of files) {
-                    const absolutePath = path.join(sectionPath, filename);
-                    const content = await gitService.readFile(absolutePath);
-
-                    if (content) {
+                    const sectionArticles: PublishedArticleData[] = [];
+                    for (const file of filesWithContent) {
                         try {
-                            const article = this.parseMarkdownFrontmatter(content, section, filename.replace('.md', ''));
+                            const article = this.parseMarkdownFrontmatter(
+                                file.content,
+                                section,
+                                file.name.replace('.md', '')
+                            );
                             if (article) {
-                                articles.push(article);
+                                sectionArticles.push(article);
                             }
                         } catch {
-                            logger.warn(`Skipping invalid article file: ${filename}`);
+                            logger.warn(`Skipping invalid article file: ${file.name}`);
                         }
                     }
-                }
-            }
+                    return sectionArticles;
+                })
+            );
+
+            // Flatten all section results
+            const articles = sectionResults.flat();
 
             // Sort by publishedAt descending
             articles.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
@@ -469,7 +472,7 @@ class ContentGit {
                                 success: false,
                                 userMessage: "Slug mismatch between draft and publication. Update blocked for safety.",
                                 errorType: GitErrorType.VALIDATION_ERROR,
-                                data: { mode: 'update' } as any
+                                data: { slug: '', section: '', url: '', publishedAt: '', mode: 'update' } as { slug: string; section: string; url: string; publishedAt: string; mode: 'create' | 'update' }
                             };
                         }
                     } catch (e) {

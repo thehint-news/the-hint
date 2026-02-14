@@ -439,6 +439,7 @@ button {
 
 /* Thumbnail container for overflow control */
 .thumbnail-container {
+  position: relative;
   overflow: hidden;
   background-color: var(--color-border);
   border-radius: 2px;

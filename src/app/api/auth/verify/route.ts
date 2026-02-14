@@ -11,8 +11,9 @@ async function isTokenUsed(jti: string): Promise<boolean> {
         if (!data) return false;
         const usedTokens = JSON.parse(data);
         return !!usedTokens[jti];
-    } catch (error: any) {
-        if (error.code === 'ENOENT' || error.name === 'NotFoundError') {
+    } catch (error: unknown) {
+        const err = error as { code?: string; name?: string };
+        if (err.code === 'ENOENT' || err.name === 'NotFoundError') {
             return false;
         }
         console.error('[AUTH-VERIFY] Failed to parse used-tokens.json. Failing closed to prevent replay.', error);
@@ -38,7 +39,7 @@ async function markTokenAsUsed(jti: string) {
         // Cleanup old tokens (> 24h) to keep file small
         const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
         const cleanedTokens = Object.fromEntries(
-            Object.entries(usedTokens).filter(([_, timestamp]) => timestamp > oneDayAgo)
+            Object.entries(usedTokens).filter(([, timestamp]) => timestamp > oneDayAgo)
         );
 
         await gitService.saveFile(USED_TOKENS_PATH, JSON.stringify(cleanedTokens, null, 2), `Auth: mark token ${jti} as used`);

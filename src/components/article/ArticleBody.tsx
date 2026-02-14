@@ -105,7 +105,7 @@ export function ArticleBody({ content }: ArticleBodyProps) {
                                     fontFamily: 'var(--font-serif)',
                                     margin: 0,
                                 }}>
-                                    "{block.content}"
+                                    &ldquo;{block.content}&rdquo;
                                 </p>
                                 {block.attribution && (
                                     <footer style={{

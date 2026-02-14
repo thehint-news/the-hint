@@ -1,41 +1,29 @@
+/**
+ * Magic Link Email — Resend
+ *
+ * Sends authentication magic link emails using the Resend API.
+ * No nodemailer, no SMTP.
+ */
 
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 export async function sendMagicLinkEmail(email: string, token: string) {
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpPort = process.env.SMTP_PORT;
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-    const fromEmail = process.env.FROM_EMAIL;
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3002';
-    const expiryMinutes = process.env.MAGIC_LINK_EXPIRY_MINUTES || 30;
+    const apiKey = process.env.RESEND_API_KEY;
+    const fromAddress = process.env.EMAIL_FROM || 'The Hint <noreply@thehint.news>';
+    const appUrl = process.env.APP_BASE_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3002';
 
-    if (!smtpHost || !smtpPort || !smtpUser || !smtpPass || !fromEmail) {
-        console.error('Missing SMTP configuration');
-        // In dev, maybe log the link?
+    if (!apiKey) {
+        // In dev, log the link so login is still possible
         if (process.env.NODE_ENV !== 'production') {
             console.log(`[DEV] Magic Link: ${appUrl}/api/auth/verify?token=${token}`);
+            return;
         }
-
-        if (process.env.NODE_ENV === 'production') {
-            throw new Error('SMTP configuration missing in production');
-        }
-        return;
+        throw new Error('RESEND_API_KEY is not configured. Cannot send magic link in production.');
     }
 
-    const transporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: Number(smtpPort),
-        secure: Number(smtpPort) === 465,
-        auth: {
-            user: smtpUser,
-            pass: smtpPass,
-        },
-    });
-
+    const resend = new Resend(apiKey);
     const link = `${appUrl}/api/auth/verify?token=${token}`;
 
-    // Professional email template
     const htmlTemplate = `
 <!DOCTYPE html>
 <html lang="en">
@@ -126,34 +114,23 @@ export async function sendMagicLinkEmail(email: string, token: string) {
 </html>
     `.trim();
 
-    const textTemplate = `
-THE HINT - Editorial Console
-
-Ready to publish?
-
-Click the link below to access your newsroom. This secure link expires in ${expiryMinutes} minutes.
-
-${link}
-
-----
-Didn't request this? You can safely ignore this email.
-
-© ${new Date().getFullYear()} The Hint · Independent Journalism
-    `.trim();
-
     try {
-        await transporter.sendMail({
-            from: fromEmail,
-            to: email,
+        const { error } = await resend.emails.send({
+            from: fromAddress,
+            to: [email],
             subject: 'Your Newsroom Access – The Hint',
-            text: textTemplate,
             html: htmlTemplate,
         });
+
+        if (error) {
+            console.error('[AUTH-EMAIL] Resend error:', error.message);
+            throw new Error('Failed to send magic link email');
+        }
     } catch (error) {
-        console.error('Failed to send email:', error);
-        // Fallback log for debugging if email fails (crucial for setup verification)
+        console.error('[AUTH-EMAIL] Failed to send email:', error);
+        // Fallback log for dev
         if (process.env.NODE_ENV !== 'production') {
-            console.log(`[FALLBACK ALERT] Email failed. Magic Link: ${link}`);
+            console.log(`[FALLBACK] Magic Link: ${link}`);
         }
         throw new Error('Failed to send magic link email');
     }

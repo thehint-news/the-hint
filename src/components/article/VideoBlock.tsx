@@ -12,6 +12,8 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import Script from 'next/script';
+import Link from 'next/link';
+import Image from 'next/image';
 import type { VideoBlock } from '@/lib/content/media-types';
 import styles from './VideoBlock.module.css';
 
@@ -59,17 +61,17 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
     useEffect(() => {
         // Twitter / X
         if (trustedSourceHtml && (provider === 'twitter' || provider === 'x')) {
-            // @ts-ignore
+            // @ts-expect-error - Twitter widgets are loaded via external script
             if (window.twttr && window.twttr.widgets) {
-                // @ts-ignore
+                // @ts-expect-error - Twitter widgets are loaded via external script
                 window.twttr.widgets.load();
             }
         }
         // Instagram
         if (trustedSourceHtml && provider === 'instagram') {
-            // @ts-ignore
+            // @ts-expect-error - Instagram embeds are loaded via external script
             if (window.instgrm && window.instgrm.Embeds) {
-                // @ts-ignore
+                // @ts-expect-error - Instagram embeds are loaded via external script
                 window.instgrm.Embeds.process();
             }
         }
@@ -134,11 +136,12 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
                     <div className={styles.fallbackPreview}>
                         <div className={styles.fallbackContent}>
                             {posterThumbnail ? (
-                                <img
+                                <Image
                                     src={posterThumbnail}
                                     alt={title || 'Video preview'}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, 800px"
                                     className={styles.fallbackPoster}
-                                    loading="lazy"
                                 />
                             ) : (
                                 <div className={styles.fallbackPlaceholder}>
@@ -163,7 +166,7 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
                         {/* Watch on [Platform] CTA */}
                         {originalUrl && (
                             <div className={styles.fallbackCtaContainer}>
-                                <a
+                                <Link
                                     href={originalUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -175,7 +178,7 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
                                         <polyline points="15 3 21 3 21 9"></polyline>
                                         <line x1="10" y1="14" x2="21" y2="3"></line>
                                     </svg>
-                                </a>
+                                </Link>
                             </div>
                         )}
                     </div>
@@ -188,11 +191,12 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
                         aria-label={`Play: ${title || 'video'}`}
                     >
                         {posterThumbnail ? (
-                            <img
+                            <Image
                                 src={posterThumbnail}
                                 alt={title || 'Video thumbnail'}
+                                fill
+                                sizes="(max-width: 1024px) 100vw, 1024px"
                                 className={styles.poster}
-                                loading="lazy"
                                 onError={handlePosterError}
                             />
                         ) : (
@@ -296,14 +300,14 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
             {/* External Link */}
             {originalUrl && (
                 <div className={styles.exploreLinkContainer}>
-                    <a
+                    <Link
                         href={originalUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={styles.exploreLink}
                     >
                         Explore now
-                    </a>
+                    </Link>
                 </div>
             )}
 

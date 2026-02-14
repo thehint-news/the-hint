@@ -3,18 +3,21 @@
  * Re-exports all media utilities
  */
 
-// Upload utilities
+// Upload utilities (Supabase Storage backed)
 export {
     processImageUpload,
     generateImageHash,
     getImageDimensions,
-    loadMediaRegistry,
-    saveMediaRegistry,
-    registerMediaAsset,
-    updateAssetUsage,
-    getOrphanedAssets,
     type ImageUploadResult,
 } from './upload';
+
+// Supabase storage utilities
+export {
+    uploadToStorage,
+    deleteFromStorage,
+    extractDimensions,
+    type StorageUploadResult,
+} from './supabase-storage';
 
 // Video provider utilities
 export {

@@ -330,7 +330,7 @@ export function parseVideoUrl(url: string): VideoParseResult {
  * In-memory cache to prevent hammering external APIs
  * and improve UX when users retry or navigate.
  */
-const metadataCache = new Map<string, { data: any, timestamp: number }>();
+const metadataCache = new Map<string, { data: unknown, timestamp: number }>();
 const CACHE_TTL = 60 * 1000; // 1 minute
 
 function getCachedMetadata<T>(key: string): T | null {
@@ -341,7 +341,7 @@ function getCachedMetadata<T>(key: string): T | null {
     return null;
 }
 
-function setCachedMetadata(key: string, data: any) {
+function setCachedMetadata(key: string, data: unknown) {
     // Keep cache size manageable
     if (metadataCache.size > 100) {
         const firstKey = metadataCache.keys().next().value;
@@ -409,7 +409,7 @@ async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 
             if (res.status === 429) {
                 await new Promise(r => setTimeout(r, backoff * 4 * (i + 1)));
             }
-        } catch (e) {
+        } catch {
             // Network error or timeout
         }
 
@@ -422,7 +422,7 @@ async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 
 
 export async function getVideoInfo(url: string): Promise<VideoInfoResult> {
     // 0. Check Cache First
-    const cached = getCachedMetadata<any>(`info:${url}`);
+    const cached = getCachedMetadata<NonNullable<VideoInfoResult['data']>>(`info:${url}`);
     if (cached) return { success: true, data: cached };
 
     const parsed = parseVideoUrl(url);
@@ -603,14 +603,14 @@ export async function getVideoInfo(url: string): Promise<VideoInfoResult> {
         };
 
         setCachedMetadata(`info:${url}`, fileResult);
-        return { success: true, data: fileResult as any };
-    } catch (e) {
+        return { success: true, data: fileResult as NonNullable<VideoInfoResult['data']> };
+    } catch {
         return { success: false, error: 'Failed to access video URL' };
     }
 }
 
 async function fetchOEmbed(url: string) {
-    const cached = getCachedMetadata<any>(`oembed:${url}`);
+    const cached = getCachedMetadata<unknown>(`oembed:${url}`);
     if (cached) return cached;
 
     try {
@@ -623,7 +623,7 @@ async function fetchOEmbed(url: string) {
                 return data;
             }
         }
-    } catch (e) {
+    } catch {
         // Quietly fail as we have fallbacks
     }
     return null;
@@ -634,7 +634,7 @@ async function fetchOEmbed(url: string) {
  * Extracts image, title, and author with multiple fallbacks
  */
 async function fetchOpenGraphData(url: string): Promise<{ image?: string; title?: string; author?: string } | null> {
-    const cached = getCachedMetadata<any>(`og:${url}`);
+    const cached = getCachedMetadata<unknown>(`og:${url}`);
     if (cached) return cached;
 
     try {

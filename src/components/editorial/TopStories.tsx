@@ -9,6 +9,7 @@
  */
 
 import Link from "next/link";
+import Image from "next/image";
 
 interface TopStoryArticle {
     id: string;
@@ -62,9 +63,11 @@ export function TopStories({ articles }: TopStoriesProps) {
                             <Link href={articleUrl} className="article-link" style={{ display: "block", marginBottom: "0.5rem" }}>
                                 <div className="thumbnail-container">
                                     {article.image ? (
-                                        <img
+                                        <Image
                                             src={article.image}
                                             alt={article.title}
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, 600px"
                                             className="article-thumbnail thumbnail-top"
                                         />
                                     ) : (
