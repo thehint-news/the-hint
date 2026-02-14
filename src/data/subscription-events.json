@@ -792,11 +792,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-14T10:22:30.148Z",
-    "status": "processing",
+    "status": "sent",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-02-14T10:22:34.208Z",
+    "lastAttemptAt": "2026-02-14T10:22:42.230Z",
     "totalSubscribers": 0
   }
 ]
