@@ -270,6 +270,55 @@
     opacity: 0.5;
 }
 
+/* Explore Link - Premium Integrated Bar */
+.exploreLinkContainer {
+    width: 100%;
+    margin-top: -1px;
+    /* Overlap border */
+    z-index: 20;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.exploreLink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 20px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-ink);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.exploreLink:hover {
+    background: #fafafa;
+    color: var(--color-primary);
+    padding-left: 24px;
+    /* Subtle slide animation */
+}
+
+/* Arrow Animation */
+.exploreLink::after {
+    content: '→';
+    font-weight: 400;
+    font-size: 1.1em;
+    transition: transform 0.3s ease;
+}
+
+.exploreLink:hover::after {
+    transform: translateX(4px);
+}
+
 /* Premium Out-dent Layout for Desktop */
 @media (min-width: 1024px) {
     .figure {
@@ -313,4 +362,17 @@
         top: 1.25rem;
         left: 1.25rem;
     }
+}
+
+/* Accessibility Focus Styles */
+.exploreLink:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+    background: #fafafa;
+    color: var(--color-primary);
+    padding-left: 24px;
+}
+
+.exploreLink:focus-visible::after {
+    transform: translateX(4px);
 }

@@ -44,6 +44,10 @@ export interface VideoInfoResult {
 // URL PATTERNS
 // =============================================================================
 
+// =============================================================================
+// URL PATTERNS
+// =============================================================================
+
 const PATTERNS = {
     youtube: [
         /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
@@ -62,17 +66,30 @@ const PATTERNS = {
         /(?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:p|reel|tv)\/([a-zA-Z0-9_-]+)/,
     ],
     facebook: [
+        // Video specific
         /(?:https?:\/\/)?(?:www\.)?facebook\.com\/watch\/\?v=(\d+)/,
         /(?:https?:\/\/)?(?:www\.)?facebook\.com\/[a-zA-Z0-9.]+\/videos\/(\d+)/,
         /(?:https?:\/\/)?(?:www\.)?facebook\.com\/share\/v\/([a-zA-Z0-9_-]+)/,
         /(?:https?:\/\/)?(?:www\.)?facebook\.com\/share\/r\/([a-zA-Z0-9_-]+)/,
+        // General Posts
+        // Support standard IDs and the new "pfbid..." base64-style IDs
+        /(?:https?:\/\/)?(?:www\.)?facebook\.com\/[^\/]+\/posts\/([a-zA-Z0-9_-]+)/,
+        /(?:https?:\/\/)?(?:www\.)?facebook\.com\/story\.php\?story_fbid=([a-zA-Z0-9_-]+)/,
+        /(?:https?:\/\/)?(?:www\.)?facebook\.com\/permalink\.php\?story_fbid=([a-zA-Z0-9_-]+)/,
+        /(?:https?:\/\/)?(?:www\.)?facebook\.com\/photo\.php\?fbid=(\d+)/,
+        /(?:https?:\/\/)?(?:www\.)?facebook\.com\/photo\/\?fbid=(\d+)/,
+        // Fallback for generic post IDs (including pfbid...)
+        /(?:https?:\/\/)?(?:www\.)?facebook\.com\/.*\/posts\/([a-zA-Z0-9_-]+)/,
     ],
     tiktok: [
         /(?:https?:\/\/)?(?:www\.)?tiktok\.com\/@([a-zA-Z0-9_.]+)\/video\/(\d+)/,
     ],
     linkedin: [
-        /(?:https?:\/\/)?(?:www\.)?linkedin\.com\/(?:posts|feed\/update)\/([a-zA-Z0-9_-]+)/,
-        /id=(\d+)/,
+        /(?:https?:\/\/)?(?:www\.)?linkedin\.com\/.*activity-(\d+)/,
+        /(?:https?:\/\/)?(?:www\.)?linkedin\.com\/.*ugcPost-(\d+)/,
+        /(?:https?:\/\/)?(?:www\.)?linkedin\.com\/.*feed\/update\/urn:li:(?:activity|share|ugcPost):(\d+)/,
+        /(?:https?:\/\/)?(?:www\.)?linkedin\.com\/.*id=(\d+)/,
+        /(?:https?:\/\/)?(?:www\.)?linkedin\.com\/(?:posts|feed\/update)\/([a-zA-Z0-9_-]+)/, // Fallback for other formats
     ],
     files: /\.(mp4|webm|mkv)$/i,
 };
@@ -86,11 +103,45 @@ export function parseVideoUrl(url: string): VideoParseResult {
 
     let trimmedUrl = url.trim();
 
-    // Basic Protocol Check
+    // 1. Handle Iframe Paste: Extract 'src' if user pasted an iframe code
+    // Check for iframe or blockquote (for twitter/insta)
+    if (/^<\s*(iframe|blockquote)/i.test(trimmedUrl)) {
+        const srcMatch = trimmedUrl.match(/src=["']([^"']+)["']/i);
+        if (srcMatch && srcMatch[1]) {
+            trimmedUrl = srcMatch[1];
+            // Decode potential HTML entities in the URL
+            trimmedUrl = trimmedUrl
+                .replace(/&amp;/g, '&')
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'")
+                .replace(/&#x27;/g, "'")
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>');
+        } else {
+            return { valid: false, error: 'Could not extract URL from embed code' };
+        }
+    }
+
+    // 2. Handle missing protocol (e.g. "www.youtube.com/...")
+    if (!/^https?:\/\//i.test(trimmedUrl)) {
+        trimmedUrl = 'https://' + trimmedUrl;
+    }
+
+    // 3. Basic Protocol Check & Validation
     try {
         const urlObj = new URL(trimmedUrl);
-        if (urlObj.protocol !== 'https:') {
-            return { valid: false, error: 'HTTPS is required' };
+        // We allow http for localhost dev, but generally prefer https
+        if (urlObj.protocol !== 'https:' && urlObj.hostname !== 'localhost') {
+            // Auto-upgrade to https for known providers
+            const upgradeHosts = [
+                'youtube.com', 'youtu.be', 'facebook.com', 'vimeo.com',
+                'twitter.com', 'x.com', 'instagram.com', 'tiktok.com', 'linkedin.com'
+            ];
+            const shouldUpgrade = upgradeHosts.some(h => urlObj.hostname.includes(h));
+
+            if (shouldUpgrade) {
+                trimmedUrl = trimmedUrl.replace(/^http:/, 'https:');
+            }
         }
     } catch {
         return { valid: false, error: 'Invalid URL format' };
@@ -156,24 +207,51 @@ export function parseVideoUrl(url: string): VideoParseResult {
     // Facebook
     for (const p of PATTERNS.facebook) {
         const match = trimmedUrl.match(p);
-        // Match[1] is usually the ID, but some regexes might have groups. 
-        // Our patterns:
-        // 1. watch/?v=(\d+) -> match[1]
-        // 2. .../videos/(\d+) -> match[1]
-        // 3. share/v/([a-zA-Z0-9_-]+) -> match[1]
-        // 4. share/r/([a-zA-Z0-9_-]+) -> match[1]
-
-        const id = match ? match[1] : null;
+        // Find the first non-null capturing group (some regexes have 1 group, others 2, etc, but we only care about the ID)
+        let id = null;
+        if (match) {
+            for (let i = 1; i < match.length; i++) {
+                if (match[i]) {
+                    id = match[i];
+                    break;
+                }
+            }
+        }
 
         if (id) {
-            // Use the original URL for the embed href. Facebook's plugin handles various formats (share, reel, watch) best
-            // when given the direct permalink rather than a constructed ID-based URL which might fail for non-numeric Reel IDs.
+            // Determine if it's a video or a post
+            const isVideo = /\/watch\/|\/videos\/|\/share\/v\/|\/share\/r\//.test(trimmedUrl);
+            const plugin = isVideo ? 'video.php' : 'post.php';
+
+            // Canonicalize the URL for the plugin
+            // Facebook plugins are picky. Using the clean, canonical URL as 'href' is best.
+            let href = trimmedUrl;
+
+            // 1. Force https and www
+            try {
+                const urlObj = new URL(trimmedUrl);
+                urlObj.protocol = 'https:';
+                if (urlObj.hostname !== 'www.facebook.com') {
+                    urlObj.hostname = 'www.facebook.com';
+                }
+                // 2. If we have a numeric video ID, use the stable video.php?v=ID format
+                // This avoids issues with 'watch' URLs or mobile URLs
+                if (isVideo && /^\d+$/.test(id)) {
+                    href = `https://www.facebook.com/video.php?v=${id}`;
+                } else {
+                    // Clean up other URLs (remove unrelated query params if possible, but keep it simple for now)
+                    href = urlObj.toString();
+                }
+            } catch {
+                // Keep original if URL parsing fails
+            }
+
             return {
                 valid: true,
                 sourceType: 'social',
                 provider: 'facebook',
                 id: id,
-                embedUrl: `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(trimmedUrl)}&show_text=false&t=0`,
+                embedUrl: `https://www.facebook.com/plugins/${plugin}?href=${encodeURIComponent(href)}&show_text=false&t=0`,
             };
         }
     }
@@ -196,13 +274,25 @@ export function parseVideoUrl(url: string): VideoParseResult {
     for (const p of PATTERNS.linkedin) {
         const match = trimmedUrl.match(p);
         if (match && match[1]) {
+            let id = match[1];
+            // Clean ID but keep track of type if possible
+            if (id.includes('activity-')) id = id.replace('activity-', '');
+            if (id.includes('ugcPost-')) id = id.replace('ugcPost-', '');
+
+            // Determine URN Type
+            let urnType = 'share'; // Default
+            if (trimmedUrl.includes('activity') || trimmedUrl.includes('urn:li:activity')) {
+                urnType = 'activity';
+            } else if (trimmedUrl.includes('ugcPost') || trimmedUrl.includes('urn:li:ugcPost')) {
+                urnType = 'ugcPost';
+            }
+
             return {
                 valid: true,
                 sourceType: 'social',
                 provider: 'linkedin',
-                id: match[1],
-                // LinkedIn embeds generally expect a URN format. urn:li:share is the most common for shared posts.
-                embedUrl: `https://www.linkedin.com/embed/feed/update/urn:li:share:${match[1].replace('activity-', '')}`,
+                id: id,
+                embedUrl: `https://www.linkedin.com/embed/feed/update/urn:li:${urnType}:${id}`,
             };
         }
     }
@@ -257,7 +347,6 @@ export async function getVideoInfo(url: string): Promise<VideoInfoResult> {
                 }
 
                 // YouTube Thumbnail Fallback Chain
-                // We check if maxres exists, otherwise fallback to hq/mq
                 try {
                     const checkRes = await fetch(posterThumbnail, { method: 'HEAD' });
                     if (!checkRes.ok) {
@@ -292,11 +381,30 @@ export async function getVideoInfo(url: string): Promise<VideoInfoResult> {
                     trustedSourceHtml = data.html || '';
                 }
             } else if (provider === 'facebook') {
-                const data = await fetchOEmbed(`https://www.facebook.com/plugins/video/oembed.json/?url=${encodeURIComponent(url)}`);
+                const isVideo = parsed.embedUrl?.includes('video.php');
+                const oembedEndpoint = isVideo
+                    ? 'https://www.facebook.com/plugins/video/oembed.json/'
+                    : 'https://www.facebook.com/plugins/post/oembed.json/';
+
+                // Use the canonical 'href' from our parsed embedUrl if available
+                // This ensures we don't send mobile/malformed URLs to the oEmbed endpoint
+                let targetUrl = url;
+                try {
+                    if (parsed.embedUrl) {
+                        const embedUrlObj = new URL(parsed.embedUrl);
+                        const href = embedUrlObj.searchParams.get('href');
+                        if (href) targetUrl = href;
+                    }
+                } catch { }
+
+                const data = await fetchOEmbed(`${oembedEndpoint}?url=${encodeURIComponent(targetUrl)}`);
                 if (data) {
                     title = data.title || title;
                     posterThumbnail = data.thumbnail_url || posterThumbnail;
                     authorName = data.author_name || authorName;
+
+                    // We will use the official SDK in the frontend, so we can use the OEmbed HTML
+                    // or construct a fallback specialized tag.
                     trustedSourceHtml = data.html || '';
                 }
             } else if (provider === 'x') {
@@ -307,12 +415,19 @@ export async function getVideoInfo(url: string): Promise<VideoInfoResult> {
                     trustedSourceHtml = data.html || '';
                     if (data.thumbnail_url) posterThumbnail = data.thumbnail_url;
                 }
+            } else if (provider === 'linkedin') {
+                // LinkedIn offers no public unauthenticated oEmbed
+                title = 'LinkedIn Content';
             }
 
-            // Fallback: If still no thumbnail, try basic Open Graph scraping
-            if (!posterThumbnail) {
-                const ogImage = await fetchOpenGraphImage(url);
-                if (ogImage) posterThumbnail = ogImage;
+            // Fallback & Enhancement
+            if (!posterThumbnail || !title || title === 'Video' || title === 'LinkedIn Content' || provider === 'linkedin' || provider === 'facebook') {
+                const ogData = await fetchOpenGraphData(url);
+                if (ogData) {
+                    if (!posterThumbnail && ogData.image) posterThumbnail = ogData.image;
+                    if ((!title || title === 'Video' || title === 'LinkedIn Content') && ogData.title) title = ogData.title;
+                    if (!authorName && ogData.author) authorName = ogData.author;
+                }
             }
         } catch (e) {
             console.error('oEmbed failed', e);
@@ -391,10 +506,10 @@ async function fetchOEmbed(url: string) {
 }
 
 /**
- * Basic Open Graph Image Scraper
- * Uses regex to find og:image or twitter:image in HTML
+ * Robust Open Graph Data Scraper
+ * Extracts image, title, and author
  */
-async function fetchOpenGraphImage(url: string): Promise<string | null> {
+async function fetchOpenGraphData(url: string): Promise<{ image?: string; title?: string; author?: string } | null> {
     try {
         const res = await fetch(url, {
             headers: {
@@ -407,36 +522,40 @@ async function fetchOpenGraphImage(url: string): Promise<string | null> {
 
         const html = await res.text();
 
-        // More robust metadata extraction
-        function findMeta(nameOrProperty: string): string | null {
-            // Regex to find content in <meta ... property="X" ... content="Y" ...> or vice versa
-            // Handles single/double quotes and variations in order
-            const patterns = [
-                new RegExp(`<meta[^>]+(?:property|name)=["']${nameOrProperty}["'][^>]+content=["']([^"']+)["']`, 'i'),
-                new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["']${nameOrProperty}["']`, 'i')
-            ];
+        function findMeta(keys: string[]): string | null {
+            for (const k of keys) {
+                // Try property="..." and name="..."
+                const p1 = new RegExp(`<meta[^>]+(?:property|name)=["']${k}["'][^>]+content=["']([^"']+)["']`, 'i');
+                const p2 = new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["']${k}["']`, 'i');
 
-            for (const p of patterns) {
-                const m = html.match(p);
+                let m = html.match(p1);
+                if (m && m[1]) return m[1];
+
+                m = html.match(p2);
                 if (m && m[1]) return m[1];
             }
             return null;
         }
 
         // Try in order of richness
-        let image = findMeta('og:image') ||
-            findMeta('twitter:image') ||
-            findMeta('thumbnail');
+        const image = findMeta(['og:image', 'twitter:image', 'thumbnail'])?.trim();
+        const title = findMeta(['og:title', 'twitter:title', 'title'])?.trim();
+        const author = findMeta(['author', 'article:author', 'og:site_name', 'twitter:creator'])?.trim();
 
-        // backup: Deep Scraper (look for common media patterns in raw body)
-        if (!image) {
+        // Backup: Deep Scraper (look for common media patterns in raw body if no og:image)
+        let finalImage = image;
+        if (!finalImage) {
             // Look for things like "https://.../media/...jpg" or ".../thumb/...png"
             const mediaPattern = /["'](https:\/\/[^"']+\/(?:media|thumbnails?|posters?)\/[^"']+\.(?:jpe?g|png|webp))["']/i;
             const bodyMatch = html.match(mediaPattern);
-            if (bodyMatch && bodyMatch[1]) image = bodyMatch[1];
+            if (bodyMatch && bodyMatch[1]) finalImage = bodyMatch[1];
         }
 
-        return image ? image.trim() : null;
+        return {
+            image: finalImage,
+            title,
+            author
+        };
 
     } catch {
         return null;

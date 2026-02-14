@@ -36,6 +36,19 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
     // State: false = showing poster, true = showing player
     const [isPlayerLoaded, setIsPlayerLoaded] = useState(false);
 
+    // Determine if this should be rendered as a full "social post" embed or a performance-optimized "video facade"
+    // - Social Posts (X, Instagram, LinkedIn): Immediate load, variable height.
+    // - Videos (YouTube, Vimeo): Facade first, fixed 16:9 aspect ratio.
+    // - Facebook: ALWAYS use SDK-based "Social Post" style for robustness. Iframe is flaky.
+    const isSocialPost = sourceType === 'social' && (
+        ['x', 'twitter', 'instagram', 'tiktok', 'linkedin', 'facebook'].includes(provider || '')
+    );
+
+    // Performance logic: 
+    // - DIRECT VIDEOS (YouTube, Vimeo, Files): Use facade (image + play button) for speed.
+    // - SOCIAL POSTS (Facebook, X, Instagram): Display the entire social context immediately (or via SDK).
+    const shouldUseFacade = !isSocialPost && !isPlayerLoaded;
+
     /**
      * Re-initialize social widgets when content changes
      */
@@ -88,6 +101,8 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
                 return `${embedUrl}${separator}autoplay=1&rel=0`;
             case 'vimeo':
                 return `${embedUrl}${separator}autoplay=1`;
+            // Facebook plugin does not support autoplay via URL param efficiently
+            // and improper params can cause 'Video Unavailable'
             default:
                 return embedUrl;
         }
@@ -103,14 +118,6 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
             img.src = img.src.replace('maxresdefault', 'hqdefault');
         }
     }, [provider]);
-
-    // Determine if this should be rendered as a full "social post" embed or a performance-optimized "video facade"
-    const isSocialPost = sourceType === 'social' && ['x', 'twitter', 'instagram', 'facebook', 'linkedin', 'tiktok'].includes(provider || '');
-
-    // Performance logic: 
-    // - DIRECT VIDEOS (YouTube, Vimeo, Files): Use facade (image + play button) for speed.
-    // - SOCIAL POSTS (X, Instagram): Display the entire social context immediately.
-    const shouldUseFacade = !isSocialPost && !isPlayerLoaded;
 
     return (
         <figure
@@ -166,12 +173,31 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
                 ) : (
                     // ACTUAL PLAYER / EMBED
                     <div className={isSocialPost ? styles.socialPlayerContainer : styles.playerContainer}>
-                        {isSocialPost && trustedSourceHtml ? (
+                        {isSocialPost ? (
                             <>
-                                <div
-                                    className={styles.nativeSocialEmbed}
-                                    dangerouslySetInnerHTML={{ __html: trustedSourceHtml }}
-                                />
+                                {/* Native Embed HTML (Twitter, Instagram, Facebook OEmbed) */}
+                                {trustedSourceHtml ? (
+                                    <div
+                                        className={styles.nativeSocialEmbed}
+                                        dangerouslySetInnerHTML={{ __html: trustedSourceHtml }}
+                                    />
+                                ) : (
+                                    /* Logic for other social types that fallback to iframe */
+                                    <iframe
+                                        src={embedUrl}
+                                        className={styles.iframe}
+                                        title={title || 'Social Post Content'}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        allowFullScreen
+                                        sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-forms"
+                                        loading="lazy"
+                                        // Specific styles for Facebook to match user request if needed, 
+                                        // but safely handled by wrapper CSS mostly.
+                                        style={provider === 'facebook' ? { border: 'none', overflow: 'hidden' } : undefined}
+                                    />
+                                )}
+
+                                {/* Social SDK Scripts - ONLY for Twitter/Instagram if needed */}
                                 {(provider === 'x' || provider === 'twitter') && (
                                     <Script
                                         src="https://platform.twitter.com/widgets.js"
@@ -184,6 +210,7 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
                                         strategy="lazyOnload"
                                     />
                                 )}
+                                {/* Facebook SDK Removed - using direct Iframe as requested */}
                             </>
                         ) : ((sourceType === 'file' || sourceType === 'cdn') && originalUrl) ? (
                             <video
@@ -199,9 +226,9 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
                             </video>
                         ) : embedUrl ? (
                             <iframe
-                                src={isSocialPost ? embedUrl : getAutoplayEmbedUrl()}
+                                src={getAutoplayEmbedUrl()}
                                 className={styles.iframe}
-                                title={title || 'Social Post Content'}
+                                title={title || 'Video Content'}
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen
                                 sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-forms"
@@ -211,6 +238,20 @@ export function VideoBlockRenderer({ block }: VideoBlockRendererProps) {
                     </div>
                 )}
             </div>
+
+            {/* External Link */}
+            {originalUrl && (
+                <div className={styles.exploreLinkContainer}>
+                    <a
+                        href={originalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.exploreLink}
+                    >
+                        Explore now
+                    </a>
+                </div>
+            )}
 
             {(caption || credit) && (
                 <figcaption className={styles.caption}>
