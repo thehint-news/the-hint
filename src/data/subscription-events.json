@@ -826,9 +826,10 @@
     "contentType": "opinion",
     "priority": "normal",
     "createdAt": "2026-02-14T12:08:42.077Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-14T12:08:46.114Z"
   }
 ]
