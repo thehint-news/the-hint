@@ -862,10 +862,11 @@
     "contentType": "opinion",
     "priority": "normal",
     "createdAt": "2026-02-14T12:10:29.907Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-14T13:12:52.810Z"
   },
   {
     "id": "7c8186da-e314-4732-b354-7b49afecda3e",
