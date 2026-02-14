@@ -734,5 +734,19 @@
     ],
     "lastAttemptAt": "2026-02-14T07:30:45.182Z",
     "totalSubscribers": 1
+  },
+  {
+    "id": "93da5d8e-8c32-424b-86c0-4d79c81d5122",
+    "articleSlug": "gffghfghfhhjfjh",
+    "section": "politics",
+    "headline": "gffghfghfhhjfjh",
+    "summary": "dsffdsffsdfddffdfsdf",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-14T07:57:44.833Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
