@@ -2,10 +2,10 @@
 title: moltbook a new AI
 subtitle: i dont know butrperfect
 contentType: opinion
-image: /media/images/315dd05233d88935-800w.webp
+image: /media/images/3a473b173959f5da-800w.jpg
 status: published
 publishedAt: 2026-02-14T11:56:39.024Z
-updatedAt: null
+updatedAt: 2026-02-14T12:08:38.105Z
 placement: standard
 tags:
   - nothing
@@ -21,11 +21,12 @@ i'm super
 how are you?
 
 :::image
-src: /media/images/3a473b173959f5da-800w.jpg
+src: /media/images/b57a414051776d17-800w.jpg
 alt: very dangerous
-width: 327
-height: 327
+width: 544
+height: 680
 caption: Remember to see
+srcset: /media/images/b57a414051776d17-400w.jpg 400w
 :::
 
 :::video
