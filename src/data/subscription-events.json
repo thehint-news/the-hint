@@ -716,5 +716,19 @@
     ],
     "lastAttemptAt": "2026-02-14T05:47:15.701Z",
     "totalSubscribers": 1
+  },
+  {
+    "id": "8dd6b224-222c-4508-91d9-0b9908b81594",
+    "articleSlug": "fgdgfdgfdgdgdf",
+    "section": "world-affairs",
+    "headline": "fgdgfdgfdgdgdf",
+    "summary": "gfdgfdgfdgfdgfdgfdg",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-14T07:30:28.655Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
