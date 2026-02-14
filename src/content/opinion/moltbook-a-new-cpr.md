@@ -4,7 +4,7 @@ subtitle: i dont know butrperfect
 contentType: opinion
 image: /media/images/315dd05233d88935-800w.webp
 status: published
-publishedAt: 2026-02-14T11:24:01.520Z
+publishedAt: 2026-02-14T11:28:10.712Z
 updatedAt: null
 placement: standard
 tags:
