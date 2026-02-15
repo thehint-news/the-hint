@@ -69,16 +69,22 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // Fetch articles for global UI elements (Ticker, Updated Indicator)
-  const allArticles = await getAllArticles();
+  let tickerHeadlines: string[] = [];
+  let latestUpdate: string | undefined = undefined;
 
-  // Latest update timestamp (from any article)
-  const latestUpdate = allArticles.length > 0 ? allArticles[0].publishedAt : undefined;
-
-  // Ticker headlines: No opinion, max 10, latest first
-  const tickerHeadlines = allArticles
-    .filter(a => a.contentType !== 'opinion')
-    .slice(0, 10)
-    .map(a => a.title);
+  try {
+    const allArticles = await getAllArticles();
+    // Latest update timestamp (from any article)
+    latestUpdate = allArticles.length > 0 ? allArticles[0].publishedAt : undefined;
+    // Ticker headlines: No opinion, max 10, latest first
+    tickerHeadlines = allArticles
+      .filter(a => a.contentType !== 'opinion')
+      .slice(0, 10)
+      .map(a => a.title);
+  } catch (error) {
+    console.error('[RootLayout] Failed to fetch global article data:', error);
+    // Fallback: Empty ticker, undefined update property
+  }
 
   return (
     <html lang="en">
