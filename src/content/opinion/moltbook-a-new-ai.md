@@ -2,10 +2,10 @@
 title: moltbook a new AI
 subtitle: i dont know but perfect
 contentType: opinion
-image: /media/images/315dd05233d88935-800w.webp
+image: "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/02/b57a414051776d17.jpg"
 status: published
 publishedAt: 2026-02-14T11:56:39.024Z
-updatedAt: 2026-02-14T16:29:02.995Z
+updatedAt: 2026-02-15T04:43:33.963Z
 placement: standard
 tags:
   - nothing
@@ -38,7 +38,6 @@ embedUrl: https://www.instagram.com/p/DSe386FEiGs/embed
 provider: instagram
 credit: GIRISHA L
 title: GIRISHA L on Instagram: "&#x1f4cd; Sri Kodanda Rama Swamy Temple, Ejipura &#x2013; Bengaluru
-Behold the world&#x2019;s tallest monolithic Vishnu statue standing 108 ft tall and carved from a single granite rock weighing around 420 tonnes &#x1f6d5;&#x2728; This awe-inspiring Vishwaroopam of Lord Vishnu in Ejipura captures divine scale, artistic mastery, and spiritual energy in every frame, turning your reel into a breathtaking celebration of faith and monumental craftsmanship."
 trustedSourceHtml: <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/DSe386FEiGs/" data-instgrm-version="14"></blockquote>
 :::
 
