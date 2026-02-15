@@ -2,7 +2,12 @@
  * StoryList Component
  * 
  * Renders a list of stories for section pages.
- * Receives fully prepared article data via props.
+ * Uses the global thumbnail system and editorial design tokens.
+ * 
+ * Layout:
+ * - Default (politics, world-affairs): Horizontal cards with 3:2 thumbnails
+ * - Compact (crime, court): Dense wire-style rows with small thumbnails
+ * - Opinion: Card-grid with author treatment
  * 
  * NO business logic, NO imports from lib/content.
  */
@@ -31,8 +36,8 @@ interface StoryListProps {
 export function StoryList({ articles, sectionSlug }: StoryListProps) {
     if (articles.length === 0) {
         return (
-            <div className="py-12 text-center border-t border-black">
-                <p className="text-lg font-serif italic text-neutral-500">
+            <div className="py-12 text-center border-t border-[#111]">
+                <p className="font-serif text-lg italic text-[#8A8A8A]">
                     No stories available in this section.
                 </p>
             </div>
@@ -43,95 +48,172 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
     const isCompact = ['crime', 'court'].includes(sectionSlug);
     const isOpinion = sectionSlug === 'opinion';
 
-    return (
-        <div className="mb-12">
-            {/* Story List */}
-            <div className="flex flex-col">
-                {articles.map((article, index) => (
-                    <article
-                        key={article.id}
-                        className={`
-                            group relative flex gap-6
-                            ${index < articles.length - 1 ? 'border-b border-neutral-200' : ''}
-                            ${isCompact ? 'py-3' : 'py-6'}
-                            ${isOpinion ? 'py-5' : ''}
-                        `}
-                    >
-                        {/* Image (Left) */}
-                        {article.image && (
-                            <div className={`
-                                shrink-0 overflow-hidden bg-neutral-100 relative
-                                ${isCompact ? 'w-24 h-24' : 'w-48 aspect-[3/2]'}
-                                ${isOpinion ? 'w-32 aspect-[3/4]' : ''}
-                            `}>
-                                <Image
-                                    src={article.image}
-                                    alt=""
-                                    fill
-                                    sizes="(max-width: 768px) 100px, 200px"
-                                    className="object-cover transition-all duration-300 group-hover:brightness-90 group-hover:scale-105"
-                                />
-                            </div>
-                        )}
+    // Opinion: 2-column card grid
+    if (isOpinion) {
+        return (
+            <div className="mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-10">
+                    {articles.map((article) => (
+                        <Link
+                            key={article.id}
+                            href={`/${article.section}/${article.id}`}
+                            className="article-link group block"
+                        >
+                            <article className="flex flex-col">
+                                {/* Thumbnail */}
+                                {article.image && (
+                                    <div className="thumbnail-container mb-3 aspect-[16/9] w-full">
+                                        <Image
+                                            src={article.image}
+                                            alt=""
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, 50vw"
+                                            className="article-thumbnail w-full h-full object-cover"
+                                        />
+                                    </div>
+                                )}
 
-                        {/* Content (Right) */}
-                        <div className="flex-1 flex flex-col justify-center">
-                            {/* Meta Top (Opinion only) */}
-                            {isOpinion && (
-                                <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-1">
-                                    OPINION
+                                {/* Content */}
+                                <span className="meta-text text-[#B04A2F] font-bold mb-1 block uppercase tracking-widest" style={{ fontSize: "10px" }}>
+                                    Opinion
                                 </span>
-                            )}
-
-                            {/* Headline */}
-                            <Link href={`/${article.section}/${article.id}`} className="block">
-                                <h2 className={`
-                                    font-bold text-neutral-900 leading-tight mb-2 group-hover:underline decoration-2 underline-offset-4
-                                    ${isCompact ? 'text-lg' : 'text-2xl font-serif'}
-                                    ${isOpinion ? 'text-xl font-serif italic' : ''}
-                                `}>
+                                <h2 className="headline-sm mb-1.5 line-clamp-3 group-hover:underline decoration-2 underline-offset-4 decoration-[#111]">
                                     {article.title}
                                 </h2>
-                            </Link>
-
-                            {/* Summary / Subtitle */}
-                            {!isCompact && (
-                                <p className={`
-                                    text-neutral-600 mb-2
-                                    ${isOpinion ? 'text-sm' : 'text-base'}
-                                    line-clamp-2
-                                `}>
-                                    {article.subtitle}
-                                </p>
-                            )}
-
-                            {/* Compact Hint */}
-                            {isCompact && article.subtitle && (
-                                <p className="text-sm text-neutral-500 line-clamp-1 mb-1">
-                                    {article.subtitle}
-                                </p>
-                            )}
-
-                            {/* Date / Meta */}
-                            <div className="flex items-center gap-3 text-xs text-neutral-500 font-medium uppercase tracking-wider">
-                                <time dateTime={article.publishedAt}>
+                                {article.subtitle && (
+                                    <p className="caption-text mb-2 line-clamp-2">
+                                        {article.subtitle}
+                                    </p>
+                                )}
+                                <time className="meta-text" dateTime={article.publishedAt}>
                                     {formatSafeDate(article.publishedAt, {
-                                        month: 'short',
+                                        month: 'long',
                                         day: 'numeric',
                                         year: 'numeric'
                                     })}
                                 </time>
-                                {article.contentType !== 'news' && !isOpinion && (
-                                    <>
-                                        <span>•</span>
-                                        <span className="text-red-700">
-                                            {article.contentType}
-                                        </span>
-                                    </>
+                            </article>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    // Compact: wire-style dense rows (crime/court)
+    if (isCompact) {
+        return (
+            <div className="mb-12">
+                <div className="flex flex-col">
+                    {articles.map((article, index) => (
+                        <Link
+                            key={article.id}
+                            href={`/${article.section}/${article.id}`}
+                            className="article-link group block"
+                        >
+                            <article
+                                className={`flex gap-4 py-4 ${index < articles.length - 1 ? 'border-b border-[#E5E5E5]' : ''
+                                    }`}
+                            >
+                                {/* Small thumbnail */}
+                                {article.image && (
+                                    <div className="thumbnail-container thumbnail-wire">
+                                        <Image
+                                            src={article.image}
+                                            alt=""
+                                            width={80}
+                                            height={60}
+                                            className="article-thumbnail thumbnail-wire object-cover"
+                                        />
+                                    </div>
                                 )}
+
+                                {/* Content */}
+                                <div className="flex-1 flex flex-col justify-center min-w-0">
+                                    <h2 className="headline-sm mb-0.5 line-clamp-2 group-hover:underline decoration-1 underline-offset-4 decoration-[#111]">
+                                        {article.title}
+                                    </h2>
+                                    {article.subtitle && (
+                                        <p className="caption-text mb-1 line-clamp-1">
+                                            {article.subtitle}
+                                        </p>
+                                    )}
+                                    <time className="meta-text" dateTime={article.publishedAt}>
+                                        {formatSafeDate(article.publishedAt, {
+                                            month: 'short',
+                                            day: 'numeric',
+                                            year: 'numeric'
+                                        })}
+                                    </time>
+                                </div>
+                            </article>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    // Default: horizontal story cards (politics, world-affairs)
+    return (
+        <div className="mb-12">
+            <div className="flex flex-col">
+                {articles.map((article, index) => (
+                    <Link
+                        key={article.id}
+                        href={`/${article.section}/${article.id}`}
+                        className="article-link group block"
+                    >
+                        <article
+                            className={`flex gap-6 py-6 ${index < articles.length - 1 ? 'border-b border-[#E5E5E5]' : ''
+                                }`}
+                        >
+                            {/* Thumbnail */}
+                            {article.image && (
+                                <div
+                                    className="thumbnail-container shrink-0 overflow-hidden"
+                                    style={{ width: "200px", aspectRatio: "3/2" }}
+                                >
+                                    <Image
+                                        src={article.image}
+                                        alt=""
+                                        fill
+                                        sizes="200px"
+                                        className="article-thumbnail w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
+                                    />
+                                </div>
+                            )}
+
+                            {/* Content */}
+                            <div className="flex-1 flex flex-col justify-center min-w-0">
+                                <h2 className="headline-md mb-1.5 line-clamp-3 group-hover:underline decoration-2 underline-offset-4 decoration-[#111]">
+                                    {article.title}
+                                </h2>
+                                {article.subtitle && (
+                                    <p className="caption-text mb-2 line-clamp-2">
+                                        {article.subtitle}
+                                    </p>
+                                )}
+                                <div className="flex items-center gap-2">
+                                    <time className="meta-text" dateTime={article.publishedAt}>
+                                        {formatSafeDate(article.publishedAt, {
+                                            month: 'long',
+                                            day: 'numeric',
+                                            year: 'numeric'
+                                        })}
+                                    </time>
+                                    {article.contentType !== 'news' && (
+                                        <>
+                                            <span className="meta-text text-[#D0D0D0]">•</span>
+                                            <span className="meta-text text-[#B04A2F] font-bold uppercase">
+                                                {article.contentType}
+                                            </span>
+                                        </>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    </article>
+                        </article>
+                    </Link>
                 ))}
             </div>
         </div>

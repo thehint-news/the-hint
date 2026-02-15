@@ -5,6 +5,7 @@
 
 import { gitService } from '../git/service';
 import { parseMarkdown } from './parser';
+import { getArticleThumbnail } from './thumbnail';
 import {
     Article,
     Section,
@@ -107,6 +108,10 @@ async function readArticleFile(filePath: string, expectedSection: Section): Prom
         placement = 'standard';
     }
 
+    // Resolve thumbnail: use explicit frontmatter image first,
+    // fall back to extracting first image from article body
+    const resolvedImage = getArticleThumbnail(frontmatter.image, body);
+
     return {
         id: slug,
         section: expectedSection,
@@ -118,7 +123,7 @@ async function readArticleFile(filePath: string, expectedSection: Section): Prom
         placement: placement as 'lead' | 'top' | 'standard',
         tags: frontmatter.tags ?? [],
         sources: frontmatter.sources ?? [],
-        image: frontmatter.image,
+        image: resolvedImage,
         body: body,
     };
 }

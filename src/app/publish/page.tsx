@@ -50,17 +50,10 @@ function getClientHints(formData: ArticleFormData): Record<string, string> {
 
     // Safely access fields with null-checks to prevent crashes on undefined data
     const headline = formData?.headline || '';
-    const subheadline = formData?.subheadline || '';
     const thumbnail = formData?.thumbnail || '';
 
     if (headline && headline.length < 10) {
         hints.headline = `${10 - headline.length} more characters needed`;
-    }
-    if (headline.length > 150) {
-        hints.headline = `${headline.length - 150} characters over limit`;
-    }
-    if (subheadline.length > 200) {
-        hints.subheadline = `${subheadline.length - 200} characters over limit`;
     }
     if (formData?.contentType === 'opinion' && formData?.section !== 'opinion') {
         hints.contentType = 'Opinion articles must be in Opinion section';

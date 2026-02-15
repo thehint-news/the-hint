@@ -1,8 +1,9 @@
 /**
  * Pagination Component
  * 
- * Working pagination for section pages.
+ * Editorial-style pagination for section pages.
  * Uses URL-based navigation with page query parameter.
+ * Matches The Hint's visual language.
  */
 
 import Link from 'next/link';
@@ -39,52 +40,103 @@ export function Pagination({
     const startArticle = (currentPage - 1) * articlesPerPage + 1;
     const endArticle = Math.min(currentPage * articlesPerPage, totalArticles);
 
+    // Generate page numbers to show
+    const pageNumbers: (number | 'ellipsis')[] = [];
+    if (totalPages <= 5) {
+        for (let i = 1; i <= totalPages; i++) pageNumbers.push(i);
+    } else {
+        pageNumbers.push(1);
+        if (currentPage > 3) pageNumbers.push('ellipsis');
+        for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+            pageNumbers.push(i);
+        }
+        if (currentPage < totalPages - 2) pageNumbers.push('ellipsis');
+        pageNumbers.push(totalPages);
+    }
+
+    const getPageHref = (page: number) =>
+        page === 1 ? `/${sectionSlug}` : `/${sectionSlug}?page=${page}`;
+
     return (
         <nav
-            className="border-t border-neutral-200 pt-8 mt-12"
+            className="pt-8 mt-8"
             aria-label="Pagination"
+            style={{ borderTop: "1px solid #111" }}
         >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 {/* Article Range */}
-                <p className="text-sm text-neutral-600">
+                <p className="font-sans text-[12px] text-[#8A8A8A] tracking-wide uppercase font-medium order-2 sm:order-1">
                     Showing {startArticle}–{endArticle} of {totalArticles} articles
                 </p>
 
                 {/* Navigation */}
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-1 order-1 sm:order-2">
                     {/* Previous */}
                     {hasPrevious ? (
                         <Link
-                            href={currentPage === 2
-                                ? `/${sectionSlug}`
-                                : `/${sectionSlug}?page=${currentPage - 1}`
-                            }
-                            className="text-sm font-medium text-neutral-900 hover:text-neutral-600 transition-colors"
+                            href={getPageHref(currentPage - 1)}
+                            className="px-3 py-1.5 font-sans text-[12px] font-bold uppercase tracking-wider text-[#111] hover:bg-[#111] hover:text-white transition-colors"
+                            aria-label="Previous page"
                         >
-                            ← Previous
+                            ←
                         </Link>
                     ) : (
-                        <span className="text-sm font-medium text-neutral-300 cursor-not-allowed">
-                            ← Previous
+                        <span
+                            className="px-3 py-1.5 font-sans text-[12px] font-bold uppercase tracking-wider text-[#D0D0D0] cursor-not-allowed"
+                            aria-disabled="true"
+                        >
+                            ←
                         </span>
                     )}
 
-                    {/* Page indicator */}
-                    <span className="text-sm text-neutral-500">
-                        Page {currentPage} of {totalPages}
-                    </span>
+                    {/* Page Numbers */}
+                    {pageNumbers.map((page, idx) => {
+                        if (page === 'ellipsis') {
+                            return (
+                                <span
+                                    key={`ellipsis-${idx}`}
+                                    className="px-2 py-1.5 font-sans text-[12px] text-[#8A8A8A]"
+                                >
+                                    …
+                                </span>
+                            );
+                        }
+
+                        const isCurrent = page === currentPage;
+                        return (
+                            <Link
+                                key={page}
+                                href={getPageHref(page)}
+                                className={`
+                                    px-3 py-1.5 font-sans text-[12px] font-bold uppercase tracking-wider transition-colors
+                                    ${isCurrent
+                                        ? 'bg-[#111] text-white'
+                                        : 'text-[#111] hover:bg-[#111] hover:text-white'
+                                    }
+                                `}
+                                aria-current={isCurrent ? 'page' : undefined}
+                                aria-label={`Page ${page}`}
+                            >
+                                {page}
+                            </Link>
+                        );
+                    })}
 
                     {/* Next */}
                     {hasNext ? (
                         <Link
-                            href={`/${sectionSlug}?page=${currentPage + 1}`}
-                            className="text-sm font-medium text-neutral-900 hover:text-neutral-600 transition-colors"
+                            href={getPageHref(currentPage + 1)}
+                            className="px-3 py-1.5 font-sans text-[12px] font-bold uppercase tracking-wider text-[#111] hover:bg-[#111] hover:text-white transition-colors"
+                            aria-label="Next page"
                         >
-                            Next →
+                            →
                         </Link>
                     ) : (
-                        <span className="text-sm font-medium text-neutral-300 cursor-not-allowed">
-                            Next →
+                        <span
+                            className="px-3 py-1.5 font-sans text-[12px] font-bold uppercase tracking-wider text-[#D0D0D0] cursor-not-allowed"
+                            aria-disabled="true"
+                        >
+                            →
                         </span>
                     )}
                 </div>

@@ -189,12 +189,24 @@ function SectionBlockSkeleton({ title, layout }: { title: string, layout: 'wire'
             )}
 
             {layout === 'opinion' && (
-                <div style={{ display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8">
                     {[0, 1, 2, 3].map(i => (
-                        <article key={i} style={{ textAlign: "center", paddingBottom: "0.5rem" }}>
-                            <div className={styles.avatarPlaceholder} style={{ width: "36px", height: "36px", borderRadius: "50%", margin: "0 auto 0.5rem" }} />
-                            <SkeletonBlock width="90%" height="15px" isHeadline style={{ margin: "0 auto 0.25rem" }} />
-                            <SkeletonBlock width="60%" height="11px" style={{ margin: "0 auto" }} />
+                        <article key={i} style={{ display: "flex", flexDirection: "column" }}>
+                            {/* Thumbnail: 16:9 aspect ratio */}
+                            <div
+                                className={styles.imagePlaceholder}
+                                style={{ aspectRatio: "16/9", width: "100%", marginBottom: "0.625rem" }}
+                            />
+                            {/* Author name */}
+                            <SkeletonBlock width="60%" height="11px" style={{ marginBottom: "0.25rem" }} />
+                            {/* Headline */}
+                            <SkeletonBlock width="95%" height="15px" isHeadline style={{ marginBottom: "0.2rem" }} />
+                            <SkeletonBlock width="70%" height="15px" isHeadline style={{ marginBottom: "0.35rem" }} />
+                            {/* Excerpt */}
+                            <SkeletonBlock width="100%" height="12px" style={{ marginBottom: "0.15rem" }} />
+                            <SkeletonBlock width="80%" height="12px" style={{ marginBottom: "0.35rem" }} />
+                            {/* Date */}
+                            <SkeletonBlock width="80px" height="11px" />
                         </article>
                     ))}
                 </div>
@@ -259,44 +271,104 @@ export function HomepageSkeleton() {
 
 export function SectionPageSkeleton() {
     return (
-        <main className="max-w-4xl mx-auto px-4 py-12" aria-hidden="true">
+        <main id="main-content" className="flex-1" aria-hidden="true">
             <span className={styles.srOnly}>Loading section...</span>
 
-            {/* Header */}
-            <header className="mb-8 border-b border-neutral-300 pb-4">
-                {/* Section Title: text-5xl -> ~48px height */}
-                <SkeletonBlock width="250px" height="48px" isHeadline />
-                <div style={{ height: "8px" }} />
-                {/* Description: text-lg -> ~18px */}
-                <SkeletonBlock width="70%" height="18px" />
-            </header>
+            {/* Section Header */}
+            <div className="container-editorial" style={{ paddingTop: "2rem", paddingBottom: "0.5rem" }}>
+                <header style={{ marginBottom: "2.5rem" }}>
+                    {/* Breadcrumb */}
+                    <div style={{ marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <SkeletonBlock width="35px" height="11px" />
+                        <SkeletonBlock width="6px" height="11px" />
+                        <SkeletonBlock width="60px" height="11px" />
+                    </div>
 
-            {/* Lead Story Replica */}
-            <LeadStorySkeleton />
+                    {/* Section Title + Article Count */}
+                    <div className="section-header flex justify-between items-baseline" style={{ marginBottom: "0.15rem" }}>
+                        <SkeletonBlock width="200px" height="36px" isHeadline />
+                        <SkeletonBlock width="80px" height="11px" />
+                    </div>
+                    <div className="section-line" style={{ backgroundColor: "#E5E5E5" }} />
 
-            <hr className="my-8 border-neutral-200" />
+                    {/* Description */}
+                    <div style={{ marginTop: "0.75rem" }}>
+                        <SkeletonBlock width="80%" height="15px" />
+                        <div style={{ height: "5px" }} />
+                        <SkeletonBlock width="50%" height="15px" />
+                    </div>
+                </header>
+            </div>
 
-            {/* Story List Items */}
-            <div className="mb-12 flex flex-col">
-                {[0, 1, 2, 3, 4].map((_, i) => (
-                    <article key={i} className={`group relative flex gap-6 py-6 ${i < 4 ? 'border-b border-neutral-200' : ''}`}>
-                        {/* Image: w-48 aspect-[3/2] */}
-                        <div className={`shrink-0 ${styles.imagePlaceholder}`} style={{ width: "192px", aspectRatio: "3/2" }} />
+            {/* Lead Story */}
+            <div className="container-editorial" style={{ paddingBottom: "1rem" }}>
+                <LeadStorySkeleton />
+            </div>
 
-                        <div className="flex-1 flex flex-col justify-center">
-                            {/* Headline: text-2xl -> 24px */}
-                            <SkeletonBlock width="90%" height="24px" isHeadline />
-                            <div style={{ height: "8px" }} />
-                            {/* Summary: text-base -> 16px */}
-                            <SkeletonBlock width="100%" height="16px" />
-                            <div style={{ height: "4px" }} />
-                            <SkeletonBlock width="80%" height="16px" />
-                            <div style={{ height: "8px" }} />
-                            {/* Meta */}
-                            <SkeletonBlock width="120px" height="12px" />
-                        </div>
-                    </article>
-                ))}
+            {/* Divider */}
+            <hr className="full-width-divider" />
+
+            {/* Story List */}
+            <div className="container-editorial" style={{ paddingTop: "1.5rem" }}>
+                <div style={{ marginBottom: "3rem" }}>
+                    <div className="flex flex-col">
+                        {[0, 1, 2, 3, 4].map((_, i) => (
+                            <article
+                                key={i}
+                                style={{
+                                    display: "flex",
+                                    gap: "1.5rem",
+                                    paddingTop: "1.5rem",
+                                    paddingBottom: "1.5rem",
+                                    borderBottom: i < 4 ? "1px solid #E5E5E5" : "none"
+                                }}
+                            >
+                                {/* Thumbnail: 200px, 3:2 */}
+                                <div
+                                    className={styles.imagePlaceholder}
+                                    style={{ width: "200px", aspectRatio: "3/2", flexShrink: 0 }}
+                                />
+
+                                <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                                    {/* Headline */}
+                                    <SkeletonBlock width="90%" height="20px" isHeadline />
+                                    <div style={{ height: "4px" }} />
+                                    <SkeletonBlock width="60%" height="20px" isHeadline />
+                                    <div style={{ height: "8px" }} />
+                                    {/* Subtitle */}
+                                    <SkeletonBlock width="100%" height="13px" />
+                                    <div style={{ height: "4px" }} />
+                                    <SkeletonBlock width="75%" height="13px" />
+                                    <div style={{ height: "8px" }} />
+                                    {/* Meta */}
+                                    <SkeletonBlock width="130px" height="11px" />
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Pagination skeleton */}
+            <div className="container-editorial" style={{ paddingBottom: "3rem" }}>
+                <div
+                    style={{
+                        paddingTop: "2rem",
+                        marginTop: "2rem",
+                        borderTop: "1px solid #111",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}
+                >
+                    <SkeletonBlock width="180px" height="12px" />
+                    <div style={{ display: "flex", gap: "0.25rem" }}>
+                        <SkeletonBlock width="30px" height="28px" />
+                        <SkeletonBlock width="30px" height="28px" />
+                        <SkeletonBlock width="30px" height="28px" />
+                        <SkeletonBlock width="30px" height="28px" />
+                    </div>
+                </div>
             </div>
         </main>
     );

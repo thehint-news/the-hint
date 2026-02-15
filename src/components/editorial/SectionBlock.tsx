@@ -282,7 +282,7 @@ function OpinionLayout({ articles, sectionSlug }: { articles: SectionArticle[]; 
                     <Link key={article.id} href={articleUrl} className="article-link group block h-full">
                         <article className="flex flex-col h-full">
                             {/* Image Container */}
-                            <div className="thumbnail-container mb-2.5 aspect-[3/2] w-full">
+                            <div className="thumbnail-container mb-2.5 aspect-[16/9] w-full">
                                 {article.image ? (
                                     <Image
                                         src={article.image}

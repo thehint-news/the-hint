@@ -4,6 +4,8 @@
  * Renders articles for a given section with pagination.
  * 10 articles per page: 1 hero + 9 in list.
  * 
+ * Uses `container-editorial` for consistent layout with homepage.
+ * 
  * NO filtering, sorting, or editorial logic here.
  */
 
@@ -77,19 +79,20 @@ export default async function SectionPage({ params, searchParams }: SectionPageP
 
     // Redirect to page 1 if page is out of range
     if (currentPage > totalPages && totalPages > 0) {
-        // Show last page instead of 404
         const validPage = totalPages;
         const startIndex = (validPage - 1) * ARTICLES_PER_PAGE;
         const pageArticles = allArticles.slice(startIndex, startIndex + ARTICLES_PER_PAGE);
 
         if (pageArticles.length === 0) {
             return (
-                <main className="max-w-4xl mx-auto px-4 py-12">
-                    <SectionHeader name={section.name} description={section.description} />
-                    <div className="py-12 text-center border-t border-neutral-300">
-                        <p className="text-lg font-serif italic text-neutral-500">
-                            No stories available in this section.
-                        </p>
+                <main id="main-content" className="flex-1">
+                    <div className="container-editorial" style={{ paddingTop: "2rem", paddingBottom: "3rem" }}>
+                        <SectionHeader name={section.name} description={section.description} />
+                        <div className="py-12 text-center">
+                            <p className="font-serif text-lg italic text-[#8A8A8A]">
+                                No stories available in this section.
+                            </p>
+                        </div>
                     </div>
                 </main>
             );
@@ -103,17 +106,19 @@ export default async function SectionPage({ params, searchParams }: SectionPageP
     // Handle empty section
     if (allArticles.length === 0) {
         return (
-            <main className="max-w-4xl mx-auto px-4 py-12">
-                <SectionHeader
-                    name={section.name}
-                    description={section.description}
-                />
-                <EmptyState
-                    title="This section is quiet... for now."
-                    message={`We haven't published any stories in ${section.name} just yet. Our editorial team is working on it.`}
-                    actionLabel="Read Top Stories"
-                    actionHref="/"
-                />
+            <main id="main-content" className="flex-1">
+                <div className="container-editorial" style={{ paddingTop: "2rem", paddingBottom: "3rem" }}>
+                    <SectionHeader
+                        name={section.name}
+                        description={section.description}
+                    />
+                    <EmptyState
+                        title="This section is quiet... for now."
+                        message={`We haven't published any stories in ${section.name} just yet. Our editorial team is working on it.`}
+                        actionLabel="Read Top Stories"
+                        actionHref="/"
+                    />
+                </div>
             </main>
         );
     }
@@ -128,37 +133,46 @@ export default async function SectionPage({ params, searchParams }: SectionPageP
     const feedArticles = pageArticles.slice(1);
 
     return (
-        <main className="max-w-4xl mx-auto px-4 py-12">
+        <main id="main-content" className="flex-1">
             {/* Section Header */}
-            <SectionHeader
-                name={section.name}
-                description={section.description}
-            />
+            <div className="container-editorial" style={{ paddingTop: "2rem", paddingBottom: "0.5rem" }}>
+                <SectionHeader
+                    name={section.name}
+                    description={section.description}
+                    articleCount={totalArticles}
+                />
+            </div>
 
-            {/* Lead Story (Top) */}
-            <LeadStory article={leadArticle} />
+            {/* Lead Story */}
+            <div className="container-editorial" style={{ paddingBottom: "1rem" }}>
+                <LeadStory article={leadArticle} />
+            </div>
 
-            {/* Separator if we have a list */}
+            {/* Divider */}
             {feedArticles.length > 0 && (
-                <hr className="my-8 border-neutral-200" />
+                <hr className="full-width-divider" />
             )}
 
-            {/* Article List (Main Body) */}
+            {/* Article List */}
             {feedArticles.length > 0 && (
-                <StoryList
-                    articles={feedArticles}
-                    sectionSlug={section.slug}
-                />
+                <div className="container-editorial" style={{ paddingTop: "1.5rem" }}>
+                    <StoryList
+                        articles={feedArticles}
+                        sectionSlug={section.slug}
+                    />
+                </div>
             )}
 
             {/* Pagination */}
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                sectionSlug={section.slug}
-                totalArticles={totalArticles}
-                articlesPerPage={ARTICLES_PER_PAGE}
-            />
+            <div className="container-editorial" style={{ paddingBottom: "3rem" }}>
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    sectionSlug={section.slug}
+                    totalArticles={totalArticles}
+                    articlesPerPage={ARTICLES_PER_PAGE}
+                />
+            </div>
         </main>
     );
 }

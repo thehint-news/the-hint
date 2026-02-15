@@ -31,8 +31,6 @@ export const VALID_PLACEMENTS: Placement[] = ['lead', 'top', 'standard'];
 
 /** Validation constants */
 export const HEADLINE_MIN_LENGTH = 10;
-export const HEADLINE_MAX_LENGTH = 150;
-export const SUBHEADLINE_MAX_LENGTH = 200;
 export const MAX_TAGS = 10;
 
 /** Validation result for a single field */
@@ -250,12 +248,6 @@ export function validateArticleInput(input: PublishArticleInput): ValidationResu
                 message: `Headline must be at least ${HEADLINE_MIN_LENGTH} characters`
             });
         }
-        if (headline.length > HEADLINE_MAX_LENGTH) {
-            errors.push({
-                field: 'headline',
-                message: `Headline must be ${HEADLINE_MAX_LENGTH} characters or less`
-            });
-        }
         if (isOnlyPunctuation(headline)) {
             errors.push({
                 field: 'headline',
@@ -267,11 +259,6 @@ export function validateArticleInput(input: PublishArticleInput): ValidationResu
     // SUBHEADLINE validation (required)
     if (!subheadline) {
         errors.push({ field: 'subheadline', message: 'Subheadline is required' });
-    } else if (subheadline.length > SUBHEADLINE_MAX_LENGTH) {
-        errors.push({
-            field: 'subheadline',
-            message: `Subheadline must be ${SUBHEADLINE_MAX_LENGTH} characters or less`
-        });
     }
 
     // BODY validation

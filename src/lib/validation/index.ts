@@ -9,8 +9,6 @@ export {
     VALID_SECTIONS,
     VALID_STATUSES,
     HEADLINE_MIN_LENGTH,
-    HEADLINE_MAX_LENGTH,
-    SUBHEADLINE_MAX_LENGTH,
     MAX_TAGS,
     // Utility functions
     sanitizeString,

@@ -54,10 +54,14 @@ export function extractFirstImageFromBody(body: string): string | undefined {
  * Get the thumbnail image URL for an article.
  * 
  * Priority:
- * 1. Explicit featured image from frontmatter
- * 2. First image found in article body
+ * 1. Dedicated thumbnail image set via the article editor (stored as `image` in frontmatter)
+ * 2. First image found in article body (fallback extraction)
  * 
- * @param explicitImage - Image URL from frontmatter (may be undefined)
+ * This is called by the content reader to ensure every article has a
+ * thumbnail wherever possible — used on homepage, section pages, and
+ * article cards throughout the site.
+ * 
+ * @param explicitImage - Thumbnail URL from frontmatter `image` field (may be undefined)
  * @param body - Raw Markdown body content
  * @returns Thumbnail URL or undefined if no images available
  */
