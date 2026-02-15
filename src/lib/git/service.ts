@@ -196,7 +196,8 @@ class GitService {
             }
             return files;
         } catch (error: unknown) {
-            const err = error as { status?: number };
+            const err = error as { status?: number; message?: string };
+            console.error(`[GIT-SERVICE] listFiles failed for ${dirPath}:`, err);
             if (err.status === 404) return [];
             return [];
         }
