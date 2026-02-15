@@ -202,13 +202,60 @@ class GitService {
         }
     }
 
-    /**
-     * List files AND their content in a singleAPI call.
-     * GitHub Contents API returns base64 content for files < 1MB in directory listings.
-     * For larger files, fetches content in parallel.
-     * This eliminates the N+1 query problem of listFiles() + readFile() per file.
-     */
-    // (listFilesWithContent already updated)
+    async listFilesWithContent(dirPath: string, extension?: string): Promise<{ name: string; content: string; sha: string }[]> {
+        try {
+            const relPath = this.getRelativePath(dirPath);
+            const client = this.octokit;
+            const response = await client.rest.repos.getContent({
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                path: relPath,
+                ref: BRANCH,
+            });
+
+            if (!Array.isArray(response.data)) return [];
+
+            let files = response.data.filter(item => item.type === 'file');
+            if (extension) {
+                files = files.filter(item => item.name.endsWith(extension));
+            }
+
+            const results = await Promise.all(files.map(async (file) => {
+                try {
+                    // Reuse getFileInfo to handle the reading + decoding
+                    // We construct the full path by joining the input dirPath with the filename
+                    // Since file.name is just the name, and getFileInfo expects a path (absolute or relative)
+                    // We can reuse getFileInfo but we need to pass a path. 
+                    // Let's us getRelativePath logic inside getFileInfo by passing a constructed path.
+                    // Or we can just call the API directly here to avoid double path parsing? 
+                    // Reusing getFileInfo is cleaner but we need to ensure the path is correct.
+                    // dirPath might be absolute or relative. 
+
+                    // Actually, let's just use the file.path returned from the directory listing if available?
+                    // response.data items have a 'path' property which is the relative path in the repo.
+                    const filePath = file.path;
+
+                    const { content, sha } = await this.getFileInfo(filePath);
+                    if (content === null) return null;
+
+                    return {
+                        name: file.name,
+                        content,
+                        sha: sha || file.sha
+                    };
+                } catch (e) {
+                    console.warn(`[GIT-SERVICE] Failed to fetch content for ${file.name}`, e);
+                    return null;
+                }
+            }));
+
+            return results.filter((item): item is { name: string; content: string; sha: string } => item !== null);
+        } catch (error: unknown) {
+            const err = error as { status?: number };
+            if (err.status === 404) return [];
+            throw error;
+        }
+    }
 
     async getFileInfo(filePath: string): Promise<{ content: string | null; sha: string | null }> {
         try {
