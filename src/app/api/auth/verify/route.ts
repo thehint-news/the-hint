@@ -52,18 +52,23 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const secret = request.headers.get('x-cron-secret') || request.nextUrl.searchParams.get('secret');
     const cronSecret = process.env.CRON_SECRET;
 
-    if (cronSecret && secret === cronSecret) {
-        // This route is also used by cron jobs to process the queue.
-        // If a secret is provided and matches, we assume it's a cron job
-        // and return a success response without further processing.
-        // The actual queue processing logic is handled elsewhere.
-        return NextResponse.json({ success: true, message: 'Cron job secret received.' });
-    } else if (cronSecret && secret !== cronSecret) {
-        return NextResponse.json(
-            { success: false, error: 'Unauthorized' },
-            { status: 401 }
-        );
+    // Check for cron job authentication ONLY if a secret is provided
+    if (secret) {
+        if (cronSecret && secret === cronSecret) {
+            // This route is also used by cron jobs to process the queue.
+            // If a secret is provided and matches, we assume it's a cron job
+            // and return a success response without further processing.
+            // The actual queue processing logic is handled elsewhere.
+            return NextResponse.json({ success: true, message: 'Cron job secret received.' });
+        } else {
+            // Secret provided but incorrect
+            return NextResponse.json(
+                { success: false, error: 'Unauthorized' },
+                { status: 401 }
+            );
+        }
     }
+    // If no secret provided, proceed to Magic Link verification below
 
     const searchParams = request.nextUrl.searchParams;
     const token = searchParams.get('token');
