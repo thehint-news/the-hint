@@ -25,8 +25,20 @@ import { LeadStory, TopStories, SectionBlock } from "@/components/editorial";
 export const revalidate = 60;
 
 export default async function HomePage() {
-  // Get all homepage data in a single call
-  const { leadStory, topStories, sections } = await getHomepageData();
+  let homepageData;
+  try {
+    homepageData = await getHomepageData();
+    console.log('[HomePage] Successfully fetched data');
+  } catch (error) {
+    console.error('[HomePage] Failed to fetch data:', error);
+    // Return empty state or error UI to prevent 404/500
+    homepageData = {
+      leadStory: null,
+      topStories: [],
+      sections: { crime: [], court: [], politics: [], worldAffairs: [], opinion: [] }
+    };
+  }
+  const { leadStory, topStories, sections } = homepageData;
 
   return (
     <main id="main-content" className="flex-1">

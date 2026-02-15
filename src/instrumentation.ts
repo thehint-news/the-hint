@@ -10,7 +10,8 @@ export async function register() {
         } catch (error) {
             console.error(error);
             // Re-throw to fail fast
-            process.exit(1);
+            // process.exit(1); // Do not exit, allow startup to debug Vercel logs
+            console.error('❌ Environment validation failed, but continuing startup for debugging.');
         }
     }
 }
