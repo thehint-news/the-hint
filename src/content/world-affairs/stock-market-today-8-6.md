@@ -5,7 +5,7 @@ contentType: news
 image: "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/02/7db061da2a01323f.avif"
 status: published
 publishedAt: 2026-02-15T06:06:30.407Z
-updatedAt: null
+updatedAt: 2026-02-15T14:34:03.309Z
 placement: standard
 tags:
   - ಷೇರು ಮಾರುಕಟ್ಟೆ
@@ -34,10 +34,6 @@ trustedSourceHtml: <iframe width="200" height="113" src="https://www.youtube.com
 ## ಪ್ರಮುಖ ಐಟಿ ಕಂಪೆನಿಗಳ ಷೇರು ಕುಸಿತದ ವಿವರ ಹೀಗಿದೆ
 
 > ವಿಪ್ರೋ ಮತ್ತು ಟೆಕ್ ಮಹೀಂದ್ರಾ - ಶೇ. 13
-ಇನ್ಫೋಸಿಸ್ - ಶೇ. 21
-HCL ಟೆಕ್ - ಶೇ. 17
-TCS - ಶೇ. 19
-LTI ಮೈಂಡ್ ಟ್ರೀ - ಶೇ. 11
 
 ## ಷೇರು ಮಾರುಕಟ್ಟೆಯ ಮೇಲೆ ಅಮೆರಿಕಾದ ಪ್ರಭಾವ
 
