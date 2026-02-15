@@ -900,5 +900,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-02-15T04:40:22.456Z",
     "totalSubscribers": 1
+  },
+  {
+    "id": "4a0a54a8-8f36-48dc-bfbc-e5de974022a8",
+    "articleSlug": "moltbook-a-new-ai",
+    "section": "opinion",
+    "headline": "moltbook a new AI",
+    "summary": "i dont know but perfect",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-15T04:43:38.032Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
