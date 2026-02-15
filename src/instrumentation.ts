@@ -9,9 +9,13 @@ export async function register() {
             validateEnv();
         } catch (error) {
             console.error(error);
-            // Re-throw to fail fast
-            // process.exit(1); // Do not exit, allow startup to debug Vercel logs
-            console.error('❌ Environment validation failed, but continuing startup for debugging.');
+            // Re-throw to fail fast in production
+            if (process.env.NODE_ENV === 'production') {
+                console.error('❌ Environment validation failed. Aborting build to prevent broken deployment.');
+                process.exit(1);
+            } else {
+                console.error('❌ Environment validation failed, but continuing startup for debugging in development.');
+            }
         }
     }
 }
