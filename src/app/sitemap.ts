@@ -49,13 +49,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
     // 3. Article Pages
-    const allArticles = await getAllArticles();
-    const articleRoutes: MetadataRoute.Sitemap = allArticles.map((article) => ({
-        url: `${baseUrl}/${article.section}/${article.id}`,
-        lastModified: article.updatedAt ? new Date(article.updatedAt).toISOString() : new Date(article.publishedAt).toISOString(),
-        changeFrequency: 'never', // News articles typically don't change
-        priority: 0.8,
-    }));
+    let articleRoutes: MetadataRoute.Sitemap = [];
+    try {
+        const allArticles = await getAllArticles();
+        articleRoutes = allArticles.map((article) => ({
+            url: `${baseUrl}/${article.section}/${article.id}`,
+            lastModified: article.updatedAt ? new Date(article.updatedAt).toISOString() : new Date(article.publishedAt).toISOString(),
+            changeFrequency: 'never', // News articles typically don't change
+            priority: 0.8,
+        }));
+    } catch (error) {
+        console.warn('Failed to generate article routes for sitemap:', error);
+    }
 
     return [...staticRoutes, ...sectionRoutes, ...articleRoutes];
 }
