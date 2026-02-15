@@ -115,7 +115,7 @@ export async function sendMagicLinkEmail(email: string, token: string) {
     `.trim();
 
     try {
-        const { error } = await resend.emails.send({
+        const { data, error } = await resend.emails.send({
             from: fromAddress,
             to: [email],
             subject: 'Your Newsroom Access – The Hint',
@@ -123,15 +123,18 @@ export async function sendMagicLinkEmail(email: string, token: string) {
         });
 
         if (error) {
-            console.error('[AUTH-EMAIL] Resend error:', error.message);
-            throw new Error('Failed to send magic link email');
+            console.error('[AUTH-EMAIL] Resend returned error:', JSON.stringify(error, null, 2));
+            throw new Error(`Resend Error: ${error.message || 'Unknown error'}`);
         }
-    } catch (error) {
-        console.error('[AUTH-EMAIL] Failed to send email:', error);
+
+        console.log(`[AUTH-EMAIL] Email sent successfully. ID: ${data?.id}`);
+    } catch (e: any) {
+        console.error('[AUTH-EMAIL] Exception during email send:', e);
         // Fallback log for dev
         if (process.env.NODE_ENV !== 'production') {
             console.log(`[FALLBACK] Magic Link: ${link}`);
         }
-        throw new Error('Failed to send magic link email');
+        // Re-throw with more detail if possible
+        throw new Error(`Failed to send magic link email: ${e.message}`);
     }
 }
