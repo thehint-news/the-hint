@@ -23,6 +23,7 @@ import {
 } from '@/lib/validation';
 import { contentGit, DraftData, PublishedArticleData } from '@/lib/git';
 import { logger } from '@/lib/feedback/console-guard';
+import { revalidatePath } from 'next/cache';
 
 /** Valid sections */
 type Section = 'politics' | 'world-affairs' | 'crime' | 'court' | 'opinion';
@@ -191,6 +192,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             logger.error('Failed to enqueue subscription event', queueError);
             // Critical: Do NOT fail publishing. Valid content > Email delivery.
         }
+
+        // 7. On-demand revalidation
+        revalidatePath('/', 'page');
+        revalidatePath(`/${articleData.section}`, 'page');
+        revalidatePath(`/${articleData.section}/${targetSlug}`, 'page');
 
         return userResponse(
             true,
