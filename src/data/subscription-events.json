@@ -1010,9 +1010,11 @@
     "createdAt": "2026-02-16T00:35:16.794Z",
     "status": "processing",
     "attempts": 0,
-    "processedCount": 0,
-    "sentEmails": [],
-    "lastAttemptAt": "2026-02-16T00:43:23.609Z",
+    "processedCount": 1,
+    "sentEmails": [
+      "venugopal6362@gmail.com"
+    ],
+    "lastAttemptAt": "2026-02-16T00:43:37.240Z",
     "totalSubscribers": 2
   },
   {
