@@ -1058,10 +1058,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-16T00:56:23.304Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-16T01:02:35.612Z"
   },
   {
     "id": "0e1fb265-df93-4ce2-9a0a-f61ca689ee7a",
