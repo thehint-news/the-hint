@@ -1008,10 +1008,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-16T00:35:16.794Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-16T00:43:23.609Z"
   },
   {
     "id": "0b28ea00-4b28-43a0-b5c9-23db53b0f14b",
