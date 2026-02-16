@@ -980,5 +980,19 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": []
+  },
+  {
+    "id": "678fac7e-4661-4a2d-88f3-b245f7745f51",
+    "articleSlug": "stock-market-today-8-6",
+    "section": "court",
+    "headline": "Stock Market Today : 10 ದಿನದಲ್ಲಿ 6ಲಕ್ಷ ಕೋಟಿ ಭಸ್ಮ - ಆಂಥ್ರೋಪಿಕ್, ಎಐ ಮುಂದೆ ಭಾರತದ ಐಟಿ ಷೇರ್ ಥಕಥೈ",
+    "summary": "ಮುಂಬೈ : ಭಾರತದ ಪ್ರತಿಷ್ಠಿತ ಸಾಫ್ಟ್‌ವೇರ್ ಸೇವಾ ಉದ್ಯಮಗಳ ಸಾಮ್ರಾಜ್ಯ ದಿನದಿಂದ ದಿನಕ್ಕೆ ಕರಗುತ್ತಿದೆ. ಸುಮಾರು 250 ಶತಕೋಟಿ ಡಾಲರ್ ಮೌಲ್ಯದ ಉದ್ಯಮ ಎಐ ಮತ್ತು ಆಂಥ್ರೋಪಿಕ್ ಆಗಮನದಿಂದ ತತ್ತರಿಸಿ ಹೋಗುತ್ತಿದೆ. ಕಳೆದ ಎಂಟು ದಿನಗಳಲ್ಲಿ ಹೂಡಿಕೆದಾರರ ಬರೋಬ್ಬರಿ 5.7ಲಕ್ಷ ಕೋಟಿ ರೂಪಾಯಿ ಧೂಳೀಪಟವಾಗಿದೆ.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-16T00:00:22.379Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
