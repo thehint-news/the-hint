@@ -1074,10 +1074,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-16T01:02:31.292Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-16T01:06:49.919Z"
   },
   {
     "id": "2ee43483-378d-48fa-b496-1a0c3a5ae4ec",
