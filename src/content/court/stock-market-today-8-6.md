@@ -5,7 +5,7 @@ contentType: news
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/02/7db061da2a01323f.avif
 status: published
 publishedAt: '2026-02-15T23:59:04.692Z'
-updatedAt: null
+updatedAt: '2026-02-16T00:00:18.512Z'
 placement: standard
 tags:
   - ಷೇರು ಮಾರುಕಟ್ಟೆ
@@ -14,14 +14,14 @@ tags:
 sources:
   - ವಿಜಯ್ ಕರ್ನಾಟಕ
 bodyBlocks:
-  - id: par-mloeo9yy-4acv
+  - id: par-mloerark-f381
     type: paragraph
     order: 0
     content: |-
       ನಿಫ್ಟಿ ಐಟಿ (Nifty IT ) ಸೂಚ್ಯಂಕವು ಶೇ. ಹತ್ತೊಂಬತ್ತರಷ್ಟು ಕುಸಿದಿರುವುದು ಮಾರುಕಟೆಯಲ್ಲಿ ತಲ್ಲಣ ಸೃಷ್ಟಿಸಿದೆ. ಕೃತಿಕ ಬುದ್ದಿಮತ್ತೆ (AI) ಮತ್ತು ಆಂಥ್ರೋಪಿಕ್ ಸಂಸ್ಥೆ Claude 4.6 Cowork ಐಟಿ ವಲಯದಲ್ಲಿ ಭೀತಿಯನ್ನು ಹುಟ್ಟುಹಾಕಿದೆ. ಇನ್ನೊಂದು ಕಡೆ, ಲೇಆಫ್ ಭೀತಿ ಎದುರಾಗಿದೆ.
       ಈ ಎರಡು ಎಐ ಟೆಕ್ನಾಲಜಿಯು, ಸಾಫ್ಟ್‌ವೇರ್ ಕೆಲಸಗಳನ್ನು ಸರಳೀಕರಣ ಮತ್ತು ಆಟೋಮೇಟೆಡ್ ಮಾಡುತ್ತಿರುವುದರಿಂದ, ಉದ್ಯೋಗಿಗಳ ಸಂಖ್ಯೆಯ ಆಧಾರದ ಮೇಲೆ (Man Hours) ಬಿಲ್ಲಿಂಗ್ ಮಾಡುವ ಭಾರತೀಯ ಐಟಿ ಕಂಪೆನಿಗಳ ವಹಿವಾಟಿಗೆ ಭಾರೀ ಏಟನ್ನು ನೀಡುತ್ತಿದೆ.
       ಈ ಹಿನ್ನಲೆಯಲ್ಲಿ ಮ್ಯಾನ್ ಹವರ್ಸ್ ಬಿಲ್ಲಿಂಗ್ ಮಾಡುವುದಕ್ಕಿಂತ ಒಟ್ಟಾರೆಯಾಗಿ ಕೆಲಸದ ಫಲಿತಾಂಶದ ಆಧಾರದ ಮೇಲೆ ಬಿಲ್ಲಿಂಗ್ ಮಾಡುವ ಅನಿವಾರ್ಯತೆ ಐಟಿ ಕಂಪೆನಿಗಳಿಗೆ ಸೃಷ್ಟಿಯಾಗಿದೆ. ಇದರಿಂದಾಗಿ, ಹಿಂದಿನಿಂದಲೂ ಪಾಲಿಸಿಕೊಂಡು ಬರಲಾಗುತ್ತಿರುವ ಐಟಿ ಸೇವೆಗಳಿಗೆ ಬೇಡಿಕೆ ದಿನದಿಂದ ದಿನಕ್ಕೆ ಕಮ್ಮಿಯಾಗುತ್ತಿದೆ.
-  - id: vid-mloeo9yy-46ub
+  - id: vid-mloerark-18qu
     type: video
     order: 1
     sourceType: social
@@ -33,50 +33,50 @@ bodyBlocks:
     provider: youtube
     title: Claude CoWork Breakthrough Triggers Sell-Off in Indian Tech | Vantage with Palki Sharma | N18G
     trustedSourceHtml: <iframe width="200" height="113" src="https://www.youtube.com/embed/tq1maEiBqo8?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="Claude CoWork Breakthrough Triggers Sell-Off in Indian Tech | Vantage with Palki Sharma | N18G"></iframe>
-  - id: sub-mloeo9yy-sj39
+  - id: sub-mloerark-1wgf
     type: subheading
     order: 2
     content: ಪ್ರಮುಖ ಐಟಿ ಕಂಪೆನಿಗಳ ಷೇರು ಕುಸಿತದ ವಿವರ ಹೀಗಿದೆ
-  - id: quo-mloeo9yy-yi1m
+  - id: quo-mloerark-5m4o
     type: quote
     order: 3
     content: ವಿಪ್ರೋ ಮತ್ತು ಟೆಕ್ ಮಹೀಂದ್ರಾ - ಶೇ. 13
-  - id: par-mloeo9yz-kfo4
+  - id: par-mloerark-rbnd
     type: paragraph
     order: 4
     content: |-
       ವಿಪ್ರೋ ಮತ್ತು ಟೆಕ್ ಮಹೀಂದ್ರಾ - ಶೇ. 13
       ವಿಪ್ರೋ ಮತ್ತು ಟೆಕ್ ಮಹೀಂದ್ರಾ - ಶೇ. 13
       ವಿಪ್ರೋ ಮತ್ತು ಟೆಕ್ ಮಹೀಂದ್ರಾ - ಶೇ. 13
-  - id: sub-mloeo9yz-916x
+  - id: sub-mloerark-7i9q
     type: subheading
     order: 5
     content: ಷೇರು ಮಾರುಕಟ್ಟೆಯ ಮೇಲೆ ಅಮೆರಿಕಾದ ಪ್ರಭಾವ
-  - id: par-mloeo9yz-nhna
+  - id: par-mloerark-vwck
     type: paragraph
     order: 6
     content: ಇನ್ನೊಂದು ಕಡೆ, ವಿಶ್ವದ ಷೇರು ಮಾರುಕಟ್ಟೆಗಳು ಅಮೆರಿಕಾದ ವಹಿವಾಟಿನ ಮೇಲೂ ಅವಲಂಬಿತವಾಗಿದೆ. ಅಲ್ಲಿನ ನಿರುದ್ಯೋಗದ ಪ್ರಮಾಣ ಇಳಿಕೆಯಾಗುತ್ತಿರುವುದು ಮತ್ತು ಟ್ರಂಪ್ ಸರ್ಕಾರ, ಬಡ್ಡಿದರ ಕಡಿತ ಮಾಡುತ್ತದೆ ಎನ್ನುವ ನಿರೀಕ್ಷೆಯು ಹುಸಿಯಾಗುತ್ತಿರುವುದೂ ಷೇರು ಮಾರುಕಟ್ಟೆಯ ಮೇಲೆ ಪ್ರಭಾವವನ್ನು ಬೀರುತ್ತಿದೆ. ಅಮೆರಿಕಾದ ದಿಗ್ಗಜ ಐಟಿ ಕಂಪೆನಿಗಳ ಷೇರುಗಳು ಕುಸಿತಗೊಳ್ಳುತ್ತಿರುವುದರಿಂದ, ಅದರ ನೇರ ಪ್ರಭಾವ, ಭಾರತದ ಐಟಿ ಕಂಪೆನಿಗಳ ಮೇಲೆ ಬೀಳುತ್ತಿದೆ.
-  - id: sub-mloeo9yz-pa9d
+  - id: sub-mloerark-cu8x
     type: subheading
     order: 7
     content: ಎಐ ಕ್ರಾಂತಿ ಎಲ್ಲಾ ತಾತ್ಕಾಲಿಕ ಎಂದ ತಜ್ಞರು
-  - id: par-mloeo9yz-l1s8
+  - id: par-mloerark-pd4w
     type: paragraph
     order: 8
     content: ಎಐ ಪ್ರಭಾವದಿಂದಾಗಿ, ಉದ್ಯೋಗ ಕಡಿತ ಉಂಟಾಗುವ ಎಲ್ಲಾ ಸಾಧ್ಯತೆಯಿದೆ ಎನ್ನುವುದು ಹಲವು ತಜ್ಞರ ಅಭಿಪ್ರಾಯವಾಗಿದೆ. ಆದರೆ, ಮಾರುಕಟ್ಟೆಯ ಮೇಲೆ ಎಐ ಸಂಪೂರ್ಣ ಪ್ರಭಾವ ಬೀರುವ ಸಾಧ್ಯತೆ ಕಮ್ಮಿ ಎಂದು ವಾದಿಸುವವರೂ ಇದ್ದಾರೆ. ಹಿಂದೆಯೂ ಈ ರೀತಿಯ ವಿದ್ಯಮಾನಗಳು ನಡೆದಿವೆ ಎಂದು ಹಲವರು ಅಭಿಪ್ರಾಯ ಪಟ್ಟಿದ್ದಾರೆ.
-  - id: par-mloeo9yz-9vex
+  - id: par-mloerark-z37x
     type: paragraph
     order: 9
     content: ವೆಂಚುರಾ ಸಂಸ್ಥೆಯ ಮುಖ್ಯಸ್ಥರ ಪ್ರಕಾರ, "ಹಿಂದೆಯೂ ಕ್ಲೌಡ್ ಕಂಪ್ಯೂಟಿಂಗ್ ಬಂದ ಆರಂಭದಲ್ಲಿ ಐಟಿ ಕ್ಷೇತ್ರದ ಭವಿಷ್ಯ ಮುಗಿಯಿತು ಎಂದು ವಾದಿಸಲಾಗಿತ್ತು. ಆದರೆ, ಪ್ರತೀ ಬಾರಿ ಹೊಸ ಟೆಕ್ನಾಲಜಿ ಬಂದಾಗಲೂ, ಐಟಿ ಕ್ಷೇತ್ರ ಇನ್ನಷ್ಟು ಅಭಿವೃದ್ದಿಗೊಂಡ ಉದಾಹರಣೆಗಳೇ ಹೆಚ್ಚು. ಹಾಗಾಗಿ, ಈಗಿನ ವಿದ್ಯಮಾನಕ್ಕೆ ಪ್ಯಾನಿಕ್ ಆಗುವ ಅವಶ್ಯಕತೆಯಿಲ್ಲ. ಇದೊಂದು ಕೇವಲ ತಾತ್ಕಾಲಿಕ ಬದಲಾವಣೆ" ಎಂದು ಇವರು ಅಭಿಪ್ರಾಯ ಪಟ್ಟಿದ್ದಾರೆ.
-  - id: quo-mloeo9yz-1xa5
+  - id: quo-mloerark-qezi
     type: quote
     order: 10
     content: ಷೇರು ಮಾರುಕಟ್ಟೆಯ ಲೋಕದಲ್ಲಿ ಎಐ ಹುಟ್ಟುಹಾಕಿದ ಸುನಾಮಿ, ಭಾರೀ ನಷ್ಟ
-  - id: par-mloeo9yz-atk4
+  - id: par-mloerark-5hm4
     type: paragraph
     order: 11
     content: ಭಾರತದ ಸಾಫ್ಟ್‌ವೇರ್ ಉದ್ಯಮದ ಭವಿಷ್ಯ ಅಯೋಮಯ, ಆಂಥ್ರೋಪಿಕ್ ದಾಳಿಗೆ ತತ್ತರ
-  - id: par-mloeo9yz-mwl8
+  - id: par-mloerark-qki8
     type: paragraph
     order: 12
     content: ಭಾರತದ ಐಟಿ ಸಾಮ್ರಾಜ್ಯಕ್ಕೆ ಕೃತಿಕ ಬುದ್ದಿಮತ್ತೆ ಕಂಟಕ, ಟಿಸಿಎಸ್ ಇನ್ಫೋಸಿಸ್ ಸಂಸ್ಥೆಗಳಿಗೆ ನಷ್ಟ
