@@ -1046,7 +1046,8 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-02-16T00:56:27.220Z"
+    "lastAttemptAt": "2026-02-16T00:56:27.220Z",
+    "totalSubscribers": 2
   },
   {
     "id": "86e17fa1-b362-4d8f-8469-bfb30bfc0aec",
