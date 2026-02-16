@@ -83,7 +83,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
             } finally {
                 setIsLoading(false);
             }
-        }, 300);
+        }, 100);
 
         return () => clearTimeout(timeoutId);
     }, [query]);

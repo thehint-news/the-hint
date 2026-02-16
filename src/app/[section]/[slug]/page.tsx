@@ -161,7 +161,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 {/* Article Body - Strict reading width */}
                 {/* Thumbnail is NOT displayed here - it's only for cards and social sharing */}
                 <div className="max-w-[68ch] mx-auto">
-                    <ArticleBody content={article.body} />
+                    <ArticleBody
+                        content={article.body}
+                        blocks={article.bodyBlocks}
+                    />
 
 
                     {/* Article Footer: Tags, Corrections, Sources */}

@@ -7,6 +7,7 @@
  */
 
 import { Section } from '../content/types';
+import { ContentBlock } from '../content/media-types';
 
 /** Valid content types - ONLY news or opinion */
 export type ContentType = 'news' | 'opinion';
@@ -169,6 +170,7 @@ export interface PublishArticleInput {
     section: unknown;
     contentType: unknown;
     body: unknown;
+    bodyBlocks?: unknown;
     tags: unknown;
     placement: unknown;
     status: unknown;
@@ -186,6 +188,7 @@ export interface DraftArticleInput {
     section?: unknown;
     contentType?: unknown;
     body: unknown;
+    bodyBlocks?: unknown;
     tags?: unknown;
     placement?: unknown;
     sources?: unknown;
@@ -202,6 +205,7 @@ export interface ValidatedArticleData {
     section: Section;
     contentType: ContentType;
     body: string;
+    bodyBlocks?: ContentBlock[];
     tags: string[];
     placement: Placement;
     status: ArticleStatus;
@@ -220,6 +224,7 @@ export interface ValidatedDraftData {
     section: Section;
     contentType: ContentType;
     body: string;
+    bodyBlocks?: ContentBlock[];
     tags: string[];
     placement: Placement;
     sources: string[];
@@ -389,6 +394,7 @@ export function transformToValidatedData(input: PublishArticleInput): ValidatedA
     const sources = sanitizeStringArray(input.sources);
     const slug = typeof input.slug === 'string' && input.slug ? input.slug : generateSlug(headline);
     const thumbnail = typeof input.thumbnail === 'string' ? input.thumbnail : undefined;
+    const bodyBlocks = Array.isArray(input.bodyBlocks) ? (input.bodyBlocks as ContentBlock[]) : undefined;
 
     return {
         headline,
@@ -396,6 +402,7 @@ export function transformToValidatedData(input: PublishArticleInput): ValidatedA
         section,
         contentType,
         body,
+        bodyBlocks,
         tags,
         placement,
         status,
@@ -419,6 +426,7 @@ export function transformToDraftData(input: DraftArticleInput, draftId?: string)
     const sources = sanitizeStringArray(input.sources);
     const thumbnail = typeof input.thumbnail === 'string' ? input.thumbnail : undefined;
     const slug = typeof (input as unknown as Record<string, unknown>).slug === 'string' ? (input as unknown as Record<string, unknown>).slug as string : undefined;
+    const bodyBlocks = Array.isArray(input.bodyBlocks) ? (input.bodyBlocks as ContentBlock[]) : undefined;
 
     return {
         draftId: draftId || generateDraftId(),
@@ -427,6 +435,7 @@ export function transformToDraftData(input: DraftArticleInput, draftId?: string)
         section,
         contentType,
         body,
+        bodyBlocks,
         tags,
         placement,
         sources,

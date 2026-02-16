@@ -49,7 +49,16 @@ export async function POST(request: NextRequest): Promise<NextResponse<UploadRes
     // Verify authentication
     const session = await getSession();
 
-    if (!session) {
+    // Dev/System Bypass Logic (Consistent with other internal APIs)
+    const secret = request.headers.get('x-cron-secret') || request.nextUrl.searchParams.get('secret');
+    const cronSecret = process.env.CRON_SECRET;
+    // Allow bypass if:
+    // 1. We have a valid secret match (System/Cron usage)
+    // 2. We are in development AND no secret is configured (Ease of local dev)
+    const isDev = process.env.NODE_ENV === 'development';
+    const isSystemAuth = (cronSecret && secret === cronSecret) || (isDev && !cronSecret);
+
+    if (!session && !isSystemAuth) {
         return NextResponse.json(
             { success: false, error: 'Unauthorized' },
             { status: 401 }

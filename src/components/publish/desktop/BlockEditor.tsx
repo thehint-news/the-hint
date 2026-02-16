@@ -13,9 +13,8 @@
 
 'use client';
 
-import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useState, useCallback, useRef, useMemo } from 'react';
 import Image from 'next/image';
-import { parseBodyToBlocks, serializeBlocksToMarkdown } from '@/lib/content/block-parser';
 import {
     ContentBlock,
     ContentBlockType,
@@ -44,10 +43,10 @@ import styles from './BlockEditor.module.css';
 // =============================================================================
 
 interface BlockEditorProps {
-    /** Current body content (markdown string) */
-    value: string;
-    /** Handler for body changes */
-    onChange: (value: string) => void;
+    /** Current content blocks */
+    blocks: ContentBlock[];
+    /** Handler for block changes */
+    onChange: (blocks: ContentBlock[]) => void;
     /** Field error message */
     error?: string;
     /** Placeholder text */
@@ -59,17 +58,11 @@ interface BlockEditorProps {
 // =============================================================================
 
 export function BlockEditor({
-    value,
+    blocks,
     onChange,
     error,
     placeholder = 'Start writing your article...',
 }: BlockEditorProps) {
-    // Parse blocks from markdown
-    const [blocks, setBlocks] = useState<ContentBlock[]>(() => {
-        const result = parseBodyToBlocks(value);
-        return result.blocks;
-    });
-
     // UI State
     const [focusedBlockId, setFocusedBlockId] = useState<string | null>(null);
     const [showInsertMenu, setShowInsertMenu] = useState(false);
@@ -79,39 +72,16 @@ export function BlockEditor({
     const [editingBlock, setEditingBlock] = useState<ContentBlock | null>(null);
 
     // Refs for managing focus
-    // Refs for managing focus
     const blockRefs = useRef<Map<string, HTMLTextAreaElement | HTMLDivElement>>(new Map());
-    // Ref to track internal changes to prevent loops
-    const isInternalChange = useRef(false);
 
     // Calculate media summary
     const mediaSummary = useMemo(() => calculateMediaSummary(blocks), [blocks]);
 
-    // Sync blocks to markdown when they change
-    useEffect(() => {
-        const markdown = serializeBlocksToMarkdown(blocks);
-        if (markdown !== value) {
-            isInternalChange.current = true;
-            onChange(markdown);
-        }
-    }, [blocks, onChange, value]);
+    // Helper to update blocks and trigger change
+    const updateBlocks = useCallback((newBlocks: ContentBlock[]) => {
+        onChange(newBlocks);
+    }, [onChange]);
 
-    // Re-parse when external value changes significantly
-    useEffect(() => {
-        if (isInternalChange.current) {
-            isInternalChange.current = false;
-            return;
-        }
-
-        const currentMarkdown = serializeBlocksToMarkdown(blocks);
-        if (value !== currentMarkdown) {
-            const result = parseBodyToBlocks(value);
-            if (result.success) {
-                setBlocks(result.blocks);
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value]);
 
     // ==========================================================================
     // BLOCK OPERATIONS
@@ -121,79 +91,84 @@ export function BlockEditor({
      * Update a block's content
      */
     const updateBlockContent = useCallback((blockId: string, content: string) => {
-        setBlocks(prev => prev.map(block => {
+        const newBlocks = blocks.map(block => {
             if (block.id === blockId && 'content' in block) {
                 return { ...block, content };
             }
             return block;
-        }));
-    }, []);
+        });
+        updateBlocks(newBlocks);
+    }, [blocks, updateBlocks]);
 
     /**
      * Insert a new block at position
      */
-    const insertBlock = useCallback((type: ContentBlockType, position: number) => {
-        setBlocks(prev => {
-            let newBlock: ContentBlock;
+    const insertBlock = useCallback((type: ContentBlockType, position: number): string | null => {
+        let newBlock: ContentBlock;
 
-            switch (type) {
-                case 'paragraph':
-                    newBlock = createParagraphBlock('', position);
-                    break;
-                case 'subheading':
-                    newBlock = createSubheadingBlock('', position);
-                    break;
-                case 'quote':
-                    newBlock = createQuoteBlock('', position);
-                    break;
-                default:
-                    return prev;
-            }
+        switch (type) {
+            case 'paragraph':
+                newBlock = createParagraphBlock('', position);
+                break;
+            case 'subheading':
+                newBlock = createSubheadingBlock('', position);
+                break;
+            case 'quote':
+                newBlock = createQuoteBlock('', position);
+                break;
+            default:
+                return null;
+        }
 
-            const updated = [...prev];
-            updated.splice(position, 0, newBlock);
-            return reorderBlocks(updated);
-        });
+        const updated = [...blocks];
+        updated.splice(position, 0, newBlock);
+        updateBlocks(reorderBlocks(updated));
         setShowInsertMenu(false);
-    }, []);
+        return newBlock.id;
+    }, [blocks, updateBlocks]);
 
     /**
      * Delete a block
      */
     const deleteBlock = useCallback((blockId: string) => {
-        setBlocks(prev => {
-            const filtered = prev.filter(b => b.id !== blockId);
-            return reorderBlocks(filtered);
-        });
-    }, []);
+        const filtered = blocks.filter(b => b.id !== blockId);
+        updateBlocks(reorderBlocks(filtered));
+        // Simple focus fallback
+        if (filtered.length > 0) {
+            // If we deleted the focused block, focus the one before it, or the first one
+            if (focusedBlockId === blockId) {
+                // Find index found in original blocks
+                // This is slightly complex without index locally, but for now we can persist focus? 
+                // Actually if a block is gone, we can't focus it.
+                // We'll let the user click for now to avoid jumpiness.
+            }
+        }
+    }, [blocks, updateBlocks, focusedBlockId]);
 
     /**
      * Move a block up or down
      */
     const moveBlock = useCallback((blockId: string, direction: 'up' | 'down') => {
-        setBlocks(prev => {
-            const index = prev.findIndex(b => b.id === blockId);
-            if (index === -1) return prev;
-            if (direction === 'up' && index === 0) return prev;
-            if (direction === 'down' && index === prev.length - 1) return prev;
+        const index = blocks.findIndex(b => b.id === blockId);
+        if (index === -1) return;
+        if (direction === 'up' && index === 0) return;
+        if (direction === 'down' && index === blocks.length - 1) return;
 
-            const newBlocks = [...prev];
-            const targetIndex = direction === 'up' ? index - 1 : index + 1;
+        const newBlocks = [...blocks];
+        const targetIndex = direction === 'up' ? index - 1 : index + 1;
 
-            // Swap
-            [newBlocks[index], newBlocks[targetIndex]] = [newBlocks[targetIndex], newBlocks[index]];
+        // Swap
+        [newBlocks[index], newBlocks[targetIndex]] = [newBlocks[targetIndex], newBlocks[index]];
 
-            // Reorder checks - enforce validity
-            const validation = isValidBlockOrder(newBlocks);
-            if (!validation.isValid) {
-                // In a real app we'd toast here, but for now strict refusal
-                // We could also allow it and show error state, but the prompt asked for "guardrails"
-                return prev;
-            }
+        // Reorder checks - enforce validity
+        const validation = isValidBlockOrder(newBlocks);
+        if (!validation.isValid) {
+            // In a real app we'd toast here, but for now strict refusal
+            return;
+        }
 
-            return reorderBlocks(newBlocks);
-        });
-    }, []);
+        updateBlocks(reorderBlocks(newBlocks));
+    }, [blocks, updateBlocks]);
 
     /**
      * Handle keyboard shortcuts in blocks
@@ -203,8 +178,31 @@ export function BlockEditor({
         block: ContentBlock,
         index: number
     ) => {
-        // Enter = New line (default behavior), do NOT create new block
-        // User requested manual block creation only
+        // Enter = Create new paragraph block below
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            const newBlockId = insertBlock('paragraph', index + 1);
+
+            // Focus new block
+            if (newBlockId) {
+                // Must wait for render cycle to complete so ref is attached
+                requestAnimationFrame(() => {
+                    // Try to focus immediately if ref exists (might not yet)
+                    const el = blockRefs.current.get(newBlockId);
+                    if (el) {
+                        el.focus();
+                    } else {
+                        // Retry once more slightly later
+                        setTimeout(() => {
+                            const retryEl = blockRefs.current.get(newBlockId);
+                            retryEl?.focus();
+                        }, 50);
+                    }
+                });
+                setFocusedBlockId(newBlockId);
+            }
+            return;
+        }
 
         // Backspace at start of empty block = delete block
         if (e.key === 'Backspace') {
@@ -220,7 +218,7 @@ export function BlockEditor({
                 }
             }
         }
-    }, [blocks, deleteBlock]);
+    }, [blocks, deleteBlock, insertBlock]);
 
     // ==========================================================================
     // INSERT MENU
@@ -302,24 +300,23 @@ export function BlockEditor({
     }) => {
         if (editingBlock && isImageBlock(editingBlock)) {
             // Update existing block
-            setBlocks(prev => prev.map(b => {
+            const newBlocks = blocks.map(b => {
                 if (b.id === editingBlock.id) {
                     return { ...b, ...data };
                 }
                 return b;
-            }));
+            });
+            updateBlocks(newBlocks);
         } else {
             // Create new image block
             const newBlock = createImageBlock(insertPosition, data);
-            setBlocks(prev => {
-                const updated = [...prev];
-                updated.splice(insertPosition, 0, newBlock);
-                return reorderBlocks(updated);
-            });
+            const updated = [...blocks];
+            updated.splice(insertPosition, 0, newBlock);
+            updateBlocks(reorderBlocks(updated));
         }
         setShowImageEditor(false);
         setEditingBlock(null);
-    }, [editingBlock, insertPosition]);
+    }, [blocks, editingBlock, insertPosition, updateBlocks]);
 
     /**
      * Handle video save from editor
@@ -339,24 +336,23 @@ export function BlockEditor({
     }) => {
         if (editingBlock && isVideoBlock(editingBlock)) {
             // Update existing block
-            setBlocks(prev => prev.map(b => {
+            const newBlocks = blocks.map(b => {
                 if (b.id === editingBlock.id) {
                     return { ...b, ...data };
                 }
                 return b;
-            }));
+            });
+            updateBlocks(newBlocks);
         } else {
             // Create new video block
             const newBlock = createVideoBlock(insertPosition, data);
-            setBlocks(prev => {
-                const updated = [...prev];
-                updated.splice(insertPosition, 0, newBlock);
-                return reorderBlocks(updated);
-            });
+            const updated = [...blocks];
+            updated.splice(insertPosition, 0, newBlock);
+            updateBlocks(reorderBlocks(updated));
         }
         setShowVideoEditor(false);
         setEditingBlock(null);
-    }, [editingBlock, insertPosition]);
+    }, [blocks, editingBlock, insertPosition, updateBlocks]);
 
     /**
      * Edit an existing media block

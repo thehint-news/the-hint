@@ -3,22 +3,10 @@
 /**
  * Article Editor Component
  * Two-column layout: Writing surface (70%) + Metadata sidebar (30%)
- * 
- * Writing Surface:
- * - Headline (required)
- * - Subheadline (required)
- * - Body editor (long-form with block-based media support)
- * 
- * Sidebar:
- * - Section (required)
- * - Content Type (News | Opinion)
- * - Tags (optional, max 10)
- * - Sources (optional)
- * - Homepage Placement
- * - Status indicator
  */
 
 import { ChangeEvent, useCallback, useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import {
     ArticleFormData,
     FieldErrors,
@@ -27,8 +15,9 @@ import {
     CONTENT_TYPES,
 } from '../types';
 import { BlockEditor } from './BlockEditor';
-import Image from 'next/image';
 import { ArticleBody } from '@/components/article/ArticleBody';
+import { parseBodyToBlocks, serializeBlocksToMarkdown } from '@/lib/content/block-parser';
+import { ContentBlock } from '@/lib/content/media-types';
 import styles from './ArticleEditor.module.css';
 
 
@@ -70,16 +59,40 @@ export function ArticleEditor({
     const [editorMode, setEditorMode] = useState<'blocks' | 'markdown'>('blocks');
 
     /**
-     * Handle input changes
+     * Ref to stabilize callbacks
      */
-    // Ref to stabilize callbacks
     const formDataRef = useRef(formData);
     useEffect(() => {
         formDataRef.current = formData;
     }, [formData]);
 
     /**
-     * Handle input changes
+     * MIGRATION: Auto-convert legacy body to blocks if blocks are empty
+     */
+    useEffect(() => {
+        const hasBody = formData.body && formData.body.trim().length > 0;
+        const hasBlocks = formData.bodyBlocks && formData.bodyBlocks.length > 0;
+
+        if (hasBody && !hasBlocks) {
+            const { blocks } = parseBodyToBlocks(formData.body);
+            if (blocks.length > 0) {
+                // Determine if we should trigger an update
+                // We use setTimeout to avoid update during render if that's a risk, 
+                // but usually calling parent handler is fine.
+                // However, to be safe and avoid infinite loops if parent re-renders immediately:
+                // We only do this if it truly differs.
+
+                onFormChange({
+                    ...formData,
+                    bodyBlocks: blocks
+                });
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Run once on mount
+
+    /**
+     * Handle input changes (metadata)
      */
     const handleInputChange = useCallback(
         (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -90,11 +103,35 @@ export function ArticleEditor({
     );
 
     /**
-     * Handle body change from BlockEditor
+     * Handle blocks change from BlockEditor
+     * Syncs blocks -> Body (markdown)
      */
-    const handleBodyChange = useCallback(
-        (newBody: string) => {
-            onFormChange({ ...formDataRef.current, body: newBody });
+    const handleBlocksChange = useCallback(
+        (newBlocks: ContentBlock[]) => {
+            const newBody = serializeBlocksToMarkdown(newBlocks);
+            onFormChange({
+                ...formDataRef.current,
+                bodyBlocks: newBlocks,
+                body: newBody
+            });
+        },
+        [onFormChange]
+    );
+
+    /**
+     * Handle markdown change
+     * Syncs Body (markdown) -> Blocks
+     */
+    const handleMarkdownChange = useCallback(
+        (e: ChangeEvent<HTMLTextAreaElement>) => {
+            const newBody = e.target.value;
+            const { blocks } = parseBodyToBlocks(newBody);
+
+            onFormChange({
+                ...formDataRef.current,
+                body: newBody,
+                bodyBlocks: blocks
+            });
         },
         [onFormChange]
     );
@@ -137,7 +174,7 @@ export function ArticleEditor({
 
         setThumbnailError(null);
 
-        // Validate file type (simple check)
+        // Validate file type
         const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
         if (!validTypes.includes(file.type)) {
             setThumbnailError('Invalid file type. Please use JPEG, PNG, WebP, or AVIF.');
@@ -154,12 +191,12 @@ export function ArticleEditor({
         setIsUploadingThumbnail(true);
 
         try {
-            const formData = new FormData();
-            formData.append('file', file);
+            const uploadFormData = new FormData();
+            uploadFormData.append('file', file);
 
             const response = await fetch('/api/media/upload', {
                 method: 'POST',
-                body: formData,
+                body: uploadFormData,
             });
 
             const result = await response.json();
@@ -173,7 +210,6 @@ export function ArticleEditor({
             setThumbnailError('Network error during upload');
         } finally {
             setIsUploadingThumbnail(false);
-            // Reset input
             if (thumbnailInputRef.current) {
                 thumbnailInputRef.current.value = '';
             }
@@ -317,8 +353,8 @@ export function ArticleEditor({
                     {/* Block-based Editor */}
                     {editorMode === 'blocks' && (
                         <BlockEditor
-                            value={formData.body}
-                            onChange={handleBodyChange}
+                            blocks={formData.bodyBlocks || []}
+                            onChange={handleBlocksChange}
                             error={fieldErrors.body}
                             placeholder="Start writing your article..."
                         />
@@ -330,22 +366,9 @@ export function ArticleEditor({
                             <textarea
                                 name="body"
                                 className={`${styles.bodyEditor} ${fieldErrors.body ? styles.inputError : ''}`}
-                                placeholder="Write in markdown format...
-
-:::image
-src: /media/images/photo.webp
-alt: Description text
-width: 1200
-height: 800
-:::
-
-:::video
-originalUrl: https://youtube.com/watch?v=...
-caption: Description of video
-posterThumbnail: https://path/to/image.jpg
-:::"
+                                placeholder="Write in markdown format..."
                                 value={formData.body}
-                                onChange={handleInputChange}
+                                onChange={handleMarkdownChange}
                             />
                             {fieldErrors.body && (
                                 <span className={styles.fieldError}>{fieldErrors.body}</span>
@@ -355,7 +378,7 @@ posterThumbnail: https://path/to/image.jpg
                 </div>
             </div>
 
-            {/* RIGHT COLUMN: SIDEBAR - Metadata or Preview (Preview works on mobile as modal) */}
+            {/* RIGHT COLUMN: SIDEBAR - Metadata or Preview */}
             {(!isMobile || showPreview) && (
                 <div className={`${styles.sidebar} ${isMobile && showPreview ? styles.mobilePreview : ''}`}>
                     {/* Preview Panel */}
@@ -388,7 +411,11 @@ posterThumbnail: https://path/to/image.jpg
                                     {previewData.placement === 'top' && <span className={styles.previewFeatured}>Top Story</span>}
                                 </div>
                                 <div className={styles.previewBody}>
-                                    <ArticleBody content={previewData.body} />
+                                    <ArticleBody
+                                        content={previewData.body}
+                                    // blocks={formData.bodyBlocks} // PreviewData needs blocks too!
+                                    // For now fallback to content since PreviewData uses body
+                                    />
                                 </div>
                                 {previewData.tags.length > 0 && (
                                     <div className={styles.previewTags}>

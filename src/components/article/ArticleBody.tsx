@@ -16,16 +16,19 @@ import {
     isImageBlock,
     isVideoBlock,
     isSubheadingBlock,
-    isQuoteBlock
+    isQuoteBlock,
+    ContentBlock
 } from '@/lib/content/media-types';
 
 interface ArticleBodyProps {
-    content: string;
+    content?: string;
+    blocks?: ContentBlock[]; // Canonical source
 }
 
-export function ArticleBody({ content }: ArticleBodyProps) {
-    // Parse content into blocks
-    const { blocks } = parseBodyToBlocks(content);
+export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProps) {
+    // USE BLOCKS DIRECTLY if available (Canonical)
+    // Fallback to legacy parser if only content string exists
+    const blocks = providedBlocks || (content ? parseBodyToBlocks(content).blocks : []);
 
     return (
         <div className="mb-12">
@@ -75,7 +78,8 @@ export function ArticleBody({ content }: ArticleBodyProps) {
                                     lineHeight: 1.3,
                                     marginTop: '2.5rem',
                                     marginBottom: '1rem',
-                                    fontFamily: 'var(--font-serif)'
+                                    fontFamily: 'var(--font-serif)',
+                                    whiteSpace: 'pre-wrap',
                                 }}
                             >
                                 {block.content}
@@ -104,6 +108,7 @@ export function ArticleBody({ content }: ArticleBodyProps) {
                                     color: '#2B2B2B',
                                     fontFamily: 'var(--font-serif)',
                                     margin: 0,
+                                    whiteSpace: 'pre-line',
                                 }}>
                                     &ldquo;{block.content}&rdquo;
                                 </p>
@@ -126,7 +131,7 @@ export function ArticleBody({ content }: ArticleBodyProps) {
                     const htmlContent = marked.parse(block.content, {
                         async: false,
                         gfm: true,
-                        breaks: false,
+                        breaks: true, // Convert newlines to <br> for WYSIWYG behavior
                     }) as string;
 
                     return (

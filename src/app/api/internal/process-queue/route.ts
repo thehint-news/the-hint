@@ -9,8 +9,16 @@ import { processSubscriptionQueue } from '@/lib/subscription/processor';
 export async function GET(request: NextRequest): Promise<NextResponse> {
     const secret = request.headers.get('x-cron-secret') || request.nextUrl.searchParams.get('secret');
     const cronSecret = process.env.CRON_SECRET;
+    const isDev = process.env.NODE_ENV === 'development';
 
-    if (!cronSecret || secret !== cronSecret) {
+    // SCENARIO 1: Localhost / Development
+    // If we are in dev mode and no secret is set in .env.local, allow access for testing.
+    // If a secret IS set locally, we still enforce it to test the production flow.
+    const isDevBypass = isDev && !cronSecret;
+
+    // SCENARIO 2 & 3: Production / Deployed
+    // Strictly enforce the secret.
+    if (!isDevBypass && (!cronSecret || secret !== cronSecret)) {
         return NextResponse.json(
             { success: false, error: 'Unauthorized' },
             { status: 401 }

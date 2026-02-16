@@ -134,9 +134,15 @@ export function SubscribePopup() {
             } else {
                 setStatus("error");
                 // Use editorial translation for error
-                const errorMsg = data.error?.includes('already')
-                    ? getErrorMessage(ErrorCodes.SUBSCRIPTION_ALREADY_EXISTS).message
-                    : getErrorMessage(ErrorCodes.SUBSCRIPTION_INVALID_EMAIL).message;
+                // Use editorial translation for error
+                let errorMsg = getErrorMessage(ErrorCodes.SUBSCRIPTION_INVALID_EMAIL).message;
+
+                if (data.error?.includes('already') || data.message?.includes('already')) {
+                    errorMsg = getErrorMessage(ErrorCodes.SUBSCRIPTION_ALREADY_EXISTS).message;
+                } else if (data.error?.includes('System') || data.error?.includes('internal') || res.status >= 500) {
+                    errorMsg = "We couldn't save your subscription. Please try again later.";
+                }
+
                 setMessage(errorMsg);
             }
         } catch (error) {

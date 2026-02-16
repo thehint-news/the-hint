@@ -100,6 +100,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 section: draftData.section,
                 contentType: draftData.contentType,
                 body: draftData.body,
+                bodyBlocks: draftData.bodyBlocks,
                 tags: draftData.tags,
                 sources: draftData.sources,
                 placement: draftData.placement,

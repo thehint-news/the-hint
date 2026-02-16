@@ -1,159 +1,20 @@
-/**
- * Minimal Markdown + YAML Frontmatter Parser
- * No external dependencies - hand-rolled for reliability
- */
-
+import yaml from 'js-yaml';
 import {
     ParsedArticle,
     ArticleFrontmatter,
     ContentParseError
 } from './types';
+import { ContentBlock } from './media-types';
 
-/** Regex to match YAML frontmatter delimited by --- */
-const FRONTMATTER_REGEX = /^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/;
-
-/**
- * Parse a YAML value into appropriate JS type
- * Handles: strings, booleans, numbers, null, arrays
+/** Regex to match YAML frontmatter delimited by ---
+ *  Matches:
+ *  1. Start of file
+ *  2. Three dashes + optional whitespace + newline
+ *  3. (Capture 1) Frontmatter content
+ *  4. Newline + Three dashes + optional whitespace + newline
+ *  5. (Capture 2) Body content
  */
-function parseYamlValue(value: string): unknown {
-    const trimmed = value.trim();
-
-    // Null/empty
-    if (trimmed === '' || trimmed === 'null' || trimmed === '~') {
-        return null;
-    }
-
-    // Boolean
-    if (trimmed === 'true') return true;
-    if (trimmed === 'false') return false;
-
-    // Quoted string - remove quotes
-    if ((trimmed.startsWith('"') && trimmed.endsWith('"')) ||
-        (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
-        return trimmed.slice(1, -1);
-    }
-
-    // Number
-    if (/^-?\d+(\.\d+)?$/.test(trimmed)) {
-        return parseFloat(trimmed);
-    }
-
-    // ISO date string - keep as string
-    if (/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})?)?$/.test(trimmed)) {
-        return trimmed;
-    }
-
-    // Plain string
-    return trimmed;
-}
-
-/**
- * Parse inline YAML array: [item1, item2, item3]
- */
-function parseInlineArray(value: string): string[] {
-    const trimmed = value.trim();
-    if (!trimmed.startsWith('[') || !trimmed.endsWith(']')) {
-        return [];
-    }
-
-    const inner = trimmed.slice(1, -1);
-    if (!inner.trim()) return [];
-
-    return inner.split(',').map(item => {
-        const s = item.trim();
-        // Remove quotes if present
-        if ((s.startsWith('"') && s.endsWith('"')) ||
-            (s.startsWith("'") && s.endsWith("'"))) {
-            return s.slice(1, -1);
-        }
-        return s;
-    });
-}
-
-/**
- * Parse simple YAML frontmatter into an object
- * Supports: key-value pairs, inline arrays, multiline arrays
- */
-function parseYamlFrontmatter(yaml: string, filePath: string): Record<string, unknown> {
-    const result: Record<string, unknown> = {};
-    const lines = yaml.split(/\r?\n/);
-
-    let currentKey: string | null = null;
-    let currentArray: string[] | null = null;
-
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        const trimmedLine = line.trim();
-
-        // Skip empty lines and comments
-        if (!trimmedLine || trimmedLine.startsWith('#')) {
-            continue;
-        }
-
-        // Check for array item (starts with -)
-        if (trimmedLine.startsWith('-') && currentKey && currentArray !== null) {
-            const itemValue = trimmedLine.slice(1).trim();
-            // Remove quotes if present
-            if ((itemValue.startsWith('"') && itemValue.endsWith('"')) ||
-                (itemValue.startsWith("'") && itemValue.endsWith("'"))) {
-                currentArray.push(itemValue.slice(1, -1));
-            } else {
-                currentArray.push(itemValue);
-            }
-            continue;
-        }
-
-        // Save previous array if we're moving to a new key
-        if (currentKey && currentArray !== null) {
-            result[currentKey] = currentArray;
-            currentKey = null;
-            currentArray = null;
-        }
-
-        // Parse key: value pair
-        const colonIndex = line.indexOf(':');
-        if (colonIndex === -1) {
-            throw new ContentParseError(
-                `Invalid YAML syntax at line ${i + 1}: "${line}"`,
-                filePath
-            );
-        }
-
-        const key = line.slice(0, colonIndex).trim();
-        const valueStr = line.slice(colonIndex + 1).trim();
-
-        if (!key) {
-            throw new ContentParseError(
-                `Empty key at line ${i + 1}`,
-                filePath
-            );
-        }
-
-        // Check for inline array
-        if (valueStr.startsWith('[')) {
-            result[key] = parseInlineArray(valueStr);
-            continue;
-        }
-
-        // Check for multiline array (empty value, next lines start with -)
-        if (!valueStr) {
-            currentKey = key;
-            currentArray = [];
-            continue;
-        }
-
-        // Regular key-value
-        result[key] = parseYamlValue(valueStr);
-    }
-
-    // Don't forget the last array if any
-    if (currentKey && currentArray !== null) {
-        result[currentKey] = currentArray;
-    }
-
-    return result;
-}
+const FRONTMATTER_REGEX = /^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/;
 
 /**
  * Validate and type-check parsed frontmatter
@@ -171,9 +32,6 @@ function validateFrontmatter(
     if (typeof data.subtitle !== 'string' || !data.subtitle) {
         errors.push('subtitle is required and must be a non-empty string');
     }
-    if (typeof data.publishedAt !== 'string' || !data.publishedAt) {
-        errors.push('publishedAt is required and must be an ISO date string');
-    }
 
     // Validate contentType enum
     const validContentTypes = ['news', 'opinion'];
@@ -181,20 +39,32 @@ function validateFrontmatter(
         errors.push(`contentType must be one of: ${validContentTypes.join(', ')}`);
     }
 
-    // Validate publishedAt is valid ISO date
-    if (typeof data.publishedAt === 'string') {
-        const date = new Date(data.publishedAt);
+    // publishedAt: Handle Date object (from js-yaml) or string
+    let publishedAt = data.publishedAt;
+    if (publishedAt instanceof Date) {
+        publishedAt = publishedAt.toISOString();
+    }
+
+    if (typeof publishedAt !== 'string' || !publishedAt) {
+        errors.push('publishedAt is required and must be an ISO date string');
+    } else {
+        const date = new Date(publishedAt);
         if (isNaN(date.getTime())) {
             errors.push('publishedAt must be a valid ISO 8601 date');
         }
     }
 
-    // Validate updatedAt if present
-    if (data.updatedAt !== undefined && data.updatedAt !== null) {
-        if (typeof data.updatedAt !== 'string') {
+    // updatedAt: Handle Date object, string, or null
+    let updatedAt = data.updatedAt;
+    if (updatedAt instanceof Date) {
+        updatedAt = updatedAt.toISOString();
+    }
+
+    if (updatedAt !== undefined && updatedAt !== null) {
+        if (typeof updatedAt !== 'string') {
             errors.push('updatedAt must be a string or null');
         } else {
-            const date = new Date(data.updatedAt);
+            const date = new Date(updatedAt);
             if (isNaN(date.getTime())) {
                 errors.push('updatedAt must be a valid ISO 8601 date');
             }
@@ -227,6 +97,12 @@ function validateFrontmatter(
         errors.push('image must be a string URL');
     }
 
+    // Validate bodyBlocks (Optional, but if present must be array)
+    // Detailed validation of blocks structure is done elsewhere or assumed consistent if created by editor
+    if (data.bodyBlocks !== undefined && !Array.isArray(data.bodyBlocks)) {
+        errors.push('bodyBlocks must be an array of ContentBlock objects');
+    }
+
     if (errors.length > 0) {
         throw new ContentParseError(
             `Frontmatter validation failed:\n  - ${errors.join('\n  - ')}`,
@@ -244,12 +120,13 @@ function validateFrontmatter(
         title: data.title as string,
         subtitle: data.subtitle as string,
         contentType: data.contentType as 'news' | 'opinion',
-        publishedAt: data.publishedAt as string,
-        updatedAt: (data.updatedAt as string | null) ?? null,
+        publishedAt: publishedAt as string,
+        updatedAt: (updatedAt as string | null) ?? null,
         placement: placement ?? 'standard',
         image: (data.image as string) ?? undefined,
         tags: (data.tags as string[]) ?? [],
         sources: (data.sources as string[]) ?? [],
+        bodyBlocks: (data.bodyBlocks as ContentBlock[]) ?? undefined,
     };
 }
 
@@ -260,22 +137,51 @@ function validateFrontmatter(
  * @returns Parsed article with frontmatter and body
  */
 export function parseMarkdown(content: string, filePath: string): ParsedArticle {
-    const match = content.match(FRONTMATTER_REGEX);
+    // Handle case where file might be JUST frontmatter (no body)
+    // or frontmatter with empty body
+    let frontmatterRaw = '';
+    let bodyContent = '';
 
-    if (!match) {
+    const match = content.match(FRONTMATTER_REGEX);
+    if (match) {
+        frontmatterRaw = match[1];
+        bodyContent = match[2];
+    } else if (content.startsWith('---\n')) {
+        // Try to match frontmatter only (no body or empty body)
+        const end = content.indexOf('\n---', 4);
+        if (end !== -1) {
+            frontmatterRaw = content.substring(4, end);
+            bodyContent = content.substring(end + 4).trim();
+        } else {
+            // Fallback to strict regex check if fuzzy match fails
+            if (!match) {
+                throw new ContentParseError(
+                    'Invalid Markdown format: Missing or malformed frontmatter. Expected format:\n---\nkey: value\n---\nBody content',
+                    filePath
+                );
+            }
+        }
+    } else {
         throw new ContentParseError(
             'Invalid Markdown format: Missing or malformed frontmatter. Expected format:\n---\nkey: value\n---\nBody content',
             filePath
         );
     }
 
-    const [, yamlContent, bodyContent] = match;
+    let parsedYaml: Record<string, unknown>;
+    try {
+        parsedYaml = yaml.load(frontmatterRaw) as Record<string, unknown>;
+    } catch (e) {
+        throw new ContentParseError(
+            `Invalid YAML in frontmatter: ${(e as Error).message}`,
+            filePath
+        );
+    }
 
-    const rawFrontmatter = parseYamlFrontmatter(yamlContent, filePath);
-    const frontmatter = validateFrontmatter(rawFrontmatter, filePath);
+    const frontmatter = validateFrontmatter(parsedYaml, filePath);
 
     return {
         frontmatter,
-        body: bodyContent.trim(),
+        body: bodyContent ? bodyContent.trim() : '',
     };
 }

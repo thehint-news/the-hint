@@ -10,12 +10,18 @@ import { Resend } from 'resend';
 export async function sendMagicLinkEmail(email: string, token: string) {
     const apiKey = process.env.RESEND_API_KEY;
     const fromAddress = process.env.EMAIL_FROM || 'The Hint <noreply@thehint.news>';
+    // Use configured URL or default to localhost for local testing
     const appUrl = process.env.APP_BASE_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3002';
 
+    // Check if we are in a "real" production deployment (Vercel)
+    const isDeployed = !!process.env.VERCEL;
+    // Allow dev behavior if we are not deployed (e.g. npm start locally)
+    const allowDevFallback = process.env.NODE_ENV !== 'production' || !isDeployed;
+
     if (!apiKey) {
-        // In dev, log the link so login is still possible
-        if (process.env.NODE_ENV !== 'production') {
-            console.log(`[DEV] Magic Link: ${appUrl}/api/auth/verify?token=${token}`);
+        // In dev or local production, log the link so login is still possible
+        if (allowDevFallback) {
+            console.log(`[LOCAL-PROD] Magic Link (No API Key): ${appUrl}/api/auth/verify?token=${token}`);
             return;
         }
         throw new Error('RESEND_API_KEY is not configured. Cannot send magic link in production.');
@@ -124,15 +130,21 @@ export async function sendMagicLinkEmail(email: string, token: string) {
 
         if (error) {
             console.error('[AUTH-EMAIL] Resend returned error:', JSON.stringify(error, null, 2));
+            // In local production/dev, fallback log instead of failing request
+            if (allowDevFallback) {
+                console.log(`[LOCAL-PROD-FALLBACK] Resend API Failed. Magic Link: ${link}`);
+                return;
+            }
             throw new Error(`Resend Error: ${error.message || 'Unknown error'}`);
         }
 
         console.log(`[AUTH-EMAIL] Email sent successfully. ID: ${data?.id}`);
     } catch (e: any) {
         console.error('[AUTH-EMAIL] Exception during email send:', e);
-        // Fallback log for dev
-        if (process.env.NODE_ENV !== 'production') {
-            console.log(`[FALLBACK] Magic Link: ${link}`);
+        // Fallback log for local dev/prod if actual send fails
+        if (allowDevFallback) {
+            console.log(`[LOCAL-PROD-FALLBACK] Magic Link (Send Failed): ${link}`);
+            return;
         }
         // Re-throw with more detail if possible
         throw new Error(`Failed to send magic link email: ${e.message}`);

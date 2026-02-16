@@ -28,6 +28,8 @@ export type PlacementValue = 'lead' | 'top' | 'standard';
 /** Article status */
 export type StatusValue = 'draft' | 'published';
 
+import { ContentBlock } from '@/lib/content/media-types';
+
 /** Workspace mode - editor for writing, all for viewing article database */
 export type WorkspaceMode = 'editor' | 'all';
 
@@ -37,7 +39,8 @@ export interface ArticleFormData {
     subheadline: string;
     section: SectionValue;
     contentType: ContentTypeValue;
-    body: string;
+    bodyBlocks: ContentBlock[]; // Canonical
+    body: string; // Legacy/Fallback
     tags: string;
     placement: PlacementValue;
     sources: string;
@@ -56,6 +59,7 @@ export const INITIAL_FORM_DATA: ArticleFormData = {
     subheadline: '',
     section: 'politics',
     contentType: 'news',
+    bodyBlocks: [],
     body: '',
     tags: '',
     placement: 'standard',
@@ -106,6 +110,7 @@ export interface PreviewData {
     section: string;
     contentType: string;
     body: string;
+    bodyBlocks?: ContentBlock[];
     tags: string[];
     sources: string[];
     placement: PlacementValue;

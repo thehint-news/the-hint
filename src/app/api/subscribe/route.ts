@@ -50,6 +50,14 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        if (!process.env.GIT_TOKEN) {
+            logger.error('Missing GIT_TOKEN environment variable. Subscription cannot be saved.');
+            return NextResponse.json(
+                { success: false, error: 'System configuration error' },
+                { status: 500 }
+            );
+        }
+
         const result = await addSubscriber(email);
 
         if (result.success && !result.isDuplicate) {

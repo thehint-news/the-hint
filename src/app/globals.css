@@ -78,7 +78,7 @@
 /* ----------------------------------------------------------------------------
    TYPOGRAPHY
    ---------------------------------------------------------------------------- */
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-serif: var(--font-serif);
@@ -391,12 +391,28 @@ button {
   min-height: 280px;
 }
 
+@media (max-width: 768px) {
+  .thumbnail-container:has(.thumbnail-lead) {
+    aspect-ratio: 16 / 9;
+    min-height: 280px;
+    max-height: 300px;
+  }
+}
+
 /* ── Top Stories ────────────────────────────────── */
-/* Container: 4:3 card ratio, moderate height */
+/* Container: 4:3 card ratio on desktop, 16:9 on mobile */
 .thumbnail-container:has(.thumbnail-top) {
   aspect-ratio: 4 / 3;
   max-height: 250px;
   min-height: 150px;
+}
+
+@media (max-width: 768px) {
+  .thumbnail-container:has(.thumbnail-top) {
+    aspect-ratio: 16 / 9;
+    min-height: auto;
+    max-height: 250px;
+  }
 }
 
 /* ── Wire Style (Crime & Court) ─────────────────── */
@@ -442,6 +458,13 @@ button {
 .thumbnail-container:has(.thumbnail-world) {
   aspect-ratio: 3 / 2;
   min-height: 140px;
+}
+
+@media (max-width: 768px) {
+  .thumbnail-container:has(.thumbnail-world) {
+    aspect-ratio: 16 / 9;
+    min-height: auto;
+  }
 }
 
 /* ── Story List Page ────────────────────────────── */

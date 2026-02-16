@@ -14,9 +14,14 @@ export async function createSession(email: string) {
         .sign(SECRET);
 
     const cookieStore = await cookies();
+
+    // Only set secure=true if we are in production AND deployed (e.g. Vercel)
+    // This allows testing production builds locally over HTTP (npm start)
+    const isProductionDeployed = process.env.NODE_ENV === 'production' && !!process.env.VERCEL;
+
     cookieStore.set(COOKIE_NAME, token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: isProductionDeployed,
         sameSite: 'lax',
         path: '/',
         maxAge: 60 * 60 * 24, // 24 hours in seconds

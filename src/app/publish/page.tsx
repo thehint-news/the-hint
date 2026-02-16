@@ -163,6 +163,7 @@ export default function PublishPage() {
             section: formData.section,
             contentType: formData.contentType,
             body: formData.body,
+            bodyBlocks: formData.bodyBlocks,
             tags: tagsArray,
             sources: sourcesArray,
             placement: formData.placement,
@@ -389,6 +390,11 @@ export default function PublishPage() {
      * Handle Publish Click
      */
     const handlePublish = useCallback(() => {
+        if (!formData.thumbnail) {
+            showToast('warning', 'Thumbnail is not set. Please upload a thumbnail.');
+            return;
+        }
+
         if (!canPublish(formData)) {
             showToast('warning', 'Complete required fields to publish.');
             return;
@@ -421,6 +427,7 @@ export default function PublishPage() {
             section: data.section || article.section || 'politics',
             contentType: data.contentType || 'news',
             body: data.body || '',
+            bodyBlocks: data.bodyBlocks || [],
             tags: typeof data.tags === 'string' ? data.tags : (Array.isArray(data.tags) ? (data.tags as string[]).join(', ') : ''),
             sources: typeof data.sources === 'string' ? data.sources : (Array.isArray(data.sources) ? (data.sources as string[]).join(', ') : ''),
             placement: data.placement || article.placement || 'standard',

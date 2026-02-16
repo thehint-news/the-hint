@@ -1,3 +1,5 @@
+import { ContentBlock } from './media-types';
+
 /**
  * Article Content Types
  * Strict type definitions for news publication content
@@ -55,9 +57,11 @@ export interface Article {
     /** Source references and citations */
     sources: string[];
 
-    /** Raw Markdown body content (after frontmatter) */
-    /** Raw Markdown body content (after frontmatter) */
-    body: string;
+    /** CANONICAL SOURCE: Structured content blocks */
+    bodyBlocks?: ContentBlock[];
+
+    /** LEGACY ONLY: Raw Markdown body content (after frontmatter) */
+    body?: string;
 
     /** Featured image URL (optional) */
     image?: string;
@@ -78,6 +82,7 @@ export interface ArticleFrontmatter {
     tags?: string[];
     sources?: string[];
     status?: 'published' | 'draft';
+    bodyBlocks?: ContentBlock[];
 }
 
 /**
@@ -85,7 +90,7 @@ export interface ArticleFrontmatter {
  */
 export interface ParsedArticle {
     frontmatter: ArticleFrontmatter;
-    body: string;
+    body?: string;
 }
 
 /**

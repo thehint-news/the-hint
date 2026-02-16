@@ -16,7 +16,10 @@
 import { gitService, GitOperationError, GitErrorType, Section, createGitStaging } from './service';
 import { logger } from '../feedback/console-guard';
 import path from 'path';
+import yaml from 'js-yaml';
+import { ContentBlock } from '../content/media-types';
 
+/** Draft data structure */
 /** Draft data structure */
 export interface DraftData {
     draftId: string;
@@ -24,7 +27,8 @@ export interface DraftData {
     subheadline: string;
     section: string;
     contentType: string;
-    body: string;
+    bodyBlocks?: ContentBlock[];
+    body?: string;
     tags: string[];
     sources: string[];
     placement: string;
@@ -34,6 +38,7 @@ export interface DraftData {
     createdAt: string;
 }
 
+/** Published article metadata (extracted from frontmatter) */
 /** Published article metadata (extracted from frontmatter) */
 export interface PublishedArticleData {
     slug: string;
@@ -48,7 +53,8 @@ export interface PublishedArticleData {
     tags: string[];
     sources: string[];
     image?: string;
-    body: string;
+    bodyBlocks?: ContentBlock[];
+    body?: string;
 }
 
 /** Article list item for UI display */
@@ -438,7 +444,8 @@ class ContentGit {
         subheadline: string;
         section: Section;
         contentType: string;
-        body: string;
+        bodyBlocks?: ContentBlock[];
+        body?: string;
         tags: string[];
         sources: string[];
         placement: string;
@@ -555,6 +562,7 @@ class ContentGit {
         updates: Partial<{
             headline: string;
             subheadline: string;
+            bodyBlocks: ContentBlock[];
             body: string;
             tags: string[];
             sources: string[];
@@ -598,7 +606,8 @@ class ContentGit {
                 subheadline: updates.subheadline || existingArticle.subtitle,
                 section,
                 contentType: existingArticle.contentType,
-                body: updates.body || existingArticle.body,
+                bodyBlocks: updates.bodyBlocks || existingArticle.bodyBlocks,
+                body: updates.body !== undefined ? updates.body : existingArticle.body, // updating body to empty string is valid
                 tags: updates.tags || existingArticle.tags,
                 sources: updates.sources || existingArticle.sources,
                 placement: updates.placement || existingArticle.placement,
@@ -655,12 +664,14 @@ class ContentGit {
 
     /**
      * Generate markdown content with frontmatter
+     * Uses js-yaml for safe dumping
      */
     private generateMarkdownContent(data: {
         headline: string;
         subheadline: string;
         contentType: string;
-        body: string;
+        bodyBlocks?: ContentBlock[]; // New canonical
+        body?: string;              // Legacy
         tags: string[];
         sources: string[];
         placement: string;
@@ -668,126 +679,93 @@ class ContentGit {
         publishedAt: string;
         updatedAt?: string;
     }): string {
-        const lines: string[] = ['---'];
+        const frontmatter: any = {
+            title: data.headline,
+            subtitle: data.subheadline,
+            contentType: data.contentType,
+            image: data.image,
+            status: 'published',
+            publishedAt: data.publishedAt,
+            updatedAt: data.updatedAt || null,
+            placement: data.placement,
+            tags: data.tags,
+            sources: data.sources,
+        };
 
-        lines.push(`title: ${this.escapeYamlString(data.headline)}`);
-        lines.push(`subtitle: ${this.escapeYamlString(data.subheadline)}`);
-        lines.push(`contentType: ${data.contentType}`);
-        if (data.image) {
-            lines.push(`image: ${this.escapeYamlString(data.image)}`);
+        // If bodyBlocks exist, add them to frontmatter (CANONICAL)
+        if (data.bodyBlocks && data.bodyBlocks.length > 0) {
+            frontmatter.bodyBlocks = data.bodyBlocks;
         }
-        lines.push(`status: published`);
-        lines.push(`publishedAt: ${data.publishedAt}`);
-        lines.push(`updatedAt: ${data.updatedAt || 'null'}`);
-        lines.push(`placement: ${data.placement}`);
 
-        if (data.tags.length > 0) {
-            lines.push('tags:');
-            for (const tag of data.tags) {
-                lines.push(`  - ${this.escapeYamlString(tag)}`);
-            }
+        const yamlBlock = yaml.dump(frontmatter, {
+            lineWidth: -1, // Prevent line wrapping
+            noRefs: true   // Prevent aliases
+        }).trim();
+
+        // If bodyBlocks exist, we DO NOT write body content (it's legacy)
+        // Unless it's explicitly requested or we are in a mixed state (unlikely)
+        // The rule is: bodyBlocks = canonical.
+
+        // HOWEVER, to ensure legacy readers don't break immediately if they ignore frontmatter blocks,
+        // we could potentially render a fallback... 
+
+        let fileContent = `---\n${yamlBlock}\n---`;
+
+        // Always append body if it exists, for legacy compatibility
+        // The parser will prefer bodyBlocks from frontmatter if present
+        if (data.body) {
+            fileContent += `\n\n${data.body}\n`;
         } else {
-            lines.push('tags: []');
+            fileContent += `\n`; // Clean ending
         }
 
-        if (data.sources.length > 0) {
-            lines.push('sources:');
-            for (const source of data.sources) {
-                lines.push(`  - ${this.escapeYamlString(source)}`);
-            }
-        } else {
-            lines.push('sources: []');
-        }
-
-        lines.push('---');
-
-        return `${lines.join('\n')}\n\n${data.body}\n`;
-    }
-
-    /**
-     * Escape special characters in YAML string values
-     */
-    private escapeYamlString(value: string): string {
-        if (/[:#\[\]{}|>!&*?'"\n\r]/.test(value) || value.startsWith(' ') || value.endsWith(' ')) {
-            return `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-        }
-        return value;
+        return fileContent;
     }
 
     /**
      * Parse markdown frontmatter to extract article data
+     * Now uses js-yaml for robust parsing including bodyBlocks
      */
     private parseMarkdownFrontmatter(content: string, section: string, slug: string): PublishedArticleData | null {
         try {
-            const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-            if (!frontmatterMatch) return null;
+            // Robust regex from parser.ts
+            const FRONTMATTER_REGEX = /^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/;
+            const frontmatterMatch = content.match(FRONTMATTER_REGEX);
 
-            const frontmatter = frontmatterMatch[1];
-            const body = frontmatterMatch[2].trim();
+            let frontmatterRaw = '';
+            let body = '';
 
-            // Simple YAML parsing
-            const getValue = (key: string): string => {
-                const match = frontmatter.match(new RegExp(`^${key}:\\s*(.*)$`, 'm'));
-                if (!match) return '';
-                let value = match[1].trim();
-                // Remove quotes if present
-                if ((value.startsWith('"') && value.endsWith('"')) ||
-                    (value.startsWith("'") && value.endsWith("'"))) {
-                    value = value.slice(1, -1);
+            if (frontmatterMatch) {
+                frontmatterRaw = frontmatterMatch[1];
+                body = frontmatterMatch[2].trim();
+            } else if (content.startsWith('---\n')) {
+                // Try to match frontmatter only
+                const end = content.indexOf('\n---', 4);
+                if (end !== -1) {
+                    frontmatterRaw = content.substring(4, end);
+                    body = content.substring(end + 4).trim();
                 }
-                return value;
-            };
+            }
 
-            const getArray = (key: string): string[] => {
-                const arrayMatch = frontmatter.match(new RegExp(`^${key}:\\s*\\[(.*)\\]$`, 'm'));
-                if (arrayMatch) {
-                    // Inline array format
-                    const content = arrayMatch[1].trim();
-                    if (!content) return [];
-                    return content.split(',').map(s => s.trim().replace(/^["']|["']$/g, ''));
-                }
+            if (!frontmatterRaw) return null;
 
-                // Multi-line format
-                const lines = frontmatter.split('\n');
-                const result: string[] = [];
-                let inArray = false;
-
-                for (const line of lines) {
-                    if (line.match(new RegExp(`^${key}:`))) {
-                        inArray = true;
-                        continue;
-                    }
-                    if (inArray) {
-                        if (line.match(/^\s+-\s+/)) {
-                            let value = line.replace(/^\s+-\s+/, '').trim();
-                            if ((value.startsWith('"') && value.endsWith('"')) ||
-                                (value.startsWith("'") && value.endsWith("'"))) {
-                                value = value.slice(1, -1);
-                            }
-                            result.push(value);
-                        } else if (!line.match(/^\s+/)) {
-                            inArray = false;
-                        }
-                    }
-                }
-
-                return result;
-            };
+            const data = yaml.load(frontmatterRaw) as any;
 
             return {
                 slug,
                 section,
-                title: getValue('title'),
-                subtitle: getValue('subtitle'),
-                contentType: getValue('contentType'),
-                status: getValue('status'),
-                publishedAt: getValue('publishedAt'),
-                updatedAt: getValue('updatedAt') === 'null' ? null : getValue('updatedAt'),
-                placement: getValue('placement'),
-                tags: getArray('tags'),
-                sources: getArray('sources'),
-                image: getValue('image'),
-                body,
+                title: data.title,
+                subtitle: data.subtitle,
+                contentType: data.contentType,
+                status: data.status,
+                publishedAt: data.publishedAt,
+                updatedAt: data.updatedAt === 'null' ? null : data.updatedAt,
+                placement: data.placement,
+                tags: data.tags || [],
+                sources: data.sources || [],
+                image: data.image,
+                bodyBlocks: data.bodyBlocks, // Canonical source
+                body, // Legacy fallback
             };
         } catch (error) {
             logger.error('Failed to parse frontmatter', error);
