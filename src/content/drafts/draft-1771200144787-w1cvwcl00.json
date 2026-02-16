@@ -1,0 +1,27 @@
+{
+  "headline": "Integration Test",
+  "subheadline": "",
+  "section": "politics",
+  "contentType": "news",
+  "body": "##",
+  "bodyBlocks": [
+    {
+      "id": "par-mloesm6x-02gp",
+      "type": "paragraph",
+      "order": 0,
+      "content": ""
+    },
+    {
+      "id": "sub-mloet94e-7m0g",
+      "type": "subheading",
+      "order": 1,
+      "content": ""
+    }
+  ],
+  "tags": [],
+  "sources": [],
+  "placement": "standard",
+  "draftId": "draft-1771200144787-w1cvwcl00",
+  "savedAt": "2026-02-16T00:02:24.787Z",
+  "createdAt": "2026-02-16T00:02:24.787Z"
+}
