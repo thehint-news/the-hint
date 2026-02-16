@@ -992,10 +992,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-16T00:00:22.379Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-16T00:35:20.716Z"
   },
   {
     "id": "aa1510b4-0e34-4f62-ba8a-3f054326e0fb",
