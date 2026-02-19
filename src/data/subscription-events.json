@@ -1170,10 +1170,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-16T01:30:10.711Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-16T01:44:53.905Z"
   },
   {
     "id": "affb4371-cb94-4df1-87bd-f3523ff5206f",
@@ -1184,6 +1185,34 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-16T01:32:14.261Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
+  },
+  {
+    "id": "a9483780-db65-4b15-87a7-e4b558df7f30",
+    "articleSlug": "ewrtewfhfdsfjsfjsdf",
+    "section": "crime",
+    "headline": "ewrtewfhfdsfjsfjsdf",
+    "summary": "dsffdsfdsfdsfdsfsfd",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-16T01:43:16.164Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
+  },
+  {
+    "id": "a50a06ab-be11-4a72-b1ea-6974c767ed0c",
+    "articleSlug": "tyfugugugijhihiu",
+    "section": "crime",
+    "headline": "tyfugugugijhihiu",
+    "summary": "yguu89u908u9090i90i90",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-16T16:03:55.349Z",
     "status": "pending",
     "attempts": 0,
     "processedCount": 0,
