@@ -14,6 +14,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { contentGit } from '@/lib/git';
 import { logger } from '@/lib/feedback/console-guard';
+import { verifyAuth } from '@/lib/auth/session';
 
 /** Valid sections */
 type Section = 'politics' | 'world-affairs' | 'crime' | 'court' | 'opinion';
@@ -37,6 +38,21 @@ function userResponse(
     );
 }
 
+const AUTH_EXPIRED_MESSAGE = 'Session expired. Please log in again.';
+
+/**
+ * Helper to enforce authentication
+ * Returns null if authenticated, or a userResponse if failed
+ */
+async function requireAuth() {
+    try {
+        await verifyAuth();
+        return null;
+    } catch {
+        return userResponse(false, AUTH_EXPIRED_MESSAGE, 401);
+    }
+}
+
 /**
  * DELETE - Remove an article (draft or published)
  * 
@@ -50,6 +66,10 @@ function userResponse(
  */
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
     try {
+        // Enforce strict session
+        const authResponse = await requireAuth();
+        if (authResponse) return authResponse;
+
         let body: Record<string, unknown>;
 
         try {

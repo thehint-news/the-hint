@@ -24,7 +24,8 @@ export async function verifyMagicToken(token: string) {
         }
         return {
             email: payload.email,
-            jti: payload.jti as string | undefined
+            jti: payload.jti as string | undefined,
+            iat: payload.iat,
         };
     } catch {
         return null;

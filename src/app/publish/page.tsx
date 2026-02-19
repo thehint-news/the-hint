@@ -16,7 +16,7 @@
  * - Drafts and published articles are strictly separated
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import {
     EditorialToolbar,
     ArticleEditor,
@@ -43,6 +43,8 @@ import {
 } from '@/lib/feedback';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import styles from './page.module.css';
+import { useSessionTimer } from '@/hooks/useSessionTimer';
+import { SessionExpiryModal } from '@/components/publish/common/SessionExpiryModal';
 
 /** Client-side UX validation hints (NOT business logic) */
 function getClientHints(formData: ArticleFormData): Record<string, string> {
@@ -276,7 +278,7 @@ export default function PublishPage() {
     /**
      * Save Draft
      */
-    const handleSaveDraft = useCallback(async () => {
+    const handleSaveDraft = useCallback(async (): Promise<boolean> => {
         setIsSaving(true);
         setFieldErrors({});
 
@@ -293,23 +295,69 @@ export default function PublishPage() {
             if (result.success && result.data?.draftId) {
                 setFormData(prev => ({ ...prev, draftId: result.data!.draftId! }));
                 showSuccessFromCode(SuccessCodes.DRAFT_SAVED);
+                return true;
             } else if (!result.success && result.errors?.length) {
                 setFieldErrors(parseFieldErrors(result.errors));
-                // Get first error and show as toast with editorial message
                 const firstError = getFirstError(transformApiErrors(result.errors));
                 if (firstError) {
                     showToast('error', firstError.message);
                 }
+                return false;
             } else {
                 showErrorFromCode(ErrorCodes.CONTENT_SAVE_FAILED);
+                return false;
             }
         } catch (error) {
             logger.error('Draft save failed', error);
             showErrorFromCode(ErrorCodes.NETWORK_REQUEST_FAILED);
+            return false;
         } finally {
             setIsSaving(false);
         }
     }, [buildPayload, parseFieldErrors, showToast, showSuccessFromCode, showErrorFromCode]);
+
+    /**
+     * Logout with Auto-Save
+     */
+    const handleLogout = useCallback(async (force = false) => {
+        // Auto-save if we have content
+        const hasContent = formData.headline || formData.body || formData.draftId;
+        if (hasContent) {
+            try {
+                showToast('info', 'Saving progress before logout...');
+                const saved = await handleSaveDraft();
+                if (!saved && !force) {
+                    showToast('error', 'Could not save draft. Logout cancelled to prevent data loss.');
+                    return; // Abort logout
+                }
+            } catch (e) {
+                logger.error('Auto-save failed', e);
+                if (!force) {
+                    showToast('error', 'Auto-save failed. Logout cancelled.');
+                    return;
+                }
+            }
+        }
+
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            window.location.href = '/newsroom';
+        } catch (error) {
+            logger.error('Logout failed', error);
+            // Force redirect anyway
+            window.location.href = '/newsroom';
+        }
+    }, [formData, handleSaveDraft, showToast]);
+
+    // Stable ref for logout to prevent timer re-subscriptions
+    const handleLogoutRef = useRef(handleLogout);
+    useEffect(() => {
+        handleLogoutRef.current = handleLogout;
+    }, [handleLogout]);
+
+    const stableLogout = useCallback(async () => {
+        await handleLogoutRef.current();
+    }, []);
 
     /**
      * Preview
@@ -403,18 +451,6 @@ export default function PublishPage() {
     }, [formData, showToast]);
 
     /**
-     * Logout
-     */
-    const handleLogout = useCallback(async () => {
-        try {
-            await fetch('/api/auth/logout', { method: 'POST' });
-            window.location.href = '/newsroom';
-        } catch (error) {
-            logger.error('Logout failed', error);
-        }
-    }, []);
-
-    /**
      * Edit article (from database view)
      */
     const handleEdit = useCallback((article: ArticleEntry) => {
@@ -441,7 +477,6 @@ export default function PublishPage() {
         setMode('editor');
     }, []);
 
-
     /**
      * Duplicate article
      */
@@ -456,7 +491,6 @@ export default function PublishPage() {
                     slug: article.slug,
                 }),
             });
-
 
             const result: ApiResponse = await response.json();
 
@@ -488,7 +522,6 @@ export default function PublishPage() {
                 }),
             });
 
-
             const result: ApiResponse = await response.json();
 
             if (result.success) {
@@ -511,8 +544,22 @@ export default function PublishPage() {
         setShowPreview(false);
     }, []);
 
+    // Session Timer Hook
+    const { timeLeft, showWarning: showSessionWarning, isExtending: isSessionExtending, handleExtendSession, handleLogout: triggerLogout } = useSessionTimer({
+        onLogout: stableLogout,
+        onExtendSuccess: () => showToast('success', 'Session extended for 5 minutes'),
+    });
+
     return (
         <div className={`${styles.page} ${isMobile ? styles.mobile : ''}`}>
+            <SessionExpiryModal
+                isOpen={showSessionWarning}
+                timeLeftMs={timeLeft}
+                onExtend={handleExtendSession}
+                onLogout={triggerLogout}
+                isExtending={isSessionExtending}
+            />
+
             {/* Toast Notifications */}
             <div style={{ position: 'fixed', top: '24px', left: '50%', transform: 'translateX(-50%)', zIndex: 10000 }}>
                 <EditorialToast toast={toast} onDismiss={() => setToast(null)} />
@@ -526,12 +573,13 @@ export default function PublishPage() {
                 onSaveDraft={handleSaveDraft}
                 onPreview={handlePreview}
                 onPublish={handlePublish}
-                onLogout={handleLogout}
+                onLogout={triggerLogout}
                 isSaving={isSaving}
                 isPreviewLoading={isPreviewLoading}
                 isPublishing={isPublishing}
                 draftId={formData.draftId}
                 isMobile={isMobile}
+                timeLeft={timeLeft}
             />
 
             {/* Main Workspace */}

@@ -24,6 +24,7 @@ import {
 import { contentGit, DraftData, PublishedArticleData } from '@/lib/git';
 import { logger } from '@/lib/feedback/console-guard';
 import { revalidatePath } from 'next/cache';
+import { verifyAuth } from '@/lib/auth/session';
 
 /** Valid sections */
 type Section = 'politics' | 'world-affairs' | 'crime' | 'court' | 'opinion';
@@ -48,6 +49,21 @@ function userResponse(
     );
 }
 
+const AUTH_EXPIRED_MESSAGE = 'Session expired. Please log in again.';
+
+/**
+ * Helper to enforce authentication
+ * Returns null if authenticated, or a userResponse if failed
+ */
+async function requireAuth() {
+    try {
+        await verifyAuth();
+        return null;
+    } catch {
+        return userResponse(false, AUTH_EXPIRED_MESSAGE, undefined, 401);
+    }
+}
+
 /**
  * POST - Publish an article
  * This is the FINAL, atomic publish action.
@@ -60,6 +76,10 @@ function userResponse(
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
+        // Enforce strict session
+        const authResponse = await requireAuth();
+        if (authResponse) return authResponse;
+
         // Parse request body
         let body: unknown;
         try {
@@ -229,6 +249,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
  */
 export async function GET(): Promise<NextResponse> {
     try {
+        // Enforce strict session
+        const authResponse = await requireAuth();
+        if (authResponse) return authResponse;
+
         // Get all drafts
         const draftsResult = await contentGit.listDrafts();
         const drafts = draftsResult.success ? draftsResult.data || [] : [];

@@ -679,7 +679,7 @@ class ContentGit {
         publishedAt: string;
         updatedAt?: string;
     }): string {
-        const frontmatter: any = {
+        const frontmatter: Record<string, unknown> = {
             title: data.headline,
             subtitle: data.subheadline,
             contentType: data.contentType,
@@ -749,23 +749,36 @@ class ContentGit {
 
             if (!frontmatterRaw) return null;
 
-            const data = yaml.load(frontmatterRaw) as any;
+            const data = yaml.load(frontmatterRaw) as Record<string, unknown>;
+
+            // Runtime validation of required fields
+            if (!data.title) {
+                logger.warn(`Missing required frontmatter 'title' in ${slug}`);
+                return null;
+            }
+
+            // Default contentType for legacy content
+            if (!data.contentType) {
+                logger.warn(`Missing 'contentType' in ${slug}, defaulting to 'news'`);
+            }
 
             return {
                 slug,
                 section,
-                title: data.title,
-                subtitle: data.subtitle,
-                contentType: data.contentType,
-                status: data.status,
-                publishedAt: data.publishedAt,
-                updatedAt: data.updatedAt === 'null' ? null : data.updatedAt,
-                placement: data.placement,
-                tags: data.tags || [],
-                sources: data.sources || [],
-                image: data.image,
-                bodyBlocks: data.bodyBlocks, // Canonical source
-                body, // Legacy fallback
+                title: String(data.title),
+                subtitle: String(data.subtitle || ''),
+                contentType: String(data.contentType || 'news'),
+                status: String(data.status || 'published'),
+                publishedAt: String(data.publishedAt || new Date().toISOString()),
+                updatedAt: (data.updatedAt === null || data.updatedAt === undefined || data.updatedAt === 'null')
+                    ? null
+                    : String(data.updatedAt),
+                placement: String(data.placement || 'standard'),
+                tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
+                sources: Array.isArray(data.sources) ? data.sources.map(String) : [],
+                image: data.image ? String(data.image) : undefined,
+                bodyBlocks: Array.isArray(data.bodyBlocks) ? data.bodyBlocks as ContentBlock[] : undefined,
+                body,
             };
         } catch (error) {
             logger.error('Failed to parse frontmatter', error);

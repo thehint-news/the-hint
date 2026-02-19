@@ -8,6 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { contentGit, DraftData, PublishedArticleData } from '@/lib/git';
+import { verifyAuth } from '@/lib/auth/session';
 
 interface ArticleEntry {
     id: string;
@@ -104,6 +105,16 @@ function transformPublishedToEntry(article: PublishedArticleData): ArticleEntry 
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
     try {
+        // Enforce strict session
+        try {
+            await verifyAuth();
+        } catch {
+            return NextResponse.json(
+                { success: false, error: 'Session expired.' },
+                { status: 401 }
+            );
+        }
+
         const { searchParams } = new URL(request.url);
         const filter = searchParams.get('filter'); // 'drafts', 'published', or 'all'
 

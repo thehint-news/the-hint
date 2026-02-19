@@ -21,6 +21,7 @@ import {
 } from '@/lib/validation';
 import { contentGit } from '@/lib/git';
 import { logger } from '@/lib/feedback/console-guard';
+import { verifyAuth } from '@/lib/auth/session';
 
 /**
  * User-friendly response helper
@@ -41,6 +42,21 @@ function userResponse(
     );
 }
 
+const AUTH_EXPIRED_MESSAGE = 'Session expired. Please log in again.';
+
+/**
+ * Helper to enforce authentication
+ * Returns null if authenticated, or a userResponse if failed
+ */
+async function requireAuth() {
+    try {
+        await verifyAuth();
+        return null;
+    } catch {
+        return userResponse(false, AUTH_EXPIRED_MESSAGE, undefined, 401);
+    }
+}
+
 /**
  * POST - Save a draft
  * Validates minimally (headline + body required)
@@ -49,6 +65,10 @@ function userResponse(
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
+        // Enforce strict session
+        const authResponse = await requireAuth();
+        if (authResponse) return authResponse;
+
         // Parse request body
         let body: unknown;
         try {
@@ -147,6 +167,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
     try {
+        // Enforce strict session
+        const authResponse = await requireAuth();
+        if (authResponse) return authResponse;
+
         const { searchParams } = new URL(request.url);
         const draftId = searchParams.get('id');
         const historyMode = searchParams.get('history');
@@ -215,6 +239,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  */
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
     try {
+        // Enforce strict session
+        const authResponse = await requireAuth();
+        if (authResponse) return authResponse;
+
         const { searchParams } = new URL(request.url);
         const draftId = searchParams.get('id');
 

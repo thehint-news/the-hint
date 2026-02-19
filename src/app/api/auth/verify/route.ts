@@ -101,8 +101,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         await markTokenAsUsed(payload.jti);
     }
 
-    // Create session
-    await createSession(payload.email);
+    // Create session with strict start time (from email sent time)
+    // token.ts verifyMagicToken returns iat in payload
+    await createSession(payload.email, payload.iat);
 
     // Redirect to publish
     return NextResponse.redirect(new URL('/publish', request.url));

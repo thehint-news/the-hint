@@ -12,6 +12,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { contentGit, PublishedArticleData } from '@/lib/git';
 import { Section, ContentType, Placement } from '@/lib/validation';
+import { verifyAuth } from '@/lib/auth/session';
 
 /**
  * Generate a unique draft ID
@@ -44,6 +45,21 @@ function userResponse(
 /** Valid sections */
 const VALID_SECTIONS: Section[] = ['politics', 'crime', 'court', 'opinion', 'world-affairs'];
 
+const AUTH_EXPIRED_MESSAGE = 'Session expired. Please log in again.';
+
+/**
+ * Helper to enforce authentication
+ * Returns null if authenticated, or a userResponse if failed
+ */
+async function requireAuth() {
+    try {
+        await verifyAuth();
+        return null;
+    } catch {
+        return userResponse(false, AUTH_EXPIRED_MESSAGE, undefined, 401);
+    }
+}
+
 /**
  * POST - Duplicate an article
  * Creates a new draft from existing content (draft or published)
@@ -51,6 +67,10 @@ const VALID_SECTIONS: Section[] = ['politics', 'crime', 'court', 'opinion', 'wor
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
+        // Enforce strict session
+        const authResponse = await requireAuth();
+        if (authResponse) return authResponse;
+
         const body = await request.json();
         const { id, type, section, slug } = body;
 

@@ -139,7 +139,7 @@ export async function sendMagicLinkEmail(email: string, token: string) {
         }
 
         console.log(`[AUTH-EMAIL] Email sent successfully. ID: ${data?.id}`);
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.error('[AUTH-EMAIL] Exception during email send:', e);
         // Fallback log for local dev/prod if actual send fails
         if (allowDevFallback) {
@@ -147,6 +147,7 @@ export async function sendMagicLinkEmail(email: string, token: string) {
             return;
         }
         // Re-throw with more detail if possible
-        throw new Error(`Failed to send magic link email: ${e.message}`);
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        throw new Error(`Failed to send magic link email: ${errorMessage}`);
     }
 }

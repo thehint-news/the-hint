@@ -19,6 +19,7 @@ import {
     ContentType,
 } from '@/lib/validation';
 import { Section } from '@/lib/content/types';
+import { verifyAuth } from '@/lib/auth/session';
 
 /**
  * Preview data structure
@@ -41,6 +42,19 @@ interface PreviewData {
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
+        // Enforce strict session
+        try {
+            await verifyAuth();
+        } catch (error: any) {
+            if (error.message === 'Unauthorized' || error.message === 'Session expired') {
+                return NextResponse.json(
+                    { success: false, error: 'Session expired.' },
+                    { status: 401 }
+                );
+            }
+            throw error;
+        }
+
         // Parse request body
         let body: unknown;
         try {
@@ -67,6 +81,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 { status: 400 }
             );
         }
+
 
         const input = body as Record<string, unknown>;
 

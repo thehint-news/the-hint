@@ -13,6 +13,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { gitService } from '@/lib/git';
+import { verifyAuth } from '@/lib/auth/session';
 
 /**
  * User-friendly response helper
@@ -42,6 +43,13 @@ function userResponse(
  */
 export async function GET(): Promise<NextResponse> {
     try {
+        // Enforce strict session
+        try {
+            await verifyAuth();
+        } catch {
+            return userResponse(false, 'Session expired.', undefined, 401);
+        }
+
         let currentBranch = 'unknown';
         let hasUncommittedChanges = false;
         let isHealthy = true;
@@ -93,6 +101,12 @@ export async function GET(): Promise<NextResponse> {
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
+        // Enforce strict session
+        try {
+            await verifyAuth();
+        } catch {
+            return userResponse(false, 'Session expired.', undefined, 401);
+        }
         const body = await request.json();
         const { action } = body;
 

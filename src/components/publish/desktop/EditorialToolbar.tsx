@@ -36,6 +36,8 @@ interface EditorialToolbarProps {
     draftId: string | null;
     /** Whether in mobile viewport */
     isMobile?: boolean;
+    /** Time remaining in session (ms) */
+    timeLeft?: number;
 }
 
 export function EditorialToolbar({
@@ -51,8 +53,19 @@ export function EditorialToolbar({
     isPublishing,
     draftId,
     isMobile = false,
+    timeLeft,
 }: EditorialToolbarProps) {
     const isEditorMode = mode === 'editor';
+
+    // Format time helper
+    const formatTime = (ms: number) => {
+        const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    };
+
+    const isLowTime = timeLeft !== undefined && timeLeft < 30000; // 30s warning
 
     return (
         <div className={`${styles.toolbar} ${isMobile ? styles.mobile : ''}`}>
@@ -100,6 +113,20 @@ export function EditorialToolbar({
 
             {/* Right group: Actions - hidden on mobile (shown in MobileActionBar) */}
             <div className={styles.actionGroup}>
+                {/* Session Timer Display */}
+                {timeLeft !== undefined && (
+                    <div
+                        className={`${styles.timerDisplay} ${isLowTime ? styles.warning : ''}`}
+                        title="Session remaining"
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        {formatTime(timeLeft)}
+                    </div>
+                )}
+
                 {!isMobile && isEditorMode && (
                     <>
                         <button
