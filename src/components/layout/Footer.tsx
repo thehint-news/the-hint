@@ -66,7 +66,7 @@ export function Footer() {
                                     <Link href="/court" className="font-sans text-[13px] text-[#999] hover:text-[#e5e5e5] transition-colors">
                                         Court
                                     </Link>
-                                    <Link href="/world" className="font-sans text-[13px] text-[#999] hover:text-[#e5e5e5] transition-colors">
+                                    <Link href="/world-affairs" className="font-sans text-[13px] text-[#999] hover:text-[#e5e5e5] transition-colors">
                                         World
                                     </Link>
                                     <Link href="/opinion" className="font-sans text-[13px] text-[#999] hover:text-[#e5e5e5] transition-colors">
