@@ -84,6 +84,7 @@ export default function PublishPage() {
 
     // Form state
     const [formData, setFormData] = useState<ArticleFormData>(INITIAL_FORM_DATA);
+    const [lastSavedFormData, setLastSavedFormData] = useState<ArticleFormData>(INITIAL_FORM_DATA);
     const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
     // Articles list for database mode
@@ -209,6 +210,10 @@ export default function PublishPage() {
         setIsLoadingArticles(true);
         try {
             const response = await fetch('/api/publish/articles');
+            if (response.status === 401) {
+                window.location.href = '/newsroom';
+                return;
+            }
             const result: ApiResponse = await response.json();
 
             if (result.success && result.data?.articles) {
@@ -249,6 +254,7 @@ export default function PublishPage() {
      */
     const handleNewArticle = useCallback(() => {
         setFormData(INITIAL_FORM_DATA);
+        setLastSavedFormData(INITIAL_FORM_DATA);
         setFieldErrors({});
         setShowPreview(false);
         setPreviewData(null);
@@ -290,10 +296,17 @@ export default function PublishPage() {
                 body: JSON.stringify(payload),
             });
 
+            if (response.status === 401) {
+                window.location.href = '/newsroom';
+                return false;
+            }
+
             const result: ApiResponse = await response.json();
 
             if (result.success && result.data?.draftId) {
+                const updatedData = { ...payload, draftId: result.data!.draftId! } as unknown as ArticleFormData;
                 setFormData(prev => ({ ...prev, draftId: result.data!.draftId! }));
+                setLastSavedFormData(updatedData);
                 showSuccessFromCode(SuccessCodes.DRAFT_SAVED);
                 return true;
             } else if (!result.success && result.errors?.length) {
@@ -322,7 +335,9 @@ export default function PublishPage() {
     const handleLogout = useCallback(async (force = false) => {
         // Auto-save if we have content
         const hasContent = formData.headline || formData.body || formData.draftId;
-        if (hasContent) {
+        const isDirty = JSON.stringify(formData) !== JSON.stringify(lastSavedFormData);
+
+        if (hasContent && isDirty) {
             try {
                 showToast('info', 'Saving progress before logout...');
                 const saved = await handleSaveDraft();
@@ -337,6 +352,8 @@ export default function PublishPage() {
                     return;
                 }
             }
+        } else if (hasContent && !isDirty && force) {
+            showToast('info', 'No changes made. Redirecting...');
         }
 
         try {
@@ -347,7 +364,7 @@ export default function PublishPage() {
             // Force redirect anyway
             window.location.href = '/newsroom';
         }
-    }, [formData, handleSaveDraft, showToast]);
+    }, [formData, lastSavedFormData, handleSaveDraft, showToast]);
 
     // Stable ref for logout to prevent timer re-subscriptions
     const handleLogoutRef = useRef(handleLogout);
@@ -355,8 +372,8 @@ export default function PublishPage() {
         handleLogoutRef.current = handleLogout;
     }, [handleLogout]);
 
-    const stableLogout = useCallback(async () => {
-        await handleLogoutRef.current();
+    const stableLogout = useCallback(async (force = false) => {
+        await handleLogoutRef.current(force);
     }, []);
 
     /**
@@ -372,6 +389,11 @@ export default function PublishPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
             });
+
+            if (response.status === 401) {
+                window.location.href = '/newsroom';
+                return;
+            }
 
             const result: ApiResponse = await response.json();
 
@@ -405,10 +427,16 @@ export default function PublishPage() {
                 body: JSON.stringify(payload),
             });
 
+            if (response.status === 401) {
+                window.location.href = '/newsroom';
+                return;
+            }
+
             const result: ApiResponse = await response.json();
 
             if (result.success) {
                 setFormData(INITIAL_FORM_DATA);
+                setLastSavedFormData(INITIAL_FORM_DATA);
                 setShowPreview(false);
                 // Invalidate articles cache so database view refreshes
                 setArticlesCached(false);
@@ -457,7 +485,7 @@ export default function PublishPage() {
         // The API returns article content nested in the 'data' property
         const data = article.data;
 
-        setFormData({
+        const newData = {
             headline: data.headline || article.title || '',
             subheadline: data.subheadline || '',
             section: data.section || article.section || 'politics',
@@ -471,7 +499,10 @@ export default function PublishPage() {
             draftId: article.status === 'draft' ? article.id : (data.draftId || null),
             status: article.status === 'published' ? 'published' : 'draft',
             slug: data.slug || article.slug || '',
-        });
+        } as ArticleFormData;
+
+        setFormData(newData);
+        setLastSavedFormData(newData);
         setFieldErrors({});
         setShowPreview(false);
         setMode('editor');
@@ -491,6 +522,11 @@ export default function PublishPage() {
                     slug: article.slug,
                 }),
             });
+
+            if (response.status === 401) {
+                window.location.href = '/newsroom';
+                return;
+            }
 
             const result: ApiResponse = await response.json();
 
@@ -521,6 +557,11 @@ export default function PublishPage() {
                     slug: article.slug,
                 }),
             });
+
+            if (response.status === 401) {
+                window.location.href = '/newsroom';
+                return;
+            }
 
             const result: ApiResponse = await response.json();
 

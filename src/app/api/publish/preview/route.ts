@@ -45,8 +45,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         // Enforce strict session
         try {
             await verifyAuth();
-        } catch (error: any) {
-            if (error.message === 'Unauthorized' || error.message === 'Session expired') {
+        } catch (error) {
+            if (error instanceof Error && (error.message === 'Unauthorized' || error.message === 'Session expired')) {
                 return NextResponse.json(
                     { success: false, error: 'Session expired.' },
                     { status: 401 }
