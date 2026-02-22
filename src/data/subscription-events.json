@@ -1361,5 +1361,19 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": []
+  },
+  {
+    "id": "b2fadb23-6dfa-41f0-b98f-e9cb7ee34796",
+    "articleSlug": "ವವಧ-ದಶಗಳ-ಮಲ-ಟರಪ-ವಧಸದದ-ಸಕಗಳನನ-ರದದಗಳಸದ-ಅಮರಕ-ಸಪರ",
+    "section": "world-affairs",
+    "headline": "ವಿವಿಧ ದೇಶಗಳ ಮೇಲೆ ಟ್ರಂಪ್ ವಿಧಿಸಿದ್ದ ಸುಂಕಗಳನ್ನು ರದ್ದುಗೊಳಿಸಿದ ಅಮೆರಿಕ ಸುಪ್ರೀಂ",
+    "summary": "ಟ್ರಂಪ್, ಅಂತರಾಷ್ಟ್ರೀಯ ತುರ್ತು ಆರ್ಥಿಕ ಅಧಿಕಾರ ಕಾಯ್ದೆ ಬಳಸಿಕೊಂಡು ಭಾರತ ಸೇರಿದಂತೆ ಅನೇಕ ದೇಶಗಳ ಮೇಲೆ ಮೇಲೆ ಮನಬಂದಂತೆ ಸುಂಕ ವಿಧಿಸಿದ್ದರು.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-22T16:43:38.956Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
