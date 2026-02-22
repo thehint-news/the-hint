@@ -1313,10 +1313,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-22T16:07:33.328Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-22T16:34:39.946Z"
   },
   {
     "id": "5c738ac3-0158-49aa-9405-e140f55ca9e6",
