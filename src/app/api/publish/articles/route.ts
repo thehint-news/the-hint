@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { contentGit, DraftData, PublishedArticleData } from '@/lib/git';
 import { verifyAuth } from '@/lib/auth/session';
+import { ContentBlock } from '@/lib/content/media-types';
 
 interface ArticleEntry {
     id: string;
@@ -25,6 +26,7 @@ interface ArticleEntry {
         section: string;
         contentType: string;
         body: string;
+        bodyBlocks: ContentBlock[]; // CANONICAL: Single source of truth
         tags: string;
         placement: 'lead' | 'top' | 'standard';
         sources: string;
@@ -55,6 +57,7 @@ function transformDraftToEntry(draft: DraftData): ArticleEntry {
             section: draft.section || 'politics',
             contentType: draft.contentType || 'news',
             body: draft.body || '',
+            bodyBlocks: draft.bodyBlocks || [],
             tags: Array.isArray(draft.tags) ? draft.tags.join(', ') : '',
             placement: (draft.placement as 'lead' | 'top' | 'standard') || 'standard',
             sources: Array.isArray(draft.sources) ? draft.sources.join(', ') : '',
@@ -86,6 +89,7 @@ function transformPublishedToEntry(article: PublishedArticleData): ArticleEntry 
             section: article.section || 'politics',
             contentType: article.contentType || 'news',
             body: article.body || '',
+            bodyBlocks: article.bodyBlocks || [],
             tags: Array.isArray(article.tags) ? article.tags.join(', ') : '',
             placement: (article.placement as 'lead' | 'top' | 'standard') || 'standard',
             sources: Array.isArray(article.sources) ? article.sources.join(', ') : '',

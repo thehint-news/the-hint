@@ -85,6 +85,42 @@
   --font-sans: var(--font-sans);
 }
 
+/* Composite font stacks: Kannada fonts cascade BEFORE system fallbacks.
+   The browser auto-selects the correct font per character's script.
+   e.g. "The Hint" → Inter, "ದಿ ಹಿಂಟ್" → Noto Sans Kannada */
+:root {
+  --font-serif-full: var(--font-serif), var(--font-kannada-serif), Georgia, serif;
+  --font-sans-full: var(--font-sans), var(--font-kannada-sans), system-ui, sans-serif;
+  --font-kannada-serif-full: var(--font-kannada-serif), var(--font-serif), serif;
+  --font-kannada-sans-full: var(--font-kannada-sans), var(--font-sans), sans-serif;
+}
+
+/* SCOPED KANNADA FONT SUPPORT — Article page only (heading → sources)
+   Apply this class to the article wrapper to enable Kannada fonts.
+   All other pages (homepage, sections, footer, editor) remain English-only. */
+.article-kannada-scope {
+  font-family: var(--font-sans-full);
+}
+
+.article-kannada-scope .headline-xl,
+.article-kannada-scope .headline-lg,
+.article-kannada-scope .headline-md,
+.article-kannada-scope .headline-sm {
+  font-family: var(--font-serif-full);
+}
+
+.article-kannada-scope .body-text,
+.article-kannada-scope .caption-text,
+.article-kannada-scope .meta-text,
+.article-kannada-scope .section-label,
+.article-kannada-scope .byline {
+  font-family: var(--font-sans-full);
+}
+
+.article-kannada-scope .keyword-tag {
+  font-family: var(--font-serif-full);
+}
+
 /* ----------------------------------------------------------------------------
    BASE STYLES
    ---------------------------------------------------------------------------- */
@@ -99,7 +135,6 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-size: 15px;
-  line-height: 1.65;
   line-height: 1.65;
   letter-spacing: -0.01em;
 }

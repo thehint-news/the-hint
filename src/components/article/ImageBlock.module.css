@@ -40,7 +40,7 @@
     margin-top: 1.5rem;
     padding-left: 1.25rem;
     border-left: 3px solid var(--color-ink);
-    font-family: var(--font-sans);
+    font-family: var(--font-sans-full);
     line-height: 1.6;
     max-width: 620px;
 }

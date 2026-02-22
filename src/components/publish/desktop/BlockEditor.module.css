@@ -117,7 +117,7 @@
     display: block;
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid transparent;
+    border: 1px solid #131212;
     border-radius: 4px;
     background: transparent;
     font-family: inherit;
@@ -148,7 +148,7 @@
     display: block;
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid transparent;
+    border: 1px solid #d0d0d0;
     border-radius: 4px;
     background: transparent;
     font-family: inherit;
@@ -166,7 +166,7 @@
     display: block;
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid transparent;
+    border: 1px solid #d0d0d0;
     border-radius: 4px;
     background: transparent;
     font-family: inherit;
@@ -185,7 +185,7 @@
     display: block;
     width: 100%;
     padding: 0.75rem 1rem 0.75rem 1.5rem;
-    border: 1px solid transparent;
+    border: 1px solid #d0d0d0;
     border-radius: 4px;
     font-family: inherit;
     font-size: 1rem;
@@ -195,7 +195,7 @@
     transition: all 0.15s ease;
     font-style: italic;
     color: #444;
-    border-left: 3px solid #d0d0d0;
+    border-left: 3px solid #888;
     background: #fafafa;
 }
 

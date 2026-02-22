@@ -7,6 +7,12 @@
  * Columns: Title, Section, Status, Placement, Last Edited, Published Date
  * Row actions: Edit, Duplicate, Delete
  * Filtering: Status filter, Section dropdown, Headline search
+ * 
+ * OPTIMISTIC UI:
+ * - Rows fade out instantly on delete (200ms animation)
+ * - Delete button shows spinner during operation
+ * - Button is disabled while delete is in-flight
+ * - If delete fails, row is restored at original position
  */
 
 import { useState, useMemo } from 'react';
@@ -26,6 +32,8 @@ interface ArticleDatabaseProps {
     onDuplicate: (article: ArticleEntry) => void;
     /** Handler for deleting an article */
     onDelete: (article: ArticleEntry) => void;
+    /** Set of article IDs currently being deleted (optimistic) */
+    deletingIds?: Set<string>;
 }
 
 export function ArticleDatabase({
@@ -34,6 +42,7 @@ export function ArticleDatabase({
     onEdit,
     onDuplicate,
     onDelete,
+    deletingIds = new Set(),
 }: ArticleDatabaseProps) {
     // Filter state
     const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'published'>('all');
@@ -121,6 +130,8 @@ export function ArticleDatabase({
      * Open delete confirmation dialog
      */
     const handleDeleteClick = (article: ArticleEntry) => {
+        // Block if already deleting this article
+        if (deletingIds.has(article.id)) return;
         setDeleteConfirm({ isOpen: true, article });
     };
 
@@ -240,78 +251,95 @@ export function ArticleDatabase({
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredArticles.map((article) => (
-                                <tr key={article.id} className={styles.row}>
-                                    <td className={styles.cellTitle}>
-                                        <button
-                                            type="button"
-                                            className={styles.titleLink}
-                                            onClick={() => onEdit(article)}
-                                        >
-                                            {article.title || 'Untitled'}
-                                        </button>
-                                    </td>
-                                    <td className={styles.cellSection}>
-                                        {getSectionLabel(article.section)}
-                                    </td>
-                                    <td className={styles.cellStatus}>
-                                        <span className={article.status === 'published' ? styles.statusPublished : styles.statusDraft}>
-                                            {article.status === 'published' ? 'Published' : 'Draft'}
-                                        </span>
-                                    </td>
-                                    <td className={styles.cellPlacement}>
-                                        {article.placement !== 'standard' ? (
-                                            <span className={`${styles.badge} ${article.placement === 'lead' ? styles.badgeLead : styles.badgeTop}`}>
-                                                {getPlacementLabel(article.placement)}
-                                            </span>
-                                        ) : (
-                                            <span className={styles.textMuted}>—</span>
-                                        )}
-                                    </td>
-                                    <td className={styles.cellDate}>
-                                        <span className={styles.dateMain}>{formatDate(article.lastEdited)}</span>
-                                        <span className={styles.dateTime}>{formatTime(article.lastEdited)}</span>
-                                    </td>
-                                    <td className={styles.cellDate}>
-                                        {article.publishedAt ? (
-                                            <>
-                                                <span className={styles.dateMain}>{formatDate(article.publishedAt)}</span>
-                                                <span className={styles.dateTime}>{formatTime(article.publishedAt)}</span>
-                                            </>
-                                        ) : (
-                                            <span className={styles.datePlaceholder}>—</span>
-                                        )}
-                                    </td>
-                                    <td className={styles.cellActions}>
-                                        <div className={styles.rowActions}>
+                            {filteredArticles.map((article) => {
+                                const isDeleting = deletingIds.has(article.id);
+                                return (
+                                    <tr
+                                        key={article.id}
+                                        className={`${styles.row} ${isDeleting ? styles.rowDeleting : ''}`}
+                                    >
+                                        <td className={styles.cellTitle}>
                                             <button
                                                 type="button"
-                                                className={styles.actionBtn}
+                                                className={styles.titleLink}
                                                 onClick={() => onEdit(article)}
-                                                title="Edit"
+                                                disabled={isDeleting}
                                             >
-                                                Edit
+                                                {article.title || 'Untitled'}
                                             </button>
-                                            <button
-                                                type="button"
-                                                className={styles.actionBtn}
-                                                onClick={() => onDuplicate(article)}
-                                                title="Duplicate"
-                                            >
-                                                Duplicate
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className={`${styles.actionBtn} ${styles.actionDelete}`}
-                                                onClick={() => handleDeleteClick(article)}
-                                                title="Delete"
-                                            >
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                                        </td>
+                                        <td className={styles.cellSection}>
+                                            {getSectionLabel(article.section)}
+                                        </td>
+                                        <td className={styles.cellStatus}>
+                                            <span className={article.status === 'published' ? styles.statusPublished : styles.statusDraft}>
+                                                {article.status === 'published' ? 'Published' : 'Draft'}
+                                            </span>
+                                        </td>
+                                        <td className={styles.cellPlacement}>
+                                            {article.placement !== 'standard' ? (
+                                                <span className={`${styles.badge} ${article.placement === 'lead' ? styles.badgeLead : styles.badgeTop}`}>
+                                                    {getPlacementLabel(article.placement)}
+                                                </span>
+                                            ) : (
+                                                <span className={styles.textMuted}>—</span>
+                                            )}
+                                        </td>
+                                        <td className={styles.cellDate}>
+                                            <span className={styles.dateMain}>{formatDate(article.lastEdited)}</span>
+                                            <span className={styles.dateTime}>{formatTime(article.lastEdited)}</span>
+                                        </td>
+                                        <td className={styles.cellDate}>
+                                            {article.publishedAt ? (
+                                                <>
+                                                    <span className={styles.dateMain}>{formatDate(article.publishedAt)}</span>
+                                                    <span className={styles.dateTime}>{formatTime(article.publishedAt)}</span>
+                                                </>
+                                            ) : (
+                                                <span className={styles.datePlaceholder}>—</span>
+                                            )}
+                                        </td>
+                                        <td className={styles.cellActions}>
+                                            <div className={styles.rowActions}>
+                                                <button
+                                                    type="button"
+                                                    className={styles.actionBtn}
+                                                    onClick={() => onEdit(article)}
+                                                    title="Edit"
+                                                    disabled={isDeleting}
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className={styles.actionBtn}
+                                                    onClick={() => onDuplicate(article)}
+                                                    title="Duplicate"
+                                                    disabled={isDeleting}
+                                                >
+                                                    Duplicate
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className={`${styles.actionBtn} ${styles.actionDelete} ${isDeleting ? styles.actionDeleting : ''}`}
+                                                    onClick={() => handleDeleteClick(article)}
+                                                    title="Delete"
+                                                    disabled={isDeleting}
+                                                >
+                                                    {isDeleting ? (
+                                                        <span className={styles.deleteSpinner}>
+                                                            <span className={styles.spinnerDot} />
+                                                            Removing…
+                                                        </span>
+                                                    ) : (
+                                                        'Delete'
+                                                    )}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 )}

@@ -208,7 +208,7 @@
    ---------------------------------------------------------------------------- */
 .row {
     border-bottom: 1px solid var(--color-border);
-    transition: background 0.1s ease;
+    transition: background 0.1s ease, opacity 0.25s ease;
 }
 
 .row:hover {
@@ -217,6 +217,23 @@
 
 .row:hover .rowActions {
     opacity: 1;
+}
+
+.rowDeleting {
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    background: #fff5f5 !important;
+    border-bottom-color: #fce4e4;
+}
+
+.rowDeleting .actionBtn {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.rowDeleting .actionDelete {
+    opacity: 1 !important;
 }
 
 .table td {
@@ -243,6 +260,12 @@
 
 .titleLink:hover {
     text-decoration: underline;
+}
+
+.titleLink:disabled {
+    opacity: 0.4;
+    cursor: default;
+    text-decoration: none;
 }
 
 .cellSection {
@@ -354,9 +377,50 @@
     color: white;
 }
 
+.actionBtn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .actionDelete:hover {
     background: #c62828;
     border-color: #c62828;
+}
+
+/* Delete button in-progress state */
+.actionDeleting {
+    color: #c62828 !important;
+    border-color: #c62828 !important;
+    background: #fff0f0 !important;
+    opacity: 1 !important;
+    cursor: wait;
+    font-weight: 600;
+}
+
+/* Spinner inside delete button */
+.deleteSpinner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+    font-size: 0.6875rem;
+    color: #c62828;
+}
+
+.spinnerDot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #c62828;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spinDot 0.6s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes spinDot {
+    to { transform: rotate(360deg); }
 }
 
 /* ----------------------------------------------------------------------------

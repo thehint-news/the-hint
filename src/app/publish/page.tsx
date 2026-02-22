@@ -41,6 +41,7 @@ import {
     getSuccessMessage,
     logger,
 } from '@/lib/feedback';
+import { serializeBlocksToMarkdown } from '@/lib/content/block-parser';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import styles from './page.module.css';
 import { useSessionTimer } from '@/hooks/useSessionTimer';
@@ -69,10 +70,12 @@ function getClientHints(formData: ArticleFormData): Record<string, string> {
 
 /** Check if form has minimum required fields for publishing */
 function canPublish(formData: ArticleFormData): boolean {
+    // bodyBlocks is the canonical content source; body is legacy fallback
+    const hasContent = (formData?.bodyBlocks && formData.bodyBlocks.length > 0) || (formData?.body || '').trim();
     return !!(
         (formData?.headline || '').trim() &&
         (formData?.subheadline || '').trim() &&
-        (formData?.body || '').trim() &&
+        hasContent &&
         formData?.section &&
         formData?.thumbnail
     );
@@ -92,6 +95,9 @@ export default function PublishPage() {
     const [isLoadingArticles, setIsLoadingArticles] = useState(false);
     const [articlesCached, setArticlesCached] = useState(false);
     const [lastFetchTime, setLastFetchTime] = useState(0);
+
+    // Optimistic delete: track which article IDs are currently being deleted
+    const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
 
     // UI state
     const [isSaving, setIsSaving] = useState(false);
@@ -154,18 +160,25 @@ export default function PublishPage() {
     }, [showToast]);
 
     /**
-     * Build API payload from form data
+     * Build API payload from form data.
+     * Generates legacy `body` from blocks at save time only.
+     * This is a ONE-DIRECTIONAL conversion for backward compatibility.
      */
     const buildPayload = useCallback(() => {
         const tagsArray = formData.tags.split(',').map(t => t.trim()).filter(Boolean);
         const sourcesArray = formData.sources.split(',').map(s => s.trim()).filter(Boolean);
+
+        // Generate legacy body from blocks for backward compat (one-directional, never flows back to editor)
+        const legacyBody = formData.bodyBlocks && formData.bodyBlocks.length > 0
+            ? serializeBlocksToMarkdown(formData.bodyBlocks)
+            : formData.body;
 
         return {
             headline: formData.headline,
             subheadline: formData.subheadline,
             section: formData.section,
             contentType: formData.contentType,
-            body: formData.body,
+            body: legacyBody,
             bodyBlocks: formData.bodyBlocks,
             tags: tagsArray,
             sources: sourcesArray,
@@ -544,15 +557,42 @@ export default function PublishPage() {
     }, [fetchArticles, showToast, showErrorFromCode]);
 
     /**
-     * Delete article
+     * Delete article — OPTIMISTIC UI
+     * 
+     * Flow:
+     * 1. Lock article (deletingIds) → spinner visible, button disabled
+     * 2. Show toast immediately
+     * 3. Fire API call
+     * 4. On success → fade row out (CSS transition) → remove from state after 400ms
+     * 5. On failure → restore: unlock article, show error toast
+     * 
+     * The article row stays in the DOM with the spinner visible while
+     * the API processes. This ensures the user sees the "Removing…" state.
      */
     const handleDelete = useCallback(async (article: ArticleEntry) => {
+        const articleId = article.id;
+
+        // Guard: prevent duplicate in-flight deletes
+        if (deletingIds.has(articleId)) return;
+
+        // 1. Lock this article — triggers spinner + disabled state in ArticleDatabase
+        setDeletingIds(prev => new Set(prev).add(articleId));
+
+        // 2. Capture original position for potential rollback
+        const originalIndex = articles.findIndex(a => a.id === articleId);
+        const originalArticle = articles[originalIndex];
+
+        // 3. Show toast immediately (optimistic)
+        showToast('success', 'Article permanently removed.');
+
+        // 4. Fire API call
         try {
             const response = await fetch('/api/publish/delete', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     id: article.id,
+                    type: article.status,
                     section: article.section,
                     slug: article.slug,
                 }),
@@ -566,17 +606,57 @@ export default function PublishPage() {
             const result: ApiResponse = await response.json();
 
             if (result.success) {
-                showSuccessFromCode(SuccessCodes.ARTICLE_DELETED);
-                // Force refresh after mutation
-                fetchArticles(true);
+                // Success — remove article from local state after CSS fade plays
+                // The fade CSS is already applied via `deletingIds` class
+                setTimeout(() => {
+                    setArticles(prev => prev.filter(a => a.id !== articleId));
+                    setDeletingIds(prev => {
+                        const next = new Set(prev);
+                        next.delete(articleId);
+                        return next;
+                    });
+                }, 400);
+                // Silently invalidate cache so next database load is fresh
+                setArticlesCached(false);
             } else {
-                showErrorFromCode(ErrorCodes.CONTENT_DELETE_FAILED);
+                // ROLLBACK: unlock article, restore if it was removed
+                setDeletingIds(prev => {
+                    const next = new Set(prev);
+                    next.delete(articleId);
+                    return next;
+                });
+                setArticles(prev => {
+                    // Only restore if it was somehow removed
+                    if (!prev.find(a => a.id === articleId)) {
+                        const restored = [...prev];
+                        const insertAt = Math.min(originalIndex, restored.length);
+                        restored.splice(insertAt, 0, originalArticle);
+                        return restored;
+                    }
+                    return prev;
+                });
+                showToast('error', "We couldn't complete the deletion. Please try again.");
             }
         } catch (error) {
             logger.error('Delete failed', error);
-            showErrorFromCode(ErrorCodes.NETWORK_REQUEST_FAILED);
+            // ROLLBACK: unlock and restore
+            setDeletingIds(prev => {
+                const next = new Set(prev);
+                next.delete(articleId);
+                return next;
+            });
+            setArticles(prev => {
+                if (!prev.find(a => a.id === articleId)) {
+                    const restored = [...prev];
+                    const insertAt = Math.min(originalIndex, restored.length);
+                    restored.splice(insertAt, 0, originalArticle);
+                    return restored;
+                }
+                return prev;
+            });
+            showToast('error', "We couldn't complete the deletion. Please try again.");
         }
-    }, [fetchArticles, showSuccessFromCode, showErrorFromCode]);
+    }, [articles, deletingIds, showToast]);
 
     /**
      * Close preview
@@ -644,6 +724,7 @@ export default function PublishPage() {
                         onEdit={handleEdit}
                         onDuplicate={handleDuplicate}
                         onDelete={handleDelete}
+                        deletingIds={deletingIds}
                     />
                 )}
             </main>

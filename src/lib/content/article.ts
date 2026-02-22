@@ -116,27 +116,33 @@ function validateSection(section: string): Section {
 
 /**
  * Validate slug string
+ * Supports Unicode characters (Kannada, Hindi, etc.) in slugs.
  * @throws InvalidSlugError if slug is invalid
  */
 function validateSlug(slug: string): string {
-    // Trim the slug
-    const trimmed = slug.trim();
+    // Decode URI-encoded characters (browsers encode non-ASCII chars in URLs)
+    let decoded: string;
+    try {
+        decoded = decodeURIComponent(slug).trim();
+    } catch {
+        decoded = slug.trim();
+    }
 
     // Check if empty
-    if (!trimmed) {
+    if (!decoded) {
         throw new InvalidSlugError(slug, 'Slug cannot be empty');
     }
 
-    // Check for valid characters (alphanumeric, hyphens only)
-    const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-    if (!slugPattern.test(trimmed)) {
+    // Check for valid characters: Unicode letters, Unicode numbers, and hyphens
+    const slugPattern = /^[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)*$/u;
+    if (!slugPattern.test(decoded)) {
         throw new InvalidSlugError(
             slug,
-            'Slug must contain only lowercase letters, numbers, and hyphens'
+            'Slug must contain only letters, numbers, and hyphens'
         );
     }
 
-    return trimmed;
+    return decoded;
 }
 
 // ============================================================================

@@ -19,6 +19,7 @@ import {
     ContentType,
 } from '@/lib/validation';
 import { Section } from '@/lib/content/types';
+import { ContentBlock } from '@/lib/content/media-types';
 import { verifyAuth } from '@/lib/auth/session';
 
 /**
@@ -30,6 +31,7 @@ interface PreviewData {
     section: Section;
     contentType: ContentType;
     body: string;
+    bodyBlocks: ContentBlock[];
     tags: string[];
     sources: string[];
     featured: boolean;
@@ -95,12 +97,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const sources = sanitizeStringArray(input.sources);
         const featured = input.featured === true;
 
+        // Extract bodyBlocks (pass through without transformation)
+        const bodyBlocks = Array.isArray(input.bodyBlocks) ? (input.bodyBlocks as ContentBlock[]) : [];
+
         const previewData: PreviewData = {
             headline,
             subheadline,
             section,
             contentType,
             body: bodyContent,
+            bodyBlocks,
             tags,
             sources,
             featured,

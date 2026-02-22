@@ -18,7 +18,7 @@ export function SourcesList({ sources }: SourcesListProps) {
         <aside style={{ marginTop: '1.5rem' }}>
             {/* Simple label */}
             <h3 style={{
-                fontFamily: 'var(--font-sans)',
+                fontFamily: 'var(--font-sans-full)',
                 fontSize: '0.6875rem',
                 fontWeight: 700,
                 textTransform: 'uppercase',
@@ -41,7 +41,7 @@ export function SourcesList({ sources }: SourcesListProps) {
                     <li
                         key={index}
                         style={{
-                            fontFamily: 'var(--font-serif)',
+                            fontFamily: 'var(--font-serif-full)',
                             fontSize: '0.875rem',
                             lineHeight: 1.5,
                             color: '#2B2B2B',

@@ -16,7 +16,7 @@ import {
 } from '../types';
 import { BlockEditor } from './BlockEditor';
 import { ArticleBody } from '@/components/article/ArticleBody';
-import { parseBodyToBlocks, serializeBlocksToMarkdown } from '@/lib/content/block-parser';
+import { parseBodyToBlocks } from '@/lib/content/block-parser';
 import { ContentBlock } from '@/lib/content/media-types';
 import styles from './ArticleEditor.module.css';
 
@@ -54,11 +54,6 @@ export function ArticleEditor({
     isMobile = false,
 }: ArticleEditorProps) {
     /**
-     * Editor mode: 'blocks' for visual block editor, 'markdown' for raw textarea
-     */
-    const [editorMode, setEditorMode] = useState<'blocks' | 'markdown'>('blocks');
-
-    /**
      * Ref to stabilize callbacks
      */
     const formDataRef = useRef(formData);
@@ -67,7 +62,9 @@ export function ArticleEditor({
     }, [formData]);
 
     /**
-     * MIGRATION: Auto-convert legacy body to blocks if blocks are empty
+     * LEGACY MIGRATION: Auto-convert legacy body to blocks if blocks are empty.
+     * Only runs once on mount for old articles that have body text but no bodyBlocks.
+     * This is the ONLY place where parseBodyToBlocks is allowed.
      */
     useEffect(() => {
         const hasBody = formData.body && formData.body.trim().length > 0;
@@ -76,12 +73,6 @@ export function ArticleEditor({
         if (hasBody && !hasBlocks) {
             const { blocks } = parseBodyToBlocks(formData.body);
             if (blocks.length > 0) {
-                // Determine if we should trigger an update
-                // We use setTimeout to avoid update during render if that's a risk, 
-                // but usually calling parent handler is fine.
-                // However, to be safe and avoid infinite loops if parent re-renders immediately:
-                // We only do this if it truly differs.
-
                 onFormChange({
                     ...formData,
                     bodyBlocks: blocks
@@ -103,34 +94,15 @@ export function ArticleEditor({
     );
 
     /**
-     * Handle blocks change from BlockEditor
-     * Syncs blocks -> Body (markdown)
+     * Handle blocks change from BlockEditor.
+     * ZERO TRANSFORMATION: Blocks are the single source of truth.
+     * No serialization to markdown. Raw blocks are stored directly.
      */
     const handleBlocksChange = useCallback(
         (newBlocks: ContentBlock[]) => {
-            const newBody = serializeBlocksToMarkdown(newBlocks);
             onFormChange({
                 ...formDataRef.current,
                 bodyBlocks: newBlocks,
-                body: newBody
-            });
-        },
-        [onFormChange]
-    );
-
-    /**
-     * Handle markdown change
-     * Syncs Body (markdown) -> Blocks
-     */
-    const handleMarkdownChange = useCallback(
-        (e: ChangeEvent<HTMLTextAreaElement>) => {
-            const newBody = e.target.value;
-            const { blocks } = parseBodyToBlocks(newBody);
-
-            onFormChange({
-                ...formDataRef.current,
-                body: newBody,
-                bodyBlocks: blocks
             });
         },
         [onFormChange]
@@ -280,25 +252,8 @@ export function ArticleEditor({
 
                 {/* Body Editor */}
                 <div className={styles.fieldWrapper}>
-                    {/* Editor Toolbar (Modes + Thumbnail) */}
+                    {/* Editor Toolbar (Thumbnail only — Visual Editor is the only mode) */}
                     <div className={styles.editorToolbar}>
-                        <div className={styles.editorModeToggle}>
-                            <button
-                                type="button"
-                                className={`${styles.modeButton} ${editorMode === 'blocks' ? styles.modeActive : ''}`}
-                                onClick={() => setEditorMode('blocks')}
-                            >
-                                Visual Editor
-                            </button>
-                            <button
-                                type="button"
-                                className={`${styles.modeButton} ${editorMode === 'markdown' ? styles.modeActive : ''}`}
-                                onClick={() => setEditorMode('markdown')}
-                            >
-                                Markdown
-                            </button>
-                        </div>
-
                         {/* Thumbnail Controls */}
                         <div className={styles.thumbnailControls}>
                             <input
@@ -350,31 +305,13 @@ export function ArticleEditor({
                         </div>
                     </div>
 
-                    {/* Block-based Editor */}
-                    {editorMode === 'blocks' && (
-                        <BlockEditor
-                            blocks={formData.bodyBlocks || []}
-                            onChange={handleBlocksChange}
-                            error={fieldErrors.body}
-                            placeholder="Start writing your article..."
-                        />
-                    )}
-
-                    {/* Markdown Textarea (fallback) */}
-                    {editorMode === 'markdown' && (
-                        <>
-                            <textarea
-                                name="body"
-                                className={`${styles.bodyEditor} ${fieldErrors.body ? styles.inputError : ''}`}
-                                placeholder="Write in markdown format..."
-                                value={formData.body}
-                                onChange={handleMarkdownChange}
-                            />
-                            {fieldErrors.body && (
-                                <span className={styles.fieldError}>{fieldErrors.body}</span>
-                            )}
-                        </>
-                    )}
+                    {/* Block-based Visual Editor — Single Source of Truth */}
+                    <BlockEditor
+                        blocks={formData.bodyBlocks || []}
+                        onChange={handleBlocksChange}
+                        error={fieldErrors.body}
+                        placeholder="Start writing your article..."
+                    />
                 </div>
             </div>
 
@@ -413,8 +350,7 @@ export function ArticleEditor({
                                 <div className={styles.previewBody}>
                                     <ArticleBody
                                         content={previewData.body}
-                                    // blocks={formData.bodyBlocks} // PreviewData needs blocks too!
-                                    // For now fallback to content since PreviewData uses body
+                                        blocks={formData.bodyBlocks}
                                     />
                                 </div>
                                 {previewData.tags.length > 0 && (

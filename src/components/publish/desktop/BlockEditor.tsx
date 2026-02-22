@@ -4,16 +4,20 @@
  * 
  * DESIGN SPEC: .agent/specifications/MEDIA_SYSTEM_DESIGN.md
  * 
+ * ARCHITECTURE:
+ * - Blocks are the SINGLE SOURCE OF TRUTH
+ * - Zero content transformation between editor, storage, and rendering
+ * - Enter = new block, Shift+Enter = line break inside block
+ * 
  * Features:
- * - Visual block-based editing
+ * - Visual block-based editing (paragraph, subheading, quote)
  * - Insert menu for adding media blocks
  * - Media counter showing limits
- * - Bidirectional sync with markdown body
  */
 
 'use client';
 
-import { useState, useCallback, useRef, useMemo } from 'react';
+import { useState, useCallback, useRef, useMemo, useLayoutEffect } from 'react';
 import Image from 'next/image';
 import {
     ContentBlock,
@@ -73,6 +77,43 @@ export function BlockEditor({
 
     // Refs for managing focus
     const blockRefs = useRef<Map<string, HTMLTextAreaElement | HTMLDivElement>>(new Map());
+
+    // Auto-resize textareas based on content
+    const resizeAllTextareas = useCallback(() => {
+        const textareas: HTMLTextAreaElement[] = [];
+        blockRefs.current.forEach((el) => {
+            if (el instanceof HTMLTextAreaElement) textareas.push(el);
+        });
+
+        if (textareas.length === 0) return;
+
+        // Save scroll position
+        const scrollContainer = textareas[0].closest('[class*="writingCanvas"]') || document.documentElement;
+        const scrollTop = scrollContainer.scrollTop;
+        const windowY = window.scrollY;
+
+        textareas.forEach((el) => {
+            el.style.height = 'auto';
+            el.style.height = `${el.scrollHeight}px`;
+        });
+
+        // Restore scroll position to prevent jumping
+        scrollContainer.scrollTop = scrollTop;
+        window.scrollTo(window.scrollX, windowY);
+    }, []);
+
+    useLayoutEffect(() => {
+        resizeAllTextareas();
+
+        window.addEventListener('resize', resizeAllTextareas);
+
+        const timeoutId = setTimeout(resizeAllTextareas, 100);
+
+        return () => {
+            window.removeEventListener('resize', resizeAllTextareas);
+            clearTimeout(timeoutId);
+        };
+    }, [blocks, resizeAllTextareas]);
 
     // Calculate media summary
     const mediaSummary = useMemo(() => calculateMediaSummary(blocks), [blocks]);
@@ -441,11 +482,38 @@ export function BlockEditor({
 
                 <textarea
                     ref={(el) => {
-                        if (el) blockRefs.current.set(block.id, el);
+                        if (el) {
+                            blockRefs.current.set(block.id, el);
+                            // Initial resize when ref attaches without scroll jump
+                            const scrollContainer = el.closest('[class*="writingCanvas"]') || document.documentElement;
+                            const scrollTop = scrollContainer.scrollTop;
+                            const windowY = window.scrollY;
+
+                            el.style.height = 'auto';
+                            el.style.height = `${el.scrollHeight}px`;
+
+                            scrollContainer.scrollTop = scrollTop;
+                            window.scrollTo(window.scrollX, windowY);
+                        } else {
+                            blockRefs.current.delete(block.id);
+                        }
                     }}
                     className={`${blockClass} ${isFocused ? styles.focused : ''}`}
                     value={content}
-                    onChange={(e) => updateBlockContent(block.id, e.target.value)}
+                    onChange={(e) => {
+                        updateBlockContent(block.id, e.target.value);
+                        // Instant visual resize for smooth typing without scroll jumping
+                        const target = e.target as HTMLTextAreaElement;
+                        const scrollContainer = target.closest('[class*="writingCanvas"]') || document.documentElement;
+                        const scrollTop = scrollContainer.scrollTop;
+                        const windowY = window.scrollY;
+
+                        target.style.height = 'auto';
+                        target.style.height = `${target.scrollHeight}px`;
+
+                        scrollContainer.scrollTop = scrollTop;
+                        window.scrollTo(window.scrollX, windowY);
+                    }}
                     onFocus={() => setFocusedBlockId(block.id)}
                     onBlur={() => setFocusedBlockId(null)}
                     onKeyDown={(e) => handleBlockKeyDown(e, block, index)}

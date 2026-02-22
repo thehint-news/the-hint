@@ -1,14 +1,14 @@
 /**
  * ArticleBody Component
  * 
- * Renders the main article content from Markdown.
- * Optimized for long-form reading with clean typography.
+ * Renders article content from structured blocks (canonical) or legacy Markdown.
  * 
- * All images display at their full original size and aspect ratio.
- * NOTE: Thumbnail is separate from body images - they don't interact.
+ * BLOCK RENDERING RULES:
+ * - When bodyBlocks exist, render directly — NO markdown parsing
+ * - white-space: pre-wrap preserves all spacing and line breaks
+ * - Legacy markdown fallback only for old articles without bodyBlocks
  */
-
-import { marked } from 'marked';
+import { marked } from 'marked'; // Only used for legacy articles without bodyBlocks
 import { parseBodyToBlocks } from '@/lib/content/block-parser';
 import { ImageBlockRenderer } from './ImageBlock';
 import { VideoBlockRenderer } from './VideoBlock';
@@ -78,7 +78,7 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                                     lineHeight: 1.3,
                                     marginTop: '2.5rem',
                                     marginBottom: '1rem',
-                                    fontFamily: 'var(--font-serif)',
+                                    fontFamily: 'var(--font-serif-full)',
                                     whiteSpace: 'pre-wrap',
                                 }}
                             >
@@ -106,9 +106,9 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                                     fontSize: '1.25rem',
                                     lineHeight: 1.6,
                                     color: '#2B2B2B',
-                                    fontFamily: 'var(--font-serif)',
+                                    fontFamily: 'var(--font-serif-full)',
                                     margin: 0,
-                                    whiteSpace: 'pre-line',
+                                    whiteSpace: 'pre-wrap',
                                 }}>
                                     &ldquo;{block.content}&rdquo;
                                 </p>
@@ -127,18 +127,41 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                         );
                     }
 
-                    // Paragraph (Default) - Styled for optimal reading
+                    // Paragraph (Default)
+                    // ZERO TRANSFORMATION: Render raw content with pre-wrap.
+                    // If bodyBlocks exist (canonical), do NOT parse markdown.
+                    // Only use markdown for legacy articles where blocks were reconstructed.
+                    if (providedBlocks && providedBlocks.length > 0) {
+                        // CANONICAL: Direct rendering, no markdown parsing
+                        return (
+                            <p
+                                key={block.id}
+                                style={{
+                                    fontFamily: 'var(--font-serif-full)',
+                                    fontSize: '1.125rem',
+                                    lineHeight: 1.75,
+                                    color: '#111111',
+                                    marginBottom: '1.5rem',
+                                    whiteSpace: 'pre-wrap',
+                                }}
+                            >
+                                {block.content}
+                            </p>
+                        );
+                    }
+
+                    // LEGACY FALLBACK: Parse markdown only for old articles without bodyBlocks
                     const htmlContent = marked.parse(block.content, {
                         async: false,
                         gfm: true,
-                        breaks: true, // Convert newlines to <br> for WYSIWYG behavior
+                        breaks: true,
                     }) as string;
 
                     return (
                         <div
                             key={block.id}
                             style={{
-                                fontFamily: 'var(--font-serif)',
+                                fontFamily: 'var(--font-serif-full)',
                                 fontSize: '1.125rem',
                                 lineHeight: 1.75,
                                 color: '#111111',

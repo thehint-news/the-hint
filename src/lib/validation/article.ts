@@ -86,7 +86,7 @@ export function normalizeTags(input: unknown): string[] {
  * Generate a URL-safe slug from a headline.
  * - Lowercase
  * - Hyphen-separated
- * - Remove punctuation
+ * - Remove punctuation (preserves Unicode letters/numbers like Kannada, Hindi, etc.)
  * - Deterministic
  */
 export function generateSlug(headline: string): string {
@@ -95,8 +95,8 @@ export function generateSlug(headline: string): string {
         .trim()
         // Replace spaces and underscores with hyphens
         .replace(/[\s_]+/g, '-')
-        // Remove all non-alphanumeric characters except hyphens
-        .replace(/[^a-z0-9-]/g, '')
+        // Remove all characters except Unicode letters, Unicode numbers, and hyphens
+        .replace(/[^\p{L}\p{N}-]/gu, '')
         // Remove consecutive hyphens
         .replace(/-+/g, '-')
         // Remove leading/trailing hyphens
@@ -105,13 +105,14 @@ export function generateSlug(headline: string): string {
 
 /**
  * Check if string is only punctuation (no alphanumeric)
+ * Supports Unicode letters and numbers (Kannada, Hindi, etc.)
  */
 export function isOnlyPunctuation(value: string): boolean {
     // Remove all whitespace and check if remaining is only punctuation
     const stripped = value.replace(/\s/g, '');
     if (stripped.length === 0) return true;
-    // Check if there's at least one alphanumeric character
-    return !/[a-zA-Z0-9]/.test(stripped);
+    // Check if there's at least one letter or number (including Unicode scripts)
+    return !/[\p{L}\p{N}]/u.test(stripped);
 }
 
 /**
@@ -267,9 +268,11 @@ export function validateArticleInput(input: PublishArticleInput): ValidationResu
     }
 
     // BODY validation
-    if (!body) {
+    // bodyBlocks is the canonical content source; body is legacy fallback
+    const hasBodyBlocks = Array.isArray(input.bodyBlocks) && (input.bodyBlocks as ContentBlock[]).length > 0;
+    if (!body && !hasBodyBlocks) {
         errors.push({ field: 'body', message: 'Article body is required' });
-    } else if (!hasValidParagraph(body)) {
+    } else if (!hasBodyBlocks && body && !hasValidParagraph(body)) {
         errors.push({
             field: 'body',
             message: 'Article body must contain at least one paragraph of content'

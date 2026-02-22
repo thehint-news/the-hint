@@ -5,7 +5,7 @@
  * Auto-dismissing notification for success/error messages
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { ToastMessage } from '../types';
 import styles from './Toast.module.css';
 
@@ -19,12 +19,17 @@ interface ToastProps {
 }
 
 export function Toast({ toast, onDismiss, timeout = 5000 }: ToastProps) {
+    const onDismissRef = useRef(onDismiss);
+    useEffect(() => {
+        onDismissRef.current = onDismiss;
+    }, [onDismiss]);
+
     useEffect(() => {
         if (toast) {
-            const timer = setTimeout(onDismiss, timeout);
+            const timer = setTimeout(() => onDismissRef.current(), timeout);
             return () => clearTimeout(timer);
         }
-    }, [toast, onDismiss, timeout]);
+    }, [toast, timeout]);
 
     if (!toast) return null;
 

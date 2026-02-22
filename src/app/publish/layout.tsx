@@ -13,7 +13,7 @@
  */
 
 import type { Metadata } from 'next';
-import { Playfair_Display, Inter } from 'next/font/google';
+import { Playfair_Display, Inter, Noto_Sans_Kannada, Noto_Serif_Kannada } from 'next/font/google';
 import '@/app/globals.css';
 
 // Serif font for headlines
@@ -28,6 +28,22 @@ const playfairDisplay = Playfair_Display({
 const inter = Inter({
     variable: '--font-sans',
     subsets: ['latin'],
+    weight: ['400', '500', '600', '700'],
+    display: 'swap',
+});
+
+// Kannada sans-serif for body text
+const notoSansKannada = Noto_Sans_Kannada({
+    variable: '--font-kannada-sans',
+    subsets: ['kannada'],
+    weight: ['400', '500', '600', '700'],
+    display: 'swap',
+});
+
+// Kannada serif for headlines
+const notoSerifKannada = Noto_Serif_Kannada({
+    variable: '--font-kannada-serif',
+    subsets: ['kannada'],
     weight: ['400', '500', '600', '700'],
     display: 'swap',
 });
@@ -59,7 +75,7 @@ export default function PublishLayout({
     // 3. Log access attempts
 
     return (
-        <html lang="en">
+        <html lang="en" className={`${notoSansKannada.variable} ${notoSerifKannada.variable}`}>
             <body className={`${playfairDisplay.variable} ${inter.variable}`}>
                 {children}
             </body>

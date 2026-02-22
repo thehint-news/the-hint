@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Inter, Noto_Sans_Kannada, Noto_Serif_Kannada } from "next/font/google";
 import "./globals.css";
 import { getAllArticles } from "@/lib/content/reader";
 
@@ -15,6 +15,22 @@ const playfairDisplay = Playfair_Display({
 const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+// Kannada sans-serif for body text — professional newspaper-grade
+const notoSansKannada = Noto_Sans_Kannada({
+  variable: "--font-kannada-sans",
+  subsets: ["kannada"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+// Kannada serif for headlines — authoritative, editorial
+const notoSerifKannada = Noto_Serif_Kannada({
+  variable: "--font-kannada-serif",
+  subsets: ["kannada"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
 });
@@ -44,7 +60,7 @@ export const metadata: Metadata = {
     description: "Independent journalism delivered as it happens. Authoritative news coverage with integrity and depth.",
     url: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://thehint.news'),
     siteName: "The Hint",
-    locale: 'en_US',
+    locale: 'en_IN',
     type: 'website',
   },
   twitter: {
@@ -87,7 +103,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${notoSansKannada.variable} ${notoSerifKannada.variable}`}>
       <body className={`${playfairDisplay.variable} ${inter.variable}`}>
         <div className="min-h-screen flex flex-col">
           <Analytics />

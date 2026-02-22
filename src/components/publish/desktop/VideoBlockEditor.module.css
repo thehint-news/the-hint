@@ -338,25 +338,25 @@
 }
 
 .thumbnailDropzone {
-    border: 2px dashed #d1d5db;
-    border-radius: 8px;
-    padding: 1.25rem;
+    border: 1px dashed #cccccc;
+    border-radius: 4px;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     cursor: pointer;
-    background: #fdfdfd;
+    background: #ffffff;
     transition: all 0.2s ease;
     text-align: center;
-    color: #6b7280;
+    color: #666666;
 }
 
 .thumbnailDropzone:hover {
-    border-color: #9ca3af;
-    background: #f9fafb;
-    color: #111;
+    border-color: #000000;
+    color: #000000;
+    background: #fdfdfd;
 }
 
 .dropicon {

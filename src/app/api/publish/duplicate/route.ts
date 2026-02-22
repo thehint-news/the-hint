@@ -109,9 +109,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                     section: existingDraft.section,
                     contentType: existingDraft.contentType,
                     body: existingDraft.body,
+                    bodyBlocks: existingDraft.bodyBlocks,
                     tags: existingDraft.tags,
                     sources: existingDraft.sources,
                     placement: existingDraft.placement,
+                    thumbnail: existingDraft.thumbnail,
                 },
                 newDraftId
             );
@@ -199,9 +201,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                     section: section as Section,
                     contentType: validContentType,
                     body: article.body,
+                    bodyBlocks: article.bodyBlocks,
                     tags: article.tags,
                     sources: article.sources,
                     placement: validPlacement,
+                    thumbnail: article.image,
                 },
                 newDraftId
             );

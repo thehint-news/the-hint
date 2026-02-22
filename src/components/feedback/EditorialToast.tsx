@@ -14,7 +14,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import styles from './EditorialToast.module.css';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
@@ -72,14 +72,20 @@ function getAriaRole(type: ToastType): 'alert' | 'status' {
 export function EditorialToast({ toast, onDismiss }: EditorialToastProps) {
     const [isExiting, setIsExiting] = useState(false);
 
+    // Use a ref for onDismiss so it doesn't cause timer resets on every parent render
+    const onDismissRef = useRef(onDismiss);
+    useEffect(() => {
+        onDismissRef.current = onDismiss;
+    }, [onDismiss]);
+
     // Handle dismiss with exit animation
     const handleDismiss = useCallback(() => {
         setIsExiting(true);
         setTimeout(() => {
             setIsExiting(false);
-            onDismiss();
-        }, 200); // Match CSS animation duration
-    }, [onDismiss]);
+            onDismissRef.current();
+        }, 200);
+    }, []);
 
     // Handle auto-dismiss
     useEffect(() => {

@@ -144,7 +144,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <article className="px-6 pt-12 pb-4 max-w-[1200px] mx-auto">
+            <article className="article-kannada-scope px-6 pt-12 pb-4 max-w-[1200px] mx-auto">
                 {/* Article Header (Section, Title, Subtitle, Meta, HR) */}
                 <div className="max-w-4xl mx-auto">
                     <ArticleHeader
@@ -174,7 +174,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                             <div style={{ marginBottom: '1.5rem' }}>
                                 {/* Simple label */}
                                 <span style={{
-                                    fontFamily: 'var(--font-sans)',
+                                    fontFamily: 'var(--font-sans-full)',
                                     fontSize: '0.6875rem',
                                     fontWeight: 700,
                                     textTransform: 'uppercase',
