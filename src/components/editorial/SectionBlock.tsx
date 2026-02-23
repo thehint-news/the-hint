@@ -282,7 +282,7 @@ function OpinionLayout({ articles, sectionSlug }: { articles: SectionArticle[]; 
                     <Link key={article.id} href={articleUrl} className="article-link group block h-full">
                         <article className="flex flex-col h-full">
                             {/* Image Container */}
-                            <div className="thumbnail-container mb-2.5 aspect-[16/9] w-full">
+                            <div className="thumbnail-container mb-2.5 aspect-video w-full">
                                 {article.image ? (
                                     <Image
                                         src={article.image}
@@ -303,7 +303,7 @@ function OpinionLayout({ articles, sectionSlug }: { articles: SectionArticle[]; 
                             </div>
 
                             {/* Content */}
-                            <div className="flex flex-col min-w-0 flex-grow">
+                            <div className="flex flex-col min-w-0 grow">
                                 {/* Author (Opinion specific) */}
                                 {authorName && (
                                     <span className="meta-text text-ink font-medium mb-1 block truncate">
@@ -316,9 +316,14 @@ function OpinionLayout({ articles, sectionSlug }: { articles: SectionArticle[]; 
                                     {article.title}
                                 </h3>
 
-                                {/* Excerpt - Desktop only */}
+                                {/* Excerpt - Desktop/Tablet only, 2 lines max */}
                                 {excerpt && (
-                                    <p className="caption-text hidden md:block mb-2 line-clamp-3">
+                                    <p className="caption-text hidden md:block mb-2" style={{
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: 2,
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden"
+                                    }}>
                                         {excerpt}
                                     </p>
                                 )}

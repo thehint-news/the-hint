@@ -3,7 +3,7 @@ import { SignJWT } from 'jose';
 
 const SECRET = new TextEncoder().encode('7b4f34661e91aeadcfa0584e682bcdd190fc99fd');
 const ALG = 'HS256';
-const EMAIL = 'chiranjeevi8050@gmail.com';
+const EMAIL = 'thehint36@gmail.com';
 
 async function createMagicToken(email: string) {
     return new SignJWT({ email, jti: 'test-uuid' })
@@ -14,5 +14,5 @@ async function createMagicToken(email: string) {
 }
 
 createMagicToken(EMAIL).then(token => {
-    console.log(`http://localhost:3001/api/auth/verify?token=${token}`);
+    console.log(`http://localhost:3002/api/auth/verify?token=${token}`);
 });

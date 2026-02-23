@@ -2,9 +2,15 @@ import { gitService, createGitStaging } from '../git/service';
 import { SubscriptionEvent, QueueStatus } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { Mutex } from 'async-mutex';
+import { logger } from '../feedback/console-guard';
 
 const QUEUE_PATH = 'src/data/subscription-events.json';
 const LOCK_PATH = 'src/data/queue.lock';
+
+let eventsCache: SubscriptionEvent[] | null = null;
+let cacheLoaded = false;
+let lastCacheLoad: number = 0;
+const CACHE_TTL = 30 * 1000; // 30 seconds cache TTL
 
 class SubscriptionQueue {
     private mutex = new Mutex();
@@ -12,20 +18,44 @@ class SubscriptionQueue {
     private async getEvents(): Promise<SubscriptionEvent[]> {
         try {
             const data = await gitService.readFile(QUEUE_PATH);
-            if (!data) return [];
-            return JSON.parse(data) as SubscriptionEvent[];
+            if (!data) {
+                eventsCache = [];
+                cacheLoaded = true;
+                lastCacheLoad = Date.now();
+                return [];
+            }
+            const parsed = JSON.parse(data) as SubscriptionEvent[];
+            eventsCache = parsed;
+            cacheLoaded = true;
+            lastCacheLoad = Date.now();
+            return parsed;
         } catch (error) {
-            console.error('Failed to read subscription queue:', error);
+            logger.error(`[QUEUE] Git API read failed: ${error}`);
+            if (eventsCache) {
+                return eventsCache;
+            }
             return [];
         }
     }
 
-    private async saveEvents(events: SubscriptionEvent[], message: string): Promise<void> {
+    private async getCachedEvents(): Promise<SubscriptionEvent[]> {
+        const now = Date.now();
+        if (!cacheLoaded || !eventsCache || (now - lastCacheLoad) > CACHE_TTL) {
+            return await this.getEvents();
+        }
+        return eventsCache;
+    }
+
+    private async saveEvents(events: SubscriptionEvent[], message: string): Promise<boolean> {
         try {
             await gitService.saveFile(QUEUE_PATH, JSON.stringify(events, null, 2), message);
+            eventsCache = events;
+            lastCacheLoad = Date.now();
+            cacheLoaded = true;
+            return true;
         } catch (error) {
-            console.error('Failed to save subscription queue:', error);
-            throw error; // Re-throw to inform caller of failure
+            logger.error(`[QUEUE] Git API write failed: ${error}`);
+            throw error;
         }
     }
 
@@ -48,7 +78,13 @@ class SubscriptionQueue {
 
             const events = await this.getEvents();
             events.push(event);
-            await this.saveEvents(events, `Enqueue: subscription event ${event.id}`);
+
+            try {
+                await this.saveEvents(events, `Enqueue: subscription event ${event.id}`);
+            } catch (error) {
+                logger.error(`[QUEUE] Failed to enqueue event: ${error}`);
+                // Still return the event - it will be in memory
+            }
 
             return event;
         });
@@ -58,7 +94,7 @@ class SubscriptionQueue {
      * Get the next pending event respecting priority.
      */
     public async getNextPending(): Promise<SubscriptionEvent | null> {
-        const events = await this.getEvents();
+        const events = await this.getCachedEvents();
 
         const pending = events.filter(e => e.status === 'pending');
 
@@ -92,7 +128,7 @@ class SubscriptionQueue {
     }
 
     public async getStatus(): Promise<QueueStatus> {
-        const events = await this.getEvents();
+        const events = await this.getCachedEvents();
         return {
             length: events.length,
             pending: events.filter(e => e.status === 'pending').length,
@@ -103,7 +139,7 @@ class SubscriptionQueue {
     }
 
     public async getEvent(id: string): Promise<SubscriptionEvent | undefined> {
-        return (await this.getEvents()).find(e => e.id === id);
+        return (await this.getCachedEvents()).find(e => e.id === id);
     }
 
     public async pauseQueue(): Promise<void> {

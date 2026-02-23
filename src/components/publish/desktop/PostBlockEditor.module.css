@@ -1,0 +1,358 @@
+/* =============================================================================
+ * Post Block Editor Modal Styles
+ * ============================================================================= */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal {
+    background: #fff;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #f4f4f5;
+}
+
+.title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #18181b;
+    margin: 0;
+}
+
+.closeButton {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: #f4f4f5;
+    border-radius: 8px;
+    color: #71717a;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.15s ease;
+}
+
+.closeButton:hover {
+    background: #e4e4e7;
+    color: #18181b;
+}
+
+/* Limit warning */
+.limitWarning {
+    margin: 12px 24px 0;
+    padding: 10px 14px;
+    background: #fef2f2;
+    color: #991b1b;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+/* Input section */
+.inputSection {
+    padding: 20px 24px;
+}
+
+.label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #52525b;
+    margin-bottom: 8px;
+}
+
+.textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #e4e4e7;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+    line-height: 1.5;
+    color: #18181b;
+    resize: vertical;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    box-sizing: border-box;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: #a1a1aa;
+    box-shadow: 0 0 0 3px rgba(161, 161, 170, 0.15);
+}
+
+.textarea::placeholder {
+    color: #a1a1aa;
+}
+
+.textarea:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Platform detection */
+.platformDetected {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 0.8125rem;
+    color: #52525b;
+}
+
+.platformDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+}
+
+/* Fetch button */
+.fetchButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 14px;
+    padding: 10px 16px;
+    background: #18181b;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.fetchButton:hover:not(:disabled) {
+    background: #27272a;
+}
+
+.fetchButton:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Spinner */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Error */
+.error {
+    margin: 0 24px;
+    padding: 10px 14px;
+    background: #fef2f2;
+    color: #991b1b;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+}
+
+/* Preview section */
+.previewSection {
+    padding: 0 24px 16px;
+}
+
+.previewLabel {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #a1a1aa;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+}
+
+.previewCard {
+    border: 1px solid #e4e4e7;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fafafa;
+}
+
+.previewHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px 10px;
+}
+
+.previewAvatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.previewAvatarPlaceholder {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e4e4e7;
+    color: #71717a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.previewAuthorInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+}
+
+.previewAuthor {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #18181b;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.previewUsername {
+    font-size: 0.75rem;
+    color: #71717a;
+}
+
+.previewPlatform {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: #71717a;
+    background: #f4f4f5;
+    padding: 3px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.previewText {
+    padding: 0 16px 12px;
+    font-size: 0.8125rem;
+    color: #3f3f46;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.previewThumbnail {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #e4e4e7;
+}
+
+.previewThumbnailImg {
+    object-fit: cover;
+}
+
+/* Actions */
+.actions {
+    display: flex;
+    gap: 10px;
+    padding: 16px 24px;
+    border-top: 1px solid #f4f4f5;
+}
+
+.cancelButton {
+    flex: 1;
+    padding: 10px 16px;
+    background: #f4f4f5;
+    color: #52525b;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.cancelButton:hover {
+    background: #e4e4e7;
+    color: #18181b;
+}
+
+.saveButton {
+    flex: 1;
+    padding: 10px 16px;
+    background: #18181b;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.saveButton:hover:not(:disabled) {
+    background: #27272a;
+}
+
+.saveButton:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Help text */
+.helpText {
+    padding: 0 24px 16px;
+    font-size: 0.6875rem;
+    color: #a1a1aa;
+    text-align: center;
+}

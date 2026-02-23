@@ -11,6 +11,7 @@
 
 import { Octokit } from 'octokit';
 import path from 'path';
+import { logger } from '../feedback';
 
 /** Git error types for internal classification */
 export enum GitErrorType {
@@ -60,7 +61,7 @@ const REPO_OWNER = process.env.GIT_REPO_OWNER || '';
 const REPO_NAME = process.env.GIT_REPO_NAME || '';
 
 if (!REPO_OWNER || !REPO_NAME) {
-    console.warn('[GIT-SERVICE] Warning: GIT_REPO_OWNER or GIT_REPO_NAME missing. Git operations will fail.');
+    logger.warn('[GIT-SERVICE] Warning: GIT_REPO_OWNER or GIT_REPO_NAME missing. Git operations will fail.');
 }
 const BRANCH = 'main';
 
@@ -83,7 +84,12 @@ class GitService {
                 auth: token,
                 request: {
                     fetch: (url: string, opts: RequestInit) => {
-                        return fetch(url, { ...opts, cache: 'no-store' });
+                        const modifiedOpts = { ...opts };
+                        delete modifiedOpts.cache; // Remove any default caching directives
+                        return fetch(url, {
+                            ...modifiedOpts,
+                            next: { revalidate: 60 }
+                        });
                     }
                 }
             });
@@ -172,7 +178,7 @@ class GitService {
         } catch (error: unknown) {
             const err = error as { status?: number; message?: string };
             if (err.status === 404) return null;
-            console.error(`Git readFile error for ${filePath}:`, err.message);
+            logger.error(`Git readFile error for ${filePath}:`, err.message);
             return null;
         }
     }
@@ -251,7 +257,7 @@ class GitService {
                         sha: sha || file.sha
                     };
                 } catch (e) {
-                    console.warn(`[GIT-SERVICE] Failed to fetch content for ${file.name}`, e);
+                    logger.warn(`[GIT-SERVICE] Failed to fetch content for ${file.name}`, e);
                     return null;
                 }
             }));

@@ -39,9 +39,21 @@ const REQUIRED_PRODUCTION = [
     'APP_BASE_URL',
 ];
 
-export function validateEnv() {
+/** Subscription-specific variables (required for subscribe/unsubscribe to work) */
+const REQUIRED_SUBSCRIPTION = [
+    'GIT_TOKEN',
+    'GIT_REPO_OWNER',
+    'GIT_REPO_NAME',
+    'RESEND_API_KEY',
+    'EMAIL_FROM',
+    'APP_BASE_URL',
+];
+
+import { logger } from './feedback';
+
+export function validateEnv(): { valid: boolean; missing: string[] } {
     // Only validate on server
-    if (typeof window !== 'undefined') return;
+    if (typeof window !== 'undefined') return { valid: true, missing: [] };
 
     const isProduction = process.env.NODE_ENV === 'production';
     const allRequired = isProduction
@@ -59,12 +71,19 @@ export function validateEnv() {
     }
 
     if (missing.length > 0 && !isProduction) {
-        console.warn(
+        logger.warn(
             `⚠️  Missing environment variables (non-fatal in dev):\n` +
             missing.map(key => `   - ${key}`).join('\n')
         );
-        return;
     }
 
-    console.log('✅ Environment configuration validated.');
+    logger.debug('✅ Environment configuration validated.');
+    return { valid: missing.length === 0, missing };
+}
+
+export function validateSubscriptionEnv(): { valid: boolean; missing: string[] } {
+    if (typeof window !== 'undefined') return { valid: true, missing: [] };
+
+    const missing = REQUIRED_SUBSCRIPTION.filter(key => !process.env[key]);
+    return { valid: missing.length === 0, missing };
 }

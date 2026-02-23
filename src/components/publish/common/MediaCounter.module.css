@@ -48,6 +48,12 @@
     font-size: 0.625rem;
 }
 
+.counterLabel {
+    font-size: 0.6875rem;
+    color: #999;
+    font-weight: 400;
+}
+
 /* At hard limit (images) */
 .atLimit {
     background: #fff3e0;

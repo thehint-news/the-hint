@@ -222,7 +222,7 @@ export default function PublishPage() {
 
         setIsLoadingArticles(true);
         try {
-            const response = await fetch('/api/publish/articles');
+            const response = await fetch('/api/publish/articles', { cache: 'no-store' });
             if (response.status === 401) {
                 window.location.href = '/newsroom';
                 return;
@@ -594,41 +594,33 @@ export default function PublishPage() {
                 return;
             }
 
-            const result: ApiResponse = await response.json();
+            const is204 = response.status === 204;
+            let result: { success?: boolean; message?: string; error?: string } = { success: true };
+            if (!is204) {
+                result = await response.json();
+            }
 
-            if (result.success) {
-                // 3. SUCCESS — show toast, then fade row out after CSS animation
+            if (response.ok && result.success) {
                 showToast('success', result.message || 'Article permanently removed.');
-                setTimeout(() => {
-                    setArticles(prev => prev.filter(a => a.id !== articleId));
-                    setDeletingIds(prev => {
-                        const next = new Set(prev);
-                        next.delete(articleId);
-                        return next;
-                    });
-                }, 400);
-                // Invalidate cache so next database load is fresh
-                setArticlesCached(false);
+
+                // 3. Await the refresh of articles
+                await fetchArticles(true);
             } else {
-                // 4. FAILURE — unlock article, show error
-                setDeletingIds(prev => {
-                    const next = new Set(prev);
-                    next.delete(articleId);
-                    return next;
-                });
+                // 4. FAILURE — show error
                 showToast('error', result.message || result.error || "We couldn't complete the deletion. Please try again.");
             }
         } catch (error) {
             logger.error('Delete failed', error);
-            // FAILURE — unlock
+            showToast('error', "Network error. Please check your connection and try again.");
+        } finally {
+            // ALWAYS unlock the article
             setDeletingIds(prev => {
                 const next = new Set(prev);
                 next.delete(articleId);
                 return next;
             });
-            showToast('error', "Network error. Please check your connection and try again.");
         }
-    }, [articles, deletingIds, showToast]);
+    }, [deletingIds, showToast, fetchArticles]);
 
     /**
      * Close preview

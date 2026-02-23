@@ -1,0 +1,407 @@
+/* =============================================================================
+ * PostBlock — Native Platform Clone Styles
+ * 
+ * Replicating the authentic, minimal look of native embeds (like X/Twitter).
+ * Focused on content readability, clear hierarchy, and exact UI components.
+ * ============================================================================= */
+
+.figure {
+    margin: 2rem auto;
+    max-width: 580px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================================================
+ * CARD CONTAINER
+ * ============================================================================= */
+
+.card {
+    position: relative;
+    border: 1px solid rgb(239, 243, 244);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: background-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.card:hover {
+    background: #fafafa;
+}
+
+/* =============================================================================
+ * HEADER (Avatar, Name, Handle, Logo)
+ * ============================================================================= */
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.authorSection {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.avatarWrap {
+    flex-shrink: 0;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatarFallback {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.authorMeta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+}
+
+.authorNameRow {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.authorName {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f1419;
+    line-height: 20px;
+}
+
+.verifiedBadge {
+    display: inline-flex;
+    align-items: center;
+    color: #1d9bf0;
+    margin-top: 2px;
+}
+.verifiedBadge svg {
+    display: block;
+}
+
+.usernameRow {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.username {
+    font-size: 15px;
+    color: #536471;
+    line-height: 20px;
+}
+
+.followBadge {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1d9bf0;
+    line-height: 20px;
+}
+
+.platformIconCorner {
+    flex-shrink: 0;
+    color: #0f1419;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+.platformIconCorner:hover {
+    background-color: rgba(15, 20, 25, 0.1);
+}
+
+/* =============================================================================
+ * TEXT CONTENT
+ * ============================================================================= */
+
+.bodyContent {
+    margin-bottom: 12px;
+}
+
+.textPreview {
+    font-size: 15px;
+    line-height: 20px;
+    color: #0f1419;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.showMore {
+    color: #1d9bf0;
+    cursor: pointer;
+}
+.showMore:hover {
+    text-decoration: underline;
+}
+
+/* =============================================================================
+ * MEDIA
+ * ============================================================================= */
+
+.mediaContainer {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgb(207, 217, 222);
+    margin-bottom: 12px;
+}
+
+.mediaFrame {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Default to square, acts like max-height */
+    max-height: 520px;
+    overflow: hidden;
+    background: #f7f9f9;
+}
+
+.mediaImage {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.watchOnBadge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    backdrop-filter: blur(4px);
+    z-index: 2;
+}
+
+.playButtonWrapper {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2); /* Very faint dark overlay */
+    z-index: 2;
+}
+
+.playButtonBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    background-color: #1d9bf0;
+    border: 4px solid #ffffff;
+    border-radius: 50%;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.playButtonBox svg {
+    margin-left: 4px; /* Optical center */
+}
+
+.mediaFrame:hover .playButtonBox {
+    background-color: #1a8cd8;
+    transform: scale(1.05);
+}
+
+/* =============================================================================
+ * FOOTER META
+ * ============================================================================= */
+
+.footerData {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgb(239, 243, 244);
+}
+
+.timestamp {
+    font-size: 15px;
+    color: #536471;
+    line-height: 20px;
+}
+
+.infoIcon {
+    color: #536471;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+.infoIcon:hover {
+    color: #0f1419;
+}
+
+/* =============================================================================
+ * ACTION BAR
+ * ============================================================================= */
+
+.actionBar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 24px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgb(239, 243, 244);
+    margin-bottom: 12px;
+}
+
+.actionItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #536471;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.actionItem:hover {
+    color: #1d9bf0;
+}
+.actionItem:first-child:hover {
+    color: #f91880; /* Heart hover color */
+}
+.actionItem:nth-child(2):hover {
+    color: #1d9bf0; /* Reply hover color */
+}
+.actionItem:nth-child(3):hover {
+    color: #00ba7c; /* Copy link hover color */
+}
+
+/* =============================================================================
+ * BOTTOM CTA
+ * ============================================================================= */
+
+.ctaWrapper {
+    width: 100%;
+}
+
+.ctaButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid rgb(207, 217, 222);
+    border-radius: 9999px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1d9bf0;
+    background-color: #ffffff;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.ctaButton:hover {
+    background-color: rgba(29, 155, 240, 0.1);
+}
+
+/* =============================================================================
+ * FALLBACK CARD
+ * ============================================================================= */
+
+.fallbackCard {
+    padding: 24px;
+    align-items: center;
+    justify-content: center;
+}
+
+.fallbackBody {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+    width: 100%;
+}
+
+.fallbackIconWrap {
+    flex-shrink: 0;
+    color: #0f1419;
+}
+
+.fallbackMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.fallbackPlatform {
+    font-size: 13px;
+    font-weight: 700;
+    color: #536471;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.fallbackAuthor {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f1419;
+}
+
+.fallbackUrl {
+    font-size: 14px;
+    color: #536471;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* =============================================================================
+ * RESPONSIVE
+ * ============================================================================= */
+
+@media (max-width: 600px) {
+    .figure {
+        max-width: 100%;
+        margin: 1.5rem 0;
+    }
+    
+    .card {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        padding: 16px 12px;
+    }
+
+    .actionBar {
+        gap: 16px;
+    }
+
+    .actionText {
+        display: none; /* Hide text on small screens, show only icons */
+    }
+}

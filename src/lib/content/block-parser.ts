@@ -36,6 +36,8 @@ import {
     QuoteBlock,
     ImageBlock,
     VideoBlock,
+    PostBlock,
+    PostPlatform,
     ImageAspectRatio,
     VideoSourceType,
     SocialVideoProvider,
@@ -69,9 +71,9 @@ export interface BlockParseError {
     content?: string;
 }
 
-/** Parsed fence block (image or video) */
+/** Parsed fence block (image, video, or post) */
 interface ParsedFence {
-    type: 'image' | 'video';
+    type: 'image' | 'video' | 'post';
     properties: Record<string, string>;
     startLine: number;
     endLine: number;
@@ -84,7 +86,7 @@ interface ParsedFence {
 /** Check if content uses block syntax */
 export function isBlockBasedContent(body: string): boolean {
     // Check for fenced media blocks
-    return /^:::(?:image|video)\s*$/m.test(body);
+    return /^:::(?:image|video|post)\s*$/m.test(body);
 }
 
 /** Check if content is legacy (plain markdown) */
@@ -165,7 +167,7 @@ function parseBlockContent(body: string, errors: BlockParseError[]): ContentBloc
         }
 
         // Fenced media block start
-        if (/^:::(?:image|video)\s*$/.test(trimmedLine)) {
+        if (/^:::(?:image|video|post)\s*$/.test(trimmedLine)) {
             const fence = parseFenceBlock(lines, i, errors);
             if (fence) {
                 if (fence.type === 'image') {
@@ -177,6 +179,11 @@ function parseBlockContent(body: string, errors: BlockParseError[]): ContentBloc
                     const videoBlock = createVideoBlockFromFence(fence, order++, errors);
                     if (videoBlock) {
                         blocks.push(videoBlock);
+                    }
+                } else if (fence.type === 'post') {
+                    const postBlock = createPostBlockFromFence(fence, order++, errors);
+                    if (postBlock) {
+                        blocks.push(postBlock);
                     }
                 }
                 i = fence.endLine + 1;
@@ -288,7 +295,7 @@ function parseFenceBlock(
     errors: BlockParseError[]
 ): ParsedFence | null {
     const openLine = lines[startLine].trim();
-    const typeMatch = openLine.match(/^:::(image|video)\s*$/);
+    const typeMatch = openLine.match(/^:::(image|video|post)\s*$/);
 
     if (!typeMatch) {
         errors.push({
@@ -299,7 +306,7 @@ function parseFenceBlock(
         return null;
     }
 
-    const type = typeMatch[1] as 'image' | 'video';
+    const type = typeMatch[1] as 'image' | 'video' | 'post';
     const properties: Record<string, string> = {};
     let endLine = startLine;
 
@@ -578,6 +585,62 @@ function createVideoBlockFromFence(
     };
 }
 
+/**
+ * Create PostBlock from parsed fence properties
+ */
+function createPostBlockFromFence(
+    fence: ParsedFence,
+    order: number,
+    errors: BlockParseError[]
+): PostBlock | null {
+    const { properties, startLine } = fence;
+
+    // Required: originalUrl
+    if (!properties.originalUrl) {
+        errors.push({
+            line: startLine + 1,
+            message: 'Post block missing required "originalUrl" property',
+        });
+        return null;
+    }
+
+    // Required: canonicalUrl
+    if (!properties.canonicalUrl) {
+        errors.push({
+            line: startLine + 1,
+            message: 'Post block missing required "canonicalUrl" property',
+        });
+        return null;
+    }
+
+    // Required: platform
+    if (!properties.platform) {
+        errors.push({
+            line: startLine + 1,
+            message: 'Post block missing required "platform" property',
+        });
+        return null;
+    }
+
+    return {
+        id: generateBlockId('post'),
+        type: 'post',
+        order,
+        originalUrl: properties.originalUrl,
+        canonicalUrl: properties.canonicalUrl,
+        platform: properties.platform as PostPlatform,
+        metadata: {
+            author: properties['metadata.author'] || '',
+            username: properties['metadata.username'] || '',
+            avatar: properties['metadata.avatar'] || undefined,
+            textPreview: properties['metadata.textPreview'] || '',
+            thumbnail: properties['metadata.thumbnail'] || undefined,
+            timestamp: properties['metadata.timestamp'] || undefined,
+            verified: properties['metadata.verified'] === 'true',
+        },
+    };
+}
+
 // =============================================================================
 // SERIALIZATION (Blocks to Markdown)
 // =============================================================================
@@ -637,10 +700,24 @@ export function serializeBlocksToMarkdown(blocks: ContentBlock[]): string {
                 if (block.provider) lines.push(`provider: ${block.provider}`);
                 if (block.credit) lines.push(`credit: ${block.credit}`);
                 if (block.title) lines.push(`title: ${block.title}`);
-                // HTML content needs to be inline for this simple parser property format for now,
-                // or we need a multi-line syntax. For now, assuming single line or robust enough.
                 if (block.trustedSourceHtml) lines.push(`trustedSourceHtml: ${block.trustedSourceHtml}`);
                 lines.push(`:::`);
+                break;
+
+            case 'post':
+                lines.push(':::post');
+                lines.push(`originalUrl: ${block.originalUrl}`);
+                lines.push(`canonicalUrl: ${block.canonicalUrl}`);
+                lines.push(`platform: ${block.platform}`);
+                lines.push(`metadata.author: ${block.metadata.author}`);
+                lines.push(`metadata.username: ${block.metadata.username}`);
+                if (block.metadata.avatar) lines.push(`metadata.avatar: ${block.metadata.avatar}`);
+                lines.push(`metadata.textPreview: ${block.metadata.textPreview}`);
+                if (block.metadata.thumbnail) lines.push(`metadata.thumbnail: ${block.metadata.thumbnail}`);
+                if (block.metadata.timestamp) lines.push(`metadata.timestamp: ${block.metadata.timestamp}`);
+                if (block.metadata.verified) lines.push(`metadata.verified: true`);
+                lines.push(':::');
+                lines.push('');
                 break;
         }
     }
@@ -680,4 +757,5 @@ export type {
     QuoteBlock,
     ImageBlock,
     VideoBlock,
+    PostBlock,
 } from './media-types';

@@ -19,6 +19,7 @@
 
 import { getHomepageData } from "@/lib/content/homepage";
 import { LeadStory, TopStories, SectionBlock } from "@/components/editorial";
+import { logger } from "@/lib/feedback";
 
 
 // Force dynamic rendering — GitHub API calls at build time cause timeouts
@@ -30,9 +31,9 @@ export default async function HomePage() {
   let homepageData;
   try {
     homepageData = await getHomepageData();
-    console.log('[HomePage] Successfully fetched data');
+    logger.info('[HomePage] Successfully fetched data');
   } catch (error) {
-    console.error('[HomePage] Failed to fetch data:', error);
+    logger.error('[HomePage] Failed to fetch data:', error);
     // Return empty state or error UI to prevent 404/500
     homepageData = {
       leadStory: null,

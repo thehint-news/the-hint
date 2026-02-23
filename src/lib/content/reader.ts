@@ -3,6 +3,7 @@
  * Reads and validates Markdown articles from Git via GitService.
  */
 
+import { cache } from 'react';
 import { gitService } from '../git/service';
 import { parseMarkdown } from './parser';
 import { getArticleThumbnail } from './thumbnail';
@@ -137,26 +138,26 @@ async function readSectionArticles(section: Section): Promise<Article[]> {
     // Read directory from Git
     const files = await gitService.listFiles(sectionPath, '.md');
 
-    const articles: Article[] = [];
+    // Parallelize file reads to prevent sequential API bottlenecks
+    const articlesOrNull = await Promise.all(
+        files.map(async (filename) => {
+            const filePath = `${sectionPath}/${filename}`;
+            try {
+                return await readArticleFile(filePath, section);
+            } catch (error) {
+                console.warn(`Skipping invalid article ${filename}: ${(error as Error).message}`);
+                return null;
+            }
+        })
+    );
 
-    for (const filename of files) {
-        const filePath = `${sectionPath}/${filename}`;
-
-        try {
-            const article = await readArticleFile(filePath, section);
-            articles.push(article);
-        } catch (error) {
-            console.warn(`Skipping invalid article ${filename}: ${(error as Error).message}`);
-        }
-    }
-
-    return articles;
+    return articlesOrNull.filter((article): article is Article => article !== null);
 }
 
 /**
  * Get all articles from all sections
  */
-export async function getAllArticles(): Promise<Article[]> {
+export const getAllArticles = cache(async function getAllArticles(): Promise<Article[]> {
     const results = await Promise.all(
         VALID_SECTIONS.map(section => readSectionArticles(section))
     );
@@ -171,12 +172,12 @@ export async function getAllArticles(): Promise<Article[]> {
     });
 
     return allArticles;
-}
+});
 
 /**
  * Get a single article by section and slug
  */
-export async function getArticleBySlug(section: string, slug: string): Promise<Article | null> {
+export const getArticleBySlug = cache(async function getArticleBySlug(section: string, slug: string): Promise<Article | null> {
     if (!isValidSection(section)) {
         throw new ContentValidationError(
             `Invalid section: "${section}". Valid sections are: ${VALID_SECTIONS.join(', ')}`,
@@ -196,12 +197,12 @@ export async function getArticleBySlug(section: string, slug: string): Promise<A
         console.error(`[READER] Failed to read article file at ${filePath} in section ${section}:`, err);
         throw err;
     }
-}
+});
 
 /**
  * Get all articles from a specific section
  */
-export async function getArticlesBySection(section: string): Promise<Article[]> {
+export const getArticlesBySection = cache(async function getArticlesBySection(section: string): Promise<Article[]> {
     if (!isValidSection(section)) {
         throw new ContentValidationError(
             `Invalid section: "${section}". Valid sections are: ${VALID_SECTIONS.join(', ')}`,
@@ -219,30 +220,30 @@ export async function getArticlesBySection(section: string): Promise<Article[]> 
     });
 
     return articles;
-}
+});
 
 /**
  * Get all lead (formerly featured) articles
  */
-export async function getLeadArticles(): Promise<Article[]> {
+export const getLeadArticles = cache(async function getLeadArticles(): Promise<Article[]> {
     const all = await getAllArticles();
     return all.filter(article => article.placement === 'lead');
-}
+});
 
 /**
  * Get articles by tag
  */
-export async function getArticlesByTag(tag: string): Promise<Article[]> {
+export const getArticlesByTag = cache(async function getArticlesByTag(tag: string): Promise<Article[]> {
     const all = await getAllArticles();
     return all.filter(article =>
         article.tags.some(t => t.toLowerCase() === tag.toLowerCase())
     );
-}
+});
 
 /**
  * Get all unique tags
  */
-export async function getAllTags(): Promise<string[]> {
+export const getAllTags = cache(async function getAllTags(): Promise<string[]> {
     const allArticles = await getAllArticles();
     const tagSet = new Set<string>();
 
@@ -253,7 +254,7 @@ export async function getAllTags(): Promise<string[]> {
     }
 
     return Array.from(tagSet).sort();
-}
+});
 
 /**
  * Get list of all valid sections

@@ -13,6 +13,7 @@
 
 import { Resend } from 'resend';
 import { SubscriptionEvent } from './types';
+import { logger } from '@/lib/feedback/console-guard';
 
 // =============================================================================
 // CLIENT
@@ -21,14 +22,19 @@ import { SubscriptionEvent } from './types';
 function getResendClient(): Resend | null {
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
-        console.warn('[EMAIL] RESEND_API_KEY not configured. Email delivery disabled.');
+        logger.error('[EMAIL] RESEND_API_KEY not configured. Email delivery disabled.');
         return null;
     }
     return new Resend(apiKey);
 }
 
 function getFromAddress(): string {
-    return process.env.EMAIL_FROM || 'The Hint <noreply@thehint.news>';
+    const from = process.env.EMAIL_FROM;
+    if (!from) {
+        logger.error('[EMAIL] EMAIL_FROM not configured. Using fallback.');
+        return 'noreply@thehint.news';
+    }
+    return from;
 }
 
 function getBaseUrl(): string {
@@ -45,6 +51,7 @@ function getBaseUrl(): string {
             return url.replace(/\/$/, '');
         }
     }
+    logger.warn('[EMAIL] No APP_BASE_URL configured, using fallback');
     return 'https://thehint.news';
 }
 
@@ -250,13 +257,13 @@ export async function sendEmailForEvent(recipient: string, event: SubscriptionEv
         });
 
         if (error) {
-            console.error(`[EMAIL] Resend error for ${recipient}:`, error.message);
+            logger.error(`[EMAIL] Resend error for ${recipient}:`, error.message);
             return false;
         }
 
         return true;
     } catch (error) {
-        console.error('[EMAIL] Fatal caught error:', error);
+        logger.error('[EMAIL] Fatal caught error:', error);
         // Silent failure — never break publishing
         return false;
     }

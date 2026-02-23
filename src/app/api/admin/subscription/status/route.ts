@@ -1,15 +1,44 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { queueManager } from '@/lib/subscription/queue';
+import { validateSubscriptionEnv } from '@/lib/env';
+import { getActiveSubscribers } from '@/lib/subscription';
+import { logger } from '@/lib/feedback/console-guard';
 
 export async function GET(): Promise<NextResponse> {
     try {
-        const status = await queueManager.getStatus();
+        const envValidation = validateSubscriptionEnv();
+        
+        const queueStatus = await queueManager.getStatus();
+        
+        let subscriberCount = 0;
+        let subscriberError = null;
+        try {
+            const subscribers = await getActiveSubscribers();
+            subscriberCount = subscribers.length;
+        } catch (error) {
+            subscriberError = String(error);
+            logger.error(`[HEALTH] Failed to get subscribers: ${error}`);
+        }
+
+        const isHealthy = envValidation.valid && !subscriberError;
+
         return NextResponse.json({
             success: true,
-            status,
+            healthy: isHealthy,
+            environment: {
+                valid: envValidation.valid,
+                missing: envValidation.missing,
+            },
+            subscribers: {
+                count: subscriberCount,
+                error: subscriberError,
+            },
+            queue: queueStatus,
+            timestamp: new Date().toISOString(),
         });
-    } catch {
+    } catch (error) {
+        logger.error('[HEALTH] Status check failed:', error);
         return NextResponse.json(
             { success: false, error: 'Failed to retrieve status' },
             { status: 500 }

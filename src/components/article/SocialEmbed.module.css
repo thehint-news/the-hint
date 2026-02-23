@@ -1,0 +1,116 @@
+/* =============================================================================
+ * SocialEmbed Component Styles
+ * Ensures the injected HTML does not break our page layout.
+ * ============================================================================= */
+
+.embedContainer {
+    width: 100%;
+    margin: 24px auto;
+    max-width: 600px;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 140px; /* Reduces layout shift during lazy load */
+    display: flex;
+    justify-content: center;
+    background-color: transparent;
+}
+
+/* Make YouTube fill properly dynamically based on aspect ratio */
+.platform-youtube .htmlWrapper {
+    width: 100%;
+    position: relative;
+    /* 16:9 Aspect Ratio purely using CSS */
+    padding-bottom: 56.25%;
+    height: 0;
+}
+
+.platform-youtube iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 12px;
+}
+
+/* Default container for other embeds (Instagram, Twitter blockquotes) */
+.htmlWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* =============================================================================
+ * SKELETON LOADER
+ * ============================================================================= */
+.skeleton {
+    width: 100%;
+    height: 480px; 
+    background-color: #f3f4f6;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top: 3px solid #1d9bf0;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* =============================================================================
+ * FALLBACK (Error State)
+ * ============================================================================= */
+.fallbackBlock {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.fallbackMsg {
+    margin: 0;
+    color: #4b5563;
+    font-size: 15px;
+}
+
+.fallbackBtn {
+    display: inline-flex;
+    padding: 8px 16px;
+    color: #1d9bf0;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid #e5e7eb;
+    background-color: #ffffff;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.fallbackBtn:hover {
+    background-color: #f3f4f6;
+}

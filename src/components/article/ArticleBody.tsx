@@ -12,9 +12,13 @@ import { marked } from 'marked'; // Only used for legacy articles without bodyBl
 import { parseBodyToBlocks } from '@/lib/content/block-parser';
 import { ImageBlockRenderer } from './ImageBlock';
 import { VideoBlockRenderer } from './VideoBlock';
+import { PostBlockRenderer } from './PostBlock';
+import { SocialEmbed } from './SocialEmbed';
+import { detectOEmbedPlatform } from '@/lib/content/oembed';
 import {
     isImageBlock,
     isVideoBlock,
+    isPostBlock,
     isSubheadingBlock,
     isQuoteBlock,
     ContentBlock
@@ -66,6 +70,15 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                         );
                     }
 
+                    // Post Block — Social embed card
+                    if (isPostBlock(block)) {
+                        return (
+                            <div key={block.id} className="not-prose">
+                                <PostBlockRenderer block={block} />
+                            </div>
+                        );
+                    }
+
                     // Subheading - Bold, black text for clear visual hierarchy
                     if (isSubheadingBlock(block)) {
                         return (
@@ -74,10 +87,10 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                                 style={{
                                     fontWeight: 700,
                                     color: '#111111',
-                                    fontSize: '1.5rem',
-                                    lineHeight: 1.3,
+                                    fontSize: 'clamp(1.25rem, 4vw, 1.5rem)',
+                                    lineHeight: 1.45,
                                     marginTop: '2.5rem',
-                                    marginBottom: '1rem',
+                                    marginBottom: '1.25rem',
                                     fontFamily: 'var(--font-serif-full)',
                                     whiteSpace: 'pre-wrap',
                                 }}
@@ -95,16 +108,16 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                                 style={{
                                     borderLeft: '3px solid #111111',
                                     paddingLeft: '1.5rem',
-                                    marginTop: '2rem',
-                                    marginBottom: '2rem',
+                                    marginTop: '2.5rem',
+                                    marginBottom: '2.5rem',
                                     marginLeft: 0,
                                     marginRight: 0,
                                 }}
                             >
                                 <p style={{
                                     fontStyle: 'italic',
-                                    fontSize: '1.25rem',
-                                    lineHeight: 1.6,
+                                    fontSize: 'clamp(1.125rem, 3vw, 1.25rem)',
+                                    lineHeight: 1.65,
                                     color: '#2B2B2B',
                                     fontFamily: 'var(--font-serif-full)',
                                     margin: 0,
@@ -127,6 +140,33 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                         );
                     }
 
+                    // Check if the paragraph is actually just a single oEmbed URL
+                    // or an entire pasted HTML blockquote containing an oEmbed URL.
+                    const blockContentTrimmed = block.content.trim();
+                    let isOEmbedUrl = false;
+                    let embedUrl = blockContentTrimmed;
+
+                    if (/^(https?:\/\/[^\s]+)$/.test(blockContentTrimmed) && detectOEmbedPlatform(blockContentTrimmed)) {
+                        isOEmbedUrl = true;
+                    } else if (blockContentTrimmed.startsWith('<') && (blockContentTrimmed.includes('<blockquote') || blockContentTrimmed.includes('<iframe') || blockContentTrimmed.includes('<div'))) {
+                        // Users often paste the full embed code rather than just the URL.
+                        // We extract the final canonical URL which is usually placed at the end of the markup.
+                        const urls = blockContentTrimmed.match(/https?:\/\/[^\s<"']+/g) || [];
+                        const lastUrl = urls[urls.length - 1];
+                        if (lastUrl && detectOEmbedPlatform(lastUrl)) {
+                            isOEmbedUrl = true;
+                            embedUrl = lastUrl;
+                        }
+                    }
+
+                    if (isOEmbedUrl) {
+                        return (
+                            <figure key={block.id} className="not-prose" style={{ margin: '2rem auto', width: '100%', maxWidth: '600px' }}>
+                                <SocialEmbed url={embedUrl} />
+                            </figure>
+                        );
+                    }
+
                     // Paragraph (Default)
                     // ZERO TRANSFORMATION: Render raw content with pre-wrap.
                     // If bodyBlocks exist (canonical), do NOT parse markdown.
@@ -138,10 +178,10 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                                 key={block.id}
                                 style={{
                                     fontFamily: 'var(--font-serif-full)',
-                                    fontSize: '1.125rem',
-                                    lineHeight: 1.75,
+                                    fontSize: 'clamp(1.0625rem, 2.5vw, 1.125rem)',
+                                    lineHeight: 1.8,
                                     color: '#111111',
-                                    marginBottom: '1.5rem',
+                                    marginBottom: '1.75rem',
                                     whiteSpace: 'pre-wrap',
                                 }}
                             >

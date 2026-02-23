@@ -46,59 +46,7 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
 
     // layout variants
     const isCompact = ['crime', 'court'].includes(sectionSlug);
-    const isOpinion = sectionSlug === 'opinion';
 
-    // Opinion: 2-column card grid
-    if (isOpinion) {
-        return (
-            <div className="mb-12">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-10">
-                    {articles.map((article) => (
-                        <Link
-                            key={article.id}
-                            href={`/${article.section}/${article.id}`}
-                            className="article-link group block"
-                        >
-                            <article className="flex flex-col">
-                                {/* Thumbnail */}
-                                {article.image && (
-                                    <div className="thumbnail-container mb-3 aspect-[16/9] w-full">
-                                        <Image
-                                            src={article.image}
-                                            alt=""
-                                            fill
-                                            sizes="(max-width: 768px) 100vw, 50vw"
-                                            className="article-thumbnail w-full h-full object-cover"
-                                        />
-                                    </div>
-                                )}
-
-                                {/* Content */}
-                                <span className="meta-text text-[#B04A2F] font-bold mb-1 block uppercase tracking-widest" style={{ fontSize: "10px" }}>
-                                    Opinion
-                                </span>
-                                <h2 className="headline-sm mb-1.5 line-clamp-3 group-hover:underline decoration-2 underline-offset-4 decoration-[#111]">
-                                    {article.title}
-                                </h2>
-                                {article.subtitle && (
-                                    <p className="caption-text mb-2 line-clamp-2">
-                                        {article.subtitle}
-                                    </p>
-                                )}
-                                <time className="meta-text" dateTime={article.publishedAt}>
-                                    {formatSafeDate(article.publishedAt, {
-                                        month: 'long',
-                                        day: 'numeric',
-                                        year: 'numeric'
-                                    })}
-                                </time>
-                            </article>
-                        </Link>
-                    ))}
-                </div>
-            </div>
-        );
-    }
 
     // Compact: wire-style dense rows (crime/court)
     if (isCompact) {
@@ -130,7 +78,7 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
 
                                 {/* Content */}
                                 <div className="flex-1 flex flex-col justify-center min-w-0">
-                                    <h2 className="headline-sm mb-0.5 line-clamp-2 group-hover:underline decoration-1 underline-offset-4 decoration-[#111]">
+                                    <h2 className="headline-sm mb-1.5 line-clamp-2 group-hover:underline decoration-1 underline-offset-4 decoration-[#111]">
                                         {article.title}
                                     </h2>
                                     {article.subtitle && (
@@ -186,7 +134,7 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
 
                             {/* Content */}
                             <div className="flex-1 flex flex-col justify-center min-w-0">
-                                <h2 className="headline-md mb-1.5 line-clamp-3 group-hover:underline decoration-2 underline-offset-4 decoration-[#111]">
+                                <h2 className="headline-md mb-3 line-clamp-3 group-hover:underline decoration-2 underline-offset-4 decoration-[#111]">
                                     {article.title}
                                 </h2>
                                 {article.subtitle && (

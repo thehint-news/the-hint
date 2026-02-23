@@ -60,14 +60,14 @@ export function LeadStory({ article }: LeadStoryProps) {
                     <h2
                         id="lead-story-heading"
                         className="headline-xl"
-                        style={{ marginBottom: "0.5rem", maxWidth: "900px" }}
+                        style={{ marginBottom: "1.25rem", maxWidth: "900px" }}
                     >
                         {article.title}
                     </h2>
                 </Link>
 
                 {/* Hero Thumbnail - Large, top-focused, more image visibility */}
-                <Link href={articleUrl} className="article-link" style={{ display: "block", marginBottom: "0.5rem" }}>
+                <Link href={articleUrl} className="article-link" style={{ display: "block", marginBottom: "1.25rem" }}>
                     <div className="thumbnail-container">
                         {article.image ? (
                             <Image

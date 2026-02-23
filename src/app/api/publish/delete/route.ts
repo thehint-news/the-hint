@@ -105,7 +105,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
             }
 
             logger.info(`[DELETE] Draft deleted successfully: ${id}`);
-            return userResponse(true, 'Draft removed.');
+            return new NextResponse(null, { status: 204 });
         }
 
         // --- PUBLISHED ARTICLE DELETION ---
@@ -133,7 +133,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
             revalidateArticlePages(section as string);
 
             logger.info(`[DELETE] Published article deleted successfully: ${section}/${safeSlug}`);
-            return userResponse(true, 'Article permanently removed.');
+            return new NextResponse(null, { status: 204 });
         }
 
         return userResponse(false, 'Please specify the article type (draft or published).', 400);

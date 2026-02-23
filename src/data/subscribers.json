@@ -1,7 +1,11 @@
 [
+<<<<<<< HEAD
   {
     "email": "bhuvaneshwari9011@gmail.com",
     "subscribedAt": "2026-02-23T02:52:02.999Z",
     "active": true
   }
+=======
+    {}
+>>>>>>> cbe7a17 (Fixing all post bugs from feedback)
 ]

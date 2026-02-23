@@ -12,4 +12,5 @@ export { CorrectionNotice } from './CorrectionNotice';
 // Media block renderers
 export { ImageBlockRenderer } from './ImageBlock';
 export { VideoBlockRenderer } from './VideoBlock';
+export { PostBlockRenderer } from './PostBlock';
 export { ContinueReading } from './ContinueReading';

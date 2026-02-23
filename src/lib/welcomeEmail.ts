@@ -11,12 +11,20 @@ import { logger } from '@/lib/feedback/console-guard';
 
 function getResendClient(): Resend | null {
     const apiKey = process.env.RESEND_API_KEY;
-    if (!apiKey) return null;
+    if (!apiKey) {
+        logger.error('[EMAIL] RESEND_API_KEY is not configured');
+        return null;
+    }
     return new Resend(apiKey);
 }
 
 function getFromAddress(): string {
-    return process.env.EMAIL_FROM || 'The Hint <noreply@thehint.news>';
+    const from = process.env.EMAIL_FROM;
+    if (!from) {
+        logger.error('[EMAIL] EMAIL_FROM is not configured');
+        return 'noreply@thehint.news';
+    }
+    return from;
 }
 
 function getBaseUrl(): string {
@@ -35,6 +43,7 @@ function getBaseUrl(): string {
     }
 
     // Last resort fallback (should never be reached in production)
+    logger.warn('[EMAIL] No APP_BASE_URL configured, using fallback');
     return 'https://thehint.news';
 }
 

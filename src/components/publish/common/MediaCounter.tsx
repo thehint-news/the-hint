@@ -17,24 +17,25 @@ interface MediaCounterProps {
 }
 
 export function MediaCounter({ summary }: MediaCounterProps) {
-    const { imageCount, videoCount } = summary;
-    const { MAX_IMAGES, MAX_VIDEOS } = MEDIA_LIMITS;
+    const { mediaCount, postCount } = summary;
+    const { MAX_MEDIA, MAX_POSTS } = MEDIA_LIMITS;
 
-    const imageAtLimit = imageCount >= MAX_IMAGES;
-    const videoAtLimit = videoCount >= MAX_VIDEOS;
+    const mediaAtLimit = mediaCount >= MAX_MEDIA;
+    const postAtLimit = postCount >= MAX_POSTS;
 
     return (
         <div className={styles.counter}>
             <div className={styles.counterGroup}>
                 <span
-                    className={`${styles.counterItem} ${imageAtLimit ? styles.atLimit : ''}`}
-                    title={imageAtLimit ? 'Image limit reached' : `${MAX_IMAGES - imageCount} images remaining`}
+                    className={`${styles.counterItem} ${mediaAtLimit ? styles.atLimit : ''}`}
+                    title={mediaAtLimit ? 'Media limit reached' : `${MAX_MEDIA - mediaCount} media slots remaining`}
                 >
-                    <span className={styles.icon}>🖼</span>
+                    <span className={styles.icon}>📷</span>
                     <span className={styles.count}>
-                        {imageCount}/{MAX_IMAGES}
+                        {mediaCount}/{MAX_MEDIA}
                     </span>
-                    {imageAtLimit && <span className={styles.limitBadge}>limit</span>}
+                    <span className={styles.counterLabel}>media</span>
+                    {mediaAtLimit && <span className={styles.limitBadge}>limit</span>}
                 </span>
             </div>
 
@@ -42,15 +43,16 @@ export function MediaCounter({ summary }: MediaCounterProps) {
 
             <div className={styles.counterGroup}>
                 <span
-                    className={`${styles.counterItem} ${videoAtLimit ? styles.atSoftLimit : ''}`}
-                    title={videoAtLimit ? 'Consider limiting to 1 video for performance' : `${MAX_VIDEOS - videoCount} video slot available`}
+                    className={`${styles.counterItem} ${postAtLimit ? styles.atSoftLimit : ''}`}
+                    title={postAtLimit ? 'Post embed limit reached' : `${MAX_POSTS - postCount} post slot available`}
                 >
-                    <span className={styles.icon}>🎬</span>
+                    <span className={styles.icon}>🔗</span>
                     <span className={styles.count}>
-                        {videoCount}/{MAX_VIDEOS}
+                        {postCount}/{MAX_POSTS}
                     </span>
-                    {videoAtLimit && videoCount > 0 && (
-                        <span className={styles.warnBadge}>perf</span>
+                    <span className={styles.counterLabel}>post</span>
+                    {postAtLimit && postCount > 0 && (
+                        <span className={styles.limitBadge}>limit</span>
                     )}
                 </span>
             </div>

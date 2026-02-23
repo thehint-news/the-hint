@@ -55,12 +55,12 @@ export function ArticleHeader({
             </div>
 
             {/* 2. Large Headline */}
-            <h1 className={`font-serif text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[1.05] mb-3 text-[#111111] max-w-4xl tracking-tight ${contentTypeLabel === 'opinion' ? 'italic' : ''}`}>
+            <h1 className={`font-serif text-[clamp(2rem,7vw,3.5rem)] font-black leading-[1.25] mb-6 text-[#111111] max-w-4xl tracking-normal ${contentTypeLabel === 'opinion' ? 'italic' : ''}`}>
                 {title}
             </h1>
 
             {/* 3. Subheadline */}
-            <p className="font-serif text-xl md:text-2xl leading-relaxed text-[#2B2B2B] mb-5 max-w-3xl">
+            <p className="font-serif text-[clamp(1.125rem,3vw,1.5rem)] leading-[1.6] text-[#2B2B2B] mb-8 max-w-3xl">
                 {subtitle}
             </p>
 

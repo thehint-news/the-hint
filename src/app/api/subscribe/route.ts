@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { addSubscriber } from '@/lib/subscription';
 import { logger } from '@/lib/feedback/console-guard';
+import { validateSubscriptionEnv } from '@/lib/env';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const MAX_REQUESTS = 5;
@@ -30,6 +34,7 @@ function isRateLimited(ip: string): boolean {
 
 export async function POST(request: NextRequest) {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const timestamp = new Date().toISOString();
 
     if (isRateLimited(ip)) {
         return NextResponse.json(
@@ -42,7 +47,6 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const { email } = body;
 
-        // Basic validation
         if (!email || typeof email !== 'string' || !email.includes('@')) {
             return NextResponse.json(
                 { success: false, error: 'Invalid email address' },
@@ -50,10 +54,11 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        if (!process.env.GIT_TOKEN) {
-            logger.error('Missing GIT_TOKEN environment variable. Subscription cannot be saved.');
+        const envValidation = validateSubscriptionEnv();
+        if (!envValidation.valid) {
+            logger.error(`[SUBSCRIBE] Missing environment variables: ${envValidation.missing.join(', ')}`);
             return NextResponse.json(
-                { success: false, error: 'System configuration error' },
+                { success: false, error: 'System configuration error. Please contact support.' },
                 { status: 500 }
             );
         }
@@ -61,18 +66,25 @@ export async function POST(request: NextRequest) {
         const result = await addSubscriber(email);
 
         if (!result.success) {
+            logger.error(`[SUBSCRIBE] Storage failed for ${email}: ${result.message}`);
             return NextResponse.json(
                 { success: false, error: result.message },
                 { status: 500 }
             );
         }
 
-        try {
-            const { sendWelcomeEmail } = await import('@/lib/welcomeEmail');
-            await sendWelcomeEmail(email);
-        } catch (err) {
-            logger.error('Failed to send welcome email', err);
-            // Don't fail the subscription itself if email fails
+        logger.info(`[SUBSCRIBE] Stored: ${email} at ${timestamp}, duplicate: ${result.isDuplicate || false}, storageSuccess: ${result.storageSuccess}`);
+
+        if (!result.isDuplicate) {
+            try {
+                const { sendWelcomeEmail } = await import('@/lib/welcomeEmail');
+                await sendWelcomeEmail(email);
+                logger.info(`[SUBSCRIBE] Welcome email sent successfully to ${email}`);
+            } catch (err) {
+                logger.error(`[SUBSCRIBE] Failed to send welcome email to ${email}`, err);
+            }
+        } else {
+            logger.info(`[SUBSCRIBE] Skipped welcome email - duplicate subscription: ${email}`);
         }
 
         return NextResponse.json(
@@ -80,7 +92,7 @@ export async function POST(request: NextRequest) {
             { status: 200 }
         );
     } catch (error) {
-        logger.error('Subscription error', error);
+        logger.error('[SUBSCRIBE] Unexpected error', error);
         return NextResponse.json(
             { success: false, error: 'Internal server error' },
             { status: 500 }

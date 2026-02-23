@@ -20,15 +20,19 @@ import {
     ContentBlock,
     ImageBlock,
     VideoBlock,
+    PostBlock,
     MEDIA_LIMITS,
     ALLOWED_IMAGE_FORMATS,
     MAX_IMAGE_SIZE_BYTES,
     SOCIAL_VIDEO_PROVIDERS,
+    SUPPORTED_POST_PLATFORMS,
     isTextBlock,
     isImageBlock,
     isVideoBlock,
+    isPostBlock,
     AllowedImageFormat,
     SocialVideoProvider,
+    PostPlatform,
 } from '../content/media-types';
 
 // ... (skipping types section which I will update in next chunk if needed or just use imports)
@@ -97,6 +101,56 @@ function validateVideoBlock(
 }
 
 // =============================================================================
+// POST BLOCK VALIDATION
+// =============================================================================
+
+/**
+ * Validate a single post block
+ */
+function validatePostBlock(
+    block: PostBlock,
+    index: number,
+    errors: MediaValidationError[]
+): void {
+    // Canonical URL required
+    if (!block.canonicalUrl || block.canonicalUrl.trim() === '') {
+        errors.push({
+            type: 'invalid_post_url',
+            message: 'Post canonical URL is required',
+            blockId: block.id,
+            blockIndex: index,
+        });
+    }
+
+    // Platform required and must be valid
+    if (!block.platform) {
+        errors.push({
+            type: 'invalid_post_platform',
+            message: 'Post platform is required',
+            blockId: block.id,
+            blockIndex: index,
+        });
+    } else if (!SUPPORTED_POST_PLATFORMS.includes(block.platform as PostPlatform)) {
+        errors.push({
+            type: 'invalid_post_platform',
+            message: `Unsupported platform: "${block.platform}". Supported: ${SUPPORTED_POST_PLATFORMS.join(', ')}`,
+            blockId: block.id,
+            blockIndex: index,
+        });
+    }
+
+    // Metadata required
+    if (!block.metadata) {
+        errors.push({
+            type: 'missing_post_metadata',
+            message: 'Post metadata is required',
+            blockId: block.id,
+            blockIndex: index,
+        });
+    }
+}
+
+// =============================================================================
 // VALIDATION RESULT TYPES
 // =============================================================================
 
@@ -104,10 +158,15 @@ function validateVideoBlock(
 export type MediaValidationErrorType =
     | 'image_limit_exceeded'
     | 'video_limit_exceeded'
+    | 'media_limit_exceeded'
+    | 'post_limit_exceeded'
     | 'missing_alt_text'
     | 'empty_alt_text'
     | 'invalid_image_url'
     | 'invalid_video_url'
+    | 'invalid_post_url'
+    | 'invalid_post_platform'
+    | 'missing_post_metadata'
     | 'missing_dimensions'
     | 'invalid_dimensions'
     | 'no_text_context_before'
@@ -190,7 +249,9 @@ export function validateMediaBlocks(blocks: ContentBlock[]): MediaValidationResu
     // Count media blocks
     const imageBlocks = blocks.filter(isImageBlock);
     const videoBlocks = blocks.filter(isVideoBlock);
+    const postBlocks = blocks.filter(isPostBlock);
     const textBlocks = blocks.filter(isTextBlock);
+    const mediaBlocks = [...imageBlocks, ...videoBlocks];
 
     // Check for media-only article
     if (textBlocks.length === 0) {
@@ -200,18 +261,19 @@ export function validateMediaBlocks(blocks: ContentBlock[]): MediaValidationResu
         });
     }
 
-    // HARD LIMITS (Hard Blocks)
-    if (imageBlocks.length > MEDIA_LIMITS.MAX_IMAGES) {
+    // COMBINED MEDIA LIMIT (images + videos = 3) — HARD BLOCK
+    if (mediaBlocks.length > MEDIA_LIMITS.MAX_MEDIA) {
         errors.push({
-            type: 'image_limit_exceeded',
-            message: `Maximum ${MEDIA_LIMITS.MAX_IMAGES} images allowed per article. Found: ${imageBlocks.length}.`,
+            type: 'media_limit_exceeded',
+            message: `Maximum ${MEDIA_LIMITS.MAX_MEDIA} media blocks (images + videos combined) allowed per article. Found: ${mediaBlocks.length}.`,
         });
     }
 
-    if (videoBlocks.length > MEDIA_LIMITS.MAX_VIDEOS) {
+    // POST LIMIT (max 1) — HARD BLOCK
+    if (postBlocks.length > MEDIA_LIMITS.MAX_POSTS) {
         errors.push({
-            type: 'video_limit_exceeded',
-            message: `Maximum ${MEDIA_LIMITS.MAX_VIDEOS} video allowed per article. Found: ${videoBlocks.length}.`,
+            type: 'post_limit_exceeded',
+            message: `Maximum ${MEDIA_LIMITS.MAX_POSTS} post embed allowed per article. Found: ${postBlocks.length}.`,
         });
     }
 
@@ -226,9 +288,12 @@ export function validateMediaBlocks(blocks: ContentBlock[]): MediaValidationResu
         if (isVideoBlock(block)) {
             validateVideoBlock(block, i, errors);
         }
+        if (isPostBlock(block)) {
+            validatePostBlock(block, i, errors);
+        }
 
-        // 2. Structural/Placement Rules (Re-enabled per Master Checklist)
-        if (isImageBlock(block) || isVideoBlock(block)) {
+        // 2. Structural/Placement Rules for media and post blocks
+        if (isImageBlock(block) || isVideoBlock(block) || isPostBlock(block)) {
             // Cannot be first
             if (i === 0) {
                 errors.push({
@@ -249,11 +314,11 @@ export function validateMediaBlocks(blocks: ContentBlock[]): MediaValidationResu
                 });
             }
 
-            // Cannot be consecutive
-            if (i > 0 && (isImageBlock(blocks[i - 1]) || isVideoBlock(blocks[i - 1]))) {
+            // Cannot be consecutive (media next to media, or media next to post)
+            if (i > 0 && (isImageBlock(blocks[i - 1]) || isVideoBlock(blocks[i - 1]) || isPostBlock(blocks[i - 1]))) {
                 errors.push({
                     type: 'consecutive_media_blocks',
-                    message: 'Consecutive media blocks are not allowed. Add text context between images or videos.',
+                    message: 'Consecutive media/post blocks are not allowed. Add text context between them.',
                     blockId: block.id,
                     blockIndex: i
                 });
@@ -401,24 +466,23 @@ export function isValidBlockOrder(blocks: ContentBlock[]): MediaValidationResult
 export function canInsertMediaAt(
     blocks: ContentBlock[],
     _position: number,
-    mediaType: 'image' | 'video'
+    mediaType: 'image' | 'video' | 'post'
 ): { valid: boolean; reason?: string } {
     // Helper options for validation
     // Removing position checks per "no minimum rule" request
 
 
-    // Check limits
-    if (mediaType === 'image') {
-        const imageCount = blocks.filter(isImageBlock).length;
-        if (imageCount >= MEDIA_LIMITS.MAX_IMAGES) {
-            return { valid: false, reason: `Maximum ${MEDIA_LIMITS.MAX_IMAGES} images allowed` };
+    if (mediaType === 'image' || mediaType === 'video') {
+        const mediaCount = blocks.filter(b => isImageBlock(b) || isVideoBlock(b)).length;
+        if (mediaCount >= MEDIA_LIMITS.MAX_MEDIA) {
+            return { valid: false, reason: `Maximum ${MEDIA_LIMITS.MAX_MEDIA} media blocks (images + videos) allowed` };
         }
     }
 
-    if (mediaType === 'video') {
-        const videoCount = blocks.filter(isVideoBlock).length;
-        if (videoCount >= MEDIA_LIMITS.MAX_VIDEOS) {
-            return { valid: false, reason: `Maximum ${MEDIA_LIMITS.MAX_VIDEOS} video allowed per article` };
+    if (mediaType === 'post') {
+        const postCount = blocks.filter(isPostBlock).length;
+        if (postCount >= MEDIA_LIMITS.MAX_POSTS) {
+            return { valid: false, reason: `Maximum ${MEDIA_LIMITS.MAX_POSTS} post embed allowed per article` };
         }
     }
 

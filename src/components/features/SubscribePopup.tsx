@@ -28,13 +28,13 @@ export function SubscribePopup() {
         // Condition: User has already subscribed - NEVER show again
         if (localStorage.getItem(STORAGE_KEY_SUBSCRIBED)) return;
 
-        // Condition: User has dismissed in the last 8 seconds
+        // Condition: User has dismissed in the last 80 seconds
         const dismissedAt = localStorage.getItem(STORAGE_KEY_DISMISSED);
         if (dismissedAt) {
             const date = new Date(dismissedAt);
             const now = new Date();
             const diffSeconds = (now.getTime() - date.getTime()) / 1000;
-            if (diffSeconds < 8) return;
+            if (diffSeconds < 80) return;
         }
 
         // Triggers
@@ -42,8 +42,8 @@ export function SubscribePopup() {
             setIsOpen(true);
         };
 
-        // 1. Time Trigger: 8 seconds (per user request "every 8 seconds")
-        const timer = setTimeout(showPopup, 8000);
+        // 1. Time Trigger: 80 seconds (per user request "every 80 seconds")
+        const timer = setTimeout(showPopup, 80000);
 
         // 2. Scroll Trigger: 35-40% scroll (Keeping as alternative trigger)
         const handleScroll = () => {
@@ -155,7 +155,7 @@ export function SubscribePopup() {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
             {/* Backdrop */}
             <div
                 className="absolute inset-0 bg-black/40 transition-opacity duration-300 ease-out"

@@ -21,13 +21,17 @@ export type ContentBlockType =
     | 'subheading'
     | 'quote'
     | 'image'
-    | 'video';
+    | 'video'
+    | 'post';
 
 /** Text block types that qualify as "text context" for media */
 export const TEXT_BLOCK_TYPES: ContentBlockType[] = ['paragraph', 'subheading', 'quote'];
 
-/** Media block types */
+/** Media block types (images and videos — used for combined limit) */
 export const MEDIA_BLOCK_TYPES: ContentBlockType[] = ['image', 'video'];
+
+/** Special embed block types */
+export const EMBED_BLOCK_TYPES: ContentBlockType[] = ['post'];
 
 /** Base block interface - all blocks extend this */
 export interface BaseBlock {
@@ -148,13 +152,62 @@ export interface VideoBlock extends BaseBlock {
 }
 
 // =============================================================================
+// POST BLOCK (Social Embed — Native Rendering)
+// =============================================================================
+
+/** Supported social platforms for post embeds */
+export type PostPlatform =
+    | 'x'
+    | 'facebook'
+    | 'instagram'
+    | 'youtube'
+    | 'linkedin'
+    | 'tiktok';
+
+/** All supported post platforms */
+export const SUPPORTED_POST_PLATFORMS: PostPlatform[] = [
+    'x', 'facebook', 'instagram', 'youtube', 'linkedin', 'tiktok',
+];
+
+/** Metadata snapshot taken at insert time */
+export interface PostMetadata {
+    /** Author display name */
+    author: string;
+    /** Author username/handle */
+    username: string;
+    /** Author avatar URL */
+    avatar?: string;
+    /** Truncated text preview of the post */
+    textPreview: string;
+    /** Thumbnail image URL */
+    thumbnail?: string;
+    /** ISO 8601 timestamp of the original post */
+    timestamp?: string;
+    /** Whether the author is verified on the platform */
+    verified?: boolean;
+}
+
+/** Post block — renders social content natively without platform scripts */
+export interface PostBlock extends BaseBlock {
+    type: 'post';
+    /** Original URL as entered by the user */
+    originalUrl: string;
+    /** Normalized canonical URL */
+    canonicalUrl: string;
+    /** Detected platform */
+    platform: PostPlatform;
+    /** Cached metadata snapshot */
+    metadata: PostMetadata;
+}
+
+// =============================================================================
 // UNION TYPES
 // =============================================================================
 
 /** Text-based blocks that provide "context" for media */
 export type TextBlock = ParagraphBlock | SubheadingBlock | QuoteBlock;
 
-/** Media blocks that require text context */
+/** Media blocks that require text context (images + videos, combined limit) */
 export type MediaBlock = ImageBlock | VideoBlock;
 
 /** Union type for all content blocks */
@@ -163,7 +216,8 @@ export type ContentBlock =
     | SubheadingBlock
     | QuoteBlock
     | ImageBlock
-    | VideoBlock;
+    | VideoBlock
+    | PostBlock;
 
 // =============================================================================
 // MEDIA LIMITS & CONSTRAINTS
@@ -171,14 +225,18 @@ export type ContentBlock =
 
 /** Media limits enforced by validation */
 export const MEDIA_LIMITS = {
-    /** Maximum images per article - HARD LIMIT (blocked at editor) */
+    /** @deprecated Use MAX_MEDIA instead. Kept for legacy compatibility. */
     MAX_IMAGES: 3,
-    /** Maximum videos per article - HARD LIMIT */
+    /** @deprecated Use MAX_MEDIA instead. Kept for legacy compatibility. */
     MAX_VIDEOS: 1,
-    /** How video limit is enforced */
-    VIDEO_LIMIT_TYPE: 'hard' as const,
-    /** How image limit is enforced */
-    IMAGE_LIMIT_TYPE: 'hard' as const,
+    /** Combined limit: images + videos = 3 (HARD LIMIT) */
+    MAX_MEDIA: 3,
+    /** Maximum post embeds per article (HARD LIMIT) */
+    MAX_POSTS: 1,
+    /** How media limit is enforced */
+    MEDIA_LIMIT_TYPE: 'hard' as const,
+    /** How post limit is enforced */
+    POST_LIMIT_TYPE: 'hard' as const,
 } as const;
 
 /** Allowed image MIME types */
@@ -267,8 +325,14 @@ export interface MediaSummary {
     imageCount: number;
     /** Number of video blocks */
     videoCount: number;
+    /** Combined media count (images + videos) */
+    mediaCount: number;
+    /** Number of post blocks */
+    postCount: number;
     /** Quick check for video presence */
     hasVideo: boolean;
+    /** Quick check for post presence */
+    hasPost: boolean;
 }
 
 // =============================================================================
@@ -293,6 +357,11 @@ export function isImageBlock(block: ContentBlock): block is ImageBlock {
 /** Check if a block is a video block */
 export function isVideoBlock(block: ContentBlock): block is VideoBlock {
     return block.type === 'video';
+}
+
+/** Check if a block is a post block */
+export function isPostBlock(block: ContentBlock): block is PostBlock {
+    return block.type === 'post';
 }
 
 /** Check if a block is a paragraph block */
@@ -326,29 +395,48 @@ export function generateBlockId(type: ContentBlockType): string {
 export function calculateMediaSummary(blocks: ContentBlock[]): MediaSummary {
     const imageCount = blocks.filter(isImageBlock).length;
     const videoCount = blocks.filter(isVideoBlock).length;
+    const postCount = blocks.filter(isPostBlock).length;
     return {
         imageCount,
         videoCount,
+        mediaCount: imageCount + videoCount,
+        postCount,
         hasVideo: videoCount > 0,
+        hasPost: postCount > 0,
     };
 }
 
-/** Check if more images can be added */
+/** Check if more media (images or videos) can be added — combined limit */
+export function canAddMedia(blocks: ContentBlock[]): boolean {
+    const mediaCount = blocks.filter(b => isImageBlock(b) || isVideoBlock(b)).length;
+    return mediaCount < MEDIA_LIMITS.MAX_MEDIA;
+}
+
+/** @deprecated Use canAddMedia instead */
 export function canAddImage(blocks: ContentBlock[]): boolean {
-    const imageCount = blocks.filter(isImageBlock).length;
-    return imageCount < MEDIA_LIMITS.MAX_IMAGES;
+    return canAddMedia(blocks);
 }
 
-/** Check if adding a video should show warning */
+/** Check if a post block can be added */
+export function canAddPost(blocks: ContentBlock[]): boolean {
+    const postCount = blocks.filter(isPostBlock).length;
+    return postCount < MEDIA_LIMITS.MAX_POSTS;
+}
+
+/** @deprecated Use canAddMedia instead */
 export function shouldWarnAboutVideo(blocks: ContentBlock[]): boolean {
-    const videoCount = blocks.filter(isVideoBlock).length;
-    return videoCount >= MEDIA_LIMITS.MAX_VIDEOS;
+    return !canAddMedia(blocks);
 }
 
-/** Get remaining image slots */
+/** Get remaining media slots (combined images + videos) */
+export function getRemainingMediaSlots(blocks: ContentBlock[]): number {
+    const mediaCount = blocks.filter(b => isImageBlock(b) || isVideoBlock(b)).length;
+    return Math.max(0, MEDIA_LIMITS.MAX_MEDIA - mediaCount);
+}
+
+/** @deprecated Use getRemainingMediaSlots instead */
 export function getRemainingImageSlots(blocks: ContentBlock[]): number {
-    const imageCount = blocks.filter(isImageBlock).length;
-    return Math.max(0, MEDIA_LIMITS.MAX_IMAGES - imageCount);
+    return getRemainingMediaSlots(blocks);
 }
 
 // =============================================================================
@@ -411,6 +499,19 @@ export function createVideoBlock(
     return {
         id: generateBlockId('video'),
         type: 'video',
+        order,
+        ...data,
+    };
+}
+
+/** Create a new post block */
+export function createPostBlock(
+    order: number,
+    data: Omit<PostBlock, 'id' | 'type' | 'order'>
+): PostBlock {
+    return {
+        id: generateBlockId('post'),
+        type: 'post',
         order,
         ...data,
     };

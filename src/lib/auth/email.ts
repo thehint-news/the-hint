@@ -6,6 +6,7 @@
  */
 
 import { Resend } from 'resend';
+import { logger } from '../feedback';
 
 export async function sendMagicLinkEmail(email: string, token: string) {
     const apiKey = process.env.RESEND_API_KEY;
@@ -21,7 +22,7 @@ export async function sendMagicLinkEmail(email: string, token: string) {
     if (!apiKey) {
         // In dev or local production, log the link so login is still possible
         if (allowDevFallback) {
-            console.log(`[LOCAL-PROD] Magic Link (No API Key): ${appUrl}/api/auth/verify?token=${token}`);
+            logger.info(`[LOCAL-PROD] Magic Link (No API Key): ${appUrl}/api/auth/verify?token=${token}`);
             return;
         }
         throw new Error('RESEND_API_KEY is not configured. Cannot send magic link in production.');
@@ -129,21 +130,21 @@ export async function sendMagicLinkEmail(email: string, token: string) {
         });
 
         if (error) {
-            console.error('[AUTH-EMAIL] Resend returned error:', JSON.stringify(error, null, 2));
+            logger.error('[AUTH-EMAIL] Resend returned error:', error);
             // In local production/dev, fallback log instead of failing request
             if (allowDevFallback) {
-                console.log(`[LOCAL-PROD-FALLBACK] Resend API Failed. Magic Link: ${link}`);
+                logger.info(`[LOCAL-PROD-FALLBACK] Resend API Failed. Magic Link: ${link}`);
                 return;
             }
             throw new Error(`Resend Error: ${error.message || 'Unknown error'}`);
         }
 
-        console.log(`[AUTH-EMAIL] Email sent successfully. ID: ${data?.id}`);
+        logger.info(`[AUTH-EMAIL] Email sent successfully. ID: ${data?.id}`);
     } catch (e: unknown) {
-        console.error('[AUTH-EMAIL] Exception during email send:', e);
+        logger.error('[AUTH-EMAIL] Exception during email send:', e);
         // Fallback log for local dev/prod if actual send fails
         if (allowDevFallback) {
-            console.log(`[LOCAL-PROD-FALLBACK] Magic Link (Send Failed): ${link}`);
+            logger.info(`[LOCAL-PROD-FALLBACK] Magic Link (Send Failed): ${link}`);
             return;
         }
         // Re-throw with more detail if possible

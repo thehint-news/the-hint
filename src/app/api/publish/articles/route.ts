@@ -166,11 +166,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                 articles,
                 count: articles.length,
             },
-        }, {
-            headers: {
-                // Browser cache: 30 seconds (fresh), then revalidate
-                'Cache-Control': 'private, max-age=30, stale-while-revalidate=60',
-            },
         });
     } catch (error) {
         console.error('Error listing articles:', error);

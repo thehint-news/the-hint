@@ -24,21 +24,28 @@ import {
     ContentBlockType,
     ImageBlock,
     VideoBlock,
+    PostBlock,
     calculateMediaSummary,
     createParagraphBlock,
     createSubheadingBlock,
     createQuoteBlock,
     createImageBlock,
     createVideoBlock,
+    createPostBlock,
     reorderBlocks,
     isImageBlock,
     isVideoBlock,
+    isPostBlock,
     MEDIA_LIMITS,
+    PostPlatform,
+    PostMetadata,
 } from '@/lib/content/media-types';
 import { canInsertMediaAt, isValidBlockOrder } from '@/lib/validation/media';
 import { MediaCounter } from '../common/MediaCounter';
 import { ImageBlockEditor } from './ImageBlockEditor';
 import { VideoBlockEditor } from './VideoBlockEditor';
+import { PostBlockEditor } from './PostBlockEditor';
+import { SocialEmbed } from '@/components/article/SocialEmbed';
 import type { ImageAspectRatio, VideoSourceType, SocialVideoProvider } from '@/lib/content/media-types';
 import styles from './BlockEditor.module.css';
 
@@ -73,6 +80,7 @@ export function BlockEditor({
     const [insertPosition, setInsertPosition] = useState<number>(0);
     const [showImageEditor, setShowImageEditor] = useState(false);
     const [showVideoEditor, setShowVideoEditor] = useState(false);
+    const [showPostEditor, setShowPostEditor] = useState(false);
     const [editingBlock, setEditingBlock] = useState<ContentBlock | null>(null);
 
     // Refs for managing focus
@@ -277,12 +285,13 @@ export function BlockEditor({
      * Get available insert options
      */
     const getInsertOptions = useCallback(() => {
-        const imageCount = mediaSummary.imageCount;
-        const videoCount = mediaSummary.videoCount;
+        const mediaCount = mediaSummary.mediaCount;
+        const postCount = mediaSummary.postCount;
 
         // Check if media can be inserted at this position
         const canInsertImage = canInsertMediaAt(blocks, insertPosition, 'image');
         const canInsertVideo = canInsertMediaAt(blocks, insertPosition, 'video');
+        const canInsertPost = canInsertMediaAt(blocks, insertPosition, 'post');
 
         return [
             { type: 'paragraph' as ContentBlockType, label: 'Paragraph', icon: '¶', disabled: false },
@@ -290,17 +299,24 @@ export function BlockEditor({
             { type: 'quote' as ContentBlockType, label: 'Quote', icon: '❝', disabled: false },
             {
                 type: 'image' as ContentBlockType,
-                label: `Image (${imageCount}/${MEDIA_LIMITS.MAX_IMAGES})`,
+                label: `Image (${mediaCount}/${MEDIA_LIMITS.MAX_MEDIA} media)`,
                 icon: '🖼',
-                disabled: !canInsertImage.valid || imageCount >= MEDIA_LIMITS.MAX_IMAGES,
+                disabled: !canInsertImage.valid || mediaCount >= MEDIA_LIMITS.MAX_MEDIA,
                 reason: !canInsertImage.valid ? canInsertImage.reason : undefined,
             },
             {
                 type: 'video' as ContentBlockType,
-                label: `Video (${videoCount}/${MEDIA_LIMITS.MAX_VIDEOS})`,
+                label: `Video (${mediaCount}/${MEDIA_LIMITS.MAX_MEDIA} media)`,
                 icon: '🎬',
-                disabled: !canInsertVideo.valid,
+                disabled: !canInsertVideo.valid || mediaCount >= MEDIA_LIMITS.MAX_MEDIA,
                 reason: !canInsertVideo.valid ? canInsertVideo.reason : undefined,
+            },
+            {
+                type: 'post' as ContentBlockType,
+                label: `Post Embed (${postCount}/${MEDIA_LIMITS.MAX_POSTS})`,
+                icon: '🔗',
+                disabled: !canInsertPost.valid || postCount >= MEDIA_LIMITS.MAX_POSTS,
+                reason: !canInsertPost.valid ? canInsertPost.reason : undefined,
             },
         ];
     }, [blocks, insertPosition, mediaSummary]);
@@ -317,6 +333,10 @@ export function BlockEditor({
             setShowInsertMenu(false);
             setEditingBlock(null);
             setShowVideoEditor(true);
+        } else if (type === 'post') {
+            setShowInsertMenu(false);
+            setEditingBlock(null);
+            setShowPostEditor(true);
         } else {
             insertBlock(type, insertPosition);
         }
@@ -405,7 +425,24 @@ export function BlockEditor({
         } else if (isVideoBlock(block)) {
             setShowVideoEditor(true);
         }
+        // Post blocks are not editable — delete and re-add
     }, []);
+
+    /**
+     * Handle post save from editor
+     */
+    const handlePostSave = useCallback((data: {
+        originalUrl: string;
+        canonicalUrl: string;
+        platform: PostPlatform;
+        metadata: PostMetadata;
+    }) => {
+        const newBlock = createPostBlock(insertPosition, data);
+        const updated = [...blocks];
+        updated.splice(insertPosition, 0, newBlock);
+        updateBlocks(reorderBlocks(updated));
+        setShowPostEditor(false);
+    }, [blocks, insertPosition, updateBlocks]);
 
     // ==========================================================================
     // RENDER BLOCKS
@@ -708,6 +745,72 @@ export function BlockEditor({
     };
 
     /**
+     * Render a post block
+     */
+    const renderPostBlock = (block: PostBlock, index: number) => {
+        return (
+            <div key={block.id} className={styles.blockWrapper}>
+                {/* Insert button above */}
+                <button
+                    type="button"
+                    className={styles.insertButton}
+                    onClick={() => openInsertMenu(index)}
+                    title="Insert block"
+                >
+                    +
+                </button>
+
+                {/* Move Controls */}
+                <div className={styles.moveControls}>
+                    <button
+                        type="button"
+                        className={styles.moveButton}
+                        onClick={() => moveBlock(block.id, 'up')}
+                        disabled={index === 0}
+                        title="Move Up"
+                    >
+                        ▲
+                    </button>
+                    <button
+                        type="button"
+                        className={styles.moveButton}
+                        onClick={() => moveBlock(block.id, 'down')}
+                        disabled={index === blocks.length - 1}
+                        title="Move Down"
+                    >
+                        ▼
+                    </button>
+                    <button
+                        type="button"
+                        className={styles.deleteActionButton}
+                        onClick={() => deleteBlock(block.id)}
+                        title="Delete Block"
+                    >
+                        ✕
+                    </button>
+                </div>
+
+                <div className={styles.mediaBlock}>
+                    <div className={styles.mediaInfo} style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <div style={{ pointerEvents: 'none', width: '100%', maxWidth: '600px', margin: '0 auto' }}>
+                            <SocialEmbed url={block.canonicalUrl || block.originalUrl} />
+                        </div>
+                    </div>
+                    <div className={styles.mediaActions}>
+                        <button
+                            type="button"
+                            className={styles.deleteButton}
+                            onClick={() => deleteBlock(block.id)}
+                        >
+                            Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    /**
      * Render a block based on type
      */
     const renderBlock = (block: ContentBlock, index: number) => {
@@ -716,6 +819,9 @@ export function BlockEditor({
         }
         if (isVideoBlock(block)) {
             return renderVideoBlock(block, index);
+        }
+        if (isPostBlock(block)) {
+            return renderPostBlock(block as PostBlock, index);
         }
         return renderTextBlock(block, index);
     };
@@ -817,6 +923,15 @@ export function BlockEditor({
                         setShowVideoEditor(false);
                         setEditingBlock(null);
                     }}
+                />
+            )}
+
+            {/* Post Editor Modal */}
+            {showPostEditor && (
+                <PostBlockEditor
+                    currentPostCount={mediaSummary.postCount}
+                    onSave={handlePostSave}
+                    onCancel={() => setShowPostEditor(false)}
                 />
             )}
         </div>
