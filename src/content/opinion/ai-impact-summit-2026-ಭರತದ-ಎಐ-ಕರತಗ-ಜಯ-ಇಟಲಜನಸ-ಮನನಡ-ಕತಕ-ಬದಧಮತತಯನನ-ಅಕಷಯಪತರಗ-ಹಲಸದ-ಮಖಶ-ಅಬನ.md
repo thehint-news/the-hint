@@ -2,10 +2,10 @@
 title: 'AI Impact Summit 2026: ಭಾರತದ ಎಐ ಕ್ರಾಂತಿಗೆ ಜಿಯೋ ಇಂಟೆಲಿಜೆನ್ಸ್ ಮುನ್ನುಡಿ! ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆಯನ್ನು ಅಕ್ಷಯಪಾತ್ರೆಗೆ ಹೋಲಿಸಿದ ಮುಖೇಶ್ ಅಂಬಾನಿ!'
 subtitle: 'AI Impact Summit 2026: ಅಂಬಾನಿ ಅವರ ಪ್ರಕಾರ, ಈ ಎಐ ಅನ್ನೋದು ಬರೀ ಇನ್ನೊಂದು ಹೊಸ ಟೆಕ್ನಾಲಜಿ ಅಲ್ಲ! ಮನುಷ್ಯರ ತರಾನೇ ಯೋಚನೆ ಮಾಡೋ, ಅರ್ಥ ಮಾಡಿಕೊಳ್ಳೋ ಶಕ್ತಿ ಇರೋ ಒಂದು ಮ್ಯಾಜಿಕ್ ಸಿಸ್ಟಮ್ ಇದು.'
 contentType: opinion
-image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/02/b5262e6604efb479.jpg
+image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/02/4310e1dfdb2a78c8.jpg
 status: published
 publishedAt: '2026-02-23T02:35:46.127Z'
-updatedAt: null
+updatedAt: '2026-02-23T02:37:10.101Z'
 placement: top
 tags:
   - ಭಾರತ
