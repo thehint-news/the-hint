@@ -1595,11 +1595,11 @@
     "contentType": "opinion",
     "priority": "normal",
     "createdAt": "2026-02-23T02:30:15.075Z",
-    "status": "processing",
+    "status": "sent",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-02-23T02:30:18.215Z",
+    "lastAttemptAt": "2026-02-23T02:30:30.054Z",
     "totalSubscribers": 0
   }
 ]
