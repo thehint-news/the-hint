@@ -5,7 +5,7 @@ contentType: opinion
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/02/4756574047cf00b0.jpg
 status: published
 publishedAt: '2026-02-23T02:29:43.689Z'
-updatedAt: '2026-02-23T02:30:12.596Z'
+updatedAt: '2026-02-23T16:21:45.269Z'
 placement: standard
 tags: []
 sources: []
@@ -14,30 +14,17 @@ bodyBlocks:
     type: paragraph
     order: 0
     content: ' ಭಾರತ ನಿಧಾನವಾಗಿ ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ(AI)ಯ ಜಗತ್ತಿನಲ್ಲಿ ತನ್ನ ಛಾಪನ್ನು ಮೂಡಿಸುತ್ತಿದೆ. ಹೆಚ್ಚಾಗಿ ಅಮೆರಿಕ ಮತ್ತು ಚೀನಾದವರು ಪ್ರಾಬಲ್ಯ ಹೊಂದಿದ್ದಾರೆ. ಬೆಂಗಳೂರು ಮೂಲದ ಸ್ಟಾರ್ಟ್ಅಪ್ ‘ ಸರ್ವಂ AI’ ಈ ಕ್ಷೇತ್ರದಲ್ಲಿ ಒಂದು ಮಾರ್ಗದರ್ಶಕನಾಗಿ ಹೊರಹೊಮ್ಮುತ್ತಿದೆ.ಇದು ಭಾರತದೊಳಗೆ ಮೂಲಭೂತ AI ಮಾದರಿಗಳನ್ನು ಅಭಿವೃದ್ಧಿಪಡಿಸುತ್ತಿದೆ.'
-  - id: vid-mlyk2paf-ljf9
-    type: video
+  - id: pos-mlzdw986-95u6
+    type: post
     order: 1
-    sourceType: social
-    originalUrl: https://www.instagram.com/p/DI52RjLMYDp/?utm_source=ig_web_copy_link
-    embedUrl: https://www.instagram.com/p/DI52RjLMYDp/embed
-    posterThumbnail: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/02/a8aba23ecabedb6a.jpg
-    caption: The Bengaluru-based startup, founded by Vivek Raghavan and Pratyush Kumar and incubated at IIT Madras, is expected to receive access to about 4,000 Nvidia H100 chips for six months.
-    credit: Instagram
-    title: |-
-      Indian Startup News on Instagram: "Sarvam AI is poised to become the first startup to benefit from India&#039;s ambitious IndiaAI Mission, with the government set to offer free access to Nvidia GPUs worth Rs 220 crore, according to a report by The Times of India. 
-
-      The Bengaluru-based startup, founded by Vivek Raghavan and Pratyush Kumar and incubated at IIT Madras, is expected to receive access to about 4,000 Nvidia H100 chips for six months. 
-
-      These high-performance GPUs are critical for training large AI models and could give Sarvam a major edge as India seeks to build an indigenous large language model, similar to OpenAI&#x2019;s GPT and China&#x2019;s DeepSeek. 
-
-      Sarvam launched a 2-billion-parameter language model late last year, specifically tailored for Indian languages. The fresh compute power is expected to significantly boost its capabilities. 
-
-      The IndiaAI Mission, backed by over Rs 10,300 crore in funding, aims to create domestic AI infrastructure, innovation hubs, and large-scale datasets to help local companies compete in the global AI race.
-
-      #ai #startup #government #nvidia #technology #innovation #news #indianstartupnews"
-    provider: instagram
-    trustedSourceHtml: <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/DI52RjLMYDp/" data-instgrm-version="14"></blockquote>
-    isRestricted: true
+    originalUrl: https://www.instagram.com/reel/DUqWeujEcGr/?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==
+    canonicalUrl: https://www.instagram.com/reel/DUqWeujEcGr/
+    platform: instagram
+    metadata:
+      author: 'Full Disclosure on Instagram: "An Indian startup just beat ChatGPT & Gemini in OCR benchmarks. Better at: Indic languages Scanned government docs Mixed-language content This isn’t hype. It’s sovereign AI in action. Can India build AI that rivals global giants? comment below #ai #sarvamai #indianai #gemini #chatgpt #artificialintelligence"'
+      username: ''
+      textPreview: 'fulldisclosure.ig on February 12, 2026: "An Indian startup just beat ChatGPT & Gemini in OCR benchmarks. Better at: Indic languages Scanned government docs Mixed-language content This isn’t hype. It’s sovereign AI in action. Can India build AI that rivals global giants? comment below #ai #sarvamai #indianai #gemini #chatgpt #artificialintelligence".'
+      thumbnail: https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/627661625_17949138021096088_6300798593912810789_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&amp;_nc_cat=102&amp;ccb=7-5&amp;_nc_sid=18de74&amp;efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&amp;_nc_ohc=2HZaGNqR6j0Q7kNvwFypfDY&amp;_nc_oc=AdlJ5uHt9F-y5XexbmQF-OK5Zxi8VKbbUc1KDhG1O29KKA9iRh5cz4ORg9OLj5VS_UI&amp;_nc_zt=23&amp;_nc_ht=scontent-iad3-1.cdninstagram.com&amp;_nc_gid=ucXjABv0PPe5TSPKNcB-Xg&amp;oh=00_AfvdwovsF4qherKy6YbKmJGGT21iaQNJHy7KA4geVlgyVg&amp;oe=69A25206
   - id: par-mlyk2vpf-v84h
     type: paragraph
     order: 2
@@ -87,27 +74,16 @@ bodyBlocks:
 
 ಭಾರತ ನಿಧಾನವಾಗಿ ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ(AI)ಯ ಜಗತ್ತಿನಲ್ಲಿ ತನ್ನ ಛಾಪನ್ನು ಮೂಡಿಸುತ್ತಿದೆ. ಹೆಚ್ಚಾಗಿ ಅಮೆರಿಕ ಮತ್ತು ಚೀನಾದವರು ಪ್ರಾಬಲ್ಯ ಹೊಂದಿದ್ದಾರೆ. ಬೆಂಗಳೂರು ಮೂಲದ ಸ್ಟಾರ್ಟ್ಅಪ್ ‘ ಸರ್ವಂ AI’ ಈ ಕ್ಷೇತ್ರದಲ್ಲಿ ಒಂದು ಮಾರ್ಗದರ್ಶಕನಾಗಿ ಹೊರಹೊಮ್ಮುತ್ತಿದೆ.ಇದು ಭಾರತದೊಳಗೆ ಮೂಲಭೂತ AI ಮಾದರಿಗಳನ್ನು ಅಭಿವೃದ್ಧಿಪಡಿಸುತ್ತಿದೆ.
 
-:::video
-sourceType: social
-originalUrl: https://www.instagram.com/p/DI52RjLMYDp/?utm_source=ig_web_copy_link
-caption: The Bengaluru-based startup, founded by Vivek Raghavan and Pratyush Kumar and incubated at IIT Madras, is expected to receive access to about 4,000 Nvidia H100 chips for six months.
-posterThumbnail: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/02/a8aba23ecabedb6a.jpg
-embedUrl: https://www.instagram.com/p/DI52RjLMYDp/embed
-provider: instagram
-credit: Instagram
-title: Indian Startup News on Instagram: "Sarvam AI is poised to become the first startup to benefit from India&#039;s ambitious IndiaAI Mission, with the government set to offer free access to Nvidia GPUs worth Rs 220 crore, according to a report by The Times of India. 
-
-The Bengaluru-based startup, founded by Vivek Raghavan and Pratyush Kumar and incubated at IIT Madras, is expected to receive access to about 4,000 Nvidia H100 chips for six months. 
-
-These high-performance GPUs are critical for training large AI models and could give Sarvam a major edge as India seeks to build an indigenous large language model, similar to OpenAI&#x2019;s GPT and China&#x2019;s DeepSeek. 
-
-Sarvam launched a 2-billion-parameter language model late last year, specifically tailored for Indian languages. The fresh compute power is expected to significantly boost its capabilities. 
-
-The IndiaAI Mission, backed by over Rs 10,300 crore in funding, aims to create domestic AI infrastructure, innovation hubs, and large-scale datasets to help local companies compete in the global AI race.
-
-#ai #startup #government #nvidia #technology #innovation #news #indianstartupnews"
-trustedSourceHtml: <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/DI52RjLMYDp/" data-instgrm-version="14"></blockquote>
+:::post
+originalUrl: https://www.instagram.com/reel/DUqWeujEcGr/?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==
+canonicalUrl: https://www.instagram.com/reel/DUqWeujEcGr/
+platform: instagram
+metadata.author: Full Disclosure on Instagram: "An Indian startup just beat ChatGPT & Gemini in OCR benchmarks. Better at: Indic languages Scanned government docs Mixed-language content This isn’t hype. It’s sovereign AI in action. Can India build AI that rivals global giants? comment below #ai #sarvamai #indianai #gemini #chatgpt #artificialintelligence"
+metadata.username: 
+metadata.textPreview: fulldisclosure.ig on February 12, 2026: "An Indian startup just beat ChatGPT & Gemini in OCR benchmarks. Better at: Indic languages Scanned government docs Mixed-language content This isn’t hype. It’s sovereign AI in action. Can India build AI that rivals global giants? comment below #ai #sarvamai #indianai #gemini #chatgpt #artificialintelligence".
+metadata.thumbnail: https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/627661625_17949138021096088_6300798593912810789_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&amp;_nc_cat=102&amp;ccb=7-5&amp;_nc_sid=18de74&amp;efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&amp;_nc_ohc=2HZaGNqR6j0Q7kNvwFypfDY&amp;_nc_oc=AdlJ5uHt9F-y5XexbmQF-OK5Zxi8VKbbUc1KDhG1O29KKA9iRh5cz4ORg9OLj5VS_UI&amp;_nc_zt=23&amp;_nc_ht=scontent-iad3-1.cdninstagram.com&amp;_nc_gid=ucXjABv0PPe5TSPKNcB-Xg&amp;oh=00_AfvdwovsF4qherKy6YbKmJGGT21iaQNJHy7KA4geVlgyVg&amp;oe=69A25206
 :::
+
 2023ರಲ್ಲಿ ಆರಂಭವಾದ ಸರ್ವಂ ಎಐ ಎನ್ನುವ ಕಂಪನಿ, ಇವತ್ತು ಗೂಗಲ್ ಜೆಮಿನಿ ಮತ್ತು ಚಾಟ್ ಜಿಪಿಟಿಯಂತಹ ದೈತ್ಯ ಎಐ ಮಾಡೆಲ್‌ಗಳನ್ನು ಕೆಲವು ಪ್ರಮುಖ ಬೆಂಚ್‌ ಮಾರ್ಕ್‌ಗಳಲ್ಲಿ ಹಿಂದಿಕ್ಕಿದೆ. ಈ ಜಾಗತಿಕ ಎಐ ದಿಗ್ಗಜರಿಗೆ ಬೆಂಗಳೂರಿನ ಒಂದು ಸ್ಟಾರ್ಟ್‌ಅಪ್‌ ಶಾಕ್ ಕೊಟ್ಟಿದೆ ಎಂದರೆ ತಪ್ಪಾಗದು.  ಡಾ. ಪ್ರತ್ಯೂಷ್ ಕುಮಾರ್ ಹಾಗೂ ಡಾ. ವಿವೇಕ್ ರಾಘವನ್ ಇದನ್ನು ನಿರ್ಮಿಸಿದ್ದಾರೆ.
 
 ಈ ಸಂಸ್ಥೆ ಇದೇ ಮೊದಲ ಬಾರಿ ದೇಶೀಯ ಎಐ ಚಾಲಿತ, ಕನ್ನಡಕ ಹೊರತಂದಿದ್ದು, ಎಐ ಇಂಪಾಕ್ಟ್​​ ಶೃಂಗಸಭೆಯಲ್ಲಿ ಪ್ರಧಾನಿ ನರೇಂದ್ರ ಮೋದಿ ಇದರ ಅನುಭವ ಪಡೆದಿದ್ದರು. ‘ಸರ್ವಂ​ ಕೆಜೆ ಎಐ ಸ್ಮಾರ್ಟ್ ಗ್ಲಾಸ್’. ಇದು ನಿಮ್ಮ ಮುಖದ ಅಂದ ಹೆಚ್ಚಿಸುವುದಷ್ಟೇ ಅಲ್ಲ, ಅದು ಜಗತ್ತನ್ನು ನೋಡುವ, ಆಲಿಸುವ, ಅರ್ಥಮಾಡಿಕೊಳ್ಳುವ, ಪ್ರತಿಕ್ರಿಯಿಸುವ ಮತ್ತು ದೃಶ್ಯ ಸೆರೆಹಿಡಿಯುವ ಗ್ಯಾಜೆಟ್.
