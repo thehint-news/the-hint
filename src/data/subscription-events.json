@@ -1601,5 +1601,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-02-23T02:30:30.054Z",
     "totalSubscribers": 0
+  },
+  {
+    "id": "a18ed2f4-b591-4689-8744-b82e544d9782",
+    "articleSlug": "ai-impact-summit-2026-ಭರತದ-ಎಐ-ಕರತಗ-ಜಯ-ಇಟಲಜನಸ-ಮನನಡ-ಕತಕ-ಬದಧಮತತಯನನ-ಅಕಷಯಪತರಗ-ಹಲಸದ-ಮಖಶ-ಅಬನ",
+    "section": "opinion",
+    "headline": "AI Impact Summit 2026: ಭಾರತದ ಎಐ ಕ್ರಾಂತಿಗೆ ಜಿಯೋ ಇಂಟೆಲಿಜೆನ್ಸ್ ಮುನ್ನುಡಿ! ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆಯನ್ನು ಅಕ್ಷಯಪಾತ್ರೆಗೆ ಹೋಲಿಸಿದ ಮುಖೇಶ್ ಅಂಬಾನಿ!",
+    "summary": "AI Impact Summit 2026: ಅಂಬಾನಿ ಅವರ ಪ್ರಕಾರ, ಈ ಎಐ ಅನ್ನೋದು ಬರೀ ಇನ್ನೊಂದು ಹೊಸ ಟೆಕ್ನಾಲಜಿ ಅಲ್ಲ! ಮನುಷ್ಯರ ತರಾನೇ ಯೋಚನೆ ಮಾಡೋ, ಅರ್ಥ ಮಾಡಿಕೊಳ್ಳೋ ಶಕ್ತಿ ಇರೋ ಒಂದು ಮ್ಯಾಜಿಕ್ ಸಿಸ್ಟಮ್ ಇದು.",
+    "contentType": "opinion",
+    "priority": "normal",
+    "createdAt": "2026-02-23T02:35:49.019Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
