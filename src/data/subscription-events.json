@@ -1611,11 +1611,10 @@
     "contentType": "opinion",
     "priority": "normal",
     "createdAt": "2026-02-23T02:35:49.019Z",
-    "status": "processing",
+    "status": "sent",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-02-23T02:35:52.166Z",
-    "totalSubscribers": 0
+    "lastAttemptAt": "2026-02-23T02:35:57.729Z"
   }
 ]
