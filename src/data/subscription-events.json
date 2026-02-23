@@ -1486,23 +1486,10 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-23T01:55:54.303Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
-  },
-  {
-    "id": "851c37fc-46b8-4d16-b2b1-25a56bebcd07",
-    "articleSlug": "ಅಣ-ಶಕತ-ಒಪಪದ-ಮತಕತ-ವಫಲ-ಇರನ-ಕಡಗ-ಮಲಟರ-ವಮನ-ಬಹತ-ಏರ-ಬರಡಜ-ಸಜಜಗಳಸದ-ಅಮರಕ-video",
-    "section": "world-affairs",
-    "headline": "ಅಣು ಶಕ್ತಿ ಒಪ್ಪಂದ ಮಾತುಕತೆ ವಿಫಲ? ಇರಾನ್ ಕಡೆಗೆ ಮಿಲಿಟರಿ ವಿಮಾನ, ಬೃಹತ್ 'ಏರ್ ಬ್ರಿಡ್ಜ್' ಸಜ್ಜುಗೊಳಿಸಿದ ಅಮೆರಿಕ! Video",
-    "summary": "ಇರಾನ್ ಕಡೆಗೆ ಸಿಬ್ಬಂದಿ, ಯುದ್ಧ ಸಾಮಗ್ರಿ ಮತ್ತು ಉಪಕರಣಗಳನ್ನು ನಿರಂತರವಾಗಿ ಸಾಗಿಸುತ್ತಿರುವ ವಿಮಾನಗಳ ದೃಶ್ಯವನ್ನು ಫ್ಲೈಟ್ ಟ್ರ್ಯಾಕಿಂಗ್ ಡೇಟಾ ಬಹಿರಂಗಪಡಿಸಿದೆ.",
-    "contentType": "news",
-    "priority": "normal",
-    "createdAt": "2026-02-23T01:57:54.308Z",
-    "status": "pending",
-    "attempts": 0,
-    "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-23T01:57:57.468Z"
   }
 ]
