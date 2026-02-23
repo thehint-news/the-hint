@@ -1564,11 +1564,10 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-23T02:15:10.722Z",
-    "status": "processing",
+    "status": "sent",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-02-23T02:15:16.880Z",
-    "totalSubscribers": 0
+    "lastAttemptAt": "2026-02-23T02:15:25.720Z"
   }
 ]
