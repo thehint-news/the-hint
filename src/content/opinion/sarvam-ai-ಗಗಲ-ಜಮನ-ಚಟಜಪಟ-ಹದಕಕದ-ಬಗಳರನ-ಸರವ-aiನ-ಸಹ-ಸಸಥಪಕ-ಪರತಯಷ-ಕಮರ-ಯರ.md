@@ -1,11 +1,11 @@
 ---
 title: 'Sarvam AI: ಗೂಗಲ್ ಜೆಮಿನಿ, ಚಾಟ್‌ಜಿಪಿಟಿ ಹಿಂದಿಕ್ಕಿದ ಬೆಂಗಳೂರಿನ ‘ಸರ್ವಂ AI’ನ ಸಹ ಸಂಸ್ಥಾಪಕ ಪ್ರತ್ಯೂಷ್ ಕುಮಾರ್ ಯಾರು?'
 subtitle: ಬೆಂಗಳೂರು ಮೂಲದ ಸರ್ವಂ AI ಭಾರತೀಯ AI ಕ್ಷೇತ್ರದಲ್ಲಿ ಹೊಸ ಕ್ರಾಂತಿ ಸೃಷ್ಟಿಸಿದೆ. ಗೂಗಲ್‌ನ ಜೆಮಿನಿ ಮತ್ತು ಓಪನ್‌ಎಐನ ಚಾಟ್‌ಜಿಪಿಟಿಯಂತಹ ಜಾಗತಿಕ ಮಾದರಿಗಳನ್ನು ಭಾರತೀಯ ಭಾಷೆಗಳ OCR ಮಾನದಂಡಗಳಲ್ಲಿ ಮೀರಿಸಿದೆ. ಸಹ-ಸಂಸ್ಥಾಪಕರಾದ ಪ್ರತ್ಯೂಷ್ ಕುಮಾರ್ ಮತ್ತು ವಿವೇಕ್ ರಾಘವನ್ ಅವರ ನಾಯಕತ್ವದಲ್ಲಿ, ಸರ್ವಂ AI ಭಾರತದ ಅಗತ್ಯಗಳಿಗೆ ಸೂಕ್ತವಾದ ಹಗುರವಾದ, ಸ್ಥಳೀಯ AI ಪರಿಹಾರಗಳನ್ನು ಅಭಿವೃದ್ಧಿಪಡಿಸುತ್ತಿದೆ, ದೇಶೀಯ AI ಮಾದರಿಗಳಿಗೆ ಹೊಸ ಭರವಸೆ ನೀಡಿದೆ.
-contentType: news
+contentType: opinion
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/02/4756574047cf00b0.jpg
 status: published
 publishedAt: '2026-02-23T02:29:43.689Z'
-updatedAt: null
+updatedAt: '2026-02-23T02:30:12.596Z'
 placement: standard
 tags: []
 sources: []
