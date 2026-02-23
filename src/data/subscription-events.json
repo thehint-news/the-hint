@@ -1532,11 +1532,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-23T02:07:03.451Z",
-    "status": "processing",
+    "status": "sent",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-02-23T02:09:24.991Z",
+    "lastAttemptAt": "2026-02-23T02:09:36.851Z",
     "totalSubscribers": 0
   }
 ]
