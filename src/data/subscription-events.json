@@ -1579,23 +1579,10 @@
     "contentType": "opinion",
     "priority": "normal",
     "createdAt": "2026-02-23T02:22:19.278Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
-  },
-  {
-    "id": "bf6cf4a3-4c9e-4cf9-a7fe-cd8e61c182a1",
-    "articleSlug": "sarvam-ai-ಗಗಲ-ಜಮನ-ಚಟಜಪಟ-ಹದಕಕದ-ಬಗಳರನ-ಸರವ-aiನ-ಸಹ-ಸಸಥಪಕ-ಪರತಯಷ-ಕಮರ-ಯರ",
-    "section": "opinion",
-    "headline": "Sarvam AI: ಗೂಗಲ್ ಜೆಮಿನಿ, ಚಾಟ್‌ಜಿಪಿಟಿ ಹಿಂದಿಕ್ಕಿದ ಬೆಂಗಳೂರಿನ ‘ಸರ್ವಂ AI’ನ ಸಹ ಸಂಸ್ಥಾಪಕ ಪ್ರತ್ಯೂಷ್ ಕುಮಾರ್ ಯಾರು?",
-    "summary": "ಬೆಂಗಳೂರು ಮೂಲದ ಸರ್ವಂ AI ಭಾರತೀಯ AI ಕ್ಷೇತ್ರದಲ್ಲಿ ಹೊಸ ಕ್ರಾಂತಿ ಸೃಷ್ಟಿಸಿದೆ. ಗೂಗಲ್‌ನ ಜೆಮಿನಿ ಮತ್ತು ಓಪನ್‌ಎಐನ ಚಾಟ್‌ಜಿಪಿಟಿಯಂತಹ ಜಾಗತಿಕ ಮಾದರಿಗಳನ್ನು ಭಾರತೀಯ ಭಾಷೆಗಳ OCR ಮಾನದಂಡಗಳಲ್ಲಿ ಮೀರಿಸಿದೆ. ಸಹ-ಸಂಸ್ಥಾಪಕರಾದ ಪ್ರತ್ಯೂಷ್ ಕುಮಾರ್ ಮತ್ತು ವಿವೇಕ್ ರಾಘವನ್ ಅವರ ನಾಯಕತ್ವದಲ್ಲಿ, ಸರ್ವಂ AI ಭಾರತದ ಅಗತ್ಯಗಳಿಗೆ ಸೂಕ್ತವಾದ ಹಗುರವಾದ, ಸ್ಥಳೀಯ AI ಪರಿಹಾರಗಳನ್ನು ಅಭಿವೃದ್ಧಿಪಡಿಸುತ್ತಿದೆ, ದೇಶೀಯ AI ಮಾದರಿಗಳಿಗೆ ಹೊಸ ಭರವಸೆ ನೀಡಿದೆ.",
-    "contentType": "news",
-    "priority": "normal",
-    "createdAt": "2026-02-23T02:29:46.139Z",
-    "status": "pending",
-    "attempts": 0,
-    "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-23T02:29:49.246Z"
   }
 ]
