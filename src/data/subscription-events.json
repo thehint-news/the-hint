@@ -1455,11 +1455,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-23T01:52:07.595Z",
-    "status": "processing",
+    "status": "pending",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-02-23T01:54:25.788Z"
+    "totalSubscribers": 0
   },
   {
     "id": "0ebde802-ac6a-411a-8cad-490b2eb38864",
