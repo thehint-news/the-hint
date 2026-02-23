@@ -1392,10 +1392,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-22T16:53:15.383Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-23T01:23:22.589Z"
   },
   {
     "id": "b5860b4e-9363-4341-8ff5-98b2ac0651c6",
@@ -1406,20 +1407,6 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-22T16:58:04.086Z",
-    "status": "pending",
-    "attempts": 0,
-    "processedCount": 0,
-    "sentEmails": []
-  },
-  {
-    "id": "d7924d53-6e4f-4d88-b755-cfa79efb87cf",
-    "articleSlug": "erwrtwetwetewtew",
-    "section": "court",
-    "headline": "erwrtwetwetewtew",
-    "summary": "twetewtewtwewtwt",
-    "contentType": "news",
-    "priority": "normal",
-    "createdAt": "2026-02-23T01:23:19.439Z",
     "status": "pending",
     "attempts": 0,
     "processedCount": 0,
