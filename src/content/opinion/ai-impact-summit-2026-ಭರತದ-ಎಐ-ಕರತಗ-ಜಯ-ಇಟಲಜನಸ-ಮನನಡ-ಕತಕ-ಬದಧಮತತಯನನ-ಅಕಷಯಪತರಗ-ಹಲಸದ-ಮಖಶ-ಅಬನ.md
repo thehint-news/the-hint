@@ -5,7 +5,7 @@ contentType: opinion
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/02/4310e1dfdb2a78c8.jpg
 status: published
 publishedAt: '2026-02-23T02:35:46.127Z'
-updatedAt: '2026-02-23T02:37:10.101Z'
+updatedAt: '2026-02-23T17:05:37.826Z'
 placement: top
 tags:
   - ಭಾರತ
@@ -17,19 +17,17 @@ bodyBlocks:
     type: paragraph
     order: 0
     content: ದೆಹಲಿಯ ಭರತ್ ಮಂಟಪದಲ್ಲಿ ನಡೆದ ‘ಇಂಡಿಯಾ ಎಐ ಇಂಪ್ಯಾಕ್ಟ್ ಸಮ್ಮಿಟ್ 2026’ (India AI Impact Summit 2026) ಉದ್ದೇಶಿಸಿ ಪ್ರಧಾನಿ ನರೇಂದ್ರ ಮೋದಿ ಅವರು ಮಾಡಿದ ಭಾಷಣ ಮಾಡಿದ್ದಾರೆ. ಅದನ್ನು ಕನ್ನಡಕ್ಕೆ ಎಐ ಮೂಲಕ ಅನುವಾದ ಮಾಡಲಾಗಿದೆ. ಇಂದಿನ ಈ ‘ಇಂಡಿಯಾ ಎಐ ಇಂಪ್ಯಾಕ್ಟ್ ಸಮ್ಮಿಟ್’ ಕೇವಲ ತಂತ್ರಜ್ಞಾನದ ಸಮಾವೇಶವಲ್ಲ, ಇದು ನವ ಭಾರತದ ಸಂಕಲ್ಪದ ಪ್ರತೀಕವಾಗಿದೆ ಎಂದು ಮೋದಿ ಇದರಲ್ಲಿ ಹೇಳಿದ್ದಾರೆ ಈ ಬಗ್ಗೆ ಲೈವ್​​ ವಿಡಿಯೋ ಇಲ್ಲಿದೆ ನೋಡಿ.
-  - id: vid-mlyk8r96-2ty1
-    type: video
+  - id: pos-mlzfgpzp-73j8
+    type: post
     order: 1
-    sourceType: social
-    originalUrl: https://youtu.be/tGonnW6TeL0
-    embedUrl: https://www.youtube.com/embed/tGonnW6TeL0
-    posterThumbnail: https://img.youtube.com/vi/tGonnW6TeL0/maxresdefault.jpg
-    caption: PM Modi’s speech during India AI Impact Summit 2026 | Kannada version | AI Generated Audio
-    credit: Narendra Modi
-    title: PM Modi’s speech during India AI Impact Summit 2026 | Kannada version | AI Generated Audio
-    provider: youtube
-    trustedSourceHtml: <iframe width="200" height="113" src="https://www.youtube.com/embed/tGonnW6TeL0?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="PM Modi’s speech during India AI Impact Summit 2026 | Kannada version | AI Generated Audio"></iframe>
-    isRestricted: false
+    originalUrl: https://www.youtube.com/live/tGonnW6TeL0?si=EVE3DRYSkyx0xepW
+    canonicalUrl: https://www.youtube.com/live/tGonnW6TeL0
+    platform: youtube
+    metadata:
+      author: PM Modi’s speech during India AI Impact Summit 2026 | Kannada version | AI Generated Audio
+      username: Narendra Modi
+      textPreview: 'PM Modi Live: Prime Minister Narendra Modi addresses a gathering during the India AI Impact Summit 2026 in New Delhi. Listen to the Kannada version of the Pr...'
+      thumbnail: https://i.ytimg.com/vi/tGonnW6TeL0/maxresdefault.jpg
   - id: par-mlykbx1p-a13r
     type: paragraph
     order: 2
@@ -54,17 +52,16 @@ bodyBlocks:
 
 ದೆಹಲಿಯ ಭರತ್ ಮಂಟಪದಲ್ಲಿ ನಡೆದ ‘ಇಂಡಿಯಾ ಎಐ ಇಂಪ್ಯಾಕ್ಟ್ ಸಮ್ಮಿಟ್ 2026’ (India AI Impact Summit 2026) ಉದ್ದೇಶಿಸಿ ಪ್ರಧಾನಿ ನರೇಂದ್ರ ಮೋದಿ ಅವರು ಮಾಡಿದ ಭಾಷಣ ಮಾಡಿದ್ದಾರೆ. ಅದನ್ನು ಕನ್ನಡಕ್ಕೆ ಎಐ ಮೂಲಕ ಅನುವಾದ ಮಾಡಲಾಗಿದೆ. ಇಂದಿನ ಈ ‘ಇಂಡಿಯಾ ಎಐ ಇಂಪ್ಯಾಕ್ಟ್ ಸಮ್ಮಿಟ್’ ಕೇವಲ ತಂತ್ರಜ್ಞಾನದ ಸಮಾವೇಶವಲ್ಲ, ಇದು ನವ ಭಾರತದ ಸಂಕಲ್ಪದ ಪ್ರತೀಕವಾಗಿದೆ ಎಂದು ಮೋದಿ ಇದರಲ್ಲಿ ಹೇಳಿದ್ದಾರೆ ಈ ಬಗ್ಗೆ ಲೈವ್​​ ವಿಡಿಯೋ ಇಲ್ಲಿದೆ ನೋಡಿ.
 
-:::video
-sourceType: social
-originalUrl: https://youtu.be/tGonnW6TeL0
-caption: PM Modi’s speech during India AI Impact Summit 2026 | Kannada version | AI Generated Audio
-posterThumbnail: https://img.youtube.com/vi/tGonnW6TeL0/maxresdefault.jpg
-embedUrl: https://www.youtube.com/embed/tGonnW6TeL0
-provider: youtube
-credit: Narendra Modi
-title: PM Modi’s speech during India AI Impact Summit 2026 | Kannada version | AI Generated Audio
-trustedSourceHtml: <iframe width="200" height="113" src="https://www.youtube.com/embed/tGonnW6TeL0?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="PM Modi’s speech during India AI Impact Summit 2026 | Kannada version | AI Generated Audio"></iframe>
+:::post
+originalUrl: https://www.youtube.com/live/tGonnW6TeL0?si=EVE3DRYSkyx0xepW
+canonicalUrl: https://www.youtube.com/live/tGonnW6TeL0
+platform: youtube
+metadata.author: PM Modi’s speech during India AI Impact Summit 2026 | Kannada version | AI Generated Audio
+metadata.username: Narendra Modi
+metadata.textPreview: PM Modi Live: Prime Minister Narendra Modi addresses a gathering during the India AI Impact Summit 2026 in New Delhi. Listen to the Kannada version of the Pr...
+metadata.thumbnail: https://i.ytimg.com/vi/tGonnW6TeL0/maxresdefault.jpg
 :::
+
 ರಿಲಯನ್ಸ್ ಇಂಡಸ್ಟ್ರೀಸ್‌ನ ಅಧ್ಯಕ್ಷ ಮುಖೇಶ್ ಅಂಬಾನಿ ಅವರು ಇತ್ತೀಚೆಗೆ ನಡೆದ ಇಂಡಿಯಾ ಎಐ ಶೃಂಗಸಭೆಯಲ್ಲಿ (India AI Summit) ಭಾಷಣ ಮಾಡಿದ್ದಾರೆ. ಜಾಗತಿಕ ಎಐ ಇಂಪ್ಯಾಕ್ಟ್ ಶೃಂಗಸಭೆಯು (Global AI Impact Summit) ಭಾರತದ ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ (Artificial Intelligence) ಇತಿಹಾಸದಲ್ಲೇ ಒಂದು ಗೇಮ್ ಚೇಂಜರ್ ಅಂತ ಅವರು ಹೇಳಿದ್ದಾರೆ. ಪ್ರಧಾನಿ ಮೋದಿಯವರ ಎಐ-ಚಾಲಿತ ಭಾರತ (AI-Driven India) ಕನಸು ಬರೀ ನಮಗೆ ಮಾತ್ರವಲ್ಲ, ಇಡೀ ಜಾಗತಿಕ ದಕ್ಷಿಣದ (Global South) ದೇಶಗಳಿಗೂ ದೊಡ್ಡ ಮಾದರಿಯಾಗಲಿದೆ ಅಂತ ಅವರು ಭವಿಷ್ಯ ನುಡಿದಿದ್ದಾರೆ.
 
 ## ಎಐ ಅನ್ನೋದು ಬತ್ತದ 'ಅಕ್ಷಯಪಾತ್ರೆ'!
