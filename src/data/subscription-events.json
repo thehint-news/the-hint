@@ -1501,10 +1501,10 @@
     "contentType": "opinion",
     "priority": "normal",
     "createdAt": "2026-02-23T02:02:41.598Z",
-    "status": "processing",
+    "status": "pending",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-02-23T02:02:44.762Z"
+    "totalSubscribers": 0
   }
 ]
