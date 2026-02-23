@@ -1408,23 +1408,10 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-22T16:58:04.086Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
-  },
-  {
-    "id": "a769fc49-160b-4191-a8da-fb8a3620f478",
-    "articleSlug": "ಅಮರಕ-ಸಪರ-ಕರಟ-ತರಪಗ-ಸಡಡ-ಹಡದ-ಟರಪ-ಜಗತಕ-ಸಕ-ಶ-10-ರದ-15ಕಕ-ಹಚಚಸ-ಆದಶ",
-    "section": "world-affairs",
-    "headline": "ಅಮೆರಿಕ ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ತೀರ್ಪಿಗೆ ಸೆಡ್ಡು ಹೊಡೆದ ಟ್ರಂಪ್; ಜಾಗತಿಕ ಸುಂಕ ಶೇ. 10 ರಿಂದ 15ಕ್ಕೆ ಹೆಚ್ಚಿಸಿ ಆದೇಶ!",
-    "summary": "ಭಾರತ ಸೇರಿದಂತೆ ವಿವಿಧ ದೇಶಗಳ ಸರಕುಗಳ ಮೇಲೆ ವಿಧಿಸಿದ್ದ ಭಾರಿ ಸುಂಕಗಳನ್ನು ಶುಕ್ರವಾರ ಅಮೆರಿಕದ ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ರದ್ದುಗೊಳಿಸಿತ್ತು.",
-    "contentType": "news",
-    "priority": "normal",
-    "createdAt": "2026-02-23T01:40:43.837Z",
-    "status": "pending",
-    "attempts": 0,
-    "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-23T01:40:47.167Z"
   }
 ]
