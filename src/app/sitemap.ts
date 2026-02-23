@@ -1,6 +1,9 @@
 import { MetadataRoute } from 'next';
 import { getAllArticles, getValidSections } from '@/lib/content/reader';
 
+// Generate sitemap dynamically (GitHub API calls at build time cause timeouts)
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thehint.news';
     const currentDate = new Date().toISOString();

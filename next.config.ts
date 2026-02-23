@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Increase timeout for static page generation (default 60s is too short
+  // when fetching content from GitHub API on Vercel's single-worker free plan)
+  staticPageGenerationTimeout: 120,
   images: {
     // Allow all external image sources used by articles and video thumbnails
     remotePatterns: [

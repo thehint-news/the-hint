@@ -23,7 +23,8 @@ import {
     ContinueReading,
 } from '@/components/article';
 
-// ISR: Revalidate every 60 seconds
+// Force dynamic rendering — GitHub API calls at build time cause timeouts
+export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 
 interface ArticlePageProps {

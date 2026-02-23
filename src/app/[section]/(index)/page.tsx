@@ -15,7 +15,8 @@ import { getSectionPageData, InvalidSectionError } from '@/lib/content';
 import { SectionHeader, StoryList, Pagination, LeadStory } from '@/components/editorial';
 import { EmptyState } from '@/components/ui/EmptyState';
 
-// Revalidate section pages every 60 seconds
+// Force dynamic rendering — GitHub API calls at build time cause timeouts
+export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 
 // Pagination config

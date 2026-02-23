@@ -21,7 +21,9 @@ import { getHomepageData } from "@/lib/content/homepage";
 import { LeadStory, TopStories, SectionBlock } from "@/components/editorial";
 
 
-// Revalidate homepage every 60 seconds
+// Force dynamic rendering — GitHub API calls at build time cause timeouts
+// on Vercel's single-worker free plan. Content is still cached via ISR.
+export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 
 export default async function HomePage() {
