@@ -5,7 +5,7 @@ contentType: opinion
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/02/4756574047cf00b0.jpg
 status: published
 publishedAt: '2026-02-23T02:29:43.689Z'
-updatedAt: '2026-02-23T16:21:45.269Z'
+updatedAt: '2026-02-23T16:23:12.712Z'
 placement: standard
 tags: []
 sources: []
@@ -14,17 +14,17 @@ bodyBlocks:
     type: paragraph
     order: 0
     content: ' ಭಾರತ ನಿಧಾನವಾಗಿ ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ(AI)ಯ ಜಗತ್ತಿನಲ್ಲಿ ತನ್ನ ಛಾಪನ್ನು ಮೂಡಿಸುತ್ತಿದೆ. ಹೆಚ್ಚಾಗಿ ಅಮೆರಿಕ ಮತ್ತು ಚೀನಾದವರು ಪ್ರಾಬಲ್ಯ ಹೊಂದಿದ್ದಾರೆ. ಬೆಂಗಳೂರು ಮೂಲದ ಸ್ಟಾರ್ಟ್ಅಪ್ ‘ ಸರ್ವಂ AI’ ಈ ಕ್ಷೇತ್ರದಲ್ಲಿ ಒಂದು ಮಾರ್ಗದರ್ಶಕನಾಗಿ ಹೊರಹೊಮ್ಮುತ್ತಿದೆ.ಇದು ಭಾರತದೊಳಗೆ ಮೂಲಭೂತ AI ಮಾದರಿಗಳನ್ನು ಅಭಿವೃದ್ಧಿಪಡಿಸುತ್ತಿದೆ.'
-  - id: pos-mlzdw986-95u6
+  - id: pos-mlzdy4v9-32tw
     type: post
     order: 1
-    originalUrl: https://www.instagram.com/reel/DUqWeujEcGr/?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==
-    canonicalUrl: https://www.instagram.com/reel/DUqWeujEcGr/
+    originalUrl: https://www.instagram.com/reel/DU_GFVHDyFE/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==
+    canonicalUrl: https://www.instagram.com/reel/DU_GFVHDyFE/
     platform: instagram
     metadata:
-      author: 'Full Disclosure on Instagram: "An Indian startup just beat ChatGPT & Gemini in OCR benchmarks. Better at: Indic languages Scanned government docs Mixed-language content This isn’t hype. It’s sovereign AI in action. Can India build AI that rivals global giants? comment below #ai #sarvamai #indianai #gemini #chatgpt #artificialintelligence"'
+      author: 'Ministry of I & B on Instagram: "Following the launch of Sarvam-30B and Sarvam-105B models at the India AI Action Summit, co-founder Vivek Raghavan discusses the company’s focus on developing full-stack AI solutions for India. ️ Watch #IndiaAIImpactSummit2026"'
       username: ''
-      textPreview: 'fulldisclosure.ig on February 12, 2026: "An Indian startup just beat ChatGPT & Gemini in OCR benchmarks. Better at: Indic languages Scanned government docs Mixed-language content This isn’t hype. It’s sovereign AI in action. Can India build AI that rivals global giants? comment below #ai #sarvamai #indianai #gemini #chatgpt #artificialintelligence".'
-      thumbnail: https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/627661625_17949138021096088_6300798593912810789_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&amp;_nc_cat=102&amp;ccb=7-5&amp;_nc_sid=18de74&amp;efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&amp;_nc_ohc=2HZaGNqR6j0Q7kNvwFypfDY&amp;_nc_oc=AdlJ5uHt9F-y5XexbmQF-OK5Zxi8VKbbUc1KDhG1O29KKA9iRh5cz4ORg9OLj5VS_UI&amp;_nc_zt=23&amp;_nc_ht=scontent-iad3-1.cdninstagram.com&amp;_nc_gid=ucXjABv0PPe5TSPKNcB-Xg&amp;oh=00_AfvdwovsF4qherKy6YbKmJGGT21iaQNJHy7KA4geVlgyVg&amp;oe=69A25206
+      textPreview: 'mib_india on February 20, 2026: "Following the launch of Sarvam-30B and Sarvam-105B models at the India AI Action Summit, co-founder Vivek Raghavan discusses the company’s focus on developing full-stack AI solutions for India. ️ Watch #IndiaAIImpactSummit2026".'
+      thumbnail: https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/639520290_18563540941024050_6598816744645748390_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&amp;_nc_cat=107&amp;ccb=7-5&amp;_nc_sid=18de74&amp;efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&amp;_nc_ohc=MiSEs7XE2KoQ7kNvwFGp_tD&amp;_nc_oc=AdmMLD-ySYtFaKdEtg95jbRwAnTftyI1VrLm03fJGW6AsZ8cDyhJk1hgzejdDJUuL4g&amp;_nc_zt=23&amp;_nc_ht=scontent-iad3-1.cdninstagram.com&amp;_nc_gid=nJhapcSVh-cgJVbKcI6VBA&amp;oh=00_AftVTvSfGsdFU8KAAg6PQWEL2Lu7A4-HoZWCo_aJqHO0pg&amp;oe=69A23A9B
   - id: par-mlyk2vpf-v84h
     type: paragraph
     order: 2
@@ -75,13 +75,13 @@ bodyBlocks:
 ಭಾರತ ನಿಧಾನವಾಗಿ ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ(AI)ಯ ಜಗತ್ತಿನಲ್ಲಿ ತನ್ನ ಛಾಪನ್ನು ಮೂಡಿಸುತ್ತಿದೆ. ಹೆಚ್ಚಾಗಿ ಅಮೆರಿಕ ಮತ್ತು ಚೀನಾದವರು ಪ್ರಾಬಲ್ಯ ಹೊಂದಿದ್ದಾರೆ. ಬೆಂಗಳೂರು ಮೂಲದ ಸ್ಟಾರ್ಟ್ಅಪ್ ‘ ಸರ್ವಂ AI’ ಈ ಕ್ಷೇತ್ರದಲ್ಲಿ ಒಂದು ಮಾರ್ಗದರ್ಶಕನಾಗಿ ಹೊರಹೊಮ್ಮುತ್ತಿದೆ.ಇದು ಭಾರತದೊಳಗೆ ಮೂಲಭೂತ AI ಮಾದರಿಗಳನ್ನು ಅಭಿವೃದ್ಧಿಪಡಿಸುತ್ತಿದೆ.
 
 :::post
-originalUrl: https://www.instagram.com/reel/DUqWeujEcGr/?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==
-canonicalUrl: https://www.instagram.com/reel/DUqWeujEcGr/
+originalUrl: https://www.instagram.com/reel/DU_GFVHDyFE/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==
+canonicalUrl: https://www.instagram.com/reel/DU_GFVHDyFE/
 platform: instagram
-metadata.author: Full Disclosure on Instagram: "An Indian startup just beat ChatGPT & Gemini in OCR benchmarks. Better at: Indic languages Scanned government docs Mixed-language content This isn’t hype. It’s sovereign AI in action. Can India build AI that rivals global giants? comment below #ai #sarvamai #indianai #gemini #chatgpt #artificialintelligence"
+metadata.author: Ministry of I & B on Instagram: "Following the launch of Sarvam-30B and Sarvam-105B models at the India AI Action Summit, co-founder Vivek Raghavan discusses the company’s focus on developing full-stack AI solutions for India. ️ Watch #IndiaAIImpactSummit2026"
 metadata.username: 
-metadata.textPreview: fulldisclosure.ig on February 12, 2026: "An Indian startup just beat ChatGPT & Gemini in OCR benchmarks. Better at: Indic languages Scanned government docs Mixed-language content This isn’t hype. It’s sovereign AI in action. Can India build AI that rivals global giants? comment below #ai #sarvamai #indianai #gemini #chatgpt #artificialintelligence".
-metadata.thumbnail: https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/627661625_17949138021096088_6300798593912810789_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&amp;_nc_cat=102&amp;ccb=7-5&amp;_nc_sid=18de74&amp;efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&amp;_nc_ohc=2HZaGNqR6j0Q7kNvwFypfDY&amp;_nc_oc=AdlJ5uHt9F-y5XexbmQF-OK5Zxi8VKbbUc1KDhG1O29KKA9iRh5cz4ORg9OLj5VS_UI&amp;_nc_zt=23&amp;_nc_ht=scontent-iad3-1.cdninstagram.com&amp;_nc_gid=ucXjABv0PPe5TSPKNcB-Xg&amp;oh=00_AfvdwovsF4qherKy6YbKmJGGT21iaQNJHy7KA4geVlgyVg&amp;oe=69A25206
+metadata.textPreview: mib_india on February 20, 2026: "Following the launch of Sarvam-30B and Sarvam-105B models at the India AI Action Summit, co-founder Vivek Raghavan discusses the company’s focus on developing full-stack AI solutions for India. ️ Watch #IndiaAIImpactSummit2026".
+metadata.thumbnail: https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/639520290_18563540941024050_6598816744645748390_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&amp;_nc_cat=107&amp;ccb=7-5&amp;_nc_sid=18de74&amp;efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&amp;_nc_ohc=MiSEs7XE2KoQ7kNvwFGp_tD&amp;_nc_oc=AdmMLD-ySYtFaKdEtg95jbRwAnTftyI1VrLm03fJGW6AsZ8cDyhJk1hgzejdDJUuL4g&amp;_nc_zt=23&amp;_nc_ht=scontent-iad3-1.cdninstagram.com&amp;_nc_gid=nJhapcSVh-cgJVbKcI6VBA&amp;oh=00_AftVTvSfGsdFU8KAAg6PQWEL2Lu7A4-HoZWCo_aJqHO0pg&amp;oe=69A23A9B
 :::
 
 2023ರಲ್ಲಿ ಆರಂಭವಾದ ಸರ್ವಂ ಎಐ ಎನ್ನುವ ಕಂಪನಿ, ಇವತ್ತು ಗೂಗಲ್ ಜೆಮಿನಿ ಮತ್ತು ಚಾಟ್ ಜಿಪಿಟಿಯಂತಹ ದೈತ್ಯ ಎಐ ಮಾಡೆಲ್‌ಗಳನ್ನು ಕೆಲವು ಪ್ರಮುಖ ಬೆಂಚ್‌ ಮಾರ್ಕ್‌ಗಳಲ್ಲಿ ಹಿಂದಿಕ್ಕಿದೆ. ಈ ಜಾಗತಿಕ ಎಐ ದಿಗ್ಗಜರಿಗೆ ಬೆಂಗಳೂರಿನ ಒಂದು ಸ್ಟಾರ್ಟ್‌ಅಪ್‌ ಶಾಕ್ ಕೊಟ್ಟಿದೆ ಎಂದರೆ ತಪ್ಪಾಗದು.  ಡಾ. ಪ್ರತ್ಯೂಷ್ ಕುಮಾರ್ ಹಾಗೂ ಡಾ. ವಿವೇಕ್ ರಾಘವನ್ ಇದನ್ನು ನಿರ್ಮಿಸಿದ್ದಾರೆ.
