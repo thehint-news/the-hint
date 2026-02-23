@@ -1642,11 +1642,10 @@
     "contentType": "opinion",
     "priority": "normal",
     "createdAt": "2026-02-23T02:45:24.978Z",
-    "status": "processing",
+    "status": "sent",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-02-23T02:45:27.689Z",
-    "totalSubscribers": 0
+    "lastAttemptAt": "2026-02-23T02:45:33.996Z"
   }
 ]
