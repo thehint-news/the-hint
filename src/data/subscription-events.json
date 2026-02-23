@@ -1414,5 +1414,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-02-23T01:40:55.860Z",
     "totalSubscribers": 0
+  },
+  {
+    "id": "889bcbaa-c6a6-448e-bcb5-3348999e600e",
+    "articleSlug": "ಅಮರಕದಲಲ-ಹದಗಳ-ಹಚಚನ-ಸಶಕಷತ-ಸಮದಯ-ಥಕ-ಟಯಕ-pew-ಅಧಯಯನ",
+    "section": "world-affairs",
+    "headline": "ಅಮೆರಿಕದಲ್ಲಿ ಹಿಂದೂಗಳೇ ಹೆಚ್ಚಿನ ಸುಶಿಕ್ಷಿತ ಸಮುದಾಯ! ಥಿಂಕ್ ಟ್ಯಾಂಕ್ Pew ಅಧ್ಯಯನ",
+    "summary": "ಅಮೆರಿಕದ ಪ್ರಮುಖ ಸಮುದಾಯಗಳ ಶೈಕ್ಷಣಿಕ ಸಾಧನೆಯನ್ನು ಪ್ಯೂ ರಿಸರ್ಚ್ ಸೆಂಟರ್‌ ಪರೀಕ್ಷಿಸಿದ್ದು, ಹಿಂದೂಗಳೇ ಹೆಚ್ಚಿನ ಸುಶಿಕ್ಷಿತ ಸಮುದಾಯವಾಗಿದೆ.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-23T01:43:41.547Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
