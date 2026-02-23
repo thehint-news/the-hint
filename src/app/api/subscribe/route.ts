@@ -60,9 +60,19 @@ export async function POST(request: NextRequest) {
 
         const result = await addSubscriber(email);
 
-        if (result.success && !result.isDuplicate) {
-            // Send Welcome Email (async, fire and forget)
-            import('@/lib/welcomeEmail').then(mod => mod.sendWelcomeEmail(email)).catch(err => logger.error('Failed to send welcome email', err));
+        if (!result.success) {
+            return NextResponse.json(
+                { success: false, error: result.message },
+                { status: 500 }
+            );
+        }
+
+        try {
+            const { sendWelcomeEmail } = await import('@/lib/welcomeEmail');
+            await sendWelcomeEmail(email);
+        } catch (err) {
+            logger.error('Failed to send welcome email', err);
+            // Don't fail the subscription itself if email fails
         }
 
         return NextResponse.json(

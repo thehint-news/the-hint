@@ -79,7 +79,14 @@ class GitService {
             if (!token) {
                 throw new Error('[GIT-SERVICE] Missing GIT_TOKEN environment variable.');
             }
-            this._octokit = new Octokit({ auth: token });
+            this._octokit = new Octokit({
+                auth: token,
+                request: {
+                    fetch: (url: string, opts: RequestInit) => {
+                        return fetch(url, { ...opts, cache: 'no-store' });
+                    }
+                }
+            });
         }
         return this._octokit;
     }
@@ -307,6 +314,7 @@ class GitService {
 
     /**
      * Commit a single file (write or update)
+     * Now routes through the robust Tree API instead of createOrUpdateFileContents
      */
     async commitFile(relativePath: string, message: string, staging: GitStaging, retryCount = 0): Promise<GitCommitResult> {
         const content = staging.pendingWrites.get(relativePath);
@@ -315,57 +323,10 @@ class GitService {
         }
 
         try {
-            const client = this.octokit;
-            let sha: string | undefined;
-            try {
-                const { data } = await client.rest.repos.getContent({
-                    owner: REPO_OWNER,
-                    repo: REPO_NAME,
-                    path: relativePath,
-                    ref: BRANCH,
-                });
-                if (!Array.isArray(data) && 'sha' in data) {
-                    sha = data.sha;
-                }
-            } catch (e: unknown) {
-                const err = e as { status?: number };
-                if (err.status !== 404) throw e;
-            }
-
-            const contentBase64 = Buffer.isBuffer(content)
-                ? content.toString('base64')
-                : Buffer.from(content, 'utf-8').toString('base64');
-
-            const res = await client.rest.repos.createOrUpdateFileContents({
-                owner: REPO_OWNER,
-                repo: REPO_NAME,
-                path: relativePath,
-                message,
-                content: contentBase64,
-                branch: BRANCH,
-                sha,
-                committer: {
-                    name: process.env.GIT_AUTHOR_NAME || 'Editor',
-                    email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
-                },
-                author: {
-                    name: process.env.GIT_AUTHOR_NAME || 'Editor',
-                    email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
-                }
-            });
-
-            staging.pendingWrites.delete(relativePath);
-
-            return {
-                success: true,
-                commitHash: res.data.commit.sha,
-                message
-            };
+            // Route through atomic Tree API to avoid finding existing SHAs.
+            // This prevents cache problems when updating files rapidly on Vercel.
+            return await this.commitFiles([relativePath], message, staging, retryCount);
         } catch (error: unknown) {
-            const err = error as { status?: number };
-            if (err.status === 409 && retryCount < 1) {
-                return this.commitFile(relativePath, message, staging, retryCount + 1);
-            }
             throw this.translateError(error);
         }
     }
@@ -382,6 +343,7 @@ class GitService {
 
     /**
      * Commit a single deletion
+     * Now routes through the robust Tree API to avoid fine-grained SHA mismatch and caching issues
      */
     async commitDeletion(relativePath: string, message: string, staging: GitStaging): Promise<GitCommitResult> {
         if (!staging.pendingDeletes.has(relativePath)) {
@@ -393,42 +355,10 @@ class GitService {
         }
 
         try {
-            const client = this.octokit;
-            const { data } = await client.rest.repos.getContent({
-                owner: REPO_OWNER,
-                repo: REPO_NAME,
-                path: relativePath,
-                ref: BRANCH,
-            });
-
-            if (Array.isArray(data) || !('sha' in data)) {
-                throw new Error('Path is a directory or invalid');
-            }
-
-            const res = await client.rest.repos.deleteFile({
-                owner: REPO_OWNER,
-                repo: REPO_NAME,
-                path: relativePath,
-                message,
-                sha: data.sha,
-                branch: BRANCH,
-                committer: {
-                    name: process.env.GIT_AUTHOR_NAME || 'Editor',
-                    email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
-                },
-                author: {
-                    name: process.env.GIT_AUTHOR_NAME || 'Editor',
-                    email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
-                }
-            });
-
-            staging.pendingDeletes.delete(relativePath);
-
-            return {
-                success: true,
-                commitHash: res.data.commit.sha,
-                message
-            };
+            // Use the atomic Tree API instead of repos.deleteFile.
+            // This is infinitely more robust because we don't need to fetch the file's exact SHA first,
+            // bypassing aggressive Next.js fetch caching that causes 409 Conflicts.
+            return await this.commitFiles([relativePath], message, staging);
         } catch (error: unknown) {
             throw this.translateError(error);
         }

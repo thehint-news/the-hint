@@ -32,7 +32,20 @@ function getFromAddress(): string {
 }
 
 function getBaseUrl(): string {
-    return process.env.APP_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL || 'https://thehint.news';
+    // Priority: explicit config → Vercel auto-vars → fallback
+    const candidates = [
+        process.env.APP_BASE_URL,
+        process.env.NEXT_PUBLIC_BASE_URL,
+        process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : undefined,
+        process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+    ];
+
+    for (const url of candidates) {
+        if (url && !url.includes('localhost')) {
+            return url.replace(/\/$/, '');
+        }
+    }
+    return 'https://thehint.news';
 }
 
 // =============================================================================
@@ -242,7 +255,8 @@ export async function sendEmailForEvent(recipient: string, event: SubscriptionEv
         }
 
         return true;
-    } catch {
+    } catch (error) {
+        console.error('[EMAIL] Fatal caught error:', error);
         // Silent failure — never break publishing
         return false;
     }

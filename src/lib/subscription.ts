@@ -37,14 +37,19 @@ export async function addSubscriber(email: string): Promise<{ success: boolean; 
         const existing = subscribers.find(s => s.email.toLowerCase() === normalizedEmail);
 
         if (existing) {
+            // Update timestamp even if already active to track re-joining intent
+            existing.subscribedAt = new Date().toISOString();
+            existing.email = normalizedEmail; // Use normalized
+
             if (!existing.active) {
                 existing.active = true;
-                existing.email = normalizedEmail; // Use normalized
-                existing.subscribedAt = new Date().toISOString();
                 await writeSubscribers(subscribers, `Re-subscribe: ${normalizedEmail}`);
-                return { success: true, message: 'Welcome back! Subscription reactivated.', isDuplicate: true };
+                return { success: true, message: 'Successfully subscribed.', isDuplicate: true };
             }
-            return { success: true, message: 'You are already subscribed.', isDuplicate: true };
+
+            // If already active, still save the update to 'subscribedAt' and return success message
+            await writeSubscribers(subscribers, `Repeat subscribe: ${normalizedEmail}`);
+            return { success: true, message: 'Successfully subscribed.', isDuplicate: true };
         }
 
         subscribers.push({

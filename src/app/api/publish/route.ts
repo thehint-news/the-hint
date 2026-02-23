@@ -189,7 +189,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             );
         }
 
-        // Initialize Subscription Event (Control Plane) - fire and forget
+        // Send article notification emails to subscribers.
+        // IMPORTANT: On Vercel serverless, background work is killed after response.
+        // We MUST await email sending before returning the response.
         try {
             const { queueManager } = await import('@/lib/subscription/queue');
             await queueManager.enqueue({
@@ -202,15 +204,28 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             });
             logger.info(`[PUBLISH] Subscription event enqueued for ${targetSlug}`);
 
-            // Auto-trigger queue processor in background
-            import('@/lib/subscription/processor').then(mod => {
-                mod.processSubscriptionQueue()
-                    .then(r => logger.info(`[PUBLISH] Queue processor: ${r.processed} emails sent`))
-                    .catch(err => logger.error('[PUBLISH] Queue processor error', err));
-            }).catch(err => logger.error('[PUBLISH] Failed to load queue processor', err));
+            // Process the queue synchronously — Vercel kills background work
+            const { processSubscriptionQueue } = await import('@/lib/subscription/processor');
+            const queueResult = await processSubscriptionQueue();
+            logger.info(`[PUBLISH] Queue processor: ${queueResult.processed} emails sent, ${queueResult.errors} errors`);
 
         } catch (queueError) {
-            logger.error('Failed to enqueue subscription event', queueError);
+            logger.error('[PUBLISH] Queue-based email delivery failed, trying direct send:', queueError);
+
+            // Fallback: Send emails directly via Resend (bypassing queue)
+            try {
+                const { sendArticleEmail } = await import('@/lib/welcomeEmail');
+                await sendArticleEmail({
+                    headline: articleData.headline,
+                    summary: articleData.subheadline || 'Read the full story on our website.',
+                    section: articleData.section,
+                    publishedAt: new Date().toISOString(),
+                    url: `/${articleData.section}/${targetSlug}`,
+                });
+                logger.info('[PUBLISH] Direct email fallback succeeded.');
+            } catch (directError) {
+                logger.error('[PUBLISH] Direct email fallback also failed:', directError);
+            }
             // Critical: Do NOT fail publishing. Valid content > Email delivery.
         }
 

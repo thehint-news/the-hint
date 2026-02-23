@@ -1,27 +1,27 @@
 [
-  {
-    "email": "bhuvaneshwari9011@gmail.com",
-    "subscribedAt": "2026-01-25T10:59:36.042Z",
-    "active": false
-  },
-  {
-    "email": "venugopal6362@gmail.com",
-    "subscribedAt": "2026-02-16T16:28:30.537Z",
-    "active": true
-  },
-  {
-    "email": "chiranjeevi8050@gmail.com",
-    "subscribedAt": "2026-01-25T11:57:30.533Z",
-    "active": false
-  },
-  {
-    "email": "smartinboxauto@gmail.com",
-    "subscribedAt": "2026-01-31T14:09:39.710Z",
-    "active": true
-  },
-  {
-    "email": "manual_success_test@example.com",
-    "subscribedAt": "2026-02-05T03:52:20.183Z",
-    "active": false
-  }
+    {
+        "email": "bhuvaneshwari9011@gmail.com",
+        "subscribedAt": "2026-01-25T10:59:36.042Z",
+        "active": false
+    },
+    {
+        "email": "venugopal6362@gmail.com",
+        "subscribedAt": "2026-02-16T16:28:30.537Z",
+        "active": false
+    },
+    {
+        "email": "chiranjeevi8050@gmail.com",
+        "subscribedAt": "2026-01-25T11:57:30.533Z",
+        "active": false
+    },
+    {
+        "email": "smartinboxauto@gmail.com",
+        "subscribedAt": "2026-01-31T14:09:39.710Z",
+        "active": true
+    },
+    {
+        "email": "manual_success_test@example.com",
+        "subscribedAt": "2026-02-05T03:52:20.183Z",
+        "active": false
+    }
 ]

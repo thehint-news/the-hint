@@ -1,14 +1,20 @@
-/** 
+/**
+ * Delete Article API Route
+ * DELETE /api/publish/delete
+ * 
+ * Handles deletion of both drafts and published articles.
+ * All deletions are backed by Git commits.
+ * 
  * ARCHITECTURE:
- * - Idempotent: calling delete on an already-deleted article returns success
- * - Decoupled: Git commit runs as background operation; response returns immediately
+ * - Idempotent: calling delete on an already-deleted article returns success (not 404)
  * - Revalidating: triggers ISR cache bust for homepage + section pages
  * - No 404s on repeat calls — safe to retry
+ * - Git push is already async inside ContentGit (pushAsync)
  * 
  * RULES:
  * - No hard deletes without commit
  * - History must remain recoverable
- * - Commits: "Draft deleted: {{headline}}" or "Remove article: {{headline}}"
+ * - Commits: "Remove draft: {{headline}}" or "Remove article: {{headline}}"
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -22,11 +28,10 @@ type Section = 'politics' | 'world-affairs' | 'crime' | 'court' | 'opinion';
 const VALID_SECTIONS: Section[] = ['politics', 'crime', 'court', 'opinion', 'world-affairs'];
 
 /**
- * In-flight delete tracker to prevent concurrent deletes on the same article.
- * Maps article identifier (id or section/slug) to a Promise.
- * This is per-instance; on serverless it prevents within-request races.
+ * Per-article lock to prevent concurrent deletes on the same article.
+ * Cleared after each request completes.
  */
-const inFlightDeletes = new Map<string, Promise<void>>();
+const inFlightDeletes = new Set<string>();
 
 /**
  * User-friendly response helper
@@ -80,15 +85,14 @@ function revalidateArticlePages(section?: string): void {
  * DELETE - Remove an article (draft or published)
  * 
  * IDEMPOTENT: If the article is already gone, returns success.
- * DECOUPLED: Git commit runs in the background; UI gets an immediate response.
  * ATOMIC: Only one delete per article ID can be in-flight at a time.
  * 
  * Request body:
  * {
- *   id: string,          // Required: article identifier
- *   type: 'draft' | 'published',  // Required: article type
- *   section?: string,    // Required for published articles
- *   slug?: string        // Required for published articles
+ *   id: string,                    // Required: article identifier
+ *   type: 'draft' | 'published',   // Required: article type
+ *   section?: string,              // Required for published articles
+ *   slug?: string                  // Required for published articles
  * }
  */
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
@@ -134,28 +138,25 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
                 return userResponse(true, 'Draft removed.');
             }
 
-            // Create the delete promise and register it
-            const deletePromise = (async () => {
-                try {
-                    await contentGit.deleteDraft(draftId);
-                } catch (error) {
-                    logger.error('Background draft deletion failed', error);
-                } finally {
-                    inFlightDeletes.delete(lockKey);
-                }
-            })();
+            // Lock
+            inFlightDeletes.add(lockKey);
 
-            inFlightDeletes.set(lockKey, deletePromise);
-
-            // Wait for the actual deletion to complete before responding
-            // (Git commit is already async inside contentGit.deleteDraft via pushAsync)
             try {
-                await deletePromise;
-            } catch {
-                // Already logged inside the promise
-            }
+                const result = await contentGit.deleteDraft(draftId);
 
-            return userResponse(true, 'Draft removed.');
+                if (!result.success) {
+                    logger.error('Draft deletion failed', result.error);
+                    return userResponse(
+                        false,
+                        result.userMessage || "Couldn't delete this draft. Please try again.",
+                        500
+                    );
+                }
+
+                return userResponse(true, 'Draft removed.');
+            } finally {
+                inFlightDeletes.delete(lockKey);
+            }
         }
 
         // --- PUBLISHED ARTICLE DELETION ---
@@ -192,31 +193,28 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
                 return userResponse(true, 'Article removed.');
             }
 
-            // Create the delete promise and register it
-            const deletePromise = (async () => {
-                try {
-                    const result = await contentGit.deletePublishedArticle(section as Section, safeSlug);
-                    if (result.success) {
-                        // Revalidate ISR caches after successful deletion
-                        revalidateArticlePages(section as string);
-                    }
-                } catch (error) {
-                    logger.error('Background article deletion failed', error);
-                } finally {
-                    inFlightDeletes.delete(lockKey);
-                }
-            })();
+            // Lock
+            inFlightDeletes.add(lockKey);
 
-            inFlightDeletes.set(lockKey, deletePromise);
-
-            // Wait for deletion to complete (push is already async via pushAsync)
             try {
-                await deletePromise;
-            } catch {
-                // Already logged inside the promise
-            }
+                const result = await contentGit.deletePublishedArticle(section as Section, safeSlug);
 
-            return userResponse(true, 'Article permanently removed.');
+                if (!result.success) {
+                    logger.error('Published article deletion failed', result.error);
+                    return userResponse(
+                        false,
+                        result.userMessage || "Couldn't delete this article. Please try again.",
+                        500
+                    );
+                }
+
+                // Revalidate ISR caches after successful deletion
+                revalidateArticlePages(section as string);
+
+                return userResponse(true, 'Article permanently removed.');
+            } finally {
+                inFlightDeletes.delete(lockKey);
+            }
         }
 
         return userResponse(

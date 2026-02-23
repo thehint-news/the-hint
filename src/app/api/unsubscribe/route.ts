@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { unsubscribe } from '@/lib/subscription';
+import { logger } from '@/lib/feedback/console-guard';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
@@ -13,6 +14,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             );
         }
 
+        if (!process.env.GIT_TOKEN) {
+            logger.error('Missing GIT_TOKEN environment variable. Unsubscribe cannot be processed.');
+            return NextResponse.json(
+                { success: false, error: 'System configuration error' },
+                { status: 500 }
+            );
+        }
+
         const result = await unsubscribe(email);
 
         return NextResponse.json({
@@ -20,7 +29,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             message: result.message,
         });
     } catch (error) {
-        console.error('Unsubscribe error:', error);
+        logger.error('Unsubscribe error:', error);
         return NextResponse.json(
             { success: false, error: 'Failed to process unsubscribe request' },
             { status: 500 }
@@ -41,7 +50,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const result = await unsubscribe(email);
 
-    // Redirect to unsubscribe confirmation page
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3002';
+    // Derive base URL from the actual incoming request, not env vars (which may be localhost)
+    const requestUrl = new URL(request.url);
+    const baseUrl = `${requestUrl.protocol}//${requestUrl.host}`;
     return NextResponse.redirect(`${baseUrl}/unsubscribe?status=${result.success ? 'success' : 'error'}&message=${encodeURIComponent(result.message)}`);
 }

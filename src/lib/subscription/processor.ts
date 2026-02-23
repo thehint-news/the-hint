@@ -38,7 +38,7 @@ export async function processSubscriptionQueue(): Promise<{ processed: number; e
 
     // Snapshot total subscribers if not set to ensure stable completion target
     let totalTarget = event.totalSubscribers;
-    if (!totalTarget) {
+    if (totalTarget === undefined || totalTarget === null) {
         totalTarget = allSubscribers.length;
         await queueManager.updateEvent(event.id, { totalSubscribers: totalTarget });
     }
