@@ -344,32 +344,30 @@ class ContentGit {
 
     /**
      * DELETE: Remove a draft
+     * 
+     * OPTIMIZED: Skip redundant fileExists + loadDraft calls.
+     * The commit itself is idempotent — if the file doesn't exist in the tree,
+     * GitHub's Tree API will simply create a no-op commit.
+     * We catch 404 from getContent during commit and treat it as success (already deleted).
      */
     async deleteDraft(draftId: string): Promise<ContentOperationResult> {
         try {
-            // Load draft first to get headline for commit message
-            const loadResult = await this.loadDraft(draftId);
-            const headline = loadResult.data?.headline || 'Untitled';
-
             const absolutePath = gitService.getDraftPath(draftId);
             const relativePath = gitService.getDraftRelativePath(draftId);
 
-            if (!await gitService.fileExists(absolutePath)) {
-                return {
-                    success: false,
-                    userMessage: 'Draft not found.',
-                };
-            }
-
+            // Stage the delete
             const staging = createGitStaging();
-            // Delete file (stage)
             await gitService.deleteFile(absolutePath, staging);
 
-            // Commit deletion
-            await gitService.commitDeletion(relativePath, `Remove draft: ${headline}`, staging);
+            // Commit deletion — this is the ONLY set of API calls we need (5 calls: getRef, getCommit, createTree, createCommit, updateRef)
+            const result = await gitService.commitDeletion(relativePath, `Remove draft: ${draftId}`, staging);
 
-            // Push async
-            this.pushAsync();
+            if (!result.success) {
+                return {
+                    success: false,
+                    userMessage: 'Failed to delete draft.',
+                };
+            }
 
             return {
                 success: true,
@@ -378,6 +376,15 @@ class ContentGit {
         } catch (error) {
             logger.error('Failed to delete draft', error);
             const gitError = gitService.translateError(error);
+
+            // If the file was already gone (404 during tree creation), treat as success
+            if (gitError.type === GitErrorType.NOT_FOUND) {
+                return {
+                    success: true,
+                    userMessage: 'Draft already removed.',
+                };
+            }
+
             return {
                 success: false,
                 userMessage: gitError.userMessage,
@@ -388,21 +395,28 @@ class ContentGit {
 
     /**
      * DELETE: Remove a published article
+     * 
+     * OPTIMIZED: Single getFileInfo call (1 API call) to check existence + get headline,
+     * then direct commit (5 API calls). Total: 6 API calls (was 8-9).
+     * If file doesn't exist, returns success (idempotent).
      */
     async deletePublishedArticle(section: Section, slug: string): Promise<ContentOperationResult> {
         try {
             const absolutePath = gitService.getPublishedPath(section, slug);
             const relativePath = gitService.getPublishedRelativePath(section, slug);
 
-            if (!await gitService.fileExists(absolutePath)) {
+            // Single API call: check existence + get content for commit message
+            const { content, sha } = await gitService.getFileInfo(relativePath);
+
+            if (!sha) {
+                // Already deleted — idempotent success
                 return {
-                    success: false,
-                    userMessage: 'Article not found.',
+                    success: true,
+                    userMessage: 'Article already removed.',
                 };
             }
 
-            // Read to get headline for commit message
-            const content = await gitService.readFile(absolutePath);
+            // Extract headline for commit message (from content we already have)
             let headline = slug;
             if (content) {
                 const article = this.parseMarkdownFrontmatter(content, section, slug);
@@ -411,15 +425,17 @@ class ContentGit {
                 }
             }
 
-            // Delete file
+            // Stage + commit deletion
             const staging = createGitStaging();
             await gitService.deleteFile(absolutePath, staging);
+            const result = await gitService.commitDeletion(relativePath, `Remove article: ${headline}`, staging);
 
-            // Commit deletion
-            await gitService.commitDeletion(relativePath, `Remove article: ${headline}`, staging);
-
-            // Push async
-            this.pushAsync();
+            if (!result.success) {
+                return {
+                    success: false,
+                    userMessage: 'Failed to delete article.',
+                };
+            }
 
             return {
                 success: true,
@@ -428,6 +444,15 @@ class ContentGit {
         } catch (error) {
             logger.error('Failed to delete published article', error);
             const gitError = gitService.translateError(error);
+
+            // If the file was already gone, treat as success
+            if (gitError.type === GitErrorType.NOT_FOUND) {
+                return {
+                    success: true,
+                    userMessage: 'Article already removed.',
+                };
+            }
+
             return {
                 success: false,
                 userMessage: gitError.userMessage,

@@ -557,17 +557,15 @@ export default function PublishPage() {
     }, [fetchArticles, showToast, showErrorFromCode]);
 
     /**
-     * Delete article — OPTIMISTIC UI
+     * Delete article — WAIT-FOR-API pattern (matching publish experience)
      * 
      * Flow:
      * 1. Lock article (deletingIds) → spinner visible, button disabled
-     * 2. Show toast immediately
-     * 3. Fire API call
-     * 4. On success → fade row out (CSS transition) → remove from state after 400ms
-     * 5. On failure → restore: unlock article, show error toast
+     * 2. Fire API call and WAIT for response
+     * 3. On success → show success toast → fade row out → remove from state
+     * 4. On failure → unlock article, show error toast
      * 
-     * The article row stays in the DOM with the spinner visible while
-     * the API processes. This ensures the user sees the "Removing…" state.
+     * NO optimistic success messages — toast only fires AFTER the server confirms.
      */
     const handleDelete = useCallback(async (article: ArticleEntry) => {
         const articleId = article.id;
@@ -578,14 +576,7 @@ export default function PublishPage() {
         // 1. Lock this article — triggers spinner + disabled state in ArticleDatabase
         setDeletingIds(prev => new Set(prev).add(articleId));
 
-        // 2. Capture original position for potential rollback
-        const originalIndex = articles.findIndex(a => a.id === articleId);
-        const originalArticle = articles[originalIndex];
-
-        // 3. Show toast immediately (optimistic)
-        showToast('success', 'Article permanently removed.');
-
-        // 4. Fire API call
+        // 2. Fire API call and WAIT for the response
         try {
             const response = await fetch('/api/publish/delete', {
                 method: 'DELETE',
@@ -606,8 +597,8 @@ export default function PublishPage() {
             const result: ApiResponse = await response.json();
 
             if (result.success) {
-                // Success — remove article from local state after CSS fade plays
-                // The fade CSS is already applied via `deletingIds` class
+                // 3. SUCCESS — show toast, then fade row out after CSS animation
+                showToast('success', result.message || 'Article permanently removed.');
                 setTimeout(() => {
                     setArticles(prev => prev.filter(a => a.id !== articleId));
                     setDeletingIds(prev => {
@@ -616,45 +607,26 @@ export default function PublishPage() {
                         return next;
                     });
                 }, 400);
-                // Silently invalidate cache so next database load is fresh
+                // Invalidate cache so next database load is fresh
                 setArticlesCached(false);
             } else {
-                // ROLLBACK: unlock article, restore if it was removed
+                // 4. FAILURE — unlock article, show error
                 setDeletingIds(prev => {
                     const next = new Set(prev);
                     next.delete(articleId);
                     return next;
                 });
-                setArticles(prev => {
-                    // Only restore if it was somehow removed
-                    if (!prev.find(a => a.id === articleId)) {
-                        const restored = [...prev];
-                        const insertAt = Math.min(originalIndex, restored.length);
-                        restored.splice(insertAt, 0, originalArticle);
-                        return restored;
-                    }
-                    return prev;
-                });
-                showToast('error', "We couldn't complete the deletion. Please try again.");
+                showToast('error', result.message || result.error || "We couldn't complete the deletion. Please try again.");
             }
         } catch (error) {
             logger.error('Delete failed', error);
-            // ROLLBACK: unlock and restore
+            // FAILURE — unlock
             setDeletingIds(prev => {
                 const next = new Set(prev);
                 next.delete(articleId);
                 return next;
             });
-            setArticles(prev => {
-                if (!prev.find(a => a.id === articleId)) {
-                    const restored = [...prev];
-                    const insertAt = Math.min(originalIndex, restored.length);
-                    restored.splice(insertAt, 0, originalArticle);
-                    return restored;
-                }
-                return prev;
-            });
-            showToast('error', "We couldn't complete the deletion. Please try again.");
+            showToast('error', "Network error. Please check your connection and try again.");
         }
     }, [articles, deletingIds, showToast]);
 
