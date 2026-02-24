@@ -1723,5 +1723,19 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": []
+  },
+  {
+    "id": "3b04335c-4d25-4f6e-9669-f1e8a6ed609d",
+    "articleSlug": "test-for-local-article",
+    "section": "local",
+    "headline": "test for local article",
+    "summary": "sadadsadsadsa",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-24T16:14:53.274Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
