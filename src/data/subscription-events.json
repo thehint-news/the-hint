@@ -1693,5 +1693,19 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": []
+  },
+  {
+    "id": "d12ed28b-a873-4437-86cc-0c5f352e8da5",
+    "articleSlug": "test-for-delete",
+    "section": "court",
+    "headline": "test for delete",
+    "summary": "sfdfds",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-24T15:20:51.113Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
