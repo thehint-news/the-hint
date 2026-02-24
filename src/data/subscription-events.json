@@ -1707,5 +1707,19 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": []
+  },
+  {
+    "id": "be698efc-aac0-4175-8ecf-282facba6072",
+    "articleSlug": "test-for-article-delete",
+    "section": "court",
+    "headline": "test for article delete",
+    "summary": "zxcczxcx",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-24T15:39:00.216Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
