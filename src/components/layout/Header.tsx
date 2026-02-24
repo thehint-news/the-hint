@@ -22,6 +22,7 @@ import { SearchOverlay } from "../features/SearchOverlay";
 
 const NAVIGATION_ITEMS = [
     { label: "Home", href: "/" },
+    { label: "Local", href: "/local" },
     { label: "Politics", href: "/politics" },
     { label: "World", href: "/world-affairs" },
     { label: "Crime", href: "/crime" },

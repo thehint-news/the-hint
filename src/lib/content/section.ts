@@ -65,6 +65,10 @@ const SECTION_META: Record<Section, { name: string; description: string }> = {
         name: 'World Affairs',
         description: 'International news, global developments, and foreign policy coverage.',
     },
+    local: {
+        name: 'Local',
+        description: 'Regional news, city updates, and community events.',
+    },
 };
 
 // ============================================================================

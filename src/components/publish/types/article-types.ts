@@ -10,6 +10,7 @@ export const SECTIONS = [
     { value: 'court', label: 'Court' },
     { value: 'opinion', label: 'Opinion' },
     { value: 'world-affairs', label: 'World Affairs' },
+    { value: 'local', label: 'Local' },
 ] as const;
 
 export type SectionValue = typeof SECTIONS[number]['value'];

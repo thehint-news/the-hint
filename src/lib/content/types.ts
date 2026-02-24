@@ -14,7 +14,8 @@ export type Section =
     | 'crime'
     | 'court'
     | 'opinion'
-    | 'world-affairs';
+    | 'world-affairs'
+    | 'local';
 
 /** Source reference for article citations */
 export interface ArticleSource {

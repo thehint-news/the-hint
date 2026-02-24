@@ -2,7 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
+    removeConsole: process.env.NODE_ENV === "production" ? {
+      exclude: ['error', 'info'],
+    } : false,
   },
   // Increase timeout for static page generation (default 60s is too short
   // when fetching content from GitHub API on Vercel's single-worker free plan)

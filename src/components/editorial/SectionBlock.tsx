@@ -236,7 +236,7 @@ function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticl
                             <p className="caption-text" style={{
                                 marginBottom: "0.25rem",
                                 display: "-webkit-box",
-                                WebkitLineClamp: 2,
+                                WebkitLineClamp: 1,
                                 WebkitBoxOrient: "vertical",
                                 overflow: "hidden",
                                 fontSize: "13px",
@@ -316,11 +316,11 @@ function OpinionLayout({ articles, sectionSlug }: { articles: SectionArticle[]; 
                                     {article.title}
                                 </h3>
 
-                                {/* Excerpt - Desktop/Tablet only, 2 lines max */}
+                                {/* Excerpt - Desktop/Tablet only, 1 line max */}
                                 {excerpt && (
                                     <p className="caption-text hidden md:block mb-2" style={{
                                         display: "-webkit-box",
-                                        WebkitLineClamp: 2,
+                                        WebkitLineClamp: 1,
                                         WebkitBoxOrient: "vertical",
                                         overflow: "hidden"
                                     }}>

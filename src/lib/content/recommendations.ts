@@ -99,7 +99,8 @@ function getSectionDisplayName(slug: Section): string {
         'crime': 'Crime',
         'court': 'Court',
         'world-affairs': 'World Affairs',
-        'opinion': 'Opinion'
+        'opinion': 'Opinion',
+        'local': 'Local'
     };
     return names[slug] || slug;
 }

@@ -36,12 +36,11 @@ export const logger = {
     },
 
     /**
-     * Log informational messages (development only)
+     * Log informational messages
      */
     info: (message: string, data?: unknown): void => {
-        if (isDevelopment) {
-            console.info(`[INFO] ${message}`, data ?? '');
-        }
+        const payload = data !== undefined ? data : '';
+        console.info(`[INFO] ${message}`, payload);
     },
 
     /**

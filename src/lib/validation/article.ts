@@ -20,6 +20,7 @@ export const VALID_SECTIONS: Section[] = [
     'court',
     'opinion',
     'world-affairs',
+    'local',
 ];
 
 /** Valid statuses */

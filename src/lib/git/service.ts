@@ -66,7 +66,7 @@ if (!REPO_OWNER || !REPO_NAME) {
 const BRANCH = 'main';
 
 /** Valid sections for published content */
-export const VALID_SECTIONS = ['politics', 'world-affairs', 'crime', 'court', 'opinion'] as const;
+export const VALID_SECTIONS = ['politics', 'world-affairs', 'crime', 'court', 'opinion', 'local'] as const;
 export type Section = typeof VALID_SECTIONS[number];
 
 class GitService {
@@ -85,10 +85,10 @@ class GitService {
                 request: {
                     fetch: (url: string, opts: RequestInit) => {
                         const modifiedOpts = { ...opts };
-                        delete modifiedOpts.cache; // Remove any default caching directives
+                        delete modifiedOpts.next;
                         return fetch(url, {
                             ...modifiedOpts,
-                            next: { revalidate: 60 }
+                            cache: 'no-store',
                         });
                     }
                 }

@@ -22,6 +22,7 @@ const VALID_SECTIONS: Section[] = [
     'court',
     'opinion',
     'world-affairs',
+    'local',
 ];
 
 /**

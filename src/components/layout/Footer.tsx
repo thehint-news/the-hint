@@ -34,9 +34,11 @@ export function Footer() {
 
                             {/* Column 1: Brand & Subscribe */}
                             <div className="text-center md:text-left">
-                                <h2 className="font-serif text-3xl md:text-4xl font-bold tracking-tight text-[#e5e5e5] uppercase mb-3">
-                                    The Hint
-                                </h2>
+                                <Link href="/" className="hover:opacity-80 transition-opacity">
+                                    <h2 className="font-serif text-3xl md:text-4xl font-bold tracking-tight text-[#e5e5e5] uppercase mb-3">
+                                        The Hint
+                                    </h2>
+                                </Link>
                                 <p className="font-serif text-[15px] text-[#888] italic leading-relaxed mb-4">
                                     Independent journalism<br />delivered as it happens.
                                 </p>
@@ -54,8 +56,8 @@ export function Footer() {
                                     Sections
                                 </h3>
                                 <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 max-w-[180px] mx-auto">
-                                    <Link href="/" className="font-sans text-[13px] text-[#999] hover:text-[#e5e5e5] transition-colors">
-                                        Home
+                                    <Link href="/local" className="font-sans text-[13px] text-[#999] hover:text-[#e5e5e5] transition-colors">
+                                        Local
                                     </Link>
                                     <Link href="/crime" className="font-sans text-[13px] text-[#999] hover:text-[#e5e5e5] transition-colors">
                                         Crime

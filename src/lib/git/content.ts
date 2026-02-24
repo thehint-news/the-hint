@@ -80,7 +80,7 @@ export interface ContentOperationResult<T = void> {
 }
 
 /** Valid sections for content */
-const VALID_SECTIONS = ['politics', 'world-affairs', 'crime', 'court', 'opinion'] as const;
+const VALID_SECTIONS = ['politics', 'world-affairs', 'crime', 'court', 'opinion', 'local'] as const;
 
 /**
  * Content Git Operations
@@ -355,12 +355,26 @@ class ContentGit {
             const absolutePath = gitService.getDraftPath(draftId);
             const relativePath = gitService.getDraftRelativePath(draftId);
 
+            // Fetch latest SHA for logging & idempotency
+            const { sha } = await gitService.getFileInfo(relativePath);
+            logger.info(`[DELETE] SHA before delete (Draft): ${sha || 'Not Found'}`);
+
+            if (!sha) {
+                logger.info(`[DELETE] Git response: File already deleted, no commit needed.`);
+                return {
+                    success: true,
+                    userMessage: 'Draft already removed.',
+                };
+            }
+
             // Stage the delete
             const staging = createGitStaging();
             await gitService.deleteFile(absolutePath, staging);
 
-            // Commit deletion — this is the ONLY set of API calls we need (5 calls: getRef, getCommit, createTree, createCommit, updateRef)
+            // Commit deletion — this is the ONLY set of API calls we need
             const result = await gitService.commitDeletion(relativePath, `Remove draft: ${draftId}`, staging);
+
+            logger.info(`[DELETE] Git response: Commit ${result.success ? 'successful' : 'failed'} ${result.commitHash ? `(Hash: ${result.commitHash})` : ''}`);
 
             if (!result.success) {
                 return {
@@ -408,8 +422,11 @@ class ContentGit {
             // Single API call: check existence + get content for commit message
             const { content, sha } = await gitService.getFileInfo(relativePath);
 
+            logger.info(`[DELETE] SHA before delete (Published): ${sha || 'Not Found'}`);
+
             if (!sha) {
                 // Already deleted — idempotent success
+                logger.info(`[DELETE] Git response: File already deleted, no commit needed.`);
                 return {
                     success: true,
                     userMessage: 'Article already removed.',
@@ -420,7 +437,7 @@ class ContentGit {
             let headline = slug;
             if (content) {
                 const article = this.parseMarkdownFrontmatter(content, section, slug);
-                if (article) {
+                if (article && article.title) {
                     headline = article.title;
                 }
             }
@@ -429,6 +446,8 @@ class ContentGit {
             const staging = createGitStaging();
             await gitService.deleteFile(absolutePath, staging);
             const result = await gitService.commitDeletion(relativePath, `Remove article: ${headline}`, staging);
+
+            logger.info(`[DELETE] Git response: Commit ${result.success ? 'successful' : 'failed'} ${result.commitHash ? `(Hash: ${result.commitHash})` : ''}`);
 
             if (!result.success) {
                 return {

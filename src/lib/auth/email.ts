@@ -20,12 +20,16 @@ export async function sendMagicLinkEmail(email: string, token: string) {
     const allowDevFallback = process.env.NODE_ENV !== 'production' || !isDeployed;
 
     if (!apiKey) {
-        // In dev or local production, log the link so login is still possible
         if (allowDevFallback) {
-            logger.info(`[LOCAL-PROD] Magic Link (No API Key): ${appUrl}/api/auth/verify?token=${token}`);
+            console.info(`[MAGIC LINK] No Resend API Key. Click here to login:\n👉 ${appUrl}/api/auth/verify?token=${token}\n`);
             return;
         }
         throw new Error('RESEND_API_KEY is not configured. Cannot send magic link in production.');
+    }
+
+    // Explicitly output the magic link in dev/local prod so the user doesn't have to wait for an email.
+    if (allowDevFallback) {
+        console.info(`[MAGIC LINK] Generated for local testing. Click here to login:\n👉 ${appUrl}/api/auth/verify?token=${token}\n`);
     }
 
     const resend = new Resend(apiKey);

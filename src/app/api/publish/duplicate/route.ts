@@ -43,7 +43,7 @@ function userResponse(
 }
 
 /** Valid sections */
-const VALID_SECTIONS: Section[] = ['politics', 'crime', 'court', 'opinion', 'world-affairs'];
+const VALID_SECTIONS: Section[] = ['politics', 'crime', 'court', 'opinion', 'world-affairs', 'local'];
 
 const AUTH_EXPIRED_MESSAGE = 'Session expired. Please log in again.';
 

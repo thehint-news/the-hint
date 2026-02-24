@@ -556,17 +556,6 @@ export default function PublishPage() {
         }
     }, [fetchArticles, showToast, showErrorFromCode]);
 
-    /**
-     * Delete article — WAIT-FOR-API pattern (matching publish experience)
-     * 
-     * Flow:
-     * 1. Lock article (deletingIds) → spinner visible, button disabled
-     * 2. Fire API call and WAIT for response
-     * 3. On success → show success toast → fade row out → remove from state
-     * 4. On failure → unlock article, show error toast
-     * 
-     * NO optimistic success messages — toast only fires AFTER the server confirms.
-     */
     const handleDelete = useCallback(async (article: ArticleEntry) => {
         const articleId = article.id;
 
@@ -594,20 +583,20 @@ export default function PublishPage() {
                 return;
             }
 
-            const is204 = response.status === 204;
-            let result: { success?: boolean; message?: string; error?: string } = { success: true };
-            if (!is204) {
-                result = await response.json();
-            }
+            const result = await response.json();
 
             if (response.ok && result.success) {
-                showToast('success', result.message || 'Article permanently removed.');
+                // 3. IMMEDIATELY remove from UI state
+                setArticles(prev => prev.filter(a => a.id !== articleId));
 
-                // 3. Await the refresh of articles
-                await fetchArticles(true);
+                // Show confirmation toast
+                showToast('success', 'Article permanently removed.');
+
+                // Trigger background refresh to ensure state stays in sync
+                fetchArticles(true);
             } else {
                 // 4. FAILURE — show error
-                showToast('error', result.message || result.error || "We couldn't complete the deletion. Please try again.");
+                showToast('error', result.error || "We couldn't complete the deletion. Please try again.");
             }
         } catch (error) {
             logger.error('Delete failed', error);

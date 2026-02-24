@@ -91,7 +91,15 @@ export function LeadStory({ article }: LeadStoryProps) {
                 </Link>
 
                 {/* Caption/Subtitle - Tight grouping with image */}
-                <p className="body-text" style={{ marginBottom: "0.25rem", maxWidth: "800px", fontSize: "14px" }}>
+                <p className="body-text" style={{
+                    marginBottom: "0.25rem",
+                    maxWidth: "800px",
+                    fontSize: "14px",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 1,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden"
+                }}>
                     {article.subtitle}
                 </p>
 

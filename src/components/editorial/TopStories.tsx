@@ -93,7 +93,7 @@ export function TopStories({ articles }: TopStoriesProps) {
                             <p className="caption-text" style={{
                                 marginBottom: "0.25rem",
                                 display: "-webkit-box",
-                                WebkitLineClamp: 2,
+                                WebkitLineClamp: 1,
                                 WebkitBoxOrient: "vertical",
                                 overflow: "hidden"
                             }}>

@@ -27,7 +27,7 @@ import { revalidatePath } from 'next/cache';
 import { verifyAuth } from '@/lib/auth/session';
 
 /** Valid sections */
-type Section = 'politics' | 'world-affairs' | 'crime' | 'court' | 'opinion';
+type Section = 'politics' | 'world-affairs' | 'crime' | 'court' | 'opinion' | 'local';
 
 /**
  * User-friendly response helper
