@@ -1739,5 +1739,19 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": []
+  },
+  {
+    "id": "520aff72-1d2c-4900-afa5-3e13b79f5f94",
+    "articleSlug": "test-for-local-article",
+    "section": "local",
+    "headline": "test for local article",
+    "summary": "saddsa",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-24T16:52:09.969Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
