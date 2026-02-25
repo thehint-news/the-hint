@@ -302,7 +302,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                                     className="ticker-container hover:pause"
                                     style={{ animationPlayState: isSubscribeOpen ? 'paused' : undefined }}
                                 >
-                                    {[...tickerHeadlines, ...tickerHeadlines].map((headline, idx) => (
+                                    {[...tickerHeadlines, ...tickerHeadlines, ...tickerHeadlines, ...tickerHeadlines].map((headline, idx) => (
                                         <Link
                                             key={`${idx}-${headline}`}
                                             href="/" // Ideally this would link to the specific article, but we strictly follow "Headlines scroll horizontally" and prop limitation for now.

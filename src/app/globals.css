@@ -278,7 +278,7 @@ button {
   display: flex;
   width: max-content;
   align-items: center;
-  animation: ticker-scroll 25s linear infinite;
+  animation: ticker-scroll 40s linear infinite;
   white-space: nowrap;
 }
 
