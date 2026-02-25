@@ -5,13 +5,14 @@ contentType: news
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/02/b96c4dd4db5a8382.avif
 status: published
 publishedAt: '2026-02-23T01:57:51.892Z'
-updatedAt: null
+updatedAt: '2026-02-25T14:48:00.277Z'
 placement: standard
 tags:
   - ಏರ್ ಬ್ರಿಡ್ಜ್
   - ಅಮೆರಿಕ
   - ಮಿಲಿಟರಿ ವಿಮಾನ
-sources: []
+sources:
+  - ಕನ್ನಡ ಪ್ರಭಾ
 bodyBlocks:
   - id: par-mlyizx8z-7m5m
     type: paragraph
@@ -24,9 +25,19 @@ bodyBlocks:
       ಜಾಗತಿಕ ನಕ್ಷೆಯೊಂದಿಗೆ ಫ್ಲೈಟ್‌ ರಾಡಾರ್ ವಿಡಿಯೋ ಓಪನ್ ಆಗುತ್ತದೆ. ಯುಎಸ್ ಮತ್ತು ಮಧ್ಯಪ್ರಾಚ್ಯದಲ್ಲಿ ಜೂಮ್ ಇನ್ ಆಗುತ್ತದೆ. ಫೈಟರ್ ಜೆಟ್‌ಗಳು, ಇಂಧನ ತುಂಬುವ ಟ್ಯಾಂಕರ್‌ಗಳು ಮತ್ತು ಯುಎಸ್ ನೆಲೆಗಳನ್ನು ತೊರೆಯುವ ಸಾರಿಗೆ ವಿಮಾನಗಳನ್ನು ಪ್ರತಿನಿಧಿಸುವ ಐಕಾನ್‌ಗಳನ್ನು ಪರದೆ ಮೇಲೆ ಪ್ರದರ್ಶಿಸುತ್ತದೆ.
 
       ವಿಮಾನ ಮಾರ್ಗಗಳು ನಿರಂತರ ಸ್ಟ್ರೀಮ್ ಆಗಿ ಗೋಚರಿಸುತ್ತವೆ. ಅಟ್ಲಾಂಟಿಕ್‌ನಾದ್ಯಂತ ಡಿಜಿಟಲ್ 'ಏರ್ ಬ್ರಿಡ್ಜ್' ಎಂದು ವಿವರಿಸಲಾಗಿದ್ದು, ಇದು ಯುರೋಪ್ ಮತ್ತು ಮೆಡಿಟರೇನಿಯನ್ ಮೇಲೆ ಹಾದುಹೋಗುತ್ತದೆ.
+  - id: pos-mm25ehut-aalr
+    type: post
+    order: 1
+    originalUrl: https://x.com/Osinttechnical/status/2025470562840039887?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E2025470562840039887%7Ctwgr%5E0d2d30e6be4be962f439560f6549481b8629cc76%7Ctwcon%5Es1_c10&ref_url=https%3A%2F%2Fwww.kannadaprabha.com%2Fworld%2F2026%2FFeb%2F22%2Fvideo-us-sets-up-massive-air-bridge-to-move-forces-towards-middle-east
+    canonicalUrl: https://x.com/Osinttechnical/status/2025470562840039887
+    platform: x
+    metadata:
+      author: x.com
+      username: '@Osinttechnical'
+      textPreview: ''
   - id: quo-mlyj0uv3-gw0v
     type: quote
-    order: 1
+    order: 2
     content: ಬಹು ಇಂಧನ ತುಂಬುವ ವಿಮಾನಗಳು, ವಾಯುಗಾಮಿ ಕಮಾಂಡ್ ಮತ್ತು ಕಂಟ್ರೋಲ್ ಪ್ಲೇನ್‌ಗಳು ಮತ್ತು ಎಲೆಕ್ಟ್ರಾನಿಕ್ ಸಂವಹನ ವಿಮಾನಗಳನ್ನು ಸಹ ನಿಯೋಜಿಸಲಾಗುತ್ತಿದೆ.ಯುಎಸ್ ನೌಕಪಡೆಯ ವಿಮಾನಗಳನ್ನು ಸಹ ಹೆಚ್ಚಿಸಲಾಗಿದೆ ಎಂದು Haaretz ವರದಿ ಮಾಡಿದೆ. ಇತ್ತೀಚೆಗೆ ಕೆರಿಬಿಯನ್‌ನಲ್ಲಿ ಕಾರ್ಯಾಚರಣೆ ನಡೆಸಿದ USS ಜೆರಾಲ್ಡ್ ಆರ್ ಫೋರ್ಡ್ ವಿಮಾನ ಪೂರ್ವ ಮೆಡಿಟರೇನಿಯನ್ ಕಡೆಗೆ ಚಲಿಸುತ್ತಿದೆ.
 ---
 
@@ -37,5 +48,14 @@ bodyBlocks:
 ಜಾಗತಿಕ ನಕ್ಷೆಯೊಂದಿಗೆ ಫ್ಲೈಟ್‌ ರಾಡಾರ್ ವಿಡಿಯೋ ಓಪನ್ ಆಗುತ್ತದೆ. ಯುಎಸ್ ಮತ್ತು ಮಧ್ಯಪ್ರಾಚ್ಯದಲ್ಲಿ ಜೂಮ್ ಇನ್ ಆಗುತ್ತದೆ. ಫೈಟರ್ ಜೆಟ್‌ಗಳು, ಇಂಧನ ತುಂಬುವ ಟ್ಯಾಂಕರ್‌ಗಳು ಮತ್ತು ಯುಎಸ್ ನೆಲೆಗಳನ್ನು ತೊರೆಯುವ ಸಾರಿಗೆ ವಿಮಾನಗಳನ್ನು ಪ್ರತಿನಿಧಿಸುವ ಐಕಾನ್‌ಗಳನ್ನು ಪರದೆ ಮೇಲೆ ಪ್ರದರ್ಶಿಸುತ್ತದೆ.
 
 ವಿಮಾನ ಮಾರ್ಗಗಳು ನಿರಂತರ ಸ್ಟ್ರೀಮ್ ಆಗಿ ಗೋಚರಿಸುತ್ತವೆ. ಅಟ್ಲಾಂಟಿಕ್‌ನಾದ್ಯಂತ ಡಿಜಿಟಲ್ 'ಏರ್ ಬ್ರಿಡ್ಜ್' ಎಂದು ವಿವರಿಸಲಾಗಿದ್ದು, ಇದು ಯುರೋಪ್ ಮತ್ತು ಮೆಡಿಟರೇನಿಯನ್ ಮೇಲೆ ಹಾದುಹೋಗುತ್ತದೆ.
+
+:::post
+originalUrl: https://x.com/Osinttechnical/status/2025470562840039887?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E2025470562840039887%7Ctwgr%5E0d2d30e6be4be962f439560f6549481b8629cc76%7Ctwcon%5Es1_c10&ref_url=https%3A%2F%2Fwww.kannadaprabha.com%2Fworld%2F2026%2FFeb%2F22%2Fvideo-us-sets-up-massive-air-bridge-to-move-forces-towards-middle-east
+canonicalUrl: https://x.com/Osinttechnical/status/2025470562840039887
+platform: x
+metadata.author: x.com
+metadata.username: @Osinttechnical
+metadata.textPreview: 
+:::
 
 > ಬಹು ಇಂಧನ ತುಂಬುವ ವಿಮಾನಗಳು, ವಾಯುಗಾಮಿ ಕಮಾಂಡ್ ಮತ್ತು ಕಂಟ್ರೋಲ್ ಪ್ಲೇನ್‌ಗಳು ಮತ್ತು ಎಲೆಕ್ಟ್ರಾನಿಕ್ ಸಂವಹನ ವಿಮಾನಗಳನ್ನು ಸಹ ನಿಯೋಜಿಸಲಾಗುತ್ತಿದೆ.ಯುಎಸ್ ನೌಕಪಡೆಯ ವಿಮಾನಗಳನ್ನು ಸಹ ಹೆಚ್ಚಿಸಲಾಗಿದೆ ಎಂದು Haaretz ವರದಿ ಮಾಡಿದೆ. ಇತ್ತೀಚೆಗೆ ಕೆರಿಬಿಯನ್‌ನಲ್ಲಿ ಕಾರ್ಯಾಚರಣೆ ನಡೆಸಿದ USS ಜೆರಾಲ್ಡ್ ಆರ್ ಫೋರ್ಡ್ ವಿಮಾನ ಪೂರ್ವ ಮೆಡಿಟರೇನಿಯನ್ ಕಡೆಗೆ ಚಲಿಸುತ್ತಿದೆ.
