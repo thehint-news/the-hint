@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { kn } from "@/lib/i18n/kn";
 
 
 // Define strict types for search results
@@ -113,7 +114,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                             type="text"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
-                            placeholder="Search coverage"
+                            placeholder={kn.search.placeholder}
                             className="flex-1 bg-transparent text-xl md:text-2xl font-serif text-[#111] placeholder:text-[#888] outline-none border-none p-0 tracking-tight"
                         />
                         <button
@@ -132,14 +133,14 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                     <div className="overflow-y-auto custom-scrollbar bg-white flex-1 min-h-[50px]">
                         {query.length > 0 && isLoading && (
                             <div className="py-8 text-center animate-pulse">
-                                <span className="font-sans text-xs text-[#888] uppercase tracking-widest">Searching...</span>
+                                <span className="font-sans text-xs text-[#888] uppercase tracking-widest">{kn.search.searching}</span>
                             </div>
                         )}
 
                         {!isLoading && hasSearched && results.length === 0 && (
                             <div className="py-12 text-center px-6">
-                                <p className="font-serif text-lg text-[#111] mb-2">No matching coverage found.</p>
-                                <p className="font-sans text-sm text-[#666]">Try adjusting your search terms.</p>
+                                <p className="font-serif text-lg text-[#111] mb-2">{kn.search.noResults}</p>
+                                <p className="font-sans text-sm text-[#666]">{kn.search.adjustTerms}</p>
                             </div>
                         )}
 
@@ -155,11 +156,11 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                                             <div className="flex flex-col gap-1.5">
                                                 <div className="flex items-center gap-2">
                                                     <span className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#E53935]">
-                                                        {result.section}
+                                                        {(kn.sections as Record<string, string>)[result.section.toLowerCase().replace(" ", "-")] || result.section}
                                                     </span>
                                                     <span className="text-[#E5E5E5] text-[10px]">•</span>
                                                     <time className="font-sans text-[10px] text-[#888] uppercase tracking-wide">
-                                                        {new Date(result.publishedAt).toLocaleDateString('en-US', {
+                                                        {new Date(result.publishedAt).toLocaleDateString('kn-IN', {
                                                             month: 'short',
                                                             day: 'numeric',
                                                             year: 'numeric'
@@ -179,7 +180,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                         {/* Empty Initial State - Optional suggestions could go here */}
                         {!isLoading && !hasSearched && query.length === 0 && (
                             <div className="py-12 text-center opacity-40">
-                                <p className="font-sans text-sm text-[#666]">Type to begin searching</p>
+                                <p className="font-sans text-sm text-[#666]">{kn.search.typeToBegin}</p>
                             </div>
                         )}
                     </div>
@@ -187,7 +188,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                     {/* Footer Hint */}
                     <div className="hidden md:block py-2 px-4 bg-[#F7F6F2] border-t border-[#E5E5E5] text-right">
                         <span className="font-sans text-[10px] text-[#888] uppercase tracking-wide">
-                            ESC to close
+                            {kn.search.escToClose}
                         </span>
                     </div>
 

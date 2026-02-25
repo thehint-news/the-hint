@@ -10,6 +10,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { kn } from "@/lib/i18n/kn";
 
 interface TopStoryArticle {
     id: string;
@@ -38,7 +39,7 @@ export function TopStories({ articles }: TopStoriesProps) {
             {/* Section Header */}
             <div className="section-header" style={{ marginBottom: "0.75rem" }}>
                 <h2 id="top-stories-heading" className="section-title">
-                    Top Stories
+                    {kn.editorial.topStories}
                 </h2>
                 <div className="section-line" aria-hidden="true" />
             </div>
@@ -51,7 +52,7 @@ export function TopStories({ articles }: TopStoriesProps) {
             }}>
                 {secondaryLeads.map((article) => {
                     const articleUrl = `/${article.section}/${article.id}`;
-                    const formattedDate = new Date(article.publishedAt).toLocaleDateString("en-US", {
+                    const formattedDate = new Date(article.publishedAt).toLocaleDateString("kn-IN", {
                         month: "long",
                         day: "numeric",
                         year: "numeric",

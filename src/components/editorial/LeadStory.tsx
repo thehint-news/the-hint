@@ -11,7 +11,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { formatSafeDate } from "@/lib/utils";
+import { kn } from "@/lib/i18n/kn";
 
 interface LeadStoryProps {
     article: {
@@ -34,16 +34,18 @@ export function LeadStory({ article }: LeadStoryProps) {
     // Thumbnail is now guaranteed through the data layer (reader.ts)
     // which extracts first body image if no explicit image is set
 
-    const formattedDate = formatSafeDate(article.publishedAt, {
+    const formattedDate = new Date(article.publishedAt).toLocaleDateString("kn-IN", {
         weekday: "long",
         year: "numeric",
         month: "long",
         day: "numeric",
     });
 
-    const sectionLabel = article.section
+    const sectionLabel = (kn.sections as Record<string, string>)[article.section] || article.section
         .replace("-", " ")
         .replace(/\b\w/g, (c) => c.toUpperCase());
+
+    const contentTypeStr = (kn.contentTypes as Record<string, string>)[article.contentType] || article.contentType;
 
     const articleUrl = `/${article.section}/${article.id}`;
 
@@ -84,7 +86,7 @@ export function LeadStory({ article }: LeadStoryProps) {
                                 role="img"
                                 aria-label={`Illustration for: ${article.title}`}
                             >
-                                <span>Featured Image</span>
+                                <span>{kn.image.featured}</span>
                             </div>
                         )}
                     </div>
@@ -110,7 +112,7 @@ export function LeadStory({ article }: LeadStoryProps) {
                     </time>
                     {article.contentType !== "news" && (
                         <span className="meta-text" style={{ marginLeft: "0.75rem", textTransform: "uppercase", fontWeight: 500 }}>
-                            {article.contentType}
+                            {contentTypeStr}
                         </span>
                     )}
                 </div>

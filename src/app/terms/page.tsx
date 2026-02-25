@@ -1,27 +1,13 @@
 /**
  * Terms & Conditions Page
- * 
- * A professional, legally sound Terms & Conditions page for The Hint.
- * Written in plain, understandable language while maintaining legal structure.
- * Designed to build reader trust through transparency and clarity.
- * 
- * Layout: Simple, text-first, single column with wide margins.
- * Typography: Serif headlines, sans-serif body.
- * Tone: Formal but readable, neutral and non-confrontational.
  */
 
 import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-    title: "Terms & Conditions | The Hint",
-    description: "Read the Terms and Conditions governing use of The Hint website, including content usage, intellectual property, and user conduct.",
-    openGraph: {
-        title: "Terms & Conditions | The Hint",
-        description: "Read the Terms and Conditions governing use of The Hint website, including content usage, intellectual property, and user conduct.",
-        type: "website",
-        siteName: "The Hint",
-    },
+    title: "ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು | The Hint",
+    description: "ದಿ ಹಿಂಟ್ ವೆಬ್‌ಸೈಟ್‌ನ ಬಳಕೆಯನ್ನು ನಿಯಂತ್ರಿಸುವ ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳನ್ನು ಓದಿ.",
 };
 
 export default function TermsPage() {
@@ -29,217 +15,111 @@ export default function TermsPage() {
         <main id="main-content" className="flex-1">
             <article className="terms-page">
                 <div className="container-editorial">
-                    {/* Back Navigation */}
                     <nav className="page-nav">
                         <Link href="/" className="back-link">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <line x1="19" y1="12" x2="5" y2="12"></line>
                                 <polyline points="12 19 5 12 12 5"></polyline>
                             </svg>
-                            Back to Home
+                            ಮುಖಪುಟಕ್ಕೆ
                         </Link>
                     </nav>
 
-                    {/* Page Header */}
                     <header className="terms-header">
-                        <h1 className="terms-title">Terms &amp; Conditions</h1>
+                        <h1 className="terms-title">ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು</h1>
                         <hr className="terms-divider" />
                     </header>
 
-                    {/* Introduction */}
                     <section className="terms-section">
                         <p className="terms-lead">
-                            These Terms and Conditions govern access to and use of this website.
-                            By using the site, readers agree to these terms. All visitors are
-                            encouraged to review these terms carefully, as they outline the
-                            expectations and responsibilities that apply when accessing content
-                            published by The Hint.
+                            ಈ ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು ಈ ವೆಬ್‌ಸೈಟ್‌ನ ಪ್ರವೇಶ ಮತ್ತು ಬಳಕೆಯನ್ನು ನಿಯಂತ್ರಿಸುತ್ತವೆ.
+                            ಸೈಟ್ ಅನ್ನು ಬಳಸುವ ಮೂಲಕ ಓದುಗರು ಈ ಷರತ್ತುಗಳಿಗೆ ಒಪ್ಪಿಕೊಳ್ಳುತ್ತಾರೆ. ದಿ ಹಿಂಟ್ ಪ್ರಕಟಿಸಿದ
+                            ವಿಷಯವನ್ನು ಪ್ರವೇಶಿಸುವಾಗ ಅನ್ವಯಿಸುವ ನಿರೀಕ್ಷೆಗಳು ಮತ್ತು ಜವಾಬ್ದಾರಿಗಳನ್ನು ಇವುಗಳು ವಿವರಿಸುವುದರಿಂದ,
+                            ಎಲ್ಲಾ ಸಂದರ್ಶಕರು ಈ ನಿಯಮಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ಪರಿಶೀಲಿಸಲು ಪ್ರೋತ್ಸಾಹಿಸಲಾಗುತ್ತದೆ.
                         </p>
                     </section>
 
-                    {/* Use of Content */}
                     <section className="terms-section">
-                        <h2 className="terms-heading">Use of Content</h2>
+                        <h2 className="terms-heading">ವಿಷಯದ ಬಳಕೆ</h2>
                         <p className="terms-body">
-                            All articles, text, images, graphics, and other media published on
-                            this website are protected by copyright and other applicable laws.
-                            Content is provided for personal, non-commercial use only.
+                            ಈ ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಪ್ರಕಟವಾದ ಎಲ್ಲಾ ಲೇಖನಗಳು, ಪಠ್ಯಗಳು, ಚಿತ್ರಗಳು, ಗ್ರಾಫಿಕ್ಸ್ ಮತ್ತು ಇತರ ಮಾಧ್ಯಮಗಳನ್ನು
+                            ಹಕ್ಕುಸ್ವಾಮ್ಯ (Copyright) ಮತ್ತು ಅನ್ವಯಿಸುವ ಇತರ ಕಾನೂನುಗಳಿಂದ ರಕ್ಷಿಸಲಾಗಿದೆ. ವಿಷಯವನ್ನು
+                            ವೈಯಕ್ತಿಕ ಮತ್ತು ವಾಣಿಜ್ಯೇತರ ಬಳಕೆಗಾಗಿ ಮಾತ್ರ ಒದಗಿಸಲಾಗಿದೆ.
                         </p>
                         <p className="terms-body">
-                            Readers may read, share links to, and quote brief excerpts from
-                            articles for purposes such as commentary, criticism, or news reporting,
-                            provided appropriate attribution is given. However, reproducing,
-                            republishing, scraping, or redistributing content in whole or in
-                            substantial part without prior written permission is not permitted.
+                            ಸೂಕ್ತ ಮನ್ನಣೆ ನೀಡಿದ ನಂತರ ಕಾಮೆಂಟ್ ಮಾಡುವಿಕೆ, ಟೀಕೆ ಅಥವಾ ವರದಿಯ ಉದ್ದೇಶಗಳಿಗಾಗಿ
+                            ಓದುಗರು ಲೇಖನಗಳ ಲಿಂಕ್‌ಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಆದಾಗ್ಯೂ, ಪೂರ್ವ ಲಿಖಿತ
+                            ಅನುಮತಿಯಿಲ್ಲದೆ ಸಂಪೂರ್ಣವಾಗಿ ಅಥವಾ ಗಣನೀಯ ಭಾಗಗಳಲ್ಲಿ ವಿಷಯವನ್ನು ಪುನರುತ್ಪಾದಿಸುವ,
+                            ಮರುಪ್ರಕಟಿಸುವ ಅಥವಾ ಮರುಹಂಚಿಕೆ ಮಾಡುವಂತಿಲ್ಲ.
                         </p>
                         <p className="terms-body">
-                            For permissions or licensing inquiries, please contact the editorial
-                            team through the Contact page.
+                            ಅನುಮತಿಗಳು ಅಥವಾ ಲೈಸೆನ್ಸಿಂಗ್ ವಿಚಾರಣೆಗಳಿಗಾಗಿ, ದಯವಿಟ್ಟು ಸಂಪರ್ಕ ಪುಟದ ಮೂಲಕ
+                            ಸಂಪಾದಕೀಯ ತಂಡವನ್ನು ಸಂಪರ್ಕಿಸಿ.
                         </p>
                     </section>
 
-                    {/* Intellectual Property */}
                     <section className="terms-section">
-                        <h2 className="terms-heading">Intellectual Property</h2>
+                        <h2 className="terms-heading">ಬೌದ್ಧಿಕ ಆಸ್ತಿ (Intellectual Property)</h2>
                         <p className="terms-body">
-                            The Hint retains all rights to its content, including but not limited
-                            to articles, photographs, illustrations, and audiovisual materials.
-                            The publication&apos;s name, logo, and associated branding are protected
-                            and may not be used without express written permission.
+                            ದಿ ಹಿಂಟ್ ತನ್ನ ಲೇಖನಗಳು, ಛಾಯಾಚಿತ್ರಗಳು, ವಿವರಣೆಗಳು ಮತ್ತು ಆಡಿಯೋ-ವಿಶುವಲ್ ವಸ್ತುಗಳನ್ನು
+                            ಒಳಗೊಂಡಂತೆ ತನ್ನ ವಿಷಯಗಳಿಗೆ ಸಂಪೂರ್ಣ ಹಕ್ಕುಗಳನ್ನು ಉಳಿಸಿಕೊಳ್ಳುತ್ತದೆ. ಪ್ರಕಟಣೆಯ ಹೆಸರು,
+                            ಲೋಗೋ ಮತ್ತು ಇತರ ಬ್ರ್ಯಾಂಡಿಂಗ್‌ಗಳನ್ನು ರಕ್ಷಿಸಲಾಗಿದೆ ಮತ್ತು ಲಿಖಿತ ಅನುಮತಿಯಿಲ್ಲದೆ ಬಳಸುವಂತಿಲ್ಲ.
                         </p>
                         <p className="terms-body">
-                            Third-party content featured on this website remains the property of
-                            its respective owners and is used in accordance with applicable
-                            agreements or fair use principles.
+                            ಈ ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಕಾಣಿಸಿಕೊಂಡಿರುವ ತೃತೀಯ-ವ್ಯಕ್ತಿ ವಿಷಯಗಳು ಆಯಾ ಮಾಲೀಕರ
+                            ಆಸ್ತಿಯಾಗಿ ಉಳಿಯುತ್ತವೆ ಮತ್ತು ನ್ಯಾಯಯುತ ಬಳಕೆಯ ತತ್ವಗಳಿಗೆ ಅನುಗುಣವಾಗಿ ಬಳಸಲ್ಪಡುತ್ತವೆ.
                         </p>
                     </section>
 
-                    {/* Accuracy & Editorial Disclaimer */}
                     <section className="terms-section">
-                        <h2 className="terms-heading">Accuracy and Editorial Standards</h2>
+                        <h2 className="terms-heading">ನಿಖರತೆ ಮತ್ತು ಸಂಪಾದಕೀಯ ಮಾನದಂಡಗಳು</h2>
                         <p className="terms-body">
-                            The Hint is committed to accuracy in journalism. Articles are produced
-                            with care, thorough research, and verification. Every reasonable effort
-                            is made to ensure that information published is correct at the time of
-                            publication.
+                            ದಿ ಹಿಂಟ್ ಪತ್ರಿಕೋದ್ಯಮದಲ್ಲಿ ನಿಖರತೆಗೆ ಬದ್ಧವಾಗಿದೆ. ಲೇಖನಗಳನ್ನು ಎಚ್ಚರಿಕೆ, ಸಮಗ್ರ ಸಂಶೋಧನೆ ಮತ್ತು
+                            ಪರಿಶೀಲನೆಯೊಂದಿಗೆ ನಿರ್ಮಿಸಲಾಗಿದೆ. ಪ್ರಕಟಣೆಯ ಸಮಯದಲ್ಲಿ ಪ್ರಕಟವಾದ ಮಾಹಿತಿಯು ಸರಿಯಾದದ್ದಾಗಿದೆಯೇ
+                            ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಲು ಸಾಧ್ಯವಾದಷ್ಟು ಪ್ರಯತ್ನ ಮಾಡಲಾಗುತ್ತದೆ.
                         </p>
                         <p className="terms-body">
-                            However, journalism operates under time constraints, and errors may
-                            occasionally occur. When mistakes are identified, they are corrected
-                            promptly and transparently.
+                            ಆದಾಗ್ಯೂ, ಪತ್ರಿಕೋದ್ಯಮವು ಸಮಯದ ಮಿತಿಗಳಲ್ಲಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ ಮತ್ತು ಕೆಲವೊಮ್ಮೆ
+                            ತಪ್ಪುಗಳು ಸಂಭವಿಸಬಹುದು. ತಪ್ಪುಗಳು ಕಂಡುಬಂದಾಗ, ಅವುಗಳನ್ನು ತ್ವರಿತವಾಗಿ ಮತ್ತು
+                            ಪಾರದರ್ಶಕವಾಗಿ ಸರಿಪಡಿಸಲಾಗುತ್ತದೆ.
                         </p>
                         <p className="terms-body">
-                            Content published on this website is intended to inform and is not a
-                            substitute for professional advice—whether legal, financial, medical,
-                            or otherwise. Readers should not make decisions based solely on
-                            information in articles without seeking appropriate professional
-                            guidance. The Hint is not liable for any actions taken or decisions
-                            made based on published content.
+                            ಈ ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಪ್ರಕಟಿಸಲಾದ ಮಾಹಿತಿಯು ತಿಳುವಳಿಕೆಗಾಗಿ ಉದ್ದೇಶಿಸಲಾಗಿದೆ ಮತ್ತು
+                            ಯಾವುದೇ ವೃತ್ತಿಪರ ಸಲಹೆಗೆ (ಕಾನೂನು, ಹಣಕಾಸು, ವೈದ್ಯಕೀಯ, ಇತ್ಯಾದಿ) ಪರ್ಯಾಯವಾಗಿಲ್ಲ.
+                            ಪ್ರಕಟಿತ ವಿಷಯದ ಆಧಾರದ ಮೇಲೆ ತೆಗೆದುಕೊಂಡ ಯಾವುದೇ ನಿರ್ಧಾರ ಅಥವಾ ಕ್ರಮಗಳಿಗೆ ದಿ ಹಿಂಟ್
+                            ಹೊಣೆಯಾಗುವುದಿಲ್ಲ.
                         </p>
                     </section>
 
-                    {/* Opinion Content Clarification */}
                     <section className="terms-section">
-                        <h2 className="terms-heading">Opinion and Analysis</h2>
+                        <h2 className="terms-heading">ಅಭಿಪ್ರಾಯ ಮತ್ತು ವಿಶ್ಲೇಷಣೆ</h2>
                         <p className="terms-body">
-                            Opinion articles, columns, and analysis pieces represent the views
-                            of their individual authors and do not necessarily reflect the
-                            institutional position of The Hint. Such content is clearly labelled
-                            and published separately from news reporting.
-                        </p>
-                        <p className="terms-body">
-                            This distinction between news and opinion is fundamental to
-                            maintaining editorial integrity. Readers can trust that news coverage
-                            is factual and impartial, while opinion pieces offer clearly
-                            identified perspectives.
+                            ಅಭಿಪ್ರಾಯ ಲೇಖನಗಳು, ಅಂಕಣಗಳು ಮತ್ತು ವಿಶ್ಲೇಷಣಾತ್ಮಕ ಬರಹಗಳು ಆಯಾ ಲೇಖಕರ
+                            ವೈಯಕ್ತಿಕ ದೃಷ್ಟಿಕೋನಗಳನ್ನು ಪ್ರತಿನಿಧಿಸುತ್ತವೆ ಮತ್ತು ದಿ ಹಿಂಟ್‌ನ ಸಾಂಸ್ಥಿಕ ನಿಲುವನ್ನು
+                            ಪ್ರತಿಬಿಂಬಿಸುವುದಿಲ್ಲ. ಅಂತಹ ವಿಷಯವನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಲೇಬಲ್ ಮಾಡಲಾಗಿರುತ್ತದೆ.
                         </p>
                     </section>
 
-                    {/* External Links */}
                     <section className="terms-section">
-                        <h2 className="terms-heading">External Links</h2>
+                        <h2 className="terms-heading">ಬಳಕೆದಾರರ ನಡವಳಿಕೆ</h2>
                         <p className="terms-body">
-                            Articles may include links to third-party websites for reference,
-                            context, or additional information. These links are provided as a
-                            convenience to readers.
-                        </p>
-                        <p className="terms-body">
-                            The Hint does not control and is not responsible for the content,
-                            accuracy, or practices of external websites. The inclusion of a
-                            link does not imply endorsement of the linked site or its content.
-                            Readers access external links at their own discretion and risk.
-                        </p>
-                    </section>
-
-                    {/* User Conduct */}
-                    <section className="terms-section">
-                        <h2 className="terms-heading">Acceptable Use</h2>
-                        <p className="terms-body">
-                            Visitors to this website agree to use it responsibly and lawfully.
-                            The following activities are prohibited:
+                            ಸಂದರ್ಶಕರು ಈ ವೆಬ್‌ಸೈಟ್ ಅನ್ನು ಜವಾಬ್ದಾರಿಯುತವಾಗಿ ಮತ್ತು ಕಾನೂನುಬದ್ಧವಾಗಿ
+                            ಬಳಸಲು ಒಪ್ಪಿಕೊಳ್ಳುತ್ತಾರೆ. ಕೆಳಗಿನ ಚಟುವಟಿಕೆಗಳನ್ನು ನಿಷೇಧಿಸಲಾಗಿದೆ:
                         </p>
                         <ul className="terms-list">
-                            <li>Attempting to disrupt, interfere with, or compromise the website&apos;s functionality or security</li>
-                            <li>Using automated systems to scrape, harvest, or collect content without permission</li>
-                            <li>Engaging in any activity that violates applicable laws or regulations</li>
-                            <li>Misrepresenting oneself or impersonating others when interacting with the publication</li>
+                            <li>ವೆಬ್‌ಸೈಟ್‌ನ ಭದ್ರತೆ ಅಥವಾ ಕಾರ್ಯಚಟುವಟಿಕೆಗೆ ಅಡ್ಡಿಪಡಿಸುವುದು</li>
+                            <li>ಅನುಮತಿಯಿಲ್ಲದೆ ವಿಷಯವನ್ನು ಸಂಗ್ರಹಿಸಲು ಸ್ಕ್ರೇಪಿಂಗ್ ಮುಂತಾದ ಸ್ವಯಂಚಾಲಿತ ವ್ಯವಸ್ಥೆಗಳ ಬಳಕೆ</li>
+                            <li>ಕಾನೂನುಬಾಹಿರ ಚಟುವಟಿಕೆಗಳಲ್ಲಿ ತೊಡಗಿಸಿಕೊಳ್ಳುವುದು</li>
                         </ul>
-                        <p className="terms-body">
-                            The Hint reserves the right to restrict access to individuals who
-                            violate these terms.
-                        </p>
                     </section>
 
-                    {/* Subscription & Email Communications */}
-                    <section className="terms-section">
-                        <h2 className="terms-heading">Email Communications</h2>
-                        <p className="terms-body">
-                            Readers may voluntarily subscribe to receive email updates about
-                            newly published content. Subscription is entirely optional.
-                        </p>
-                        <p className="terms-body">
-                            Email communications are related to editorial content and
-                            publication updates. Every email includes a clear option to
-                            unsubscribe, and requests to unsubscribe are honoured promptly.
-                        </p>
-                        <p className="terms-body">
-                            Email addresses and subscriber information are handled in accordance
-                            with the publication&apos;s Privacy Policy.
-                        </p>
-                    </section>
-
-                    {/* Limitation of Liability */}
-                    <section className="terms-section">
-                        <h2 className="terms-heading">Limitation of Liability</h2>
-                        <p className="terms-body">
-                            Access to this website is provided on an &quot;as is&quot; basis without
-                            warranties of any kind, whether express or implied. The Hint does
-                            not guarantee uninterrupted access or that the website will be
-                            free from errors.
-                        </p>
-                        <p className="terms-body">
-                            To the extent permitted by law, The Hint shall not be liable for
-                            any indirect, incidental, consequential, or special damages arising
-                            from the use of or inability to use this website or its content.
-                        </p>
-                    </section>
-
-                    {/* Changes to These Terms */}
-                    <section className="terms-section">
-                        <h2 className="terms-heading">Changes to These Terms</h2>
-                        <p className="terms-body">
-                            These Terms and Conditions may be updated periodically to reflect
-                            changes in practices, legal requirements, or editorial policy.
-                            Updates will be posted on this page.
-                        </p>
-                        <p className="terms-body">
-                            Continued use of the website following any changes constitutes
-                            acceptance of the revised terms. Readers are encouraged to review
-                            this page periodically.
-                        </p>
-                    </section>
-
-                    {/* Governing Law */}
-                    <section className="terms-section terms-governance">
-                        <h2 className="terms-heading">Governing Law</h2>
-                        <p className="terms-body">
-                            These Terms and Conditions are governed by and construed in
-                            accordance with the applicable laws of the jurisdiction in which
-                            the publication operates. Any disputes arising from or relating
-                            to these terms shall be subject to the exclusive jurisdiction of
-                            the appropriate courts in that jurisdiction.
-                        </p>
-                    </section>
-
-                    {/* Contact Information */}
                     <section className="terms-section terms-closing">
                         <p className="terms-body">
-                            Questions regarding these Terms and Conditions may be directed
-                            through the{" "}
+                            ಈ ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳ ಕುರಿತಾದ ಪ್ರಶ್ನೆಗಳಿಗೆ {" "}
                             <Link href="/contact" className="terms-link">
-                                Contact page
+                                ಸಂಪರ್ಕ ಪುಟವನ್ನು
                             </Link>
-                            .
+                            {" "}ಬಳಸಬಹುದು.
                         </p>
                     </section>
                 </div>

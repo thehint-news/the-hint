@@ -1,27 +1,13 @@
 /**
  * Privacy Policy Page
- * 
- * A professional, reader-friendly Privacy Policy page for The Hint.
- * Written in plain, understandable language that prioritizes trust and transparency.
- * Designed to clearly explain data collection, usage, and protection practices.
- * 
- * Layout: Simple, text-first, single column with wide margins.
- * Typography: Serif headlines, sans-serif body.
- * Tone: Calm, clear, and factual - written for readers, not lawyers.
  */
 
 import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-    title: "Privacy Policy | The Hint",
-    description: "Learn how The Hint collects, uses, and protects your personal information. Our privacy practices prioritize transparency and reader trust.",
-    openGraph: {
-        title: "Privacy Policy | The Hint",
-        description: "Learn how The Hint collects, uses, and protects your personal information. Our privacy practices prioritize transparency and reader trust.",
-        type: "website",
-        siteName: "The Hint",
-    },
+    title: "ಗೌಪ್ಯತೆ ನೀತಿ | The Hint",
+    description: "ದಿ ಹಿಂಟ್ ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಮಾಹಿತಿಯನ್ನು ಹೇಗೆ ಸಂಗ್ರಹಿಸುತ್ತದೆ, ಬಳಸುತ್ತದೆ ಮತ್ತು ರಕ್ಷಿಸುತ್ತದೆ ಎಂಬುದನ್ನು ತಿಳಿಯಿರಿ.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -29,232 +15,125 @@ export default function PrivacyPolicyPage() {
         <main id="main-content" className="flex-1">
             <article className="privacy-page">
                 <div className="container-editorial">
-                    {/* Back Navigation */}
                     <nav className="page-nav">
                         <Link href="/" className="back-link">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <line x1="19" y1="12" x2="5" y2="12"></line>
                                 <polyline points="12 19 5 12 12 5"></polyline>
                             </svg>
-                            Back to Home
+                            ಮುಖಪುಟಕ್ಕೆ
                         </Link>
                     </nav>
 
-                    {/* Page Header */}
                     <header className="privacy-header">
-                        <h1 className="privacy-title">Privacy Policy</h1>
+                        <h1 className="privacy-title">ಗೌಪ್ಯತೆ ನೀತಿ</h1>
                         <hr className="privacy-divider" />
                     </header>
 
-                    {/* Introduction */}
                     <section className="privacy-section">
                         <p className="privacy-lead">
-                            The Hint values reader privacy. This Privacy Policy explains how
-                            personal information is collected, used, and protected when readers
-                            visit and interact with this website. This policy applies to all
-                            users of the site, regardless of how they access it.
+                            ದಿ ಹಿಂಟ್ ಓದುಗರ ಗೌಪ್ಯತೆಯನ್ನು ಗೌರವಿಸುತ್ತದೆ. ಓದುಗರು ಈ ವೆಬ್‌ಸೈಟ್‌ಗೆ ಭೇಟಿ ನೀಡಿದಾಗ ಮತ್ತು ಸಂವಹನ ನಡೆಸಿದಾಗ ವೈಯಕ್ತಿಕ ಮಾಹಿತಿಯನ್ನು ಹೇಗೆ ಸಂಗ್ರಹಿಸಲಾಗುತ್ತದೆ, ಬಳಸಲಾಗುತ್ತದೆ ಮತ್ತು ರಕ್ಷಿಸಲಾಗುತ್ತದೆ ಎಂಬುದನ್ನು ಈ ಗೌಪ್ಯತೆ ನೀತಿಯು ವಿವರಿಸುತ್ತದೆ.
                         </p>
                     </section>
 
-                    {/* Information We Collect */}
                     <section className="privacy-section">
-                        <h2 className="privacy-heading">Information We Collect</h2>
+                        <h2 className="privacy-heading">ನಾವು ಸಂಗ್ರಹಿಸುವ ಮಾಹಿತಿ</h2>
 
-                        <h3 className="privacy-subheading">Information You Provide</h3>
+                        <h3 className="privacy-subheading">ನೀವು ಒದಗಿಸುವ ಮಾಹಿತಿ</h3>
                         <p className="privacy-body">
-                            When readers choose to interact with this website, certain information
-                            may be provided voluntarily. This includes:
+                            ಓದುಗರು ಈ ವೆಬ್‌ಸೈಟ್‌ನೊಂದಿಗೆ ಸಂವಹನ ನಡೆಸಲು ಆಯ್ಕೆಮಾಡಿದಾಗ, ಕೆಲವು ಮಾಹಿತಿಯನ್ನು ಸ್ವಯಂಪ್ರೇರಣೆಯಿಂದ ಒದಗಿಸಬಹುದು. ಇವುಗಳು ಸೇರಿವೆ:
                         </p>
                         <ul className="privacy-list">
-                            <li>Email addresses when subscribing to receive updates about new articles</li>
-                            <li>Messages sent through the Contact page or news tips submissions</li>
+                            <li>ಹೊಸ ಲೇಖನಗಳ ಕುರಿತು ನವೀಕರಣಗಳನ್ನು ಪಡೆಯಲು ಚಂದಾದಾರರಾದಾಗ ಇಮೇಲ್ ವಿಳಾಸಗಳು</li>
+                            <li>ಸಂಪರ್ಕ ಪುಟದ ಮೂಲಕ ಕಳುಹಿಸಲಾದ ಸಂದೇಶಗಳು ಅಥವಾ ಸುದ್ದಿ ಸುಳಿವುಗಳನ್ನು ಸಲ್ಲಿಸುವಾಗ</li>
                         </ul>
                         <p className="privacy-body">
-                            No account registration is required to read articles published on this
-                            website. Readers may access all published content without providing any
-                            personal information.
+                            ಈ ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಪ್ರಕಟವಾದ ಲೇಖನಗಳನ್ನು ಓದಲು ಯಾವುದೇ ಖಾತೆ ನೋಂದಣಿ ಅಗತ್ಯವಿಲ್ಲ. ಓದುಗರು ಯಾವುದೇ ವೈಯಕ್ತಿಕ ಮಾಹಿತಿಯನ್ನು ಒದಗಿಸದೆ ಎಲ್ಲಾ ಪ್ರಕಟಿತ ವಿಷಯವನ್ನು ಪ್ರವೇಶಿಸಬಹುದು.
                         </p>
 
-                        <h3 className="privacy-subheading">Information Collected Automatically</h3>
+                        <h3 className="privacy-subheading">ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಸಂಗ್ರಹಿಸುವ ಮಾಹಿತಿ</h3>
                         <p className="privacy-body">
-                            When readers visit this website, limited technical information may be
-                            collected automatically to help maintain and improve the site. This
-                            includes:
+                            ಓದುಗರು ಈ ವೆಬ್‌ಸೈಟ್‌ಗೆ ಭೇಟಿ ನೀಡಿದಾಗ, ಸೈಟ್ ಅನ್ನು ನಿರ್ವಹಿಸಲು ಮತ್ತು ಸುಧಾರಿಸಲು ಸಹಾಯ ಮಾಡಲು ಸೀಮಿತ ತಾಂತ್ರಿಕ ಮಾಹಿತಿಯನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಸಂಗ್ರಹಿಸಬಹುದು. ಇವುಗಳು ಸೇರಿವೆ:
                         </p>
                         <ul className="privacy-list">
-                            <li>Browser type and version</li>
-                            <li>Device type</li>
-                            <li>Pages viewed during the visit</li>
-                            <li>Approximate geographic location (non-precise, such as city or region)</li>
+                            <li>ಬ್ರೌಸರ್ ಪ್ರಕಾರ ಮತ್ತು ಆವೃತ್ತಿ</li>
+                            <li>ಸಾಧನದ ಪ್ರಕಾರ (Device type)</li>
+                            <li>ಭೇಟಿಯ ಸಮಯದಲ್ಲಿ ವೀಕ್ಷಿಸಿದ ಪುಟಗಳು</li>
+                            <li>ಅಂದಾಜು ಭೌಗೋಳಿಕ ಸ್ಥಳ</li>
                         </ul>
-                        <p className="privacy-body">
-                            This information is collected solely to understand how readers use the
-                            website and to improve its performance and content.
-                        </p>
                     </section>
 
-                    {/* How Information Is Used */}
                     <section className="privacy-section">
-                        <h2 className="privacy-heading">How Information Is Used</h2>
+                        <h2 className="privacy-heading">ಮಾಹಿತಿಯನ್ನು ಹೇಗೆ ಬಳಸಲಾಗುತ್ತದೆ</h2>
                         <p className="privacy-body">
-                            Personal information collected through this website is used for the
-                            following purposes:
+                            ಈ ವೆಬ್‌ಸೈಟ್ ಮೂಲಕ ಸಂಗ್ರಹಿಸಲಾದ ವೈಯಕ್ತಿಕ ಮಾಹಿತಿಯನ್ನು ಈ ಕೆಳಗಿನ ಉದ್ದೇಶಗಳಿಗಾಗಿ ಬಳಸಲಾಗುತ್ತದೆ:
                         </p>
                         <ul className="privacy-list">
-                            <li>To deliver email updates when new articles are published</li>
-                            <li>To respond to reader inquiries and messages</li>
-                            <li>To understand readership patterns and interests</li>
-                            <li>To improve the website&apos;s performance and usability</li>
+                            <li>ಹೊಸ ಲೇಖನಗಳನ್ನು ಪ್ರಕಟಿಸಿದಾಗ ಇಮೇಲ್ ಅಪ್‌ಡೇಟ್ಗಳನ್ನು ತಲುಪಿಸಲು</li>
+                            <li>ಓದುಗರ ವಿಚಾರಣೆಗಳು ಮತ್ತು ಸಂದೇಶಗಳಿಗೆ ಪ್ರತಿಕ್ರಿಯಿಸಲು</li>
+                            <li>ಓದುಗರ ಆಸಕ್ತಿಗಳು ಮತ್ತು ಓದುವ ಹವ್ಯಾಸಗಳನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು</li>
+                            <li>ವೆಬ್‌ಸೈಟ್‌ನ ಕಾರ್ಯಕ್ಷಮತೆ ಮತ್ತು ಉಪಯುಕ್ತತೆಯನ್ನು ಸುಧಾರಿಸಲು</li>
                         </ul>
                         <p className="privacy-body privacy-emphasis">
-                            Personal information is not sold to third parties. Reader data is not
-                            used for advertising profiling or targeted marketing purposes.
+                            ವೈಯಕ್ತಿಕ ಮಾಹಿತಿಯನ್ನು ಮೂರನೇ ವ್ಯಕ್ತಿಗಳಿಗೆ ಮಾರಾಟ ಮಾಡಲಾಗುವುದಿಲ್ಲ. ಓದುಗರ ಡೇಟಾವನ್ನು ಜಾಹೀರಾತು ಪ್ರೊಫೈಲಿಂಗ್ ಅಥವಾ ಉದ್ದೇಶಿತ ಮಾರ್ಕೆಟಿಂಗ್ ಉದ್ದೇಶಗಳಿಗಾಗಿ ಬಳಸಲಾಗುವುದಿಲ್ಲ.
                         </p>
                     </section>
 
-                    {/* Email Communications */}
                     <section className="privacy-section">
-                        <h2 className="privacy-heading">Email Communications</h2>
+                        <h2 className="privacy-heading">ಇಮೇಲ್ ಸಂವಹನಗಳು</h2>
                         <p className="privacy-body">
-                            Email updates are sent only to readers who have explicitly opted in to
-                            receive them. These communications relate to newly published content or
-                            important updates about the publication.
+                            ಇಮೇಲ್ ನವೀಕರಣಗಳನ್ನು ಸ್ವೀಕರಿಸಲು ಸ್ಪಷ್ಟವಾಗಿ ಆಯ್ಕೆ ಮಾಡಿದ ಓದುಗರಿಗೆ ಮಾತ್ರ ಕಳುಹಿಸಲಾಗುತ್ತದೆ.
                         </p>
                         <p className="privacy-body">
-                            Every email includes an option to unsubscribe. Unsubscribe requests are
-                            processed promptly, and no further emails will be sent after such a
-                            request is received.
-                        </p>
-                        <p className="privacy-body">
-                            Subscribers remain in control of their inbox at all times.
+                            ಪ್ರತಿ ಇಮೇಲ್ ಅನ್‌ಸಬ್‌ಸ್ಕ್ರೈಬ್ (Unsubscribe) ಮಾಡುವ ಆಯ್ಕೆಯನ್ನು ಒಳಗೊಂಡಿರುತ್ತದೆ. ಈ ವಿನಂತಿಗಳನ್ನು ತ್ವರಿತವಾಗಿ ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲಾಗುತ್ತದೆ, ಮತ್ತು ಅಂತಹ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಿದ ನಂತರ ಬೇರೆ ಯಾವುದೇ ಇಮೇಲ್ ಗಳನ್ನು ಕಳುಹಿಸಲಾಗುವುದಿಲ್ಲ.
                         </p>
                     </section>
 
-                    {/* Cookies & Analytics */}
                     <section className="privacy-section">
-                        <h2 className="privacy-heading">Cookies and Analytics</h2>
+                        <h2 className="privacy-heading">ಕುಕೀಸ್ ಮತ್ತು ಅನಾಲಿಟಿಕ್ಸ್</h2>
                         <p className="privacy-body">
-                            This website uses a limited number of cookies to ensure proper
-                            functionality and to gather basic analytics about readership. Cookies
-                            are small text files stored in your browser that help the website
-                            recognize return visitors and remember preferences.
+                            ಸರಿಯಾದ ಕಾರ್ಯಕ್ಷಮತೆಯನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಲು ಮತ್ತು ಓದುಗರ ಬಗ್ಗೆ ಮೂಲಭೂತ ಅನಾಲಿಟಿಕ್ಸ್ ಸಂಗ್ರಹಿಸಲು ಈ ವೆಬ್‌ಸೈಟ್ ಸೀಮಿತ ಸಂಖ್ಯೆಯ ಕುಕೀಗಳನ್ನು ಬಳಸುತ್ತದೆ.
                         </p>
                         <p className="privacy-body">
-                            Analytics tools are used to measure how readers interact with the
-                            website, including which articles are most read and how visitors
-                            navigate between pages. This information helps improve the reading
-                            experience.
-                        </p>
-                        <p className="privacy-body">
-                            This website does not use cross-site tracking cookies. No advertising
-                            cookies are employed. Readers may control cookie settings through
-                            their browser preferences.
+                            ಈ ವೆಬ್‌ಸೈಟ್ ಕ್ರಾಸ್-ಸೈಟ್ ಟ್ರ್ಯಾಕಿಂಗ್ ಕುಕೀಗಳನ್ನು ಬಳಸುವುದಿಲ್ಲ. ಯಾವುದೇ ಜಾಹೀರಾತು ಕುಕೀಗಳನ್ನು ಬಳಸಲಾಗುವುದಿಲ್ಲ. ಓದುಗರು ತಮ್ಮ ಬ್ರೌಸರ್ ಆದ್ಯತೆಗಳ ಮೂಲಕ ಕುಕೀ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ನಿಯಂತ್ರಿಸಬಹುದು.
                         </p>
                     </section>
 
-                    {/* Data Sharing */}
                     <section className="privacy-section">
-                        <h2 className="privacy-heading">Data Sharing</h2>
+                        <h2 className="privacy-heading">ಡೇಟಾ ಹಂಚಿಕೆ</h2>
                         <p className="privacy-body">
-                            Personal information is not sold or shared with third parties for
-                            marketing or commercial purposes.
-                        </p>
-                        <p className="privacy-body">
-                            Information may be shared only in the following limited circumstances:
+                            ವೈಯಕ್ತಿಕ ಮಾಹಿತಿಯನ್ನು ಮಾರ್ಕೆಟಿಂಗ್ ಅಥವಾ ವಾಣಿಜ್ಯ ಉದ್ದೇಶಗಳಿಗಾಗಿ ಮೂರನೇ ವ್ಯಕ್ತಿಗಳೊಂದಿಗೆ ಮಾರಾಟ ಮಾಡುವುದಿಲ್ಲ ಅಥವಾ ಹಂಚಿಕೊಳ್ಳುವುದಿಲ್ಲ. ಕೆಳಗಿನ ಸೀಮಿತ ಸಂದರ್ಭಗಳಲ್ಲಿ ಮಾತ್ರ ಮಾಹಿತಿಯನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು:
                         </p>
                         <ul className="privacy-list">
-                            <li>With service providers who assist in operating the website, such as
-                                email delivery services, and only to the extent necessary for them to
-                                perform their functions</li>
-                            <li>When required by law, such as in response to a valid legal request
-                                from authorities</li>
+                            <li>ವೆಬ್‌ಸೈಟ್ ಅನ್ನು ನಿರ್ವಹಿಸಲು ಸಹಾಯ ಮಾಡುವ ಸೇವಾ ಪೂರೈಕೆದಾರರೊಂದಿಗೆ (ಉದಾಹರಣೆಗೆ ಇಮೇಲ್ ವಿತರಣಾ ಸೇವೆಗಳು).</li>
+                            <li>ಕಾನೂನುಬದ್ಧವಾಗಿ ಅಧಿಕೃತ ಅಧಿಕಾರಿಗಳಿಂದ ವಿನಂತಿಸಿಕೊಂಡಾಗ ಮಾತ್ರ.</li>
                         </ul>
+                    </section>
+
+                    <section className="privacy-section">
+                        <h2 className="privacy-heading">ಡೇಟಾ ಭದ್ರತೆ</h2>
                         <p className="privacy-body">
-                            Any service providers who receive personal information are required to
-                            handle it in accordance with applicable privacy standards.
+                            ಅನಧಿಕೃತ ಪ್ರವೇಶ, ಬದಲಾವಣೆ, ಅಥವಾ ನಾಶದಿಂದ ವೈಯಕ್ತಿಕ ಮಾಹಿತಿಯನ್ನು ರಕ್ಷಿಸಲು ಸಮಂಜಸವಾದ ತಾಂತ್ರಿಕ ಮತ್ತು ಸಾಂಸ್ಥಿಕ ಕ್ರಮಗಳನ್ನು ಬಳಸಲಾಗುತ್ತದೆ. ಆದಾಗ್ಯೂ, ಸಂಪೂರ್ಣ ಭದ್ರತೆಯ ಖಾತರಿಯನ್ನು ನೀಡಲಾಗುವುದಿಲ್ಲ.
                         </p>
                     </section>
 
-                    {/* Data Security */}
                     <section className="privacy-section">
-                        <h2 className="privacy-heading">Data Security</h2>
+                        <h2 className="privacy-heading">ನಿಮ್ಮ ಹಕ್ಕುಗಳು</h2>
                         <p className="privacy-body">
-                            Reasonable technical and organizational measures are used to protect
-                            personal information from unauthorized access, alteration, disclosure,
-                            or destruction.
-                        </p>
-                        <p className="privacy-body">
-                            Access to personal information is limited to authorized personnel who
-                            require it to operate the website and respond to reader inquiries.
-                        </p>
-                        <p className="privacy-body">
-                            While every effort is made to protect personal information, no system
-                            is completely secure. Care is taken at every step, but absolute
-                            security cannot be guaranteed.
-                        </p>
-                    </section>
-
-                    {/* Data Retention */}
-                    <section className="privacy-section">
-                        <h2 className="privacy-heading">Data Retention</h2>
-                        <p className="privacy-body">
-                            Email addresses are retained for as long as the subscription remains
-                            active. When a reader unsubscribes, their email address is removed
-                            from the mailing list.
-                        </p>
-                        <p className="privacy-body">
-                            Messages submitted through the Contact page may be retained for
-                            record-keeping purposes and to allow for follow-up if needed.
-                        </p>
-                        <p className="privacy-body">
-                            Readers may request removal of their personal information at any time
-                            by contacting the publication.
-                        </p>
-                    </section>
-
-                    {/* Your Rights */}
-                    <section className="privacy-section">
-                        <h2 className="privacy-heading">Your Rights</h2>
-                        <p className="privacy-body">
-                            Readers have certain rights regarding their personal information:
+                            ಓದುಗರು ತಮ್ಮ ವೈಯಕ್ತಿಕ ಮಾಹಿತಿಗೆ ಸಂಬಂಧಿಸಿದಂತೆ ಕೆಲವು ಹಕ್ಕುಗಳನ್ನು ಹೊಂದಿದ್ದಾರೆ:
                         </p>
                         <ul className="privacy-list">
-                            <li>The right to unsubscribe from email communications at any time</li>
-                            <li>The right to request deletion of personal data held by the publication</li>
-                            <li>The right to inquire about what personal information is stored</li>
+                            <li>ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಇಮೇಲ್ ಸಂವಹನಗಳಿಂದ ಅನ್‌ಸಬ್‌ಸ್ಕ್ರೈಬ್ ಮಾಡುವ ಹಕ್ಕು</li>
+                            <li>ಪ್ರಕಟಣೆಯು ಹೊಂದಿರುವ ವೈಯಕ್ತಿಕ ಡೇಟಾವನ್ನು ಅಳಿಸಲು ವಿನಂತಿಸುವ ಹಕ್ಕು</li>
                         </ul>
                         <p className="privacy-body">
-                            To exercise any of these rights, please reach out through the{" "}
-                            <Link href="/contact" className="privacy-link">
-                                Contact page
-                            </Link>
-                            . Requests will be addressed as promptly as possible.
+                            ಈ ಹಕ್ಕುಗಳನ್ನು ಚಲಾಯಿಸಲು ದಯವಿಟ್ಟು <Link href="/contact" className="privacy-link">ಸಂಪರ್ಕ ಪುಟವನ್ನು</Link> ಬಳಸಿ.
                         </p>
                     </section>
 
-                    {/* Changes to This Policy */}
-                    <section className="privacy-section privacy-updates">
-                        <h2 className="privacy-heading">Changes to This Policy</h2>
-                        <p className="privacy-body">
-                            This Privacy Policy may be updated from time to time to reflect changes
-                            in practices, legal requirements, or how the website operates. Updates
-                            will be posted on this page.
-                        </p>
-                        <p className="privacy-body">
-                            Continued use of the website following any changes constitutes
-                            acceptance of the revised policy. Readers are encouraged to review
-                            this page periodically to stay informed.
-                        </p>
-                    </section>
-
-                    {/* Contact Information */}
                     <section className="privacy-section privacy-closing">
                         <p className="privacy-body">
-                            Questions regarding this Privacy Policy may be directed through the{" "}
-                            <Link href="/contact" className="privacy-link">
-                                Contact page
-                            </Link>
-                            .
+                            ಈ ನೀತಿಗೆ ಸಂಬಂಧಿಸಿದ ಪ್ರಶ್ನೆಗಳನ್ನು <Link href="/contact" className="privacy-link">ಸಂಪರ್ಕ ಪುಟದ</Link> ಮೂಲಕ ಕೇಳಬಹುದು.
                         </p>
                     </section>
                 </div>

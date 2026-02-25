@@ -108,9 +108,6 @@ export default async function HomePage() {
           articles={sections.opinion}
         />
       </div>
-
-
-
     </main>
   );
 }

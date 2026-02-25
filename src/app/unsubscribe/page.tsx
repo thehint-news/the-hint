@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Suspense, useState } from 'react';
 import { SkeletonBlock } from '@/components/skeleton';
+import { kn } from "@/lib/i18n/kn";
 
 function UnsubscribeContent() {
     const searchParams = useSearchParams();
@@ -78,7 +79,7 @@ function UnsubscribeContent() {
                     marginBottom: '30px',
                     color: '#111',
                 }}>
-                    THE HINT
+                    {kn.brand.name}
                 </h1>
 
                 {isResultView ? (
@@ -97,7 +98,7 @@ function UnsubscribeContent() {
                                 marginBottom: '15px',
                                 color: '#111',
                             }}>
-                                Unsubscribed
+                                {kn.unsubscribePage.title}
                             </h2>
                             <p style={{
                                 fontSize: '16px',
@@ -105,7 +106,7 @@ function UnsubscribeContent() {
                                 color: '#666',
                                 marginBottom: '30px',
                             }}>
-                                {displayMessage || 'You have been successfully unsubscribed from our mailing list.'}
+                                {displayMessage || kn.unsubscribePage.successMsg}
                             </p>
                         </>
                     ) : (
@@ -116,7 +117,7 @@ function UnsubscribeContent() {
                                 marginBottom: '15px',
                                 color: '#111',
                             }}>
-                                Unsubscribe
+                                {kn.unsubscribePage.title}
                             </h2>
                             <p style={{
                                 fontSize: '16px',
@@ -124,7 +125,7 @@ function UnsubscribeContent() {
                                 color: '#666',
                                 marginBottom: '30px',
                             }}>
-                                {displayMessage || 'There was an issue processing your request.'}
+                                {displayMessage || kn.unsubscribePage.errorMsg}
                             </p>
                         </>
                     )
@@ -137,7 +138,7 @@ function UnsubscribeContent() {
                             marginBottom: '10px',
                             color: '#111',
                         }}>
-                            Unsubscribe
+                            {kn.unsubscribePage.title}
                         </h2>
                         <p style={{
                             fontSize: '15px',
@@ -145,7 +146,7 @@ function UnsubscribeContent() {
                             color: '#666',
                             marginBottom: '30px',
                         }}>
-                            Enter your email address to unsubscribe from our newsletter.
+                            {kn.unsubscribePage.description}
                         </p>
 
                         <form onSubmit={handleManualSubmit} style={{ marginBottom: '30px' }}>
@@ -160,7 +161,7 @@ function UnsubscribeContent() {
                                     fontFamily: 'Arial, sans-serif',
                                     letterSpacing: '0.5px'
                                 }}>
-                                    Email Address
+                                    {kn.unsubscribePage.emailLabel}
                                 </label>
                                 <input
                                     type="email"
@@ -168,7 +169,7 @@ function UnsubscribeContent() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
-                                    placeholder="your@email.com"
+                                    placeholder={kn.unsubscribePage.placeholder}
                                     style={{
                                         width: '100%',
                                         padding: '12px',
@@ -209,7 +210,7 @@ function UnsubscribeContent() {
                                     opacity: formStatus === 'loading' ? 0.7 : 1,
                                 }}
                             >
-                                {formStatus === 'loading' ? 'Processing...' : 'Unsubscribe'}
+                                {formStatus === 'loading' ? kn.unsubscribePage.processing : kn.unsubscribePage.button}
                             </button>
                         </form>
                     </>
@@ -230,7 +231,7 @@ function UnsubscribeContent() {
                         letterSpacing: '1px',
                     }}
                 >
-                    Return to Homepage
+                    {kn.unsubscribePage.returnHome}
                 </Link>
 
                 {!isResultView && (
@@ -240,9 +241,9 @@ function UnsubscribeContent() {
                         color: '#999',
                         fontFamily: 'Arial, sans-serif',
                     }}>
-                        Changed your mind?{' '}
+                        {kn.unsubscribePage.changedMind}{' '}
                         <Link href="/" style={{ color: '#666', textDecoration: 'underline' }}>
-                            Stay subscribed
+                            {kn.unsubscribePage.staySubscribed}
                         </Link>
                     </p>
                 )}

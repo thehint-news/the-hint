@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Recommendation } from '@/lib/content/recommendations';
+import { kn } from '@/lib/i18n/kn';
 
 interface ContinueReadingProps {
     items: Recommendation[];
@@ -56,14 +57,14 @@ export function ContinueReading({ items }: ContinueReadingProps) {
                     <div className="md:col-span-2 relative">
                         <div className="flex items-center gap-2 mb-2">
                             <span className="block font-sans text-[10px] font-bold tracking-[0.15em] text-[#8B0000] uppercase">
-                                Continue Reading
+                                {kn.editorial.continueReading}
                             </span>
                             {/* Decorative Line */}
                             <div className="h-[1px] w-12 bg-[#8B0000]/30 hidden sm:block"></div>
                         </div>
                         <div className="flex items-end gap-3">
                             <h2 className="font-serif text-3xl md:text-4xl text-neutral-900 font-bold tracking-tighter leading-[0.9] text-left relative z-10">
-                                From Our<br />Coverage
+                                {kn.editorial.fromOurCoverage}
                             </h2>
                             <div className="mb-2 animate-pulse hidden md:block">
                                 <Icons.Trending />
@@ -72,7 +73,7 @@ export function ContinueReading({ items }: ContinueReadingProps) {
                     </div>
                     <div className="md:col-span-1 md:text-right pl-0 md:pl-6 text-left">
                         <p className="font-serif text-neutral-500 text-sm md:text-base leading-relaxed italic border-l-2 md:border-l-0 md:border-r-2 border-[#8B0000] pl-4 md:pl-0 md:pr-4">
-                            &ldquo;Curated stories you might have missed.&rdquo;
+                            &ldquo;{kn.editorial.curatedStories}&rdquo;
                         </p>
                     </div>
                 </div>
@@ -112,7 +113,7 @@ export function ContinueReading({ items }: ContinueReadingProps) {
                                         <div className="mb-auto pt-2">
                                             <span className="inline-flex items-center px-2 py-0.5 text-[9px] font-bold tracking-widest text-white uppercase bg-[#8B0000] rounded-sm shadow-lg">
                                                 <Icons.Star />
-                                                LEAD STORY
+                                                {kn.editorial.leadStory}
                                             </span>
                                         </div>
 
@@ -123,7 +124,7 @@ export function ContinueReading({ items }: ContinueReadingProps) {
                                         {/* CTA: Visible on Mobile, Slide-up on Desktop */}
                                         <div className="flex items-center text-[10px] text-neutral-300 font-sans mt-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 transform md:translate-y-2 md:group-hover:translate-y-0">
                                             <span className="font-bold text-white uppercase tracking-wider flex items-center gap-1">
-                                                Read Article <Icons.ArrowRight />
+                                                {kn.article.readMore} <Icons.ArrowRight />
                                             </span>
                                         </div>
                                     </div>
@@ -177,7 +178,7 @@ export function ContinueReading({ items }: ContinueReadingProps) {
 
                                     <div className="mt-auto flex items-center justify-between text-[10px] text-neutral-400 font-sans border-t border-neutral-50 pt-3">
                                         <span className="flex items-center gap-1 text-[#8B0000] md:text-neutral-400 md:group-hover:text-[#8B0000] transition-colors">
-                                            Read Now <Icons.ArrowRight />
+                                            {kn.article.readMore} <Icons.ArrowRight />
                                         </span>
                                     </div>
                                 </div>

@@ -7,6 +7,8 @@
  * NO business logic, NO imports from lib/content.
  */
 
+import { kn } from "@/lib/i18n/kn";
+
 interface CorrectionNoticeProps {
     updatedAt: string | null;
     correctionText?: string;
@@ -17,7 +19,7 @@ export function CorrectionNotice({ updatedAt, correctionText }: CorrectionNotice
         return null;
     }
 
-    const formattedDate = new Date(updatedAt).toLocaleDateString('en-US', {
+    const formattedDate = new Date(updatedAt).toLocaleDateString('kn-IN', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -26,17 +28,17 @@ export function CorrectionNotice({ updatedAt, correctionText }: CorrectionNotice
     return (
         <aside className="border border-current p-6 mb-12">
             <h2 className="text-base font-bold uppercase tracking-wide mb-2">
-                Correction
+                {kn.article.correction}
             </h2>
             <p className="text-base mb-2">
-                <span className="font-semibold">Updated:</span> {formattedDate}
+                <span className="font-semibold">{kn.time.updatedOnLabel}</span> {formattedDate}
             </p>
             {correctionText && (
                 <p className="text-base">{correctionText}</p>
             )}
             {!correctionText && (
                 <p className="text-base">
-                    This article has been updated since its original publication.
+                    {kn.article.updatedNotice}
                 </p>
             )}
         </aside>

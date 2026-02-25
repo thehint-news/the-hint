@@ -14,6 +14,7 @@ import { notFound } from 'next/navigation';
 import { getSectionPageData, InvalidSectionError } from '@/lib/content';
 import { SectionHeader, StoryList, Pagination, LeadStory } from '@/components/editorial';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { kn } from "@/lib/i18n/kn";
 
 // Force dynamic rendering — GitHub API calls at build time cause timeouts
 export const dynamic = 'force-dynamic';
@@ -88,10 +89,10 @@ export default async function SectionPage({ params, searchParams }: SectionPageP
             return (
                 <main id="main-content" className="flex-1">
                     <div className="container-editorial" style={{ paddingTop: "2rem", paddingBottom: "3rem" }}>
-                        <SectionHeader name={section.name} description={section.description} />
+                        <SectionHeader name={section.name} description={(kn.sectionDescriptions as Record<string, string>)[section.slug] || section.description} />
                         <div className="py-12 text-center">
                             <p className="font-serif text-lg italic text-[#8A8A8A]">
-                                No stories available in this section.
+                                {kn.messages.emptySection}
                             </p>
                         </div>
                     </div>
@@ -111,12 +112,12 @@ export default async function SectionPage({ params, searchParams }: SectionPageP
                 <div className="container-editorial" style={{ paddingTop: "2rem", paddingBottom: "3rem" }}>
                     <SectionHeader
                         name={section.name}
-                        description={section.description}
+                        description={(kn.sectionDescriptions as Record<string, string>)[section.slug] || section.description}
                     />
                     <EmptyState
-                        title="This section is quiet... for now."
-                        message={`We haven't published any stories in ${section.name} just yet. Our editorial team is working on it.`}
-                        actionLabel="Read Top Stories"
+                        title={kn.messages.emptyStateTitle}
+                        message={kn.messages.emptyStateDesc((kn.sections as Record<string, string>)[section.slug] || section.name)}
+                        actionLabel={kn.messages.readTopStories}
                         actionHref="/"
                     />
                 </div>
@@ -139,7 +140,7 @@ export default async function SectionPage({ params, searchParams }: SectionPageP
             <div className="container-editorial" style={{ paddingTop: "2rem", paddingBottom: "0.5rem" }}>
                 <SectionHeader
                     name={section.name}
-                    description={section.description}
+                    description={(kn.sectionDescriptions as Record<string, string>)[section.slug] || section.description}
                     articleCount={totalArticles}
                 />
             </div>

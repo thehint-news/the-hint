@@ -12,6 +12,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { detectOEmbedPlatform, OEmbedPlatform, OEmbedResponse } from '@/lib/content/oembed';
+import { kn } from '@/lib/i18n/kn';
 import styles from './SocialEmbed.module.css';
 
 interface WindowWithGlobals extends Window {
@@ -197,9 +198,9 @@ export function SocialEmbed({ url }: SocialEmbedProps) {
             {/* Error Fallback */}
             {error && (
                 <div className={styles.fallbackBlock}>
-                    <p className={styles.fallbackMsg}>Content is currently unavailable.</p>
+                    <p className={styles.fallbackMsg}>{kn.embed.unavailable}</p>
                     <a href={url} target="_blank" rel="noopener noreferrer" className={styles.fallbackBtn}>
-                        View on Original Link
+                        {kn.embed.viewOriginal}
                     </a>
                 </div>
             )}

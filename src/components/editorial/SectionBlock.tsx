@@ -13,6 +13,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { kn } from "@/lib/i18n/kn";
 
 interface SectionArticle {
     id: string;
@@ -35,7 +36,7 @@ function WireStyleLayout({ articles, sectionSlug }: { articles: SectionArticle[]
         <div>
             {articles.slice(0, 5).map((article) => {
                 const articleUrl = `/${sectionSlug}/${article.id}`;
-                const formattedDate = new Date(article.publishedAt).toLocaleDateString("en-US", {
+                const formattedDate = new Date(article.publishedAt).toLocaleDateString("kn-IN", {
                     month: "long",
                     day: "numeric",
                     year: "numeric",
@@ -116,7 +117,7 @@ function PoliticsLayout({ articles, sectionSlug }: { articles: SectionArticle[];
         <div>
             {articles.slice(0, 4).map((article) => {
                 const articleUrl = `/${sectionSlug}/${article.id}`;
-                const formattedDate = new Date(article.publishedAt).toLocaleDateString("en-US", {
+                const formattedDate = new Date(article.publishedAt).toLocaleDateString("kn-IN", {
                     month: "long",
                     day: "numeric",
                     year: "numeric",
@@ -193,7 +194,7 @@ function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticl
         <div style={{ display: "grid", gap: "1.25rem", gridTemplateColumns: "repeat(2, 1fr)" }}>
             {articles.slice(0, 2).map((article) => {
                 const articleUrl = `/${sectionSlug}/${article.id}`;
-                const formattedDate = new Date(article.publishedAt).toLocaleDateString("en-US", {
+                const formattedDate = new Date(article.publishedAt).toLocaleDateString("kn-IN", {
                     month: "long",
                     day: "numeric",
                     year: "numeric",
@@ -272,7 +273,7 @@ function OpinionLayout({ articles, sectionSlug }: { articles: SectionArticle[]; 
                     excerpt = parts[1]?.trim() || "";
                 }
 
-                const formattedDate = new Date(article.publishedAt).toLocaleDateString("en-US", {
+                const formattedDate = new Date(article.publishedAt).toLocaleDateString("kn-IN", {
                     month: "long",
                     day: "numeric",
                     year: "numeric"
@@ -374,11 +375,11 @@ export function SectionBlock({ sectionTitle, articles }: SectionBlockProps) {
             <div className="section-header flex justify-between items-baseline" style={{ marginBottom: "0.15rem" }}>
                 <Link href={`/${actualSlug}`} className="group">
                     <h2 id={`section-${sectionSlug}`} className="section-title group-hover:underline decoration-2 underline-offset-4 decoration-[#111]" style={{ fontWeight: 700 }}>
-                        {sectionTitle}
+                        {(kn.sections as Record<string, string>)[actualSlug] || sectionTitle}
                     </h2>
                 </Link>
                 <Link href={`/${actualSlug}`} className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#8A8A8A] hover:text-[#111]">
-                    View All
+                    {kn.editorial.viewAll}
                 </Link>
             </div>
             <div className="section-line" aria-hidden="true" style={{ marginBottom: "1rem" }} />

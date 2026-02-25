@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Noto_Sans_Kannada, Noto_Serif_Kannada } from "next/font/google";
+import { Playfair_Display, Inter, Anek_Kannada, Tiro_Kannada } from "next/font/google";
 import "./globals.css";
 import { getAllArticles } from "@/lib/content/reader";
 
@@ -19,30 +19,30 @@ const inter = Inter({
   display: "swap",
 });
 
-// Kannada sans-serif for body text — professional newspaper-grade
-const notoSansKannada = Noto_Sans_Kannada({
+// Kannada sans-serif for body text and UI — modern, clean and professional
+const anekKannada = Anek_Kannada({
   variable: "--font-kannada-sans",
   subsets: ["kannada"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-// Kannada serif for headlines — authoritative, editorial
-const notoSerifKannada = Noto_Serif_Kannada({
+// Kannada serif for headlines — authoritative, authentic newspaper print feel
+const tiroKannada = Tiro_Kannada({
   variable: "--font-kannada-serif",
   subsets: ["kannada"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://thehint.news'),
   title: {
-    default: "The Hint",
-    template: "%s | The Hint",
+    default: "ದಿ ಹಿಂಟ್",
+    template: "%s | ದಿ ಹಿಂಟ್",
   },
-  description: "Independent journalism delivered as it happens. Authoritative news coverage with integrity and depth.",
-  keywords: ["news", "politics", "world affairs", "crime", "court", "opinion", "journalism", "independent news"],
+  description: "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ ನಡೆದಂತೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ. ಸಮಗ್ರತೆ ಮತ್ತು ಆಳದೊಂದಿಗೆ ಅಧಿಕೃತ ಸುದ್ದಿ ಪ್ರಸಾರ.",
+  keywords: ["news", "politics", "world affairs", "crime", "court", "opinion", "journalism", "independent news", "kannada"],
   authors: [{ name: "The Hint Editorial Board" }],
   robots: {
     index: true,
@@ -56,17 +56,17 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "The Hint",
-    description: "Independent journalism delivered as it happens. Authoritative news coverage with integrity and depth.",
+    title: "ದಿ ಹಿಂಟ್",
+    description: "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ ನಡೆದಂತೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ. ಸಮಗ್ರತೆ ಮತ್ತು ಆಳದೊಂದಿಗೆ ಅಧಿಕೃತ ಸುದ್ದಿ ಪ್ರಸಾರ.",
     url: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://thehint.news'),
-    siteName: "The Hint",
-    locale: 'en_IN',
+    siteName: "ದಿ ಹಿಂಟ್",
+    locale: 'kn_IN',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: "The Hint",
-    description: "Independent journalism delivered as it happens.",
+    title: "ದಿ ಹಿಂಟ್",
+    description: "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ ನಡೆದಂತೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ.",
     creator: "@thehintnews", // Placeholder
   },
   verification: {
@@ -103,7 +103,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en" className={`${notoSansKannada.variable} ${notoSerifKannada.variable}`}>
+    <html lang="kn" className={`${anekKannada.variable} ${tiroKannada.variable}`}>
       <body className={`${playfairDisplay.variable} ${inter.variable}`}>
         <div className="min-h-screen flex flex-col">
           <Analytics />

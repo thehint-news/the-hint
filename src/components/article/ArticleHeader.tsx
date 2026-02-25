@@ -8,6 +8,7 @@
  */
 
 import Link from 'next/link';
+import { kn } from "@/lib/i18n/kn";
 
 interface ArticleHeaderProps {
     title: string;
@@ -29,12 +30,16 @@ export function ArticleHeader({
     updatedAt,
 }: ArticleHeaderProps) {
     // Format dates
-    const formattedPublished = new Date(publishedAt).toLocaleDateString('en-US', {
+    const formattedPublished = new Date(publishedAt).toLocaleDateString('kn-IN', {
         weekday: 'long',
         month: 'long',
         day: 'numeric',
         year: 'numeric',
     });
+
+    const displaySection = (kn.sections as Record<string, string>)[sectionSlug] || sectionLabel;
+    const isOpinion = contentTypeLabel === 'opinion';
+    const displayContentType = contentTypeLabel ? (kn.contentTypes as Record<string, string>)[contentTypeLabel.toLowerCase()] || contentTypeLabel : null;
 
     return (
         <header className="mb-6">
@@ -42,20 +47,20 @@ export function ArticleHeader({
             <div className="mb-3 flex items-center gap-4">
                 <Link href={`/${sectionSlug}`} className="hover:opacity-70 transition-opacity">
                     <span className="text-xs font-bold uppercase tracking-[0.15em] text-[#8A8A8A]">
-                        {sectionLabel}
+                        {displaySection}
                     </span>
                 </Link>
-                {contentTypeLabel &&
+                {displayContentType &&
                     contentTypeLabel !== 'news' &&
-                    contentTypeLabel.toLowerCase() !== sectionLabel.toLowerCase() && (
+                    displayContentType !== displaySection && (
                         <span className="text-xs font-bold uppercase tracking-[0.15em] text-[#8A8A8A] border-l border-[#D9D9D9] pl-4">
-                            {contentTypeLabel}
+                            {displayContentType}
                         </span>
                     )}
             </div>
 
             {/* 2. Large Headline */}
-            <h1 className={`font-serif text-[clamp(2rem,7vw,3.5rem)] font-black leading-[1.25] mb-6 text-[#111111] max-w-4xl tracking-normal ${contentTypeLabel === 'opinion' ? 'italic' : ''}`}>
+            <h1 className={`font-serif text-[clamp(2rem,7vw,3.5rem)] font-black leading-[1.25] mb-6 text-[#111111] max-w-4xl tracking-normal ${isOpinion ? 'italic' : ''}`}>
                 {title}
             </h1>
 
@@ -74,8 +79,8 @@ export function ArticleHeader({
                     <>
                         <span aria-hidden="true" className="text-[#D9D9D9]">•</span>
                         <time dateTime={updatedAt}>
-                            Updated {new Date(updatedAt).toLocaleDateString('en-US', {
-                                month: 'short',
+                            {kn.time.updatedOn}{new Date(updatedAt).toLocaleDateString('kn-IN', {
+                                month: 'long',
                                 day: 'numeric',
                                 year: 'numeric'
                             })}

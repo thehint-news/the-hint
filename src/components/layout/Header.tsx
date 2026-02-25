@@ -18,16 +18,17 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { SubscribeModal } from "../features/SubscribeModal";
 import { SearchOverlay } from "../features/SearchOverlay";
+import { kn } from "@/lib/i18n/kn";
 
 
 const NAVIGATION_ITEMS = [
-    { label: "Home", href: "/" },
-    { label: "Local", href: "/local" },
-    { label: "Politics", href: "/politics" },
-    { label: "World", href: "/world-affairs" },
-    { label: "Crime", href: "/crime" },
-    { label: "Court", href: "/court" },
-    { label: "Opinion", href: "/opinion" },
+    { label: kn.nav.home, href: "/" },
+    { label: kn.nav.local, href: "/local" },
+    { label: kn.nav.politics, href: "/politics" },
+    { label: kn.nav.world, href: "/world-affairs" },
+    { label: kn.nav.crime, href: "/crime" },
+    { label: kn.nav.court, href: "/court" },
+    { label: kn.nav.opinion, href: "/opinion" },
 ] as const;
 
 interface HeaderProps {
@@ -69,11 +70,11 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
         const diff = Date.now() - new Date(isoString).getTime();
         const minutes = Math.floor(diff / 60000);
 
-        if (minutes < 1) return "Updated just now";
-        if (minutes < 60) return `Updated ${minutes} minutes ago`;
+        if (minutes < 1) return kn.time.updatedJustNow;
+        if (minutes < 60) return kn.time.updatedMinutesAgo(minutes);
         const hours = Math.floor(minutes / 60);
-        if (hours < 24) return `Updated ${hours} hours ago`;
-        return `Updated ${new Date(isoString).toLocaleDateString()}`;
+        if (hours < 24) return kn.time.updatedHoursAgo(hours);
+        return `${kn.time.updatedOn}${new Date(isoString).toLocaleDateString("kn-IN")}`;
     };
 
     const updatedString = latestUpdate ? getUpdatedString(latestUpdate) : "";
@@ -91,7 +92,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
             <header role="banner" className="sticky top-0 z-50 bg-[#F7F6F2]">
                 {/* Skip Link for Accessibility */}
                 <a href="#main-content" className="skip-link">
-                    Skip to main content
+                    {kn.nav.skipToMain}
                 </a>
 
                 {/* Mobile Menu 'News Index' Drawer */}
@@ -111,10 +112,10 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                         {/* Drawer Header */}
                         <div className="px-6 pt-8 pb-6 flex justify-between items-start">
                             <div className="flex flex-col gap-1">
-                                <span className="font-serif text-3xl font-black tracking-tight leading-none text-[#111]">
-                                    The Hint
+                                <span className="font-serif text-2xl font-black tracking-tight leading-none text-[#111]">
+                                    {kn.brand.name}
                                 </span>
-                                <span className="font-sans text-[11px] font-medium text-[#666] uppercase tracking-wide pl-0.5">
+                                <span className="font-sans text-[10px] font-medium text-[#666] uppercase tracking-wide pl-0.5">
                                     {currentDate}
                                 </span>
                             </div>
@@ -131,16 +132,16 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                         </div>
 
                         {/* Search Field Stylized Button */}
-                        <div className="px-6 pb-6">
+                        <div className="px-6 pb-5">
                             <button
                                 onClick={() => { setIsSearchOpen(true); setIsMenuOpen(false); }}
-                                className="w-full flex items-center gap-3 bg-white border border-[#E5E5E5] px-4 py-3 text-[#888] hover:border-[#111] hover:text-[#111] transition-colors group shadow-sm"
+                                className="w-full flex items-center gap-3 bg-white border border-[#E5E5E5] px-3 py-2.5 text-[#888] hover:border-[#111] hover:text-[#111] transition-colors group shadow-sm"
                             >
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#AAA] group-hover:text-[#111] transition-colors">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#AAA] group-hover:text-[#111] transition-colors">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
-                                <span className="font-sans text-sm font-medium pt-0.5">Search coverage...</span>
+                                <span className="font-sans text-xs font-medium pt-0.5">{kn.nav.searchPlaceholder}</span>
                             </button>
                         </div>
 
@@ -151,7 +152,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                                     <li key={item.href}>
                                         <Link
                                             href={item.href}
-                                            className="block font-serif text-lg text-[#111] py-3 border-b border-[#E5E5E5]/60 hover:pl-3 transition-all duration-300"
+                                            className="block font-serif text-base text-[#111] py-2.5 border-b border-[#E5E5E5]/60 hover:pl-3 transition-all duration-300"
                                             onClick={() => setIsMenuOpen(false)}
                                         >
                                             {item.label}
@@ -165,16 +166,14 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                                     href="/"
                                     onClick={() => setIsMenuOpen(false)}
                                     className="flex items-center gap-2 font-sans text-xs font-bold uppercase tracking-widest text-[#6B6B6B] hover:text-[#111] group"
-                                >
-                                    See what others miss
-                                    <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all">→</span>
+                                >                                    <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all">→</span>
                                 </Link>
 
                                 <button
                                     onClick={() => { setIsSubscribeOpen(true); setIsMenuOpen(false); }}
-                                    className="w-full bg-[#111] text-[#F7F6F2] font-sans font-bold uppercase tracking-widest text-xs py-4 hover:bg-[#333] transition-colors shadow-sm"
+                                    className="w-full bg-[#111] text-[#F7F6F2] font-sans font-bold uppercase tracking-widest text-sm py-3 hover:bg-[#333] transition-colors shadow-sm"
                                 >
-                                    Subscribe for Updates
+                                    {kn.nav.subscribeMobileButton}
                                 </button>
                             </div>
                         </nav>
@@ -191,7 +190,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
 
 
                     <Link href="/" className="font-sans text-[11px] font-medium uppercase tracking-widest text-[#6B6B6B] hover:text-[#111]">
-                        Today&apos;s Paper
+                        {kn.nav.todaysPaper}
                     </Link>
                 </div>
 
@@ -209,7 +208,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                         </button>
 
                         <Link href="/" className="no-underline">
-                            <h1 className="font-serif text-2xl font-black tracking-tight text-[#111] leading-none">THE HINT</h1>
+                            <h1 className="font-serif text-4xl font-black tracking-tight text-[#111] leading-none pb-1">{kn.brand.name}</h1>
                         </Link>
 
                         {/* Mobile Subscribe Icon Replacement or Spacer */}
@@ -234,7 +233,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                             </time>
                         )}
                         <Link href="/" className="inline-block no-underline">
-                            <h1 className="masthead-title leading-none">The Hint</h1>
+                            <h1 className="masthead-title leading-none">{kn.brand.name}</h1>
                         </Link>
                     </div>
 
@@ -274,15 +273,15 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
                                 <span className="font-sans text-[11px] font-bold uppercase tracking-widest">
-                                    Search
+                                    {kn.nav.searchButton}
                                 </span>
                             </button>
 
                             <button
                                 onClick={() => setIsSubscribeOpen(true)}
-                                className="bg-[#111] text-[#F7F6F2] font-sans text-[11px] font-bold uppercase tracking-widest px-6 py-2 rounded-full hover:bg-[#333] transition-colors shadow-sm"
+                                className="bg-[#111] text-[#F7F6F2] font-sans text-sm font-bold uppercase tracking-widest px-6 py-2 rounded-full hover:bg-[#333] transition-colors shadow-sm"
                             >
-                                Subscribe
+                                {kn.nav.subscribeDesktopButton}
                             </button>
                         </div>
                     </nav>
@@ -295,7 +294,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                     <div className="headline-ticker border-y border-[#111] py-1 bg-[#F7F6F2]">
                         <div className="container-editorial flex items-center">
                             <span className="font-sans text-[10px] font-black uppercase tracking-widest mr-4 text-[#E53935] whitespace-nowrap">
-                                LATEST
+                                {kn.nav.latest}
                             </span>
                             <div className="flex-1 overflow-hidden relative">
                                 <div

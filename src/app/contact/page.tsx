@@ -1,27 +1,13 @@
 /**
  * Contact Page
- * 
- * A professional, institutional Contact page for The Hint.
- * Emphasizes accessibility, accountability, and openness.
- * Written in third person with a calm, neutral, and factual tone.
- * 
- * Layout: Simple, text-first, single column with wide margins.
- * Typography: Serif headlines, sans-serif body.
- * Email-based contact only. No forms, icons, or decorative elements.
  */
 
 import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-    title: "Contact | The Hint",
-    description: "Reach The Hint newsroom for general inquiries, news tips, letters to the editor, corrections, and advertising.",
-    openGraph: {
-        title: "Contact | The Hint",
-        description: "Reach The Hint newsroom for general inquiries, news tips, letters to the editor, corrections, and advertising.",
-        type: "website",
-        siteName: "The Hint",
-    },
+    title: "ಸಂಪರ್ಕ | The Hint",
+    description: "ಸಾಮಾನ್ಯ ವಿಚಾರಣೆಗಳು, ಸುದ್ದಿ ಸುಳಿವುಗಳು, ಸಂಪಾದಕರಿಗೆ ಪತ್ರಗಳು, ತಿದ್ದುಪಡಿಗಳು ಮತ್ತು ಜಾಹೀರಾತುಗಳಿಗಾಗಿ ದಿ ಹಿಂಟ್ ಸುದ್ದಿಮನೆಯನ್ನು ತಲುಪಿ.",
 };
 
 export default function ContactPage() {
@@ -29,39 +15,31 @@ export default function ContactPage() {
         <main id="main-content" className="flex-1">
             <article className="contact-page">
                 <div className="container-editorial">
-                    {/* Back Navigation */}
                     <nav className="page-nav">
                         <Link href="/" className="back-link">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <line x1="19" y1="12" x2="5" y2="12"></line>
                                 <polyline points="12 19 5 12 12 5"></polyline>
                             </svg>
-                            Back to Home
+                            ಮುಖಪುಟಕ್ಕೆ
                         </Link>
                     </nav>
 
-                    {/* Page Header */}
                     <header className="contact-header">
-                        <h1 className="contact-title">Contact</h1>
+                        <h1 className="contact-title">ಸಂಪರ್ಕ</h1>
                         <hr className="contact-divider" />
                     </header>
 
-                    {/* General Contact Information */}
                     <section className="contact-section">
                         <p className="contact-lead">
-                            The editorial team welcomes correspondence from readers regarding coverage,
-                            corrections, and general inquiries. All messages are reviewed by the
-                            appropriate department. Due to the volume of correspondence received,
-                            not all messages may receive an individual response.
+                            ವರದಿ ಮಾಡುವಿಕೆ, ತಿದ್ದುಪಡಿಗಳು ಮತ್ತು ಸಾಮಾನ್ಯ ವಿಚಾರಣೆಗಳಿಗೆ ಸಂಬಂಧಿಸಿದಂತೆ ಸಂಪಾದಕೀಯ ತಂಡವು ಓದುಗರಿಂದ ಪತ್ರವ್ಯವಹಾರವನ್ನು ಸ್ವಾಗತಿಸುತ್ತದೆ. ಎಲ್ಲಾ ಸಂದೇಶಗಳನ್ನು ಸೂಕ್ತ ವಿಭಾಗದಿಂದ ಪರಿಶೀಲಿಸಲಾಗುತ್ತದೆ. ಸ್ವೀಕರಿಸಿದ ಸಂದೇಶಗಳ ಪ್ರಮಾಣದಿಂದಾಗಿ, ಎಲ್ಲಾ ಸಂದೇಶಗಳು ವೈಯಕ್ತಿಕ ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಪಡೆಯದಿರಬಹುದು.
                         </p>
                     </section>
 
-                    {/* General Inquiries */}
                     <section className="contact-section">
-                        <h2 className="contact-heading">General Inquiries</h2>
+                        <h2 className="contact-heading">ಸಾಮಾನ್ಯ ವಿಚಾರಣೆಗಳು</h2>
                         <p className="contact-body">
-                            For questions about coverage, feedback on articles, or general
-                            correspondence with the newsroom, readers may write to the address below.
+                            ವರದಿ ಕುರಿತ ಪ್ರಶ್ನೆಗಳಿಗೆ, ಲೇಖನಗಳ ಮೇಲಿನ ಪ್ರತಿಕ್ರಿಯೆ ಅಥವಾ ಸುದ್ದಿಮನೆಯೊಂದಿಗೆ ಸಾಮಾನ್ಯ ವಿಚಾರಣೆಗಾಗಿ ಓದುಗರು ಕೆಳಗಿನ ವಿಳಾಸಕ್ಕೆ ಬರೆಯಬಹುದು.
                         </p>
                         <p className="contact-email">
                             <a href="mailto:contact@thehint.news" className="email-link">
@@ -70,18 +48,13 @@ export default function ContactPage() {
                         </p>
                     </section>
 
-                    {/* News Tips */}
                     <section className="contact-section">
-                        <h2 className="contact-heading">News Tips</h2>
+                        <h2 className="contact-heading">ಸುದ್ದಿ ಸುಳಿವುಗಳು</h2>
                         <p className="contact-body">
-                            The Hint welcomes information related to matters of public interest.
-                            Tips that may contribute to investigative or public-interest reporting
-                            are reviewed by the editorial team. Confidentiality is respected where
-                            appropriate and where legally permissible.
+                            ದಿ ಹಿಂಟ್ ಸಾರ್ವಜನಿಕ ಹಿತಾಸಕ್ತಿಯ ವಿಷಯಗಳಿಗೆ ಸಂಬಂಧಿಸಿದ ಮಾಹಿತಿಯನ್ನು ಸ್ವಾಗತಿಸುತ್ತದೆ. ತನಿಖಾ ಅಥವಾ ಸಾರ್ವಜನಿಕ-ಹಿತಾಸಕ್ತಿಯ ವರದಿಗೆ ಕೊಡುಗೆ ನೀಡಬಹುದಾದ ಸುಳಿವುಗಳನ್ನು ಸಂಪಾದಕೀಯ ತಂಡವು ಪರಿಶೀಲಿಸುತ್ತದೆ. ಸೂಕ್ತವಾದಲ್ಲಿ ಮತ್ತು ಕಾನೂನಿನ ಪ್ರಕಾರ ಅನುಮತಿಸಲ್ಪಟ್ಟಲ್ಲಿ ಗೌಪ್ಯತೆಯನ್ನು ಗೌರವಿಸಲಾಗುತ್ತದೆ.
                         </p>
                         <p className="contact-body">
-                            When submitting a tip, readers are encouraged to provide factual,
-                            verifiable information and, where possible, supporting documentation.
+                            ಸುಳಿವು ಸಲ್ಲಿಸುವಾಗ, ವಾಸ್ತವಿಕ, ಪರಿಶೀಲಿಸಬಹುದಾದ ಮಾಹಿತಿಯನ್ನು ಒದಗಿಸಲು ಓದುಗರನ್ನು ಪ್ರೋತ್ಸಾಹಿಸಲಾಗುತ್ತದೆ ಮತ್ತು ಸಾಧ್ಯವಾದಲ್ಲೆಲ್ಲಾ ಬೆಂಬಲಿಸುವ ದಾಖಲಾತಿಗಳನ್ನು ಒದಗಿಸಲು ವಿನಂತಿಸಲಾಗಿದೆ.
                         </p>
                         <p className="contact-email">
                             <a href="mailto:newstips@thehint.news" className="email-link">
@@ -90,18 +63,13 @@ export default function ContactPage() {
                         </p>
                     </section>
 
-                    {/* Letters to the Editor */}
                     <section className="contact-section">
-                        <h2 className="contact-heading">Letters to the Editor</h2>
+                        <h2 className="contact-heading">ಸಂಪಾದಕರಿಗೆ ಪತ್ರಗಳು</h2>
                         <p className="contact-body">
-                            Readers may submit letters in response to published articles or on
-                            matters of public concern. Letters should be concise and include the
-                            author&apos;s full name.
+                            ಪ್ರಕಟಿತ ಲೇಖನಗಳಿಗೆ ಪ್ರತಿಕ್ರಿಯೆಯಾಗಿ ಅಥವಾ ಸಾರ್ವಜನಿಕ ಕಾಳಜಿಯ ವಿಷಯಗಳ ಕುರಿತು ಓದುಗರು ಪತ್ರಗಳನ್ನು ಸಲ್ಲಿಸಬಹುದು. ಪತ್ರಗಳು ಸಂಕ್ಷಿಪ್ತವಾಗಿರಬೇಕು ಮತ್ತು ಲೇಖಕರ ಪೂರ್ಣ ಹೆಸರನ್ನು ಒಳಗೊಂಡಿರಬೇಕು.
                         </p>
                         <p className="contact-body">
-                            Submission of a letter does not guarantee publication. Letters selected
-                            for publication may be edited for clarity, length, and style. The Hint
-                            reserves the right to reject letters that do not meet editorial standards.
+                            ಪತ್ರವನ್ನು ಸಲ್ಲಿಸುವುದರಿಂದ ಪ್ರಕಟಣೆಯ ಖಾತರಿಯಿಲ್ಲ. ಪ್ರಕಟಣೆಗಾಗಿ ಆಯ್ಕೆಮಾಡಿದ ಪತ್ರಗಳನ್ನು ಸ್ಪಷ್ಟತೆ, ಉದ್ದ ಮತ್ತು ಶೈಲಿಗಾಗಿ ಸಂಪಾದಿಸಬಹುದು. ಸಂಪಾದಕೀಯ ಮಾನದಂಡಗಳನ್ನು ಪೂರೈಸದ ಪತ್ರಗಳನ್ನು ತಿರಸ್ಕರಿಸುವ ಹಕ್ಕನ್ನು ದಿ ಹಿಂಟ್ ಕಾಯ್ದಿರಿಸಿದೆ.
                         </p>
                         <p className="contact-email">
                             <a href="mailto:letters@thehint.news" className="email-link">
@@ -110,18 +78,13 @@ export default function ContactPage() {
                         </p>
                     </section>
 
-                    {/* Corrections */}
                     <section className="contact-section">
-                        <h2 className="contact-heading">Corrections</h2>
+                        <h2 className="contact-heading">ತಿದ್ದುಪಡಿಗಳು</h2>
                         <p className="contact-body">
-                            Accuracy is fundamental to this publication&apos;s mission. Readers who
-                            identify factual errors in published content are encouraged to report
-                            them. All correction requests are reviewed by the editorial team and
-                            addressed promptly.
+                            ನಿಖರತೆಯು ಈ ಪ್ರಕಟಣೆಯ ಧ್ಯೇಯಕ್ಕೆ ಮೂಲಭೂತವಾಗಿದೆ. ಪ್ರಕಟವಾದ ವಿಷಯದಲ್ಲಿ ವಾಸ್ತವಿಕ ದೋಷಗಳನ್ನು ಗುರುತಿಸುವ ಓದುಗರು ಅವುಗಳನ್ನು ವರದಿ ಮಾಡಲು ಪ್ರೋತ್ಸಾಹಿಸಲಾಗುತ್ತದೆ. ಎಲ್ಲಾ ತಿದ್ದುಪಡಿ ವಿನಂತಿಗಳನ್ನು ಸಂಪಾದಕೀಯ ತಂಡವು ಪರಿಶೀಲಿಸುತ್ತದೆ ಮತ್ತು ತ್ವರಿತವಾಗಿ ಪರಿಹರಿಸುತ್ತದೆ.
                         </p>
                         <p className="contact-body">
-                            When reporting an error, please include the article title, publication
-                            date, and a description of the inaccuracy along with the correct information.
+                            ದೋಷವನ್ನು ವರದಿ ಮಾಡುವಾಗ, ದಯವಿಟ್ಟು ಲೇಖನದ ಶೀರ್ಷಿಕೆ, ಪ್ರಕಟಣೆಯ ದಿನಾಂಕ ಮತ್ತು ಸರಿಯಾದ ಮಾಹಿತಿಯೊಂದಿಗೆ ತಪ್ಪುಗಳ ವಿವರಣೆಯನ್ನು ಸೇರಿಸಿ.
                         </p>
                         <p className="contact-email">
                             <a href="mailto:corrections@thehint.news" className="email-link">
@@ -130,14 +93,10 @@ export default function ContactPage() {
                         </p>
                     </section>
 
-                    {/* Advertising & Business */}
                     <section className="contact-section">
-                        <h2 className="contact-heading">Advertising and Business</h2>
+                        <h2 className="contact-heading">ಜಾಹೀರಾತು ಮತ್ತು ವ್ಯಾಪಾರ</h2>
                         <p className="contact-body">
-                            Commercial and advertising inquiries are handled separately from editorial
-                            operations. There is a strict separation between the business and editorial
-                            functions of this publication. Advertising does not influence coverage
-                            or editorial decisions.
+                            ವಾಣಿಜ್ಯ ಮತ್ತು ಜಾಹೀರಾತು ವಿಚಾರಣೆಗಳನ್ನು ಸಂಪಾದಕೀಯ ಕಾರ್ಯಾಚರಣೆಗಳಿಂದ ಪ್ರತ್ಯೇಕವಾಗಿ ನಿರ್ವಹಿಸಲಾಗುತ್ತದೆ. ಈ ಪ್ರಕಟಣೆಯ ವ್ಯಾಪಾರ ಮತ್ತು ಸಂಪಾದಕೀಯ ಕಾರ್ಯಗಳ ನಡುವೆ ಕಟ್ಟುನಿಟ್ಟಾದ ಪ್ರತ್ಯೇಕತೆಯಿದೆ. ಜಾಹೀರಾತುಗಳು ವರದಿ ಮಾಡುವಿಕೆ ಅಥವಾ ಸಂಪಾದಕೀಯ ನಿರ್ಧಾರಗಳ ಮೇಲೆ ಪ್ರಭಾವ ಬೀರುವುದಿಲ್ಲ.
                         </p>
                         <p className="contact-email">
                             <a href="mailto:advertising@thehint.news" className="email-link">
@@ -146,18 +105,15 @@ export default function ContactPage() {
                         </p>
                     </section>
 
-                    {/* Jurisdiction */}
                     <section className="contact-section contact-jurisdiction">
                         <p className="contact-body">
-                            This publication operates digitally and serves a global readership.
+                            ಈ ಪ್ರಕಟಣೆಯು ಡಿಜಿಟಲ್ ಆಗಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ ಮತ್ತು ಜಾಗತಿಕ ಓದುಗರಿಗೆ ಸೇವೆ ಸಲ್ಲಿಸುತ್ತದೆ.
                         </p>
                     </section>
 
-                    {/* Closing Note */}
                     <section className="contact-section contact-closing">
                         <p className="contact-body">
-                            All correspondence is handled in accordance with the publication&apos;s
-                            editorial standards and privacy policy.
+                            ಎಲ್ಲಾ ಪತ್ರವ್ಯವಹಾರಗಳನ್ನು ಪ್ರಕಟಣೆಯ ಸಂಪಾದಕೀಯ ಮಾನದಂಡಗಳು ಮತ್ತು ಗೌಪ್ಯತೆ ನೀತಿಗೆ ಅನುಗುಣವಾಗಿ ನಿರ್ವಹಿಸಲಾಗುತ್ತದೆ.
                         </p>
                     </section>
                 </div>

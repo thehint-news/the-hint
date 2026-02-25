@@ -9,6 +9,7 @@
  */
 
 import Link from 'next/link';
+import { kn } from "@/lib/i18n/kn";
 
 interface SectionHeaderProps {
     /** Display name for the section */
@@ -27,14 +28,14 @@ export function SectionHeader({ name, description, articleCount }: SectionHeader
                 <ol className="flex items-center gap-2 font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-[#8A8A8A]">
                     <li>
                         <Link href="/" className="hover:text-[#111] transition-colors">
-                            Home
+                            {kn.nav.home}
                         </Link>
                     </li>
                     <li aria-hidden="true">
                         <span className="text-[#D0D0D0]">/</span>
                     </li>
                     <li>
-                        <span className="text-[#111]">{name}</span>
+                        <span className="text-[#111]">{(kn.sections as Record<string, string>)[name.toLowerCase().replace(" ", "-")] || name}</span>
                     </li>
                 </ol>
             </nav>
@@ -50,11 +51,11 @@ export function SectionHeader({ name, description, articleCount }: SectionHeader
                         lineHeight: 1.1,
                     }}
                 >
-                    {name}
+                    {(kn.sections as Record<string, string>)[name.toLowerCase().replace(" ", "-")] || name}
                 </h1>
                 {articleCount !== undefined && articleCount > 0 && (
                     <span className="font-sans text-[11px] font-medium text-[#8A8A8A] tracking-wider uppercase">
-                        {articleCount} {articleCount === 1 ? 'Article' : 'Articles'}
+                        {articleCount.toLocaleString('kn-IN')} {articleCount === 1 ? kn.plural.article : kn.plural.articles}
                     </span>
                 )}
             </div>

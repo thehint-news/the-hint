@@ -7,6 +7,7 @@
  */
 
 import Link from 'next/link';
+import { kn } from "@/lib/i18n/kn";
 
 interface PaginationProps {
     /** Current page number (1-indexed) */
@@ -64,9 +65,8 @@ export function Pagination({
             style={{ borderTop: "1px solid #111" }}
         >
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                {/* Article Range */}
                 <p className="font-sans text-[12px] text-[#8A8A8A] tracking-wide uppercase font-medium order-2 sm:order-1">
-                    Showing {startArticle}–{endArticle} of {totalArticles} articles
+                    {kn.editorial.showingArticles(startArticle.toLocaleString('kn-IN'), endArticle.toLocaleString('kn-IN'), totalArticles.toLocaleString('kn-IN'))}
                 </p>
 
                 {/* Navigation */}
@@ -115,9 +115,9 @@ export function Pagination({
                                     }
                                 `}
                                 aria-current={isCurrent ? 'page' : undefined}
-                                aria-label={`Page ${page}`}
+                                aria-label={`ಪುಟ ${page.toLocaleString('kn-IN')}`}
                             >
-                                {page}
+                                {page.toLocaleString('kn-IN')}
                             </Link>
                         );
                     })}

@@ -1,27 +1,13 @@
 /**
  * About Us Page
- * 
- * A professional, institutional About page for The Hint.
- * Written in third person with an editorial, restrained, and authoritative tone.
- * Designed to establish credibility, transparency, and reader trust.
- * 
- * Layout: Simple, text-first, single column.
- * Typography: Serif headlines, sans-serif body.
- * No images, no cards, no marketing language.
  */
 
 import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-    title: "About Us | The Hint",
-    description: "Learn about The Hint's commitment to independent journalism, editorial standards, and accountability to readers.",
-    openGraph: {
-        title: "About Us | The Hint",
-        description: "Learn about The Hint's commitment to independent journalism, editorial standards, and accountability to readers.",
-        type: "website",
-        siteName: "The Hint",
-    },
+    title: "ನಮ್ಮ ಬಗ್ಗೆ | The Hint",
+    description: "ದಿ ಹಿಂಟ್‌ನ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ, ಸಂಪಾದಕೀಯ ಮಾನದಂಡಗಳು ಮತ್ತು ಓದುಗರಿಗೆ ಅದರ ಬದ್ಧತೆಯ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ.",
 };
 
 export default function AboutPage() {
@@ -29,123 +15,79 @@ export default function AboutPage() {
         <main id="main-content" className="flex-1">
             <article className="about-page">
                 <div className="container-editorial">
-                    {/* Back Navigation */}
                     <nav className="page-nav">
                         <Link href="/" className="back-link">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <line x1="19" y1="12" x2="5" y2="12"></line>
                                 <polyline points="12 19 5 12 12 5"></polyline>
                             </svg>
-                            Back to Home
+                            ಮುಖಪುಟಕ್ಕೆ
                         </Link>
                     </nav>
 
-                    {/* Page Header */}
                     <header className="about-header">
-                        <h1 className="about-title">About Us</h1>
+                        <h1 className="about-title">ನಮ್ಮ ಬಗ್ಗೆ</h1>
                         <hr className="about-divider" />
                     </header>
 
-                    {/* Mission Statement */}
                     <section className="about-section">
                         <p className="about-lead">
-                            The Hint is dedicated to reporting the news with accuracy, independence, and clarity,
-                            serving readers who seek reliable information in an increasingly complex world.
-                            Founded on the principle that factual journalism is essential to an informed public,
-                            this publication operates without regard to commercial pressure or political favour.
+                            ದಿ ಹಿಂಟ್ ನಿಖರತೆ, ಸ್ವಾತಂತ್ರ್ಯ ಮತ್ತು ಸ್ಪಷ್ಟತೆಯೊಂದಿಗೆ ಸುದ್ದಿಗಳನ್ನು ವರದಿ ಮಾಡಲು ಸಮರ್ಪಿತವಾಗಿದೆ. ಸಂಕೀರ್ಣಗೊಳ್ಳುತ್ತಿರುವ ಜಗತ್ತಿನಲ್ಲಿ ವಿಶ್ವಾಸಾರ್ಹ ಮಾಹಿತಿಯನ್ನು ಹುಡುಕುವ ಓದುಗರಿಗೆ ಇದು ಸೇವೆ ಸಲ್ಲಿಸುತ್ತದೆ. ಮಾಹಿತಿಯುಕ್ತ ಸಾರ್ವಜನಿಕರಿಗೆ ವಾಸ್ತವಿಕ ಪತ್ರಿಕೋದ್ಯಮ ಅತ್ಯಗತ್ಯ ಎಂಬ ತತ್ವದ ಮೇಲೆ ಸ್ಥಾಪಿತವಾದ ಈ ಪ್ರಕಟಣೆಯು ವಾಣಿಜ್ಯ ಒತ್ತಡ ಅಥವಾ ರಾಜಕೀಯ ಒಲವು ಇಲ್ಲದೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ.
                         </p>
                         <p className="about-body">
-                            The purpose of this publication is straightforward: to provide readers with
-                            verified, contextual reporting on matters of public interest. Every story
-                            published reflects a commitment to thorough research, careful sourcing, and
-                            impartial presentation of facts. The Hint serves its readers—not advertisers,
-                            institutions, or any particular ideology.
+                            ಈ ಪ್ರಕಟಣೆಯ ಉದ್ದೇಶ ನೇರವಾಗಿದೆ: ಸಾರ್ವಜನಿಕ ಹಿತಾಸಕ್ತಿಯ ವಿಷಯಗಳ ಕುರಿತು ಓದುಗರಿಗೆ ಪರಿಶೀಲಿಸಿದ, ಸಂದರ್ಭೋಚಿತ ವರದಿಗಳನ್ನು ಒದಗಿಸುವುದು. ಪ್ರಕಟವಾದ ಪ್ರತಿಯೊಂದು ಸುದ್ದಿಯೂ ಸಮಗ್ರ ಸಂಶೋಧನೆ, ಎಚ್ಚರಿಕೆಯ ಮೂಲಗಳು ಮತ್ತು ಸತ್ಯಗಳ ನಿಷ್ಪಕ್ಷಪಾತ ಪ್ರಸ್ತುತಿಗೆ ಬದ್ಧತೆಯನ್ನು ಪ್ರತಿಬಿಂಬಿಸುತ್ತದೆ. ದಿ ಹಿಂಟ್ ತನ್ನ ಓದುಗರಿಗೆ ಮಾತ್ರ ಸೇವೆಯನ್ನು ನೀಡುತ್ತದೆಯೇ ಹೊರತು ಜಾಹೀರಾತುದಾರರು, ಸಂಸ್ಥೆಗಳು, ಅಥವಾ ಯಾವುದೇ ನಿರ್ದಿಷ್ಟ ಸಿದ್ಧಾಂತಕ್ಕಲ್ಲ.
                         </p>
                     </section>
 
-                    {/* What We Cover */}
                     <section className="about-section">
-                        <h2 className="about-heading">What We Cover</h2>
+                        <h2 className="about-heading">ನಾವು ಏನನ್ನು ವರದಿ ಮಾಡುತ್ತೇವೆ</h2>
                         <p className="about-body">
-                            The editorial focus of The Hint centres on matters of genuine public concern:
-                            politics, world affairs, crime and courts, public policy, and informed analysis
-                            of events that shape society. Coverage prioritises substance over speed, context
-                            over sensation, and depth over volume.
+                            ದಿ ಹಿಂಟ್‌ನ ಸಂಪಾದಕೀಯ ಗಮನವು ನೈಜ ಸಾರ್ವಜನಿಕ ಕಾಳಜಿಯ ವಿಷಯಗಳ ಮೇಲೆ ಕೇಂದ್ರೀಕೃತವಾಗಿದೆ: ರಾಜಕೀಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳು, ಕ್ರೈಂ ಮತ್ತು ನ್ಯಾಯಾಲಯ, ಸಾರ್ವಜನಿಕ ನೀತಿ, ಮತ್ತು ಸಮಾಜವನ್ನು ರೂಪಿಸುವ ಘಟನೆಗಳ ವಿಶ್ಲೇಷಣೆ. ನಮ್ಮ ವರದಿಯು ವೇಗಕ್ಕಿಂತ ವಿಷಯಕ್ಕೆ, ಸಂವೇದನೆಗಿಂತ ಸಂದರ್ಭಕ್ಕೆ, ಮತ್ತು ಪ್ರಮಾಣಕ್ಕಿಂತ ಆಳಕ್ಕೆ ಆದ್ಯತೆ ನೀಡುತ್ತದೆ.
                         </p>
                         <p className="about-body">
-                            Articles are selected and developed according to their relevance to readers and
-                            their significance to the public record. The Hint does not pursue stories for
-                            the sake of controversy, nor does it amplify unverified claims. What appears in
-                            this publication has been subject to rigorous editorial scrutiny.
+                            ಲೇಖನಗಳನ್ನು ಓದುಗರಿಗೆ ಅವುಗಳ ಪ್ರಸ್ತುತತೆ ಮತ್ತು ಸಾರ್ವಜನಿಕ ದಾಖಲೆಗಳಿಗೆ ಅವುಗಳ ಪ್ರಾಮುಖ್ಯತೆಗೆ ಅನುಗುಣವಾಗಿ ಆಯ್ಕೆ ಮಾಡಲಾಗುತ್ತದೆ ಮತ್ತು ಅಭಿವೃದ್ಧಿಪಡಿಸಲಾಗುತ್ತದೆ. ದಿ ಹಿಂಟ್ ಕೇವಲ ವಿವಾದಕ್ಕಾಗಿ ಸುದ್ದಿಯನ್ನು ಪ್ರಕಟಿಸುವುದಿಲ್ಲ, ಅಥವಾ ಪರಿಶೀಲಿಸದ ಹೇಳಿಕೆಗಳನ್ನು ಬೆಂಬಲಿಸುವುದಿಲ್ಲ. ಈ ಪ್ರಕಟಣೆಯಲ್ಲಿ ಬರುವ ಪ್ರತಿಯೊಂದು ಸುದ್ದಿಯು ಕಠಿಣ ಸಂಪಾದಕೀಯ ಪರಿಶೀಲನೆಗೆ ಒಳಪಟ್ಟಿರುತ್ತದೆ.
                         </p>
                     </section>
 
-                    {/* Editorial Independence */}
                     <section className="about-section">
-                        <h2 className="about-heading">Editorial Independence</h2>
+                        <h2 className="about-heading">ಸಂಪಾದಕೀಯ ಸ್ವಾತಂತ್ರ್ಯ</h2>
                         <p className="about-body">
-                            The Hint maintains complete editorial independence. There is no political
-                            affiliation, no corporate influence, and no government oversight of any kind.
-                            Editorial decisions are made solely by the newsroom, based on journalistic
-                            merit and public interest.
+                            ದಿ ಹಿಂಟ್ ಸಂಪೂರ್ಣ ಸಂಪಾದಕೀಯ ಸ್ವಾತಂತ್ರ್ಯವನ್ನು ಕಾಯ್ದುಕೊಂಡಿದೆ. ಯಾವುದೇ ರಾಜಕೀಯ ಒಲವು, ಕಾರ್ಪೊರೇಟ್ ಪ್ರಭಾವ, ಅಥವಾ ಯಾವುದೇ ರೀತಿಯ ಸರ್ಕಾರಿ ಮೇಲ್ವಿಚಾರಣೆ ಇಲ್ಲಿಲ್ಲ. ಪತ್ರಿಕೋದ್ಯಮದ ಅರ್ಹತೆ ಮತ್ತು ಸಾರ್ವಜನಿಕ ಹಿತಾಸಕ್ತಿಯ ಆಧಾರದ ಮೇಲೆ, ಸುದ್ದಿಮನೆಯು ಸಂಪಾದಕೀಯ ನಿರ್ಧಾರಗಳನ್ನು ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ.
                         </p>
                         <p className="about-body">
-                            Opinion and analysis content is clearly labelled and published separately
-                            from news reporting. Readers can trust that news coverage is factual and
-                            impartial, while opinion pieces represent clearly identified perspectives
-                            that are distinct from the publication&apos;s reporting.
+                            ಅಭಿಪ್ರಾಯ ಮತ್ತು ವಿಶ್ಲೇಷಣೆ ವಿಷಯಗಳನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಗುರುತಿಸಲಾಗಿದೆ ಮತ್ತು ವರದಿ ಮಾಡುವಿಕೆಯಿಂದ ಪ್ರತ್ಯೇಕವಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ. ಸುದ್ದಿ ಪ್ರಸಾರವು ವಾಸ್ತವಿಕ ಮತ್ತು ನಿಷ್ಪಕ್ಷಪಾತವಾಗಿದೆ ಎಂದು ಓದುಗರು ನಂಬಬಹುದು, ಆದರೆ ಅಭಿಪ್ರಾಯಗಳು ಪ್ರಕಟಣೆಯ ವರದಿ ಮಾಡುವಿಕೆಯಿಂದ ಭಿನ್ನವಾಗಿರುವ ಲೇಖಕರ ದೃಷ್ಟಿಕೋನಗಳನ್ನು ಪ್ರತಿನಿಧಿಸುತ್ತವೆ.
                         </p>
                         <p className="about-body">
-                            This separation between news and opinion is fundamental to maintaining
-                            credibility. The Hint believes readers are best served when they can
-                            distinguish fact from commentary.
+                            ಸುದ್ದಿ ಮತ್ತು ಅಭಿಪ್ರಾಯದ ನಡುವಿನ ಈ ಪ್ರತ್ಯೇಕತೆಯು ವಿಶ್ವಾಸಾರ್ಹತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಲು ಮೂಲಭೂತವಾಗಿದೆ. ಸತ್ಯವನ್ನು ವ್ಯಾಖ್ಯಾನದಿಂದ ಪ್ರತ್ಯೇಕಿಸುವ ಅವಕಾಶ ಒದಗಿಸಿದಾಗ ಓದುಗರಿಗೆ ಉತ್ತಮ ಸೇವೆ ಸಲ್ಲಿಸಬಲ್ಲೆವು ಎಂದು ದಿ ಹಿಂಟ್ ನಂಬುತ್ತದೆ.
                         </p>
                     </section>
 
-                    {/* Corrections & Accountability */}
                     <section className="about-section">
-                        <h2 className="about-heading">Corrections and Accountability</h2>
+                        <h2 className="about-heading">ತಿದ್ದುಪಡಿಗಳು ಮತ್ತು ಜವಾಬ್ದಾರಿ</h2>
                         <p className="about-body">
-                            When errors occur, they are corrected promptly and transparently. The Hint
-                            acknowledges that accuracy is paramount, and that mistakes—when they
-                            happen—must be addressed openly. Corrections are published with clear
-                            notation of what was changed and why.
+                            ತಪ್ಪುಗಳಾದಾಗ, ಅವುಗಳನ್ನು ತ್ವರಿತವಾಗಿ ಮತ್ತು ಪಾರದರ್ಶಕವಾಗಿ ಸರಿಪಡಿಸಲಾಗುತ್ತದೆ. ನಿಖರತೆಯು ಅತ್ಯುನ್ನತವಾಗಿದೆ ಎಂಬುದನ್ನು ದಿ ಹಿಂಟ್ ಒಪ್ಪಿಕೊಳ್ಳುತ್ತದೆ, ಮತ್ತು ತಪ್ಪುಗಳು ಸಂಭವಿಸಿದಾಗ—ಅವುಗಳನ್ನು ಬಹಿರಂಗವಾಗಿ ಪರಿಹರಿಸಬೇಕು. ತಿದ್ದುಪಡಿಗಳನ್ನು ಏನು ಬದಲಾಗಿದೆ ಮತ್ತು ಏಕೆ ಎಂಬುದರ ಸ್ಪಷ್ಟ ಸೂಚನೆಯೊಂದಿಗೆ ಪ್ರಕಟಿಸಲಾಗುತ್ತದೆ.
                         </p>
                         <p className="about-body">
-                            This publication does not quietly alter articles or remove content without
-                            explanation. Readers have a right to know when information has been updated,
-                            and The Hint upholds that standard as a matter of principle.
+                            ಈ ಪ್ರಕಟಣೆಯು ಯಾವುದೇ ವಿವರಣೆಯಿಲ್ಲದೆ ಲೇಖನಗಳನ್ನು ಗುಪ್ತವಾಗಿ ಬದಲಾಯಿಸುವುದಿಲ್ಲ ಅಥವಾ ವಿಷಯವನ್ನು ತೆಗೆದುಹಾಕುವುದಿಲ್ಲ. ಮಾಹಿತಿಯನ್ನು ಯಾವಾಗ ನವೀಕರಿಸಲಾಗಿದೆ ಎಂಬುದನ್ನು ತಿಳಿದುಕೊಳ್ಳುವ ಹಕ್ಕು ಓದುಗರಿಗಿದೆ, ಮತ್ತು ದಿ ಹಿಂಟ್ ಆ ಮಾನದಂಡವನ್ನು ತತ್ವದ ವಿಷಯವಾಗಿ ಎತ್ತಿಹಿಡಿಯುತ್ತದೆ.
                         </p>
                     </section>
 
-                    {/* Audience Commitment */}
                     <section className="about-section">
-                        <h2 className="about-heading">Commitment to Readers</h2>
+                        <h2 className="about-heading">ಓದುಗರಿಗೆ ನಮ್ಮ ಬದ್ಧತೆ</h2>
                         <p className="about-body">
-                            The Hint is written for readers who value clarity, accuracy, and
-                            straightforward reporting. This publication does not employ misleading
-                            headlines, does not exaggerate for effect, and does not pursue engagement
-                            at the expense of truth.
+                            ಸ್ಪಷ್ಟತೆ, ನಿಖರತೆ, ಮತ್ತು ನೇರ ವರದಿಗಾರಿಕೆಯನ್ನು ಗೌರವಿಸುವ ಓದುಗರಿಗಾಗಿ ದಿ ಹಿಂಟ್ ಬರೆಯಲಾಗಿದೆ. ಈ ಪ್ರಕಟಣೆಯು ದಾರಿ ತಪ್ಪಿಸುವ ಶೀರ್ಷಿಕೆಗಳನ್ನು ಬಳಸುವುದಿಲ್ಲ, ಪ್ರಭಾವಕ್ಕಾಗಿ ಉತ್ಪ್ರೇಕ್ಷೆ ಮಾಡುವುದಿಲ್ಲ, ಮತ್ತು ಸತ್ಯದ ವೆಚ್ಚದಲ್ಲಿ ಜನಪ್ರಿಯತೆಯನ್ನು ಬೆನ್ನಟ್ಟುವುದಿಲ್ಲ.
                         </p>
                         <p className="about-body">
-                            Every article is sourced with care. Claims are attributed. Context is provided.
-                            Readers are treated as intelligent individuals capable of drawing their
-                            own conclusions when presented with reliable information.
+                            ಪ್ರತಿ ಲೇಖನವನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ಮೂಲ ಮಾಡಲಾಗಿದೆ. ಹಕ್ಕುಗಳನ್ನು ಆರೋಪಿಸಲಾಗಿದೆ. ಸಂದರ್ಭವನ್ನು ಒದಗಿಸಲಾಗಿದೆ. ವಿಶ್ವಾಸಾರ್ಹ ಮಾಹಿತಿಯನ್ನು ಪ್ರಸ್ತುತಪಡಿಸಿದಾಗ, ತಮ್ಮದೇ ಆದ ತೀರ್ಮಾನಗಳನ್ನು ತೆಗೆದುಕೊಳ್ಳುವ ಸಾಮರ್ಥ್ಯವುಳ್ಳ ಬುದ್ಧಿವಂತ ವ್ಯಕ್ತಿಗಳಂತೆ ಓದುಗರನ್ನು ಪರಿಗಣಿಸಲಾಗುತ್ತದೆ.
                         </p>
                         <p className="about-body">
-                            There are no hidden agendas. The Hint exists to inform, not to persuade.
-                            The publication&apos;s only loyalty is to the facts and to the readers who
-                            depend on them.
+                            ಯಾವುದೇ ರಹಸ್ಯ ಕಾರ್ಯಸೂಚಿಗಳಿಲ್ಲ. ದಿ ಹಿಂಟ್ ಕೇವಲ ಮಾಹಿತಿ ನೀಡಲು ಅಸ್ತಿತ್ವದಲ್ಲಿದೆಯೇ ಹೊರತು ಮನವೊಲಿಸಲು ಅಲ್ಲ. ಪ್ರಕಟಣೆಯ ಏಕೈಕ ನಿಷ್ಠೆಯು ಸತ್ಯಕ್ಕೆ ಮತ್ತು ಅದನ್ನೇ ಅವಲಂಬಿಸಿರುವ ಓದುಗರಿಗೆ ಸೇರಿದೆ.
                         </p>
                     </section>
 
-                    {/* Closing Statement */}
                     <section className="about-section about-closing">
                         <p className="about-body">
-                            The Hint operates in the tradition of serious, public-interest journalism.
-                            Its work is guided by the principles of integrity, accuracy, and service
-                            to an informed citizenry. In an era of uncertainty and noise, this publication
-                            remains committed to the quiet, essential work of telling the truth.
+                            ದಿ ಹಿಂಟ್ ಗಂಭೀರ, ಸಾರ್ವಜನಿಕ ಹಿತಾಸಕ್ತಿ ಪತ್ರಿಕೋದ್ಯಮದ ಸಂಪ್ರದಾಯದಲ್ಲಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ. ಇದರ ಕೆಲಸವು ಸಮಗ್ರತೆ, ನಿಖರತೆ, ಮತ್ತು ಮಾಹಿತಿಯುಕ್ತ ನಾಗರಿಕರಿಗೆ ಸೇವೆಯ ತತ್ವಗಳಿಂದ ಮಾರ್ಗದರ್ಶಿಸಲ್ಪಡುತ್ತದೆ. ಅನಿಶ್ಚಿತತೆ ಮತ್ತು ಗದ್ದಲದ ಯುಗದಲ್ಲಿ, ಸತ್ಯವನ್ನು ಹೇಳುವ ಅಗತ್ಯ ಕೆಲಸಕ್ಕೆ ಈ ಪ್ರಕಟಣೆಯು ಬದ್ಧವಾಗಿ ಉಳಿದಿದೆ.
                         </p>
                     </section>
                 </div>

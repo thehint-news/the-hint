@@ -9,6 +9,7 @@ import {
     getSuccessMessage,
     logger,
 } from '@/lib/feedback';
+import { kn } from "@/lib/i18n/kn";
 
 const STORAGE_KEY_DISMISSED = "thehint-subscribe-dismissed";
 const STORAGE_KEY_SUBSCRIBED = "thehint-subscribe-completed";
@@ -194,27 +195,27 @@ export function SubscribePopup() {
 
                     {/* 1. Headline */}
                     <h2 id="popup-title" className="font-serif text-2xl md:text-3xl font-bold text-[#111] mb-2 leading-tight">
-                        Independent journalism, delivered as it happens.
+                        {kn.brand.tagline1}, {kn.brand.tagline2}
                     </h2>
 
                     {/* 2. Subheadline */}
                     <p className="font-sans text-[#6B6B6B] text-[15px] mb-8 max-w-sm leading-relaxed">
-                        Subscribe to receive breaking stories, investigations, and analysis — straight from the newsroom.
+                        {kn.subscribe.popupSubtitle}
                     </p>
 
                     {/* 3. Editorial Value Points */}
                     <ul className="text-left space-y-2 mb-8 font-sans text-[#333] text-sm md:text-[15px] mx-auto">
                         <li className="flex items-center gap-3">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#8A8A8A]"></span>
-                            Breaking news alerts from our editors
+                            {kn.subscribe.bullet1}
                         </li>
                         <li className="flex items-center gap-3">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#8A8A8A]"></span>
-                            In-depth reporting and analysis
+                            {kn.subscribe.bullet2}
                         </li>
                         <li className="flex items-center gap-3">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#8A8A8A]"></span>
-                            No ads. No noise. Just journalism
+                            {kn.subscribe.bullet3}
                         </li>
                     </ul>
 
@@ -232,7 +233,7 @@ export function SubscribePopup() {
                                         type="email"
                                         id="popup-email"
                                         required
-                                        placeholder="Enter your email"
+                                        placeholder={kn.subscribe.placeholder}
                                         className="w-full bg-[#FAFAFA] border border-[#D9D9D9] p-3 rounded font-sans text-base focus:border-[#111] focus:ring-1 focus:ring-[#111] focus:outline-none transition-all placeholder:text-[#8A8A8A]"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
@@ -248,7 +249,7 @@ export function SubscribePopup() {
                                     disabled={status === "loading"}
                                     className="w-full bg-[#111] text-white font-sans font-bold uppercase tracking-widest text-xs py-3.5 rounded hover:bg-[#333] transition-colors disabled:opacity-50"
                                 >
-                                    {status === "loading" ? "Subscribing…" : "Subscribe"}
+                                    {status === "loading" ? kn.subscribe.subscribing : kn.subscribe.button}
                                 </button>
                             </>
                         )}
@@ -257,13 +258,13 @@ export function SubscribePopup() {
                     {/* Footer / Disclaimer */}
                     <div className="mt-4 space-y-2">
                         <p className="text-[11px] text-[#8A8A8A]">
-                            We respect your inbox. Unsubscribe anytime.
+                            {kn.subscribe.respectInbox}
                         </p>
                         <button
                             onClick={handleDismiss}
                             className="text-[12px] text-[#6B6B6B] hover:text-[#111] underline underline-offset-2 decoration-1"
                         >
-                            No thanks
+                            {kn.subscribe.noThanks}
                         </button>
                     </div>
 

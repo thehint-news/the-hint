@@ -14,7 +14,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { formatSafeDate } from '@/lib/utils';
+import { kn } from "@/lib/i18n/kn";
 
 interface StoryListArticle {
     id: string;
@@ -38,7 +38,7 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
         return (
             <div className="py-12 text-center border-t border-[#111]">
                 <p className="font-serif text-lg italic text-[#8A8A8A]">
-                    No stories available in this section.
+                    {kn.messages.emptySection}
                 </p>
             </div>
         );
@@ -87,7 +87,7 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
                                         </p>
                                     )}
                                     <time className="meta-text" dateTime={article.publishedAt}>
-                                        {formatSafeDate(article.publishedAt, {
+                                        {new Date(article.publishedAt).toLocaleDateString('kn-IN', {
                                             month: 'short',
                                             day: 'numeric',
                                             year: 'numeric'
@@ -144,7 +144,7 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
                                 )}
                                 <div className="flex items-center gap-2">
                                     <time className="meta-text" dateTime={article.publishedAt}>
-                                        {formatSafeDate(article.publishedAt, {
+                                        {new Date(article.publishedAt).toLocaleDateString("kn-IN", {
                                             month: 'long',
                                             day: 'numeric',
                                             year: 'numeric'
@@ -154,7 +154,7 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
                                         <>
                                             <span className="meta-text text-[#D0D0D0]">•</span>
                                             <span className="meta-text text-[#B04A2F] font-bold uppercase">
-                                                {article.contentType}
+                                                {(kn.contentTypes as Record<string, string>)[article.contentType] || article.contentType}
                                             </span>
                                         </>
                                     )}

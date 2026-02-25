@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { kn } from "@/lib/i18n/kn";
 
 interface SubscribeModalProps {
     isOpen: boolean;
@@ -82,9 +83,9 @@ export function SubscribeModal({ isOpen, onClose }: SubscribeModalProps) {
                 </button>
 
                 <div className="text-center mb-8">
-                    <h2 className="font-serif text-3xl font-bold mb-2">The Hint</h2>
+                    <h2 className="font-serif text-3xl font-bold mb-2">{kn.brand.name}</h2>
                     <p className="text-[#6B6B6B] font-sans text-sm uppercase tracking-widest">
-                        Editorial Dispatch
+                        {kn.subscribe.dispatch}
                     </p>
                 </div>
 
@@ -97,10 +98,10 @@ export function SubscribeModal({ isOpen, onClose }: SubscribeModalProps) {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
                             <h3 className="font-serif text-xl font-medium text-center">
-                                Subscribe to our daily briefing
+                                {kn.subscribe.dailyBriefing}
                             </h3>
                             <p className="text-center text-[#6B6B6B] text-sm leading-relaxed px-4">
-                                Get the latest stories and editorial analysis delivered straight to your inbox.
+                                {kn.subscribe.popupSubtitle}
                             </p>
                         </div>
 
@@ -112,7 +113,7 @@ export function SubscribeModal({ isOpen, onClose }: SubscribeModalProps) {
                                     type="email"
                                     id="email"
                                     required
-                                    placeholder="Enter your email address"
+                                    placeholder={kn.subscribe.placeholder}
                                     className="w-full bg-white border border-[#D9D9D9] p-3 font-sans text-base focus:border-[#111] focus:outline-none transition-colors placeholder:text-[#8A8A8A]"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -129,14 +130,14 @@ export function SubscribeModal({ isOpen, onClose }: SubscribeModalProps) {
                             <button
                                 type="submit"
                                 disabled={status === "loading"}
-                                className="w-full bg-[#111] text-white font-sans font-bold uppercase tracking-widest text-xs py-4 hover:bg-[#333] transition-colors disabled:opacity-50"
+                                className="w-full bg-[#111] text-white font-sans font-bold uppercase tracking-widest text-sm py-4 hover:bg-[#333] transition-colors disabled:opacity-50"
                             >
-                                {status === "loading" ? "Subscribing..." : "Subscribe"}
+                                {status === "loading" ? kn.subscribe.subscribing : kn.subscribe.button}
                             </button>
                         </div>
 
                         <p className="text-center text-[10px] text-[#8A8A8A]">
-                            No spam. Unsubscribe anytime.
+                            {kn.subscribe.noSpam}
                         </p>
                     </form>
                 )}

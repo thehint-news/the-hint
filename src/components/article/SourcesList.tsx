@@ -5,6 +5,8 @@
  * Clean typography, simple borders, no distractions.
  */
 
+import { kn } from "@/lib/i18n/kn";
+
 interface SourcesListProps {
     sources: string[];
 }
@@ -26,7 +28,7 @@ export function SourcesList({ sources }: SourcesListProps) {
                 color: '#595959',
                 marginBottom: '0.75rem',
             }}>
-                Sources
+                {kn.article.sources}
             </h3>
 
             {/* Clean list */}
