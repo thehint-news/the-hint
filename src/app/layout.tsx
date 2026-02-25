@@ -92,10 +92,10 @@ export default async function RootLayout({
     const allArticles = await getAllArticles();
     // Latest update timestamp (from any article)
     latestUpdate = allArticles.length > 0 ? allArticles[0].publishedAt : undefined;
-    // Ticker headlines: No opinion, max 10, latest first
+    // Ticker headlines: No opinion, max 6, latest first
     tickerHeadlines = allArticles
       .filter(a => a.contentType !== 'opinion')
-      .slice(0, 10)
+      .slice(0, 6)
       .map(a => a.title);
   } catch (error) {
     console.error('[RootLayout] Failed to fetch global article data:', error);

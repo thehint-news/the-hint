@@ -276,9 +276,9 @@ button {
 
 .ticker-container {
   display: flex;
+  width: max-content;
   align-items: center;
-  gap: 2rem;
-  animation: ticker-scroll 30s linear infinite;
+  animation: ticker-scroll 25s linear infinite;
   white-space: nowrap;
 }
 
@@ -294,6 +294,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 1rem;
+  padding-right: 2rem;
   flex-shrink: 0;
 }
 
@@ -301,10 +302,6 @@ button {
   content: "•";
   color: var(--color-muted);
   font-size: 8px;
-}
-
-.ticker-item:last-child::after {
-  content: "";
 }
 
 @keyframes ticker-scroll {
