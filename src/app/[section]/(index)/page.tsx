@@ -89,7 +89,7 @@ export default async function SectionPage({ params, searchParams }: SectionPageP
             return (
                 <main id="main-content" className="flex-1">
                     <div className="container-editorial" style={{ paddingTop: "2rem", paddingBottom: "3rem" }}>
-                        <SectionHeader name={section.name} description={(kn.sectionDescriptions as Record<string, string>)[section.slug] || section.description} />
+                        <SectionHeader name={section.name} sectionSlug={section.slug} description={(kn.sectionDescriptions as Record<string, string>)[section.slug] || section.description} />
                         <div className="py-12 text-center">
                             <p className="font-serif text-lg italic text-[#8A8A8A]">
                                 {kn.messages.emptySection}
@@ -112,6 +112,7 @@ export default async function SectionPage({ params, searchParams }: SectionPageP
                 <div className="container-editorial" style={{ paddingTop: "2rem", paddingBottom: "3rem" }}>
                     <SectionHeader
                         name={section.name}
+                        sectionSlug={section.slug}
                         description={(kn.sectionDescriptions as Record<string, string>)[section.slug] || section.description}
                     />
                     <EmptyState
@@ -140,6 +141,7 @@ export default async function SectionPage({ params, searchParams }: SectionPageP
             <div className="container-editorial" style={{ paddingTop: "2rem", paddingBottom: "0.5rem" }}>
                 <SectionHeader
                     name={section.name}
+                    sectionSlug={section.slug}
                     description={(kn.sectionDescriptions as Record<string, string>)[section.slug] || section.description}
                     articleCount={totalArticles}
                 />

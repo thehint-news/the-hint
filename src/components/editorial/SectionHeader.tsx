@@ -14,13 +14,23 @@ import { kn } from "@/lib/i18n/kn";
 interface SectionHeaderProps {
     /** Display name for the section */
     name: string;
+    /** The actual section slug for precise translation */
+    sectionSlug?: string;
     /** Editorial description of the section */
     description: string;
     /** Total article count (optional, shown as context) */
     articleCount?: number;
 }
 
-export function SectionHeader({ name, description, articleCount }: SectionHeaderProps) {
+export function SectionHeader({ name, sectionSlug, description, articleCount }: SectionHeaderProps) {
+    const generatedSlug = name.toLowerCase().replace(/\s+&?\s*/g, "-").replace("--", "-");
+    const actualSlug = sectionSlug || generatedSlug;
+
+    // We allow a specific mapping for "Opinion & Analysis" or fall back to the section's base slug
+    const displayTitle = (kn.sections as Record<string, string>)[actualSlug] || 
+                         (kn.sections as Record<string, string>)[generatedSlug] || 
+                         name;
+
     return (
         <header className="mb-10">
             {/* Breadcrumb */}
@@ -35,7 +45,7 @@ export function SectionHeader({ name, description, articleCount }: SectionHeader
                         <span className="text-[#D0D0D0]">/</span>
                     </li>
                     <li>
-                        <span className="text-[#111]">{(kn.sections as Record<string, string>)[name.toLowerCase().replace(" ", "-")] || name}</span>
+                        <span className="text-[#111]">{displayTitle}</span>
                     </li>
                 </ol>
             </nav>
@@ -51,7 +61,7 @@ export function SectionHeader({ name, description, articleCount }: SectionHeader
                         lineHeight: 1.1,
                     }}
                 >
-                    {(kn.sections as Record<string, string>)[name.toLowerCase().replace(" ", "-")] || name}
+                    {displayTitle}
                 </h1>
                 {articleCount !== undefined && articleCount > 0 && (
                     <span className="font-sans text-[11px] font-medium text-[#8A8A8A] tracking-wider uppercase">

@@ -116,7 +116,7 @@ export const kn = {
         "world-affairs": "ವಿಶ್ವ",
         "crime": "ಕ್ರೈಂ",
         "court": "ನ್ಯಾಯಾಲಯ",
-        "opinion": "ಅಭಿಪ್ರಾಯ",
+        "opinion": "ಅಭಿಪ್ರಾಯ ಮತ್ತು ವಿಶ್ಲೇಷಣೆ",
     },
     sectionDescriptions: {
         "politics": "ಶಾಸಕಾಂಗ ವ್ಯವಹಾರಗಳು, ನೀತಿ ನಿರ್ಧಾರಗಳು ಹಾಗೂ ರಾಜಕೀಯ ಬೆಳವಣಿಗೆಗಳ ವರದಿ.",

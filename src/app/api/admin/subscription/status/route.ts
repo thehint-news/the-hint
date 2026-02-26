@@ -5,12 +5,15 @@ import { validateSubscriptionEnv } from '@/lib/env';
 import { getActiveSubscribers } from '@/lib/subscription';
 import { logger } from '@/lib/feedback/console-guard';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function GET(): Promise<NextResponse> {
     try {
         const envValidation = validateSubscriptionEnv();
-        
+
         const queueStatus = await queueManager.getStatus();
-        
+
         let subscriberCount = 0;
         let subscriberError = null;
         try {
@@ -33,6 +36,7 @@ export async function GET(): Promise<NextResponse> {
             subscribers: {
                 count: subscriberCount,
                 error: subscriberError,
+                path: 'src/data/subscribers.json'
             },
             queue: queueStatus,
             timestamp: new Date().toISOString(),

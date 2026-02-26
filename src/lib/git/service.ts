@@ -454,7 +454,7 @@ class GitService {
             };
         } catch (error: unknown) {
             const err = error as { status?: number };
-            if ((err.status === 409 || err.status === 422) && retryCount < 1) {
+            if ((err.status === 409 || err.status === 422) && retryCount < 3) {
                 return this.commitFiles(filesPaths, message, staging, retryCount + 1);
             }
             throw this.translateError(error);

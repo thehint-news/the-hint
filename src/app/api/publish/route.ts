@@ -14,7 +14,7 @@
  * - Publishing commits: "Publish: {{headline}}"
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, after } from 'next/server';
 import {
     validateArticleInput,
     transformToValidatedData,
@@ -25,6 +25,9 @@ import { contentGit, DraftData, PublishedArticleData } from '@/lib/git';
 import { logger } from '@/lib/feedback/console-guard';
 import { revalidatePath } from 'next/cache';
 import { verifyAuth } from '@/lib/auth/session';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /** Valid sections */
 type Section = 'politics' | 'world-affairs' | 'crime' | 'court' | 'opinion' | 'local';
@@ -190,44 +193,37 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
 
         // Send article notification emails to subscribers.
-        // IMPORTANT: On Vercel serverless, background work is killed after response.
-        // We MUST await email sending before returning the response.
-        try {
-            const { queueManager } = await import('@/lib/subscription/queue');
-            await queueManager.enqueue({
-                articleSlug: targetSlug,
-                section: articleData.section,
-                headline: articleData.headline,
-                summary: articleData.subheadline || 'Read the full story on our website.',
-                contentType: (articleData.contentType as 'news' | 'opinion') || 'news',
-                priority: 'normal',
-            });
-            logger.info(`[PUBLISH] Subscription event enqueued for ${targetSlug}`);
-
-            // Process the queue synchronously — Vercel kills background work
-            const { processSubscriptionQueue } = await import('@/lib/subscription/processor');
-            const queueResult = await processSubscriptionQueue();
-            logger.info(`[PUBLISH] Queue processor: ${queueResult.processed} emails sent, ${queueResult.errors} errors`);
-
-        } catch (queueError) {
-            logger.error('[PUBLISH] Queue-based email delivery failed, trying direct send:', queueError);
-
-            // Fallback: Send emails directly via Resend (bypassing queue)
+        // We use Next.js `after()` to run this securely in the background
+        // without blocking the user's publish response.
+        after(async () => {
             try {
-                const { sendArticleEmail } = await import('@/lib/welcomeEmail');
-                await sendArticleEmail({
+                const { queueManager } = await import('@/lib/subscription/queue');
+                await queueManager.enqueue({
+                    articleSlug: targetSlug,
+                    section: articleData.section,
                     headline: articleData.headline,
                     summary: articleData.subheadline || 'Read the full story on our website.',
-                    section: articleData.section,
-                    publishedAt: new Date().toISOString(),
-                    url: `/${articleData.section}/${targetSlug}`,
+                    contentType: (articleData.contentType as 'news' | 'opinion') || 'news',
+                    priority: 'normal',
                 });
-                logger.info('[PUBLISH] Direct email fallback succeeded.');
-            } catch (directError) {
-                logger.error('[PUBLISH] Direct email fallback also failed:', directError);
+                logger.info(`[PUBLISH] Subscription event enqueued for ${targetSlug}`);
+
+                // Process the queue in batches until complete
+                const { processSubscriptionQueue } = await import('@/lib/subscription/processor');
+                let remaining = true;
+                while (remaining) {
+                    const queueResult = await processSubscriptionQueue();
+                    logger.info(`[PUBLISH] Batch processor: ${queueResult.processed} emails sent, ${queueResult.errors} errors`);
+                    remaining = queueResult.remaining;
+                    // Prevent tight loop
+                    if (remaining) {
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                }
+            } catch (queueError) {
+                logger.error('[PUBLISH] Queue processing failed in background:', queueError);
             }
-            // Critical: Do NOT fail publishing. Valid content > Email delivery.
-        }
+        });
 
         // 7. On-demand revalidation
         revalidatePath('/', 'page');
