@@ -112,30 +112,56 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     // JSON-LD Structured Data
     const jsonLd = {
         '@context': 'https://schema.org',
-        '@type': article.contentType === 'opinion' ? 'OpinionNewsArticle' : 'NewsArticle',
-        headline: article.title,
-        description: article.subtitle,
-        image: article.image ? [article.image] : [],
-        datePublished: article.publishedAt,
-        dateModified: article.updatedAt || article.publishedAt,
-        author: [{
-            '@type': 'Organization',
-            name: 'The Hint Editorial Board',
-            url: 'https://thehint.news'
-        }],
-        publisher: {
-            '@type': 'Organization',
-            name: 'The Hint',
-            url: 'https://thehint.news',
-            logo: {
-                '@type': 'ImageObject',
-                url: 'https://thehint.news/logo.png' // Replace with actual logo URL if available
+        '@graph': [
+            {
+                '@type': article.contentType === 'opinion' ? 'OpinionNewsArticle' : 'NewsArticle',
+                '@id': `https://www.thehintnews.in/${article.section}/${article.id}#article`,
+                url: `https://www.thehintnews.in/${article.section}/${article.id}`,
+                headline: article.title,
+                description: article.subtitle,
+                image: article.image ? [article.image] : [],
+                datePublished: new Date(article.publishedAt).toISOString(),
+                dateModified: new Date(article.updatedAt || article.publishedAt).toISOString(),
+                author: [{
+                    '@type': 'Organization',
+                    name: 'The Hint Editorial Board',
+                    url: 'https://www.thehintnews.in/'
+                }],
+                publisher: {
+                    '@type': 'Organization',
+                    name: 'The Hint Editorial Board',
+                    url: 'https://www.thehintnews.in/',
+                },
+                mainEntityOfPage: {
+                    '@type': 'WebPage',
+                    '@id': `https://www.thehintnews.in/${article.section}/${article.id}`
+                },
+                inLanguage: 'kn'
+            },
+            {
+                '@type': 'BreadcrumbList',
+                '@id': `https://www.thehintnews.in/${article.section}/${article.id}#breadcrumb`,
+                itemListElement: [
+                    {
+                        '@type': 'ListItem',
+                        position: 1,
+                        name: 'ಮುಖಪುಟ',
+                        item: 'https://www.thehintnews.in/'
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 2,
+                        name: sectionLabel,
+                        item: `https://www.thehintnews.in/${article.section}`
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 3,
+                        name: article.title
+                    }
+                ]
             }
-        },
-        mainEntityOfPage: {
-            '@type': 'WebPage',
-            '@id': `https://thehint.news/${article.section}/${article.id}`
-        }
+        ]
     };
 
     return (

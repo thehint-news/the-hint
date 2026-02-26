@@ -93,6 +93,7 @@
   --font-sans-full: var(--font-kannada-sans), var(--font-sans), system-ui, sans-serif;
   --font-kannada-serif-full: var(--font-kannada-serif), var(--font-serif), serif;
   --font-kannada-sans-full: var(--font-kannada-sans), var(--font-sans), sans-serif;
+  --font-serif-bold-full: var(--font-kannada-serif-bold), var(--font-serif), Georgia, serif;
 }
 
 /* SCOPED KANNADA FONT SUPPORT — Article page only (heading → sources)
@@ -103,7 +104,10 @@
 }
 
 .article-kannada-scope .headline-xl,
-.article-kannada-scope .headline-lg,
+.article-kannada-scope .headline-lg {
+  font-family: var(--font-serif-bold-full);
+}
+
 .article-kannada-scope .headline-md,
 .article-kannada-scope .headline-sm {
   font-family: var(--font-serif-full);
@@ -147,18 +151,18 @@ button {
    HEADLINE TYPOGRAPHY
    ---------------------------------------------------------------------------- */
 .headline-xl {
-  font-family: var(--font-serif-full);
+  font-family: var(--font-serif-bold-full);
   font-size: clamp(2.25rem, 8vw, 3.5rem);
-  font-weight: 800;
+  font-weight: 800; /* Will now render true bold for Kannada */
   line-height: 1.25;
   letter-spacing: -0.015em;
   color: var(--color-ink);
 }
 
 .headline-lg {
-  font-family: var(--font-serif-full);
+  font-family: var(--font-serif-bold-full);
   font-size: clamp(1.5rem, 4vw, 2.25rem);
-  font-weight: 700;
+  font-weight: 700; /* Will now render true bold for Kannada */
   line-height: 1.3;
   letter-spacing: -0.01em;
   color: var(--color-ink);

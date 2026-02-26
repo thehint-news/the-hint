@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Anek_Kannada, Tiro_Kannada } from "next/font/google";
+import { Playfair_Display, Inter, Anek_Kannada, Tiro_Kannada, Noto_Serif_Kannada } from "next/font/google";
 import "./globals.css";
 import { getAllArticles } from "@/lib/content/reader";
 
@@ -35,8 +35,16 @@ const tiroKannada = Tiro_Kannada({
   display: "swap",
 });
 
+// Bold Kannada serif for lead story headlines
+const notoSerifKannada = Noto_Serif_Kannada({
+  variable: "--font-kannada-serif-bold",
+  subsets: ["kannada"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://thehint.news'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in'),
   title: {
     default: "ದಿ ಹಿಂಟ್",
     template: "%s | ದಿ ಹಿಂಟ್",
@@ -58,7 +66,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ದಿ ಹಿಂಟ್",
     description: "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ ನಡೆದಂತೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ. ಸಮಗ್ರತೆ ಮತ್ತು ಆಳದೊಂದಿಗೆ ಅಧಿಕೃತ ಸುದ್ದಿ ಪ್ರಸಾರ.",
-    url: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://thehint.news'),
+    url: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in'),
     siteName: "ದಿ ಹಿಂಟ್",
     locale: 'kn_IN',
     type: 'website',
@@ -77,7 +85,8 @@ export const metadata: Metadata = {
 import { Header, Footer } from "@/components/layout";
 import { SubscribePopup } from "@/components/features/SubscribePopup";
 import ScrollToTop from "@/components/features/ScrollToTop";
-import Analytics from "@/components/analytics/Analytics";
+import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
+import PageViewTracker from '@/components/analytics/PageViewTracker';
 
 export default async function RootLayout({
   children,
@@ -103,16 +112,17 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="kn" className={`${anekKannada.variable} ${tiroKannada.variable}`}>
+    <html lang="kn" className={`${anekKannada.variable} ${tiroKannada.variable} ${notoSerifKannada.variable}`}>
       <body className={`${playfairDisplay.variable} ${inter.variable}`}>
+        <PageViewTracker />
         <div className="min-h-screen flex flex-col">
-          <Analytics />
           <Header latestUpdate={latestUpdate} tickerHeadlines={tickerHeadlines} />
           <ScrollToTop />
           {children}
           <Footer />
           <SubscribePopup />
         </div>
+        <GoogleAnalytics />
       </body>
     </html>
   );

@@ -32,7 +32,7 @@ function getFromAddress(): string {
     const from = process.env.EMAIL_FROM;
     if (!from) {
         logger.error('[EMAIL] EMAIL_FROM not configured. Using fallback.');
-        return 'noreply@thehint.news';
+        return 'noreply@thehintnews.in';
     }
     return from;
 }
@@ -52,7 +52,7 @@ function getBaseUrl(): string {
         }
     }
     logger.warn('[EMAIL] No APP_BASE_URL configured, using fallback');
-    return 'https://thehint.news';
+    return 'https://www.thehintnews.in';
 }
 
 // =============================================================================

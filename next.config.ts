@@ -57,6 +57,19 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Permissions-Policy',
+            value: 'unload=(self "https://platform.twitter.com" "https://syndication.twitter.com" "https://www.instagram.com" "https://connect.facebook.net")',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

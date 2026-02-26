@@ -43,8 +43,45 @@ export default async function HomePage() {
   }
   const { leadStory, topStories, sections } = homepageData;
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': 'https://www.thehintnews.in/#website',
+        url: 'https://www.thehintnews.in/',
+        name: 'ದಿ ಹಿಂಟ್',
+        description: 'ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ ನಡೆದಂತೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ.',
+        publisher: {
+          '@id': 'https://www.thehintnews.in/#organization'
+        },
+        inLanguage: 'kn'
+      },
+      {
+        '@type': 'Organization',
+        '@id': 'https://www.thehintnews.in/#organization',
+        name: 'The Hint',
+        url: 'https://www.thehintnews.in/',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://www.thehintnews.in/logo.png' // Adjust if needed
+        },
+        sameAs: [
+          'https://twitter.com/thehintnews',
+          'https://www.facebook.com/thehintnews',
+          'https://www.instagram.com/thehintnews',
+          'https://www.youtube.com/@thehintnews'
+        ]
+      }
+    ]
+  };
+
   return (
     <main id="main-content" className="flex-1">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* 2. LEAD STORY */}
       <div className="container-editorial" style={{ paddingTop: "1rem", paddingBottom: "1.5rem" }}>
         <LeadStory article={leadStory} />

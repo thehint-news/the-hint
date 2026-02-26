@@ -5,7 +5,7 @@ import { getAllArticles, getValidSections } from '@/lib/content/reader';
 export const dynamic = 'force-dynamic';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thehint.news';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
     const currentDate = new Date().toISOString();
 
     // 1. Static Routes

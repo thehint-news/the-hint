@@ -22,7 +22,7 @@ function getFromAddress(): string {
     const from = process.env.EMAIL_FROM;
     if (!from) {
         logger.error('[EMAIL] EMAIL_FROM is not configured');
-        return 'noreply@thehint.news';
+        return 'noreply@thehintnews.in';
     }
     return from;
 }
@@ -44,7 +44,7 @@ function getBaseUrl(): string {
 
     // Last resort fallback (should never be reached in production)
     logger.warn('[EMAIL] No APP_BASE_URL configured, using fallback');
-    return 'https://thehint.news';
+    return 'https://www.thehintnews.in';
 }
 
 /**
@@ -189,5 +189,58 @@ export async function sendWelcomeEmail(email: string): Promise<void> {
     } catch (err) {
         logger.error(`[EMAIL] Failed to send welcome email to ${email}`, err);
         // Do not throw — welcome email failure should not break subscription flow
+    }
+}
+
+export async function sendUnsubscribeEmail(email: string): Promise<void> {
+    const resend = getResendClient();
+    if (!resend) {
+        logger.warn('[EMAIL] Resend not configured. Skipping unsubscribe email.');
+        return;
+    }
+
+    const baseUrl = getBaseUrl();
+
+    logger.info(`[EMAIL] Sending unsubscribe email to: ${email}`);
+
+    try {
+        const { error } = await resend.emails.send({
+            from: getFromAddress(),
+            to: [email],
+            subject: "You've successfully unsubscribed",
+            html: `
+            <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #111; background-color: #ffffff; padding: 0;">
+                <!-- Header -->
+                <div style="text-align: center; padding: 30px 20px; border-bottom: 1px solid #E5E5E5;">
+                    <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -0.5px; margin: 0;">THE HINT</h1>
+                </div>
+
+                <div style="padding: 30px 25px;">
+                    <p style="font-family: Georgia, serif; font-size: 18px; line-height: 1.6; color: #111; margin: 0 0 30px 0;">
+                        You have been successfully unsubscribed from The Hint.
+                    </p>
+                    <p style="font-family: Georgia, serif; font-size: 16px; line-height: 1.6; color: #333; margin: 0 0 30px 0;">
+                        You will no longer receive our emails. If you ever change your mind, you can re-subscribe on our website anytime.
+                    </p>
+
+                    <!-- Gentle Engagement -->
+                    <div style="text-align: center; margin-top: 40px; padding-top: 25px; border-top: 1px solid #E5E5E5;">
+                        <p style="font-family: Arial, sans-serif; font-size: 14px; color: #444; margin-bottom: 10px;">
+                            You can visit the homepage anytime for the latest coverage.
+                        </p>
+                        <a href="${baseUrl}" style="font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; color: #111; text-decoration: none;">
+                            Visit the homepage →
+                        </a>
+                    </div>
+                </div>
+            </div>
+            `,
+        });
+
+        if (error) {
+            logger.error(`[EMAIL] Resend error for unsubscribe email:`, error.message);
+        }
+    } catch (err) {
+        logger.error(`[EMAIL] Failed to send unsubscribe email to ${email}`, err);
     }
 }

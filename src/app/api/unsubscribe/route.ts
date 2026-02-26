@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
     const timestamp = new Date().toISOString();
-    
+
     try {
         const body = await request.json();
         const { email } = body;
@@ -33,6 +33,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
         if (result.success) {
             logger.info(`[UNSUBSCRIBE] Success: ${email} at ${timestamp}, storageSuccess: ${result.storageSuccess}`);
+
+            // Send unsubscribe confirmation email
+            try {
+                const { sendUnsubscribeEmail } = await import('@/lib/welcomeEmail');
+                await sendUnsubscribeEmail(email);
+            } catch (err) {
+                logger.error(`[UNSUBSCRIBE] Failed to send unsubscribe email to ${email}`, err);
+            }
         } else {
             logger.error(`[UNSUBSCRIBE] Failed: ${email} at ${timestamp}, error: ${result.message}`);
             return NextResponse.json(
@@ -70,6 +78,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     if (result.success) {
         logger.info(`[UNSUBSCRIBE] GET Success: ${email} at ${timestamp}`);
+
+        try {
+            const { sendUnsubscribeEmail } = await import('@/lib/welcomeEmail');
+            await sendUnsubscribeEmail(email);
+        } catch (err) {
+            logger.error(`[UNSUBSCRIBE] Failed to send unsubscribe email to ${email}`, err);
+        }
     } else {
         logger.error(`[UNSUBSCRIBE] GET Failed: ${email} at ${timestamp}, error: ${result.message}`);
     }

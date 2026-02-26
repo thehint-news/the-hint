@@ -29,37 +29,56 @@ export function SubscribePopup() {
         // Condition: User has already subscribed - NEVER show again
         if (localStorage.getItem(STORAGE_KEY_SUBSCRIBED)) return;
 
-        // Condition: User has dismissed in the last 80 seconds
-        const dismissedAt = localStorage.getItem(STORAGE_KEY_DISMISSED);
-        if (dismissedAt) {
-            const date = new Date(dismissedAt);
-            const now = new Date();
-            const diffSeconds = (now.getTime() - date.getTime()) / 1000;
-            if (diffSeconds < 80) return;
-        }
+        let intervalId: NodeJS.Timeout;
 
-        // Triggers
-        const showPopup = () => {
+        const checkAndShowPopup = () => {
+            // Check if user subscribed in another tab
+            if (localStorage.getItem(STORAGE_KEY_SUBSCRIBED)) {
+                return;
+            }
+
+            const dismissedAt = localStorage.getItem(STORAGE_KEY_DISMISSED);
+            if (dismissedAt) {
+                const date = new Date(dismissedAt);
+                const now = new Date();
+                const diffSeconds = (now.getTime() - date.getTime()) / 1000;
+                if (diffSeconds < 180) return;
+            }
+
             setIsOpen(true);
         };
 
-        // 1. Time Trigger: 80 seconds (per user request "every 80 seconds")
-        const timer = setTimeout(showPopup, 80000);
+        // 1. Initial Time Trigger: 180 seconds wait before first pop-up, then every 180s looping
+        const timerId = setTimeout(() => {
+            checkAndShowPopup();
+            // Start the interval after the first popup loop
+            intervalId = setInterval(checkAndShowPopup, 180000);
+        }, 180000);
 
-        // 2. Scroll Trigger: 35-40% scroll (Keeping as alternative trigger)
+        // 2. Scroll Trigger: 35-40% scroll (Immediate trigger if conditions met)
         const handleScroll = () => {
             const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
             if (scrollPercentage >= 35) {
-                showPopup();
-                window.removeEventListener("scroll", handleScroll);
-                clearTimeout(timer);
+                const dismissedAt = localStorage.getItem(STORAGE_KEY_DISMISSED);
+                let diffSeconds = 999;
+                if (dismissedAt) {
+                    const date = new Date(dismissedAt);
+                    const now = new Date();
+                    diffSeconds = (now.getTime() - date.getTime()) / 1000;
+                }
+
+                if (diffSeconds >= 180 && !localStorage.getItem(STORAGE_KEY_SUBSCRIBED)) {
+                    setIsOpen(true);
+                    window.removeEventListener("scroll", handleScroll);
+                }
             }
         };
 
         window.addEventListener("scroll", handleScroll);
 
         return () => {
-            clearTimeout(timer);
+            clearTimeout(timerId);
+            if (intervalId) clearInterval(intervalId);
             window.removeEventListener("scroll", handleScroll);
         };
     }, [pathname]);

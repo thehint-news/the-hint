@@ -139,18 +139,25 @@ async function readSectionArticles(section: Section): Promise<Article[]> {
     // Read directory from Git
     const files = await gitService.listFiles(sectionPath, '.md');
 
-    // Parallelize file reads to prevent sequential API bottlenecks
-    const articlesOrNull = await Promise.all(
-        files.map(async (filename) => {
-            const filePath = `${sectionPath}/${filename}`;
-            try {
-                return await readArticleFile(filePath, section);
-            } catch (error) {
-                console.warn(`Skipping invalid article ${filename}: ${(error as Error).message}`);
-                return null;
-            }
-        })
-    );
+    // Concurrency limit to prevent GitHub secondary rate limits but remain fast
+    const CONCURRENCY = 8;
+    const articlesOrNull: (Article | null)[] = [];
+
+    for (let i = 0; i < files.length; i += CONCURRENCY) {
+        const chunk = files.slice(i, i + CONCURRENCY);
+        const results = await Promise.all(
+            chunk.map(async (filename) => {
+                const filePath = `${sectionPath}/${filename}`;
+                try {
+                    return await readArticleFile(filePath, section);
+                } catch (error) {
+                    console.warn(`Skipping invalid article ${filename}: ${(error as Error).message}`);
+                    return null;
+                }
+            })
+        );
+        articlesOrNull.push(...results);
+    }
 
     return articlesOrNull.filter((article): article is Article => article !== null);
 }

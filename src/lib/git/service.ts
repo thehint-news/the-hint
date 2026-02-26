@@ -178,7 +178,7 @@ class GitService {
         } catch (error: unknown) {
             const err = error as { status?: number; message?: string };
             if (err.status === 404) return null;
-            logger.error(`Git readFile error for ${filePath}:`, err.message);
+            logger.error(`Git readFile error for ${filePath}: ${err.message || String(error)}`);
             return null;
         }
     }
