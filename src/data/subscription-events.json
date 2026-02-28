@@ -1821,5 +1821,19 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": []
+  },
+  {
+    "id": "2c4a79f8-7791-4c0d-96c6-8b80bdeaf780",
+    "articleSlug": "ಕಪ-ಕಷತರಕಕ-ಸರಕಯದ-ವಪರತ-ಕರಕಳ-ಗರಮ",
+    "section": "local",
+    "headline": "ಕಾಪು ಕ್ಷೇತ್ರಕ್ಕೆ ಸೊರಕೆಯಿಂದ ವಿಪರೀತ ಕಿರುಕುಳ - ಗುರ್ಮೆ",
+    "summary": "ಶಂಕುಸ್ಥಾಪನೆ ಕಾರ್ಯಕ್ರಮಕ್ಕೆ ಮಾಜಿ ಶಾಸಕ ವಿನಯ್ ಕುಮಾರ್ ಸೊರಕೆ ಆಕ್ಷೇಪ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-28T14:59:37.381Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
