@@ -1983,5 +1983,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-02-28T17:35:05.929Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "0f5f401c-513a-4c04-a9d9-2958f92a7477",
+    "articleSlug": "fdgdddddfsdf",
+    "section": "politics",
+    "headline": "fdgdddddfsdf",
+    "summary": "dsffsdfdss",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-28T17:38:07.359Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
