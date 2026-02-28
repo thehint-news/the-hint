@@ -1753,11 +1753,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-24T16:52:09.969Z",
-    "status": "processing",
+    "status": "pending",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-02-28T02:49:58.883Z"
+    "totalSubscribers": 2
   },
   {
     "id": "4176607d-31fc-431e-becb-aa17a49ff95b",
