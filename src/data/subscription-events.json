@@ -1967,5 +1967,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-02-28T17:23:08.553Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "7e7509a8-97e0-47c1-bda5-c543aa8fa07d",
+    "articleSlug": "gfhgfhgfhfg",
+    "section": "court",
+    "headline": "gfhgfhgfhfg",
+    "summary": "gfhgfhgfhgfhg",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-02-28T17:34:40.499Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
