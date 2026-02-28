@@ -1801,9 +1801,10 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-28T13:42:45.056Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-28T13:42:51.094Z"
   }
 ]
