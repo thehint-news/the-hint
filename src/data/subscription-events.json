@@ -1753,12 +1753,12 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-24T16:52:09.969Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
     "totalSubscribers": 2,
-    "lastAttemptAt": "2026-02-28T02:50:11.292Z"
+    "lastAttemptAt": "2026-02-28T02:50:17.529Z"
   },
   {
     "id": "4176607d-31fc-431e-becb-aa17a49ff95b",
