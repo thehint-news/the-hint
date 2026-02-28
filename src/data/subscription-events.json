@@ -1833,10 +1833,10 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-28T14:59:37.381Z",
-    "status": "processing",
+    "status": "pending",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-02-28T15:00:10.873Z"
+    "totalSubscribers": 2
   }
 ]
