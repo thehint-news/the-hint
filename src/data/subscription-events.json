@@ -1817,10 +1817,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-02-28T13:43:52.445Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-02-28T14:59:42.246Z"
   },
   {
     "id": "2c4a79f8-7791-4c0d-96c6-8b80bdeaf780",
