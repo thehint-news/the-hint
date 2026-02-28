@@ -23,6 +23,7 @@ import {
     SECTIONS,
     CONTENT_TYPES,
 } from '../types';
+import { LeadMediaManager } from '../common/LeadMediaManager';
 import styles from './MobileSettingsPanel.module.css';
 
 interface MobileSettingsPanelProps {
@@ -70,7 +71,19 @@ export function MobileSettingsPanel({
     const handlePlacementChange = useCallback(
         (placement: 'lead' | 'top' | 'standard') => {
             const newPlacement = formData.placement === placement ? 'standard' : placement;
-            onFormChange({ ...formData, placement: newPlacement });
+            // Sync isLead with placement for backward compatibility
+            const isLead = newPlacement === 'lead';
+            onFormChange({ ...formData, placement: newPlacement, isLead });
+        },
+        [formData, onFormChange]
+    );
+
+    /**
+     * Handle lead images change
+     */
+    const handleLeadImagesChange = useCallback(
+        (leadImages: ArticleFormData['leadImages']) => {
+            onFormChange({ ...formData, leadImages });
         },
         [formData, onFormChange]
     );
@@ -266,6 +279,17 @@ export function MobileSettingsPanel({
                                 : `Selected: ${formData.placement === 'lead' ? 'Lead Story' : 'Top Story'}. Tap to deselect.`}
                         </div>
                     </div>
+
+                    {/* Lead Story Media Manager - Only show when isLead is true */}
+                    {formData.isLead && (
+                        <div className={styles.controlGroup}>
+                            <LeadMediaManager
+                                images={formData.leadImages}
+                                onChange={handleLeadImagesChange}
+                                maxImages={3}
+                            />
+                        </div>
+                    )}
 
                     {/* Status Indicator */}
                     <div className={styles.statusSection}>

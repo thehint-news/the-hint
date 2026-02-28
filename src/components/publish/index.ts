@@ -32,6 +32,7 @@ export { MobileInsertMenu } from './mobile/MobileInsertMenu';
 // =============================================================================
 export { Toast } from './common/Toast';
 export { MediaCounter } from './common/MediaCounter';
+export { LeadMediaManager } from './common/LeadMediaManager';
 
 // =============================================================================
 // TYPES

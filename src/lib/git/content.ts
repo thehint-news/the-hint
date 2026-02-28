@@ -20,7 +20,6 @@ import yaml from 'js-yaml';
 import { ContentBlock } from '../content/media-types';
 
 /** Draft data structure */
-/** Draft data structure */
 export interface DraftData {
     draftId: string;
     headline: string;
@@ -36,9 +35,29 @@ export interface DraftData {
     slug?: string;
     savedAt: string;
     createdAt: string;
+    /** Whether this draft is marked as lead story */
+    isLead?: boolean;
+    /** Lead story carousel media - only valid if isLead === true */
+    leadMedia?: {
+        images: {
+            url: string;
+            alt: string;
+            width?: number;
+            height?: number;
+        }[];
+    };
 }
 
 /** Published article metadata (extracted from frontmatter) */
+/** English translation data */
+export interface ArticleTranslation {
+    title: string;
+    subtitle: string;
+    body: string;
+    excerpt: string;
+    translatedAt: string;
+}
+
 /** Published article metadata (extracted from frontmatter) */
 export interface PublishedArticleData {
     slug: string;
@@ -55,6 +74,20 @@ export interface PublishedArticleData {
     image?: string;
     bodyBlocks?: ContentBlock[];
     body?: string;
+    translations?: {
+        en?: ArticleTranslation;
+    };
+    /** Whether this article is the designated lead story */
+    isLead?: boolean;
+    /** Lead story carousel media - only present if isLead === true */
+    leadMedia?: {
+        images: {
+            url: string;
+            alt: string;
+            width?: number;
+            height?: number;
+        }[];
+    };
 }
 
 /** Article list item for UI display */
@@ -496,13 +529,37 @@ class ContentGit {
         slug: string;
         thumbnail?: string;
         draftId?: string;
+        isLead?: boolean;
+        leadMedia?: {
+            images: {
+                url: string;
+                alt: string;
+                width?: number;
+                height?: number;
+            }[];
+        };
     }): Promise<ContentOperationResult<{ slug: string; section: string; url: string; publishedAt: string; mode: 'create' | 'update' }>> {
         try {
-            const { section, slug, draftId, headline } = articleData;
+            const { section, slug, draftId, headline, isLead } = articleData;
+
+            logger.info(`[GIT-PUBLISH] Starting publish for: ${section}/${slug}, isLead: ${isLead}`);
 
             // 1. Check If File Exists (Detect Mode)
             const articleRelativePath = gitService.getPublishedRelativePath(section, slug);
-            const { content: existingFile, sha: existingSha } = await gitService.getFileInfo(articleRelativePath);
+            logger.info(`[GIT-PUBLISH] Checking file info for: ${articleRelativePath}`);
+
+            let existingFile: string | null = null;
+            let existingSha: string | null = null;
+
+            try {
+                const fileInfo = await gitService.getFileInfo(articleRelativePath);
+                existingFile = fileInfo.content;
+                existingSha = fileInfo.sha;
+                logger.info(`[GIT-PUBLISH] File info result: sha=${existingSha ? 'exists' : 'null'}`);
+            } catch (fileError) {
+                logger.warn(`[GIT-PUBLISH] Error getting file info:`, fileError);
+                // File doesn't exist - this is OK for new articles
+            }
 
             const mode = existingSha ? 'update' : 'create';
             let publishedAt = new Date().toISOString();
@@ -566,14 +623,19 @@ class ContentGit {
             }
 
             // Write article
+            logger.info(`[GIT-PUBLISH] Writing article to: ${articlePath}`);
             await gitService.writeFileAtomic(articlePath, markdownContent, staging);
 
             // 5. Commit all
             const commitMessage = (mode === 'create' ? 'Publish article: ' : 'Update article: ') + headline;
+            logger.info(`[GIT-PUBLISH] Committing files: ${pathsToCommit.join(', ')}`);
             await gitService.commitFiles(pathsToCommit, commitMessage, staging);
+            logger.info(`[GIT-PUBLISH] Commit successful`);
 
             // Push async
             this.pushAsync();
+
+            logger.info(`[GIT-PUBLISH] Publish successful: ${section}/${slug}`);
 
             return {
                 success: true,
@@ -587,7 +649,12 @@ class ContentGit {
                 userMessage: mode === 'update' ? 'Article updated successfully.' : 'Article published successfully.',
             };
         } catch (error) {
-            logger.error('Failed to publish article', error);
+            logger.error('[GIT-PUBLISH] Failed to publish article', {
+                error: error instanceof Error ? error.message : String(error),
+                stack: error instanceof Error ? error.stack : undefined,
+                section: articleData.section,
+                slug: articleData.slug,
+            });
             const gitError = gitService.translateError(error);
             return {
                 success: false,
@@ -722,7 +789,23 @@ class ContentGit {
         image?: string;
         publishedAt: string;
         updatedAt?: string;
+        isLead?: boolean;
+        leadMedia?: {
+            images: {
+                url: string;
+                alt: string;
+                width?: number;
+                height?: number;
+            }[];
+        };
     }): string {
+        // DEBUG: Log lead story data
+        logger.info('[GIT-CONTENT] generateMarkdownContent received:', {
+            isLead: data.isLead,
+            hasLeadMedia: !!data.leadMedia,
+            leadImagesCount: data.leadMedia?.images?.length || 0,
+        });
+
         const frontmatter: Record<string, unknown> = {
             title: data.headline,
             subtitle: data.subheadline,
@@ -739,6 +822,34 @@ class ContentGit {
         // If bodyBlocks exist, add them to frontmatter (CANONICAL)
         if (data.bodyBlocks && data.bodyBlocks.length > 0) {
             frontmatter.bodyBlocks = data.bodyBlocks;
+        }
+
+        // Add lead story fields if this is a lead article
+        if (data.isLead === true) {
+            logger.info('[GIT-CONTENT] Adding lead story fields to frontmatter');
+            frontmatter.isLead = true;
+
+            // Only add leadMedia if it has valid images
+            if (data.leadMedia && data.leadMedia.images && data.leadMedia.images.length > 0) {
+                // Validate and clean leadMedia
+                const validImages = data.leadMedia.images
+                    .filter(img => img.url && img.alt)
+                    .slice(0, 3); // Enforce max 3 images
+
+                if (validImages.length > 0) {
+                    frontmatter.leadMedia = {
+                        images: validImages.map(img => ({
+                            url: img.url,
+                            alt: img.alt,
+                            ...(img.width && { width: img.width }),
+                            ...(img.height && { height: img.height }),
+                        })),
+                    };
+                    logger.info(`[GIT-CONTENT] Added leadMedia with ${validImages.length} images`);
+                }
+            } else {
+                logger.info('[GIT-CONTENT] No leadMedia images to add');
+            }
         }
 
         const yamlBlock = yaml.dump(frontmatter, {
@@ -806,6 +917,46 @@ class ContentGit {
                 logger.warn(`Missing 'contentType' in ${slug}, defaulting to 'news'`);
             }
 
+            // Parse translations if present
+            let translations: PublishedArticleData['translations'] = undefined;
+            if (data.translations && typeof data.translations === 'object') {
+                const transData = data.translations as Record<string, unknown>;
+                const enTranslation = transData.en as Record<string, unknown> | undefined;
+                if (enTranslation && typeof enTranslation === 'object') {
+                    translations = {
+                        en: {
+                            title: String(enTranslation.title || data.title),
+                            subtitle: String(enTranslation.subtitle || data.subtitle || ''),
+                            body: String(enTranslation.body || body),
+                            excerpt: String(enTranslation.excerpt || enTranslation.subtitle || data.subtitle || ''),
+                            translatedAt: String(enTranslation.translatedAt || new Date().toISOString()),
+                        },
+                    };
+                }
+            }
+
+            // Parse lead media if present
+            let leadMedia: PublishedArticleData['leadMedia'] = undefined;
+            if (data.leadMedia && typeof data.leadMedia === 'object') {
+                const lm = data.leadMedia as Record<string, unknown>;
+                if (Array.isArray(lm.images)) {
+                    leadMedia = {
+                        images: lm.images.map((img: unknown) => {
+                            if (typeof img !== 'object' || img === null) {
+                                return { url: '', alt: '' };
+                            }
+                            const image = img as Record<string, unknown>;
+                            return {
+                                url: String(image.url || ''),
+                                alt: String(image.alt || ''),
+                                width: typeof image.width === 'number' ? image.width : undefined,
+                                height: typeof image.height === 'number' ? image.height : undefined,
+                            };
+                        }).filter(img => img.url && img.alt),
+                    };
+                }
+            }
+
             return {
                 slug,
                 section,
@@ -823,10 +974,122 @@ class ContentGit {
                 image: data.image ? String(data.image) : undefined,
                 bodyBlocks: Array.isArray(data.bodyBlocks) ? data.bodyBlocks as ContentBlock[] : undefined,
                 body,
+                translations,
+                isLead: data.isLead === true,
+                leadMedia: leadMedia && leadMedia.images.length > 0 ? leadMedia : undefined,
             };
         } catch (error) {
             logger.error('Failed to parse frontmatter', error);
             return null;
+        }
+    }
+
+    /**
+     * UPDATE TRANSLATION: Update article with English translation
+     * Called after automatic translation generation
+     */
+    async updateTranslation(
+        section: Section,
+        slug: string,
+        translation: {
+            title: string;
+            subheadline?: string;
+            body: string;
+            excerpt?: string;
+            translatedAt: string;
+        }
+    ): Promise<ContentOperationResult> {
+        try {
+            const articleRelativePath = gitService.getPublishedRelativePath(section, slug);
+            const { content: existingFile, sha: existingSha } = await gitService.getFileInfo(articleRelativePath);
+
+            if (!existingFile || !existingSha) {
+                return {
+                    success: false,
+                    userMessage: 'Article not found',
+                    errorType: GitErrorType.NOT_FOUND,
+                };
+            }
+
+            // Parse existing article
+            const existingArticle = this.parseMarkdownFrontmatter(existingFile, section, slug);
+            if (!existingArticle) {
+                return {
+                    success: false,
+                    userMessage: 'Failed to parse existing article',
+                    errorType: GitErrorType.VALIDATION_ERROR,
+                };
+            }
+
+            // Reconstruct frontmatter with translation added
+            const updatedFrontmatter: Record<string, unknown> = {
+                title: existingArticle.title,
+                subtitle: existingArticle.subtitle,
+                contentType: existingArticle.contentType,
+                image: existingArticle.image,
+                status: existingArticle.status,
+                publishedAt: existingArticle.publishedAt,
+                updatedAt: existingArticle.updatedAt,
+                placement: existingArticle.placement,
+                tags: existingArticle.tags,
+                sources: existingArticle.sources,
+                bodyBlocks: existingArticle.bodyBlocks,
+                // Add translation
+                translations: {
+                    en: {
+                        title: translation.title,
+                        subtitle: translation.subheadline || existingArticle.subtitle,
+                        body: translation.body,
+                        excerpt: translation.excerpt || translation.subheadline || existingArticle.subtitle,
+                        translatedAt: translation.translatedAt,
+                    },
+                },
+            };
+
+            // Generate updated markdown
+            const yaml = await import('js-yaml');
+            const yamlBlock = yaml.dump(updatedFrontmatter, {
+                lineWidth: -1,
+                noRefs: true,
+            }).trim();
+
+            let fileContent = `---\n${yamlBlock}\n---`;
+
+            // Preserve original body
+            const bodyMatch = existingFile.match(/---\s*[\r\n]+[\s\S]*?[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
+            const originalBody = bodyMatch ? bodyMatch[1].trim() : '';
+
+            if (originalBody) {
+                fileContent += `\n\n${originalBody}\n`;
+            } else {
+                fileContent += `\n`;
+            }
+
+            const articlePath = gitService.getPublishedPath(section, slug);
+            const staging = createGitStaging();
+
+            // Write updated article
+            await gitService.writeFileAtomic(articlePath, fileContent, staging);
+
+            // Commit
+            const commitMessage = `Update translation: ${existingArticle.title}`;
+            await gitService.commitFiles([articleRelativePath], commitMessage, staging);
+
+            // Push async
+            this.pushAsync();
+
+            return {
+                success: true,
+                userMessage: 'Translation updated successfully',
+            };
+        } catch (error) {
+            logger.error('Failed to update translation', error);
+            const gitError = gitService.translateError(error);
+            return {
+                success: false,
+                userMessage: gitError.userMessage,
+                error: gitError,
+            };
         }
     }
 

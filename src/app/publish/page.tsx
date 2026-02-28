@@ -55,14 +55,17 @@ function getClientHints(formData: ArticleFormData): Record<string, string> {
     const headline = formData?.headline || '';
     const thumbnail = formData?.thumbnail || '';
 
+    // Thumbnail is not required if article is lead with at least 1 lead image
+    const hasLeadImages = formData?.isLead && formData?.leadImages && formData.leadImages.length > 0;
+
     if (headline && headline.length < 10) {
         hints.headline = `${10 - headline.length} more characters needed`;
     }
     if (formData?.contentType === 'opinion' && formData?.section !== 'opinion') {
         hints.contentType = 'Opinion articles must be in Opinion section';
     }
-    if (!thumbnail) {
-        hints.thumbnail = 'Thumbnail is required for publishing';
+    if (!thumbnail && !hasLeadImages) {
+        hints.thumbnail = 'Thumbnail is required (or add lead story images)';
     }
 
     return hints;
@@ -72,12 +75,15 @@ function getClientHints(formData: ArticleFormData): Record<string, string> {
 function canPublish(formData: ArticleFormData): boolean {
     // bodyBlocks is the canonical content source; body is legacy fallback
     const hasContent = (formData?.bodyBlocks && formData.bodyBlocks.length > 0) || (formData?.body || '').trim();
+    // Thumbnail is not required if article is lead with at least 1 lead image
+    const hasLeadImages = formData?.isLead && formData?.leadImages && formData.leadImages.length > 0;
+    const hasThumbnail = formData?.thumbnail || hasLeadImages;
     return !!(
         (formData?.headline || '').trim() &&
         (formData?.subheadline || '').trim() &&
         hasContent &&
         formData?.section &&
-        formData?.thumbnail
+        hasThumbnail
     );
 }
 
@@ -173,6 +179,11 @@ export default function PublishPage() {
             ? serializeBlocksToMarkdown(formData.bodyBlocks)
             : formData.body;
 
+        // Build lead media payload if article is marked as lead and has images
+        const leadMedia = formData.isLead && formData.leadImages.length > 0
+            ? { images: formData.leadImages }
+            : undefined;
+
         return {
             headline: formData.headline,
             subheadline: formData.subheadline,
@@ -187,6 +198,8 @@ export default function PublishPage() {
             status: formData.status,
             slug: formData.slug || undefined,
             thumbnail: formData.thumbnail || undefined,
+            isLead: formData.isLead,
+            leadMedia: leadMedia,
         };
     }, [formData]);
 
@@ -479,8 +492,10 @@ export default function PublishPage() {
      * Handle Publish Click
      */
     const handlePublish = useCallback(() => {
-        if (!formData.thumbnail) {
-            showToast('warning', 'Thumbnail is not set. Please upload a thumbnail.');
+        // Thumbnail required UNLESS it's a lead story with lead images
+        const hasLeadImages = formData.isLead && formData.leadImages && formData.leadImages.length > 0;
+        if (!formData.thumbnail && !hasLeadImages) {
+            showToast('warning', 'Thumbnail is not set. Please upload a thumbnail or add lead story images.');
             return;
         }
 
@@ -512,6 +527,9 @@ export default function PublishPage() {
             draftId: article.status === 'draft' ? article.id : (data.draftId || null),
             status: article.status === 'published' ? 'published' : 'draft',
             slug: data.slug || article.slug || '',
+            // Load lead story fields
+            isLead: data.isLead === true,
+            leadImages: Array.isArray(data.leadImages) ? data.leadImages : [],
         } as ArticleFormData;
 
         setFormData(newData);

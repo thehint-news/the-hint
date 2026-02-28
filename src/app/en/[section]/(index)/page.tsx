@@ -1,25 +1,24 @@
 /**
- * Kannada Section Page
+ * English Section Page
  * 
- * Route: /[section]
- * Default language (Kannada) section page.
+ * Route: /en/[section]
+ * Renders English translations of section articles.
  */
 
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { getSectionPageData, InvalidSectionError } from '@/lib/content';
-import { SectionPageContent } from './SectionPageContent';
+import { getSectionPageData } from '@/lib/content';
+import { SectionPageContent } from '@/app/[section]/(index)/SectionPageContent';
 import {
     getTranslationsForLang,
     buildSectionHrefLang,
 } from '@/lib/i18n';
-import { DEFAULT_LANGUAGE } from '@/lib/i18n/language';
+import { SECONDARY_LANGUAGE } from '@/lib/i18n/language';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 
-interface SectionPageProps {
+interface EnglishSectionPageProps {
     params: Promise<{
         section: string;
     }>;
@@ -28,9 +27,9 @@ interface SectionPageProps {
     }>;
 }
 
-export async function generateMetadata({ params }: SectionPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: EnglishSectionPageProps): Promise<Metadata> {
     const { section: sectionSlug } = await params;
-    const lang = DEFAULT_LANGUAGE;
+    const lang = SECONDARY_LANGUAGE;
     const t = getTranslationsForLang(lang);
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
 
@@ -46,7 +45,7 @@ export async function generateMetadata({ params }: SectionPageProps): Promise<Me
             title: `${sectionName} News`,
             description: sectionDesc,
             alternates: {
-                canonical: `/${section.slug}`,
+                canonical: `/en/${section.slug}`,
                 languages: {
                     'kn': hrefLang.kn,
                     'en': hrefLang.en,
@@ -59,8 +58,8 @@ export async function generateMetadata({ params }: SectionPageProps): Promise<Me
                 title: `${sectionName} News | ${t.brand.name}`,
                 description: sectionDesc,
                 type: 'website',
-                url: `/${section.slug}`,
-                locale: 'kn_IN',
+                url: `/en/${section.slug}`,
+                locale: 'en_US',
             },
         };
     } catch {
@@ -70,28 +69,18 @@ export async function generateMetadata({ params }: SectionPageProps): Promise<Me
     }
 }
 
-export default async function SectionPage({ params, searchParams }: SectionPageProps) {
+export default async function EnglishSectionPage({ params, searchParams }: EnglishSectionPageProps) {
     const { section: sectionSlug } = await params;
     const resolvedSearchParams = await searchParams;
 
     // Parse page number
     const currentPage = Math.max(1, parseInt(resolvedSearchParams.page || '1', 10) || 1);
 
-    // Validate section exists
-    try {
-        await getSectionPageData(sectionSlug);
-    } catch (error) {
-        if (error instanceof InvalidSectionError) {
-            notFound();
-        }
-        throw error;
-    }
-
     return (
         <SectionPageContent
             sectionSlug={sectionSlug}
             currentPage={currentPage}
-            lang={DEFAULT_LANGUAGE}
+            lang={SECONDARY_LANGUAGE}
         />
     );
 }

@@ -1,4 +1,5 @@
 import { ContentBlock } from './media-types';
+import { Language } from '@/lib/i18n/language';
 
 /**
  * Article Content Types
@@ -24,6 +25,57 @@ export interface ArticleSource {
 }
 
 /**
+ * Lead story image for multi-thumbnail carousel
+ * Maximum 3 images allowed
+ */
+export interface LeadStoryImage {
+    /** Image URL (must be from Supabase/R2 storage) */
+    url: string;
+    /** Alt text for accessibility and SEO */
+    alt: string;
+    /** Image width in pixels (optional, for aspect ratio calculation) */
+    width?: number;
+    /** Image height in pixels (optional, for aspect ratio calculation) */
+    height?: number;
+}
+
+/**
+ * Lead story media configuration
+ * Only valid when isLead === true
+ */
+export interface LeadMedia {
+    /** Array of carousel images (max 3) */
+    images: LeadStoryImage[];
+}
+
+/** Maximum number of lead story images allowed */
+export const MAX_LEAD_IMAGES = 3;
+
+/**
+ * Article translation data structure
+ * Stored in frontmatter translations field
+ */
+export interface ArticleTranslation {
+    /** Translated headline */
+    title: string;
+    /** Translated subtitle/deck */
+    subtitle: string;
+    /** Translated body content (markdown or plain text) */
+    body?: string;
+    /** Translated excerpt/summary */
+    excerpt?: string;
+    /** Translated content blocks (optional - if not provided, uses original bodyBlocks) */
+    bodyBlocks?: ContentBlock[];
+    /** Translation generation timestamp */
+    translatedAt: string;
+}
+
+/**
+ * Map of translations by language code
+ */
+export type ArticleTranslations = Partial<Record<Language, ArticleTranslation>>;
+
+/**
  * Complete Article type with all required and optional fields
  * Represents a fully parsed and validated article from Markdown
  */
@@ -34,10 +86,10 @@ export interface Article {
     /** Section folder the article belongs to */
     section: Section;
 
-    /** Main headline of the article */
+    /** Main headline of the article (Kannada/original) */
     title: string;
 
-    /** Secondary headline / deck */
+    /** Secondary headline / deck (Kannada/original) */
     subtitle: string;
 
     /** Type of content: news or opinion */
@@ -66,6 +118,15 @@ export interface Article {
 
     /** Featured image URL (optional) */
     image?: string;
+
+    /** Translations by language code - optional for backwards compatibility */
+    translations?: ArticleTranslations;
+
+    /** Whether this article is the designated lead story (only ONE can be true globally) */
+    isLead?: boolean;
+
+    /** Lead story carousel media - only present if isLead === true */
+    leadMedia?: LeadMedia;
 }
 
 /**
@@ -84,6 +145,12 @@ export interface ArticleFrontmatter {
     sources?: string[];
     status?: 'published' | 'draft';
     bodyBlocks?: ContentBlock[];
+    /** Optional translations map for multilingual support */
+    translations?: ArticleTranslations;
+    /** Whether this article is the designated lead story */
+    isLead?: boolean;
+    /** Lead story carousel media - only valid if isLead === true */
+    leadMedia?: LeadMedia;
 }
 
 /**

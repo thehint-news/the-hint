@@ -28,6 +28,7 @@ interface SectionArticle {
 interface SectionBlockProps {
     sectionTitle: string;
     articles: SectionArticle[];
+    sectionSlug?: string;
 }
 
 // Wire-style layout for Crime and Court - Dense with heading, sub-headline, date
@@ -344,15 +345,16 @@ function OpinionLayout({ articles, sectionSlug }: { articles: SectionArticle[]; 
     );
 }
 
-export function SectionBlock({ sectionTitle, articles }: SectionBlockProps) {
+export function SectionBlock({ sectionTitle, articles, sectionSlug: propSectionSlug }: SectionBlockProps) {
     if (articles.length === 0) {
         return null;
     }
 
-    // Determine section slug for URLs
-    const sectionSlug = sectionTitle.toLowerCase().replace(/\s+&?\s*/g, "-").replace("--", "-");
+    // Use provided sectionSlug or derive from title for backward compatibility
+    const derivedSlug = sectionTitle.toLowerCase().replace(/\s+&?\s*/g, "-").replace("--", "-");
+    const sectionSlug = propSectionSlug || derivedSlug;
 
-    // Map display names to actual slugs
+    // Map display names to actual slugs (for backward compatibility)
     const slugMap: Record<string, string> = {
         "crime": "crime",
         "court": "court",
@@ -363,11 +365,11 @@ export function SectionBlock({ sectionTitle, articles }: SectionBlockProps) {
 
     const actualSlug = slugMap[sectionSlug] || sectionSlug;
 
-    // Determine layout based on section
-    const isOpinion = sectionTitle.toLowerCase().includes("opinion");
-    const isCrimeOrCourt = ["crime", "court"].includes(sectionSlug);
-    const isPolitics = sectionSlug === "politics";
-    const isWorldAffairs = sectionSlug.includes("world");
+    // Determine layout based on section slug (not title, to support localized titles)
+    const isOpinion = actualSlug === "opinion";
+    const isCrimeOrCourt = ["crime", "court"].includes(actualSlug);
+    const isPolitics = actualSlug === "politics";
+    const isWorldAffairs = actualSlug === "world-affairs";
 
     return (
         <section style={{ marginBottom: "1.25rem" }} aria-labelledby={`section-${sectionSlug}`}>

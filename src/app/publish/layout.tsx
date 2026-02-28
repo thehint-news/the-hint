@@ -75,7 +75,7 @@ export default function PublishLayout({
     // 3. Log access attempts
 
     return (
-        <html lang="en" className={`${notoSansKannada.variable} ${notoSerifKannada.variable}`}>
+        <html lang="kn" className={`${notoSansKannada.variable} ${notoSerifKannada.variable}`}>
             <body className={`${playfairDisplay.variable} ${inter.variable}`}>
                 {children}
             </body>

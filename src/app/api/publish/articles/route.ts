@@ -36,6 +36,13 @@ interface ArticleEntry {
         publishedAt?: string;
         lastEdited?: string;
         thumbnail?: string;
+        isLead?: boolean;
+        leadImages?: {
+            url: string;
+            alt: string;
+            width?: number;
+            height?: number;
+        }[];
     };
 }
 
@@ -66,6 +73,8 @@ function transformDraftToEntry(draft: DraftData): ArticleEntry {
             slug: draft.slug,
             lastEdited: draft.savedAt,
             thumbnail: draft.thumbnail || '',
+            isLead: draft.isLead === true,
+            leadImages: draft.leadMedia?.images || [],
         },
     };
 }
@@ -99,6 +108,8 @@ function transformPublishedToEntry(article: PublishedArticleData): ArticleEntry 
             publishedAt: article.publishedAt,
             lastEdited: article.updatedAt || article.publishedAt,
             thumbnail: article.image || '',
+            isLead: article.isLead === true,
+            leadImages: article.leadMedia?.images || [],
         },
     };
 }

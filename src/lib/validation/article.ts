@@ -179,6 +179,10 @@ export interface PublishArticleInput {
     sources: unknown;
     slug?: unknown;
     thumbnail?: unknown;
+    /** Whether this article should be marked as the lead story */
+    isLead?: unknown;
+    /** Lead story carousel media - only valid if isLead === true */
+    leadMedia?: unknown;
 }
 
 /**
@@ -196,6 +200,8 @@ export interface DraftArticleInput {
     sources?: unknown;
     thumbnail?: unknown;
     draftId?: unknown;
+    isLead?: unknown;
+    leadMedia?: unknown;
 }
 
 /**
@@ -214,6 +220,15 @@ export interface ValidatedArticleData {
     sources: string[];
     slug: string;
     thumbnail?: string;
+    isLead?: boolean;
+    leadMedia?: {
+        images: {
+            url: string;
+            alt: string;
+            width?: number;
+            height?: number;
+        }[];
+    };
 }
 
 /**
@@ -233,6 +248,15 @@ export interface ValidatedDraftData {
     thumbnail?: string;
     slug?: string;
     savedAt: string;
+    isLead?: boolean;
+    leadMedia?: {
+        images: {
+            url: string;
+            alt: string;
+            width?: number;
+            height?: number;
+        }[];
+    };
 }
 
 /**
@@ -336,8 +360,80 @@ export function validateArticleInput(input: PublishArticleInput): ValidationResu
     }
 
     // THUMBNAIL validation
-    if (!input.thumbnail || typeof input.thumbnail !== 'string' || !input.thumbnail.trim()) {
+    // Thumbnail is required UNLESS article is marked as lead story
+    const isLeadStory = input.isLead === true;
+    const hasThumbnail = input.thumbnail && typeof input.thumbnail === 'string' && input.thumbnail.trim();
+
+    console.log('[VALIDATION] Thumbnail check:', { isLeadStory, hasThumbnail: !!hasThumbnail, thumbnail: input.thumbnail });
+
+    if (!hasThumbnail && !isLeadStory) {
         errors.push({ field: 'thumbnail', message: 'Thumbnail image is required' });
+    }
+
+    // LEAD MEDIA validation (only if isLead is true)
+    if (input.isLead === true) {
+        // Validate leadMedia structure if provided
+        if (input.leadMedia !== undefined) {
+            if (typeof input.leadMedia !== 'object' || input.leadMedia === null) {
+                errors.push({ field: 'leadMedia', message: 'Lead media must be an object' });
+            } else {
+                const leadMedia = input.leadMedia as { images?: unknown };
+
+                // Validate images array
+                if (leadMedia.images !== undefined) {
+                    if (!Array.isArray(leadMedia.images)) {
+                        errors.push({ field: 'leadMedia.images', message: 'Lead media images must be an array' });
+                    } else if (leadMedia.images.length > 3) {
+                        errors.push({ field: 'leadMedia.images', message: 'Maximum 3 lead images allowed' });
+                    } else {
+                        // Validate each image
+                        leadMedia.images.forEach((img, index) => {
+                            if (typeof img !== 'object' || img === null) {
+                                errors.push({ field: `leadMedia.images[${index}]`, message: 'Image must be an object' });
+                                return;
+                            }
+
+                            const image = img as Record<string, unknown>;
+
+                            if (!image.url || typeof image.url !== 'string' || !image.url.trim()) {
+                                errors.push({ field: `leadMedia.images[${index}].url`, message: 'Image URL is required' });
+                            } else {
+                                // Validate URL is from allowed storage
+                                const url = image.url;
+                                const isAllowedStorage =
+                                    url.includes('supabase.co') ||
+                                    url.includes('r2.cloudflarestorage.com') ||
+                                    url.startsWith('/media/') ||
+                                    url.startsWith('https://www.thehintnews.in/media/');
+
+                                if (!isAllowedStorage && url.startsWith('http')) {
+                                    errors.push({ field: `leadMedia.images[${index}].url`, message: 'Image URL must be from approved storage (Supabase/R2)' });
+                                }
+                            }
+
+                            if (!image.alt || typeof image.alt !== 'string' || !image.alt.trim()) {
+                                errors.push({ field: `leadMedia.images[${index}].alt`, message: 'Image alt text is required' });
+                            }
+
+                            if (image.width !== undefined && (typeof image.width !== 'number' || image.width <= 0)) {
+                                errors.push({ field: `leadMedia.images[${index}].width`, message: 'Width must be a positive number' });
+                            }
+
+                            if (image.height !== undefined && (typeof image.height !== 'number' || image.height <= 0)) {
+                                errors.push({ field: `leadMedia.images[${index}].height`, message: 'Height must be a positive number' });
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    } else {
+        // If isLead is not true, leadMedia should not be present
+        // This is a warning - the API will ignore leadMedia if isLead is false
+        if (input.leadMedia !== undefined) {
+            // Non-blocking: log warning but don't fail validation
+            // The publish API will strip leadMedia if isLead is false
+        }
     }
 
     return {
@@ -397,8 +493,45 @@ export function transformToValidatedData(input: PublishArticleInput): ValidatedA
     const tags = normalizeTags(input.tags);
     const sources = sanitizeStringArray(input.sources);
     const slug = typeof input.slug === 'string' && input.slug ? input.slug : generateSlug(headline);
-    const thumbnail = typeof input.thumbnail === 'string' ? input.thumbnail : undefined;
     const bodyBlocks = Array.isArray(input.bodyBlocks) ? (input.bodyBlocks as ContentBlock[]) : undefined;
+
+    // Parse isLead - must be explicitly true
+    const isLead = input.isLead === true;
+
+    // Parse leadMedia - only valid if isLead is true
+    let leadMedia: ValidatedArticleData['leadMedia'] = undefined;
+    if (isLead && input.leadMedia && typeof input.leadMedia === 'object') {
+        const lm = input.leadMedia as { images?: unknown[] };
+        if (Array.isArray(lm.images)) {
+            leadMedia = {
+                images: lm.images
+                    .filter((img): img is Record<string, unknown> =>
+                        typeof img === 'object' && img !== null
+                    )
+                    .map(img => ({
+                        url: String(img.url || ''),
+                        alt: String(img.alt || ''),
+                        width: typeof img.width === 'number' ? img.width : undefined,
+                        height: typeof img.height === 'number' ? img.height : undefined,
+                    }))
+                    .filter(img => img.url && img.alt), // Only include valid images
+            };
+            // If no valid images, set to undefined
+            if (leadMedia.images.length === 0) {
+                leadMedia = undefined;
+            }
+        }
+    }
+
+    // Determine thumbnail: use input or fall back to first lead image
+    let thumbnail = typeof input.thumbnail === 'string' && input.thumbnail.trim()
+        ? input.thumbnail
+        : undefined;
+
+    // If no thumbnail but has lead images, use first lead image as thumbnail
+    if (!thumbnail && isLead && leadMedia && leadMedia.images.length > 0) {
+        thumbnail = leadMedia.images[0].url;
+    }
 
     return {
         headline,
@@ -413,6 +546,8 @@ export function transformToValidatedData(input: PublishArticleInput): ValidatedA
         sources,
         slug,
         thumbnail,
+        isLead,
+        leadMedia,
     };
 }
 
@@ -432,6 +567,33 @@ export function transformToDraftData(input: DraftArticleInput, draftId?: string)
     const slug = typeof (input as unknown as Record<string, unknown>).slug === 'string' ? (input as unknown as Record<string, unknown>).slug as string : undefined;
     const bodyBlocks = Array.isArray(input.bodyBlocks) ? (input.bodyBlocks as ContentBlock[]) : undefined;
 
+    // Parse isLead
+    const isLead = input.isLead === true;
+
+    // Parse leadMedia
+    let leadMedia: ValidatedDraftData['leadMedia'] = undefined;
+    if (input.leadMedia && typeof input.leadMedia === 'object' && !Array.isArray(input.leadMedia)) {
+        const lm = input.leadMedia as { images?: unknown[] };
+        if (Array.isArray(lm.images)) {
+            leadMedia = {
+                images: lm.images
+                    .filter((img): img is Record<string, unknown> =>
+                        typeof img === 'object' && img !== null
+                    )
+                    .map(img => ({
+                        url: String(img.url || ''),
+                        alt: String(img.alt || ''),
+                        width: typeof img.width === 'number' ? img.width : undefined,
+                        height: typeof img.height === 'number' ? img.height : undefined,
+                    }))
+                    .filter(img => img.url && img.alt),
+            };
+            if (leadMedia.images.length === 0) {
+                leadMedia = undefined;
+            }
+        }
+    }
+
     return {
         draftId: draftId || generateDraftId(),
         headline,
@@ -446,6 +608,8 @@ export function transformToDraftData(input: DraftArticleInput, draftId?: string)
         thumbnail,
         slug,
         savedAt: new Date().toISOString(),
+        isLead,
+        leadMedia,
     };
 }
 

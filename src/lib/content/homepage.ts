@@ -113,23 +113,35 @@ function takeFirst(articles: Article[], count: number): Article[] {
 
 /**
  * Select the lead story based on editorial rules:
- * - Must have featured === true
- * - Must NOT be opinion
+ * - Must have isLead === true (new canonical field)
+ * - Falls back to placement='lead' for legacy compatibility
  * - If multiple, choose most recently published
  * - If none, return null
+ * 
+ * MIGRATION NOTE: During transition period, both isLead and placement='lead' 
+ * are checked. After full migration, only isLead will be used.
  */
 function selectLeadStory(articles: Article[]): Article | null {
-    // Filter: placement='lead' (allow opinion if explicitly promoted)
-    const candidates = articles.filter(
+    // Primary: Check for isLead === true (new canonical field)
+    const isLeadCandidates = articles.filter(article => article.isLead === true);
+
+    if (isLeadCandidates.length > 0) {
+        // Sort by publishedAt descending and take the first
+        const sorted = sortByPublishedAtDesc(isLeadCandidates);
+        return sorted[0];
+    }
+
+    // Fallback: Check for placement='lead' (legacy compatibility)
+    const placementCandidates = articles.filter(
         article => isPlacement(article, 'lead')
     );
 
-    if (candidates.length === 0) {
+    if (placementCandidates.length === 0) {
         return null;
     }
 
     // Sort by publishedAt descending and take the first
-    const sorted = sortByPublishedAtDesc(candidates);
+    const sorted = sortByPublishedAtDesc(placementCandidates);
     return sorted[0];
 }
 

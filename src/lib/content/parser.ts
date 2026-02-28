@@ -116,6 +116,12 @@ function validateFrontmatter(
         placement = 'lead';
     }
 
+    // Parse translations if present (loose validation)
+    let translations: ArticleFrontmatter['translations'] = undefined;
+    if (data.translations && typeof data.translations === 'object') {
+        translations = data.translations as ArticleFrontmatter['translations'];
+    }
+
     return {
         title: data.title as string,
         subtitle: data.subtitle as string,
@@ -127,6 +133,7 @@ function validateFrontmatter(
         tags: (data.tags as string[]) ?? [],
         sources: (data.sources as string[]) ?? [],
         bodyBlocks: (data.bodyBlocks as ContentBlock[]) ?? undefined,
+        translations,
     };
 }
 

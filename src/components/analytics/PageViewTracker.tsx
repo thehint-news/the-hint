@@ -3,6 +3,19 @@
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
+// Define gtag type for Google Analytics
+type Gtag = (
+    command: 'config' | 'event' | 'js',
+    targetId: string,
+    config?: Record<string, unknown>
+) => void;
+
+declare global {
+    interface Window {
+        gtag?: Gtag;
+    }
+}
+
 export default function PageViewTracker() {
     const pathname = usePathname();
 
@@ -15,8 +28,8 @@ export default function PageViewTracker() {
         }
 
         const timer = setTimeout(() => {
-            if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
-                (window as any).gtag('config', GA_ID, {
+            if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+                window.gtag('config', GA_ID, {
                     page_path: pathname,
                 });
             }

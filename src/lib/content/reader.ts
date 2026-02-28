@@ -127,6 +127,9 @@ async function readArticleFile(filePath: string, expectedSection: Section): Prom
         image: resolvedImage,
         bodyBlocks: frontmatter.bodyBlocks,
         body: body,
+        translations: frontmatter.translations,
+        isLead: frontmatter.isLead === true,
+        leadMedia: frontmatter.leadMedia,
     };
 }
 

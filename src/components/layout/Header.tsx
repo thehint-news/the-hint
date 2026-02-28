@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { SubscribeModal } from "../features/SubscribeModal";
 import { SearchOverlay } from "../features/SearchOverlay";
+import { LanguageToggle } from "@/components/i18n";
 import { kn } from "@/lib/i18n/kn";
 
 
@@ -188,6 +189,10 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                         </span>
                     )}
 
+                    {/* Language Toggle - Desktop (Moved to utility bar for better UX) */}
+                    <div className="flex items-center">
+                        <LanguageToggle variant="desktop" />
+                    </div>
 
                     <Link href="/" className="font-sans text-[11px] font-medium uppercase tracking-widest text-[#6B6B6B] hover:text-[#111]">
                         {kn.nav.todaysPaper}
@@ -211,18 +216,22 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                             <h1 className="font-serif text-4xl font-black tracking-tight text-[#111] leading-none pb-1">{kn.brand.name}</h1>
                         </Link>
 
-                        {/* Mobile Subscribe Icon Replacement or Spacer */}
-                        {/* Mobile Search Icon */}
-                        <button
-                            onClick={() => setIsSearchOpen(true)}
-                            className="p-2 -mr-2 text-[#111]"
-                            aria-label="Search"
-                        >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            </svg>
-                        </button>
+                        {/* Mobile Language Toggle & Search */}
+                        <div className="flex items-center gap-2">
+                            <div className="md:hidden">
+                                <LanguageToggle variant="compact" />
+                            </div>
+                            <button
+                                onClick={() => setIsSearchOpen(true)}
+                                className="p-2 -mr-2 text-[#111]"
+                                aria-label="Search"
+                            >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
 
                     {/* Desktop Masthead Content */}

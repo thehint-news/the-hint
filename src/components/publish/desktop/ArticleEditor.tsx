@@ -18,6 +18,7 @@ import { BlockEditor } from './BlockEditor';
 import { ArticleBody } from '@/components/article/ArticleBody';
 import { parseBodyToBlocks } from '@/lib/content/block-parser';
 import { ContentBlock } from '@/lib/content/media-types';
+import { LeadMediaManager } from '../common/LeadMediaManager';
 import styles from './ArticleEditor.module.css';
 
 
@@ -114,7 +115,19 @@ export function ArticleEditor({
     const handlePlacementChange = useCallback(
         (placement: 'lead' | 'top' | 'standard') => {
             const newPlacement = formData.placement === placement ? 'standard' : placement;
-            onFormChange({ ...formData, placement: newPlacement });
+            // Sync isLead with placement for backward compatibility
+            const isLead = newPlacement === 'lead';
+            onFormChange({ ...formData, placement: newPlacement, isLead });
+        },
+        [formData, onFormChange]
+    );
+
+    /**
+     * Handle lead images change
+     */
+    const handleLeadImagesChange = useCallback(
+        (leadImages: ArticleFormData['leadImages']) => {
+            onFormChange({ ...formData, leadImages });
         },
         [formData, onFormChange]
     );
@@ -479,6 +492,17 @@ export function ArticleEditor({
                                         : `Selected: ${formData.placement === 'lead' ? 'Lead Story' : 'Top Story'}. Click to deselect.`}
                                 </div>
                             </div>
+
+                            {/* Lead Story Media Manager - Only show when isLead is true */}
+                            {formData.isLead && (
+                                <div className={styles.controlGroup}>
+                                    <LeadMediaManager
+                                        images={formData.leadImages}
+                                        onChange={handleLeadImagesChange}
+                                        maxImages={3}
+                                    />
+                                </div>
+                            )}
 
                             {/* Status Indicator */}
                             <div className={styles.statusSection}>

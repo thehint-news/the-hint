@@ -34,6 +34,14 @@ import { ContentBlock } from '@/lib/content/media-types';
 /** Workspace mode - editor for writing, all for viewing article database */
 export type WorkspaceMode = 'editor' | 'all';
 
+/** Lead story image for carousel */
+export interface LeadStoryImageData {
+    url: string;
+    alt: string;
+    width?: number;
+    height?: number;
+}
+
 /** Form data structure for editing */
 export interface ArticleFormData {
     headline: string;
@@ -52,6 +60,10 @@ export interface ArticleFormData {
     slug?: string;
     publishedAt?: string;
     lastEdited?: string;
+    /** Whether this article is marked as the lead story */
+    isLead: boolean;
+    /** Lead story carousel images (max 3) */
+    leadImages: LeadStoryImageData[];
 }
 
 /** Initial form state */
@@ -68,6 +80,8 @@ export const INITIAL_FORM_DATA: ArticleFormData = {
     thumbnail: '',
     draftId: null,
     status: 'draft',
+    isLead: false,
+    leadImages: [],
 };
 
 /** Article entry for the database table */

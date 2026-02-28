@@ -25,6 +25,7 @@ import { contentGit, DraftData, PublishedArticleData } from '@/lib/git';
 import { logger } from '@/lib/feedback/console-guard';
 import { revalidatePath } from 'next/cache';
 import { verifyAuth } from '@/lib/auth/session';
+import { translateArticle } from '@/lib/i18n/translation-service';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -133,6 +134,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         // Transform to validated data
         const articleData = transformToValidatedData(input);
 
+        // DEBUG: Log lead story data
+        logger.info('[PUBLISH] Transformed article data:', {
+            isLead: articleData.isLead,
+            hasLeadMedia: !!articleData.leadMedia,
+            leadImagesCount: articleData.leadMedia?.images?.length || 0,
+        });
+
         // Validate slug is not empty after transformation
         if (!articleData.slug) {
             return userResponse(
@@ -166,6 +174,39 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const draftId = (body as Record<string, unknown>).draftId;
         const draftIdString = typeof draftId === 'string' ? draftId : undefined;
 
+        // LEAD STORY ENFORCEMENT
+        // If this article is marked as lead, attempt to enforce single-lead constraint
+        // This runs in the background and doesn't block publishing if it fails
+        if (articleData.isLead) {
+            logger.info('[PUBLISH] Lead story enforcement started for:', targetSlug);
+            try {
+                const { findCurrentLead, atomicallySwapLead } = await import('@/lib/lead/enforcement');
+                const currentLead = await findCurrentLead();
+                logger.info('[PUBLISH] Current lead found:', currentLead ? `${currentLead.slug} in ${currentLead.section}` : 'none');
+
+                // Only swap if this is a different article
+                if (!currentLead || currentLead.slug !== targetSlug || currentLead.section !== articleData.section) {
+                    const leadSwapResult = await atomicallySwapLead(
+                        articleData.section as Section,
+                        targetSlug,
+                        articleData.headline,
+                        currentLead
+                    );
+
+                    if (leadSwapResult.success) {
+                        logger.info('[PUBLISH] Lead swap successful');
+                    } else {
+                        logger.warn('[PUBLISH] Lead swap failed (non-blocking):', leadSwapResult.message);
+                        // Don't fail the publish - just log the warning
+                        // The article will still be published with isLead=true
+                    }
+                }
+            } catch (leadError) {
+                logger.error('[PUBLISH] Lead enforcement error (non-blocking):', leadError);
+                // Don't fail the publish if lead enforcement errors
+            }
+        }
+
         // Perform atomic publish operation
         const result = await contentGit.publish({
             headline: articleData.headline,
@@ -180,6 +221,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             thumbnail: articleData.thumbnail,
             slug: targetSlug,
             draftId: draftIdString,
+            isLead: articleData.isLead,
+            leadMedia: articleData.leadMedia,
         });
 
         if (!result.success) {
@@ -191,6 +234,56 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 500
             );
         }
+
+        // Generate English translation in background
+        // This runs async without blocking the publish response
+        after(async () => {
+            try {
+                logger.info(`[PUBLISH] Starting translation generation for ${targetSlug}`);
+
+                // Prepare article for translation
+                const articleForTranslation = {
+                    title: articleData.headline,
+                    subheadline: articleData.subheadline,
+                    body: articleData.body || '',
+                    excerpt: articleData.subheadline, // Use subheadline as excerpt if no explicit excerpt
+                };
+
+                // Generate translation
+                const translation = await translateArticle(articleForTranslation);
+
+                if (translation) {
+                    // Update the article file with translation
+                    const { contentGit } = await import('@/lib/git');
+                    const updateResult = await contentGit.updateTranslation(
+                        articleData.section as Section,
+                        targetSlug,
+                        {
+                            title: translation.title,
+                            subheadline: translation.subheadline,
+                            body: translation.body,
+                            excerpt: translation.excerpt,
+                            translatedAt: translation.translatedAt,
+                        }
+                    );
+
+                    if (updateResult.success) {
+                        logger.info(`[PUBLISH] Translation saved for ${targetSlug}`, {
+                            translatedAt: translation.translatedAt,
+                        });
+                    } else {
+                        logger.error(`[PUBLISH] Failed to save translation for ${targetSlug}`, {
+                            error: updateResult.error,
+                        });
+                    }
+                } else {
+                    logger.warn(`[PUBLISH] Translation generation returned null for ${targetSlug}`);
+                }
+            } catch (translationError) {
+                logger.error('[PUBLISH] Translation generation failed in background:', translationError);
+                // Non-blocking: Don't fail publish if translation fails
+            }
+        });
 
         // Send article notification emails to subscribers.
         // We use Next.js `after()` to run this securely in the background
