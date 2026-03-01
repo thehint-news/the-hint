@@ -1,10 +1,11 @@
 /**
- * Next.js Middleware for Domain Proxy and Language Handling
+ * Next.js Middleware for Domain Proxy, Language Handling, and Slug Redirects
  * 
  * Handles:
  * - Domain redirects (thehintnews.in -> www.thehintnews.in)
  * - Language detection from cookie
  * - Route exclusions for /publish, /newsroom, /api, /admin
+ * - Old slug redirects (long slugs -> new 5-word slugs)
  * - SEO header injection preparation
  * 
  * NO runtime translation happens here.
@@ -19,6 +20,121 @@ import {
   validateLanguage,
   classifyRoute,
 } from '@/lib/i18n/language';
+
+// Type for redirect mapping
+interface RedirectMapping {
+  /** Old long slug pattern to match */
+  from: string;
+  /** New short slug to redirect to */
+  to: string;
+  /** Section for the redirect */
+  section: string;
+  /** Whether this is a permanent (301) or temporary (302) redirect */
+  permanent: boolean;
+}
+
+// In-memory cache for redirects (loaded from file or database)
+let redirectCache: Map<string, RedirectMapping> | null = null;
+let cacheTimestamp = 0;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+/**
+ * Check if a slug looks like an old long slug (more than 6 word segments)
+ * This is a heuristic to detect URLs that might need redirecting
+ */
+function isOldLongSlug(slug: string): boolean {
+  const wordCount = slug.split('-').length;
+  return wordCount > 6;
+}
+
+/**
+ * Load redirect mappings from storage
+ * In production, this would load from a database or JSON file
+ */
+async function loadRedirectMappings(): Promise<Map<string, RedirectMapping>> {
+  const now = Date.now();
+
+  // Return cached mappings if still valid
+  if (redirectCache && (now - cacheTimestamp) < CACHE_TTL) {
+    return redirectCache;
+  }
+
+  // Initialize new cache
+  const mappings = new Map<string, RedirectMapping>();
+
+  // TODO: Load from database or JSON file
+  // For now, this is empty - redirects should be added via admin interface
+  // or by manually updating the redirects.json file
+
+  try {
+    // Try to load from file (in production)
+    // const redirects = await import('@/data/redirects.json');
+    // for (const mapping of redirects.default) {
+    //     const key = `${mapping.section}/${mapping.from}`;
+    //     mappings.set(key, mapping);
+    // }
+  } catch {
+    // File doesn't exist yet, that's okay
+  }
+
+  redirectCache = mappings;
+  cacheTimestamp = now;
+
+  return mappings;
+}
+
+/**
+ * Handle old slug redirects (301 redirects from long slugs to new 5-word slugs)
+ */
+async function handleSlugRedirect(request: NextRequest): Promise<NextResponse | null> {
+  const pathname = request.nextUrl.pathname;
+
+  // Parse path: /[section]/[slug] or /en/[section]/[slug]
+  const parts = pathname.split('/').filter(Boolean);
+
+  let section: string;
+  let slug: string;
+  let isEnglish = false;
+
+  if (parts[0] === 'en') {
+    // English route: /en/[section]/[slug]
+    if (parts.length !== 3) return null;
+    isEnglish = true;
+    section = parts[1];
+    slug = parts[2];
+  } else {
+    // Kannada route: /[section]/[slug]
+    if (parts.length !== 2) return null;
+    section = parts[0];
+    slug = parts[1];
+  }
+
+  // Check if this looks like an old long slug
+  if (!isOldLongSlug(slug)) {
+    return null;
+  }
+
+  // Load redirect mappings
+  const mappings = await loadRedirectMappings();
+  const key = `${section}/${slug}`;
+  const mapping = mappings.get(key);
+
+  if (mapping) {
+    // Build redirect URL
+    const url = request.nextUrl.clone();
+    const newPath = isEnglish
+      ? `/en/${mapping.section}/${mapping.to}`
+      : `/${mapping.section}/${mapping.to}`;
+
+    url.pathname = newPath;
+
+    return NextResponse.redirect(url, mapping.permanent ? 301 : 302);
+  }
+
+  // No mapping found - let the request proceed
+  // The article page will return 404 if slug doesn't exist
+  return null;
+}
 
 /**
  * Handle domain redirects (www redirect and Vercel preview domains)
@@ -94,7 +210,7 @@ function handleLanguage(request: NextRequest): NextResponse {
 /**
  * Main proxy handler
  */
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
 
   // Skip system routes immediately
@@ -112,10 +228,16 @@ export function proxy(request: NextRequest) {
     return domainRedirect;
   }
 
-  // 2. Handle language detection
+  // 2. Handle old slug redirects (long slugs -> new 5-word slugs)
+  const slugRedirect = await handleSlugRedirect(request);
+  if (slugRedirect) {
+    return slugRedirect;
+  }
+
+  // 3. Handle language detection
   const langResponse = handleLanguage(request);
 
-  // 3. Add no-index to preview deployments and non-production vercel domains defensively
+  // 4. Add no-index to preview deployments and non-production vercel domains defensively
   const host = request.headers.get('host') || '';
   const isVercelDomain = host.endsWith('.vercel.app');
 

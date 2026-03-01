@@ -9,6 +9,7 @@
 import { Metadata } from 'next';
 import { ArticlePageContent, generateArticleMetadata } from '@/app/[section]/[slug]/ArticlePageContent';
 import { SECONDARY_LANGUAGE } from '@/lib/i18n/language';
+import { ArticlePageWrapper } from '@/components/article';
 
 // Force dynamic rendering — GitHub API calls at build time cause timeouts
 export const dynamic = 'force-dynamic';
@@ -32,11 +33,13 @@ export default async function EnglishArticlePage({ params }: EnglishArticlePageP
 
     return (
         <main className="w-full bg-white">
-            <ArticlePageContent
-                section={section}
-                slug={slug}
-                lang={SECONDARY_LANGUAGE}
-            />
+            <ArticlePageWrapper>
+                <ArticlePageContent
+                    section={section}
+                    slug={slug}
+                    lang={SECONDARY_LANGUAGE}
+                />
+            </ArticlePageWrapper>
         </main>
     );
 }

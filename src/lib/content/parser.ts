@@ -122,6 +122,32 @@ function validateFrontmatter(
         translations = data.translations as ArticleFrontmatter['translations'];
     }
 
+    // Parse isLead if present
+    const isLead: boolean | undefined = data.isLead === true ? true : undefined;
+
+    // Parse leadMedia if present
+    let leadMedia: ArticleFrontmatter['leadMedia'] = undefined;
+    if (data.leadMedia && typeof data.leadMedia === 'object' && data.leadMedia !== null) {
+        const leadMediaData = data.leadMedia as Record<string, unknown>;
+        if (Array.isArray(leadMediaData.images)) {
+            leadMedia = {
+                images: leadMediaData.images.filter((img: unknown) => {
+                    if (typeof img !== 'object' || img === null) return false;
+                    const imgObj = img as Record<string, unknown>;
+                    return typeof imgObj.url === 'string' && typeof imgObj.alt === 'string';
+                }).map((img: unknown) => {
+                    const imgObj = img as Record<string, unknown>;
+                    return {
+                        url: imgObj.url as string,
+                        alt: imgObj.alt as string,
+                        ...(typeof imgObj.width === 'number' && { width: imgObj.width }),
+                        ...(typeof imgObj.height === 'number' && { height: imgObj.height }),
+                    };
+                }),
+            };
+        }
+    }
+
     return {
         title: data.title as string,
         subtitle: data.subtitle as string,
@@ -134,6 +160,8 @@ function validateFrontmatter(
         sources: (data.sources as string[]) ?? [],
         bodyBlocks: (data.bodyBlocks as ContentBlock[]) ?? undefined,
         translations,
+        isLead,
+        leadMedia,
     };
 }
 

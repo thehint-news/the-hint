@@ -10,6 +10,7 @@
 import { Metadata } from 'next';
 import { ArticlePageContent, generateArticleMetadata } from './ArticlePageContent';
 import { DEFAULT_LANGUAGE } from '@/lib/i18n/language';
+import { ArticlePageWrapper } from '@/components/article';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -33,11 +34,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
     return (
         <main className="w-full bg-white">
-            <ArticlePageContent
-                section={section}
-                slug={slug}
-                lang={DEFAULT_LANGUAGE}
-            />
+            <ArticlePageWrapper>
+                <ArticlePageContent
+                    section={section}
+                    slug={slug}
+                    lang={DEFAULT_LANGUAGE}
+                />
+            </ArticlePageWrapper>
         </main>
     );
 }

@@ -19,6 +19,7 @@ import {
     SourcesList,
     ContinueReading,
 } from '@/components/article';
+import { ShareButtons } from '@/components/article/ShareButtons';
 import {
     applyArticleTranslation,
     getTranslationsForLang,
@@ -78,7 +79,7 @@ export async function generateArticleMetadata({
         title: localizedArticle.title,
         description: localizedArticle.subtitle,
         keywords: article.tags,
-        authors: [{ name: "The Hint Editorial Board" }],
+        authors: [{ name: lang === 'kn' ? 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಸಂಪಾದಕೀಯ ಮಂಡಳಿ' : 'The Hint News Editorial Board' }],
         alternates: {
             canonical: canonicalUrl,
             languages: {
@@ -87,7 +88,6 @@ export async function generateArticleMetadata({
                 'x-default': hrefLang.xDefault,
             },
         },
-        // Both languages indexable now (Phase 3)
         robots: { index: true, follow: true },
         openGraph: {
             title: localizedArticle.title,
@@ -100,6 +100,7 @@ export async function generateArticleMetadata({
             images: article.image ? [{ url: article.image, alt: localizedArticle.title }] : [],
             url: canonicalUrl,
             locale: lang === 'kn' ? 'kn_IN' : 'en_US',
+            siteName: lang === 'kn' ? 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್' : 'The Hint News',
         },
         twitter: {
             card: 'summary_large_image',
@@ -162,19 +163,28 @@ export async function ArticlePageContent({ section, slug, lang }: ArticlePageCon
                 dateModified: new Date(article.updatedAt || article.publishedAt).toISOString(),
                 author: [{
                     '@type': 'Organization',
-                    name: 'The Hint Editorial Board',
+                    name: lang === 'kn' ? 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಸಂಪಾದಕೀಯ ಮಂಡಳಿ' : 'The Hint News Editorial Board',
                     url: siteUrl,
                 }],
                 publisher: {
-                    '@type': 'Organization',
-                    name: 'The Hint Editorial Board',
-                    url: siteUrl,
+                    '@type': 'NewsMediaOrganization',
+                    '@id': 'https://www.thehintnews.in/#organization',
+                    name: 'The Hint News',
+                    logo: {
+                        '@type': 'ImageObject',
+                        url: 'https://www.thehintnews.in/brand/logo.png',
+                        width: 512,
+                        height: 512,
+                    },
                 },
                 mainEntityOfPage: {
                     '@type': 'WebPage',
                     '@id': `${siteUrl}${lang === 'en' ? '/en' : ''}/${article.section}/${article.id}`,
                 },
                 inLanguage: lang === 'en' ? 'en' : 'kn',
+                isAccessibleForFree: true,
+                articleSection: sectionLabel,
+                keywords: article.tags?.join(', '),
             },
             {
                 '@type': 'BreadcrumbList',
@@ -202,6 +212,9 @@ export async function ArticlePageContent({ section, slug, lang }: ArticlePageCon
         ],
     };
 
+    // Build current page URL for sharing
+    const currentPageUrl = `${siteUrl}${lang === 'en' ? '/en' : ''}/${article.section}/${article.id}`;
+
     return (
         <>
             <script
@@ -214,7 +227,15 @@ export async function ArticlePageContent({ section, slug, lang }: ArticlePageCon
             <link rel="alternate" hrefLang="en" href={hrefLang.en} />
             <link rel="alternate" hrefLang="x-default" href={hrefLang.xDefault} />
 
-            <article className={`${lang === 'kn' ? 'article-kannada-scope' : ''} px-6 pt-12 pb-4 max-w-[1200px] mx-auto`}>
+            {/* Floating Share Buttons (Desktop) */}
+            <ShareButtons
+                title={localizedArticle.title}
+                description={localizedArticle.subtitle}
+                url={currentPageUrl}
+                variant="floating"
+            />
+
+            <article className={`${lang === 'kn' ? 'article-kannada-scope' : ''} px-6 pt-12 pb-4 max-w-[1200px] mx-auto lg:pl-20`}>
                 <div className="max-w-4xl mx-auto">
                     <ArticleHeader
                         title={localizedArticle.title}
@@ -244,6 +265,14 @@ export async function ArticlePageContent({ section, slug, lang }: ArticlePageCon
                     />
                 </div>
             </article>
+
+            {/* Bottom Share Bar (Mobile) */}
+            <ShareButtons
+                title={localizedArticle.title}
+                description={localizedArticle.subtitle}
+                url={currentPageUrl}
+                variant="bottom-bar"
+            />
         </>
     );
 }

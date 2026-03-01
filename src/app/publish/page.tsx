@@ -574,16 +574,35 @@ export default function PublishPage() {
         }
     }, [fetchArticles, showToast, showErrorFromCode]);
 
+    /**
+     * PART 4: CONFIRMED DELETE MODEL
+     *
+     * Delete flow:
+     * 1. User clicks delete (already confirmed via dialog in ArticleDatabase)
+     * 2. Disable delete button via deletingIds state
+     * 3. Show "Deleting…" state (handled by ArticleDatabase)
+     * 4. Await API response
+     * 5. If success: Remove from UI state, show confirmation toast
+     * 6. If failure: Re-enable button, show clear error message
+     *
+     * CRITICAL: Do NOT remove from UI before API confirmation
+     * CRITICAL: Do NOT show success before commit confirmed
+     * CRITICAL: Prevent parallel delete calls
+     */
     const handleDelete = useCallback(async (article: ArticleEntry) => {
         const articleId = article.id;
 
-        // Guard: prevent duplicate in-flight deletes
-        if (deletingIds.has(articleId)) return;
+        // PART 5: PREVENT DOUBLE DELETE - Guard: prevent duplicate in-flight deletes
+        if (deletingIds.has(articleId)) {
+            logger.warn(`[DELETE-FRONTEND] Delete already in progress for article: ${articleId}`);
+            return;
+        }
 
-        // 1. Lock this article — triggers spinner + disabled state in ArticleDatabase
+        // STEP 1: Lock this article — triggers spinner + disabled state in ArticleDatabase
         setDeletingIds(prev => new Set(prev).add(articleId));
+        logger.info(`[DELETE-FRONTEND] Starting delete for article: ${articleId}, type: ${article.status}`);
 
-        // 2. Fire API call and WAIT for the response
+        // STEP 2: Fire API call and WAIT for the response (do NOT optimistically remove)
         try {
             const response = await fetch('/api/publish/delete', {
                 method: 'DELETE',
@@ -596,36 +615,60 @@ export default function PublishPage() {
                 }),
             });
 
+            // Handle session expiry
             if (response.status === 401) {
+                logger.warn(`[DELETE-FRONTEND] Session expired during delete`);
                 window.location.href = '/newsroom';
+                return;
+            }
+
+            // Handle rate limiting (delete lock on server)
+            if (response.status === 429) {
+                const result = await response.json();
+                logger.warn(`[DELETE-FRONTEND] Delete rate limited:`, result.error);
+                showToast('warning', result.error || 'Delete already in progress. Please wait.');
                 return;
             }
 
             const result = await response.json();
 
-            if (response.ok && result.success) {
-                // 3. IMMEDIATELY remove from UI state
+            // STEP 3: Handle API response
+            if (response.ok && result.success === true) {
+                // SUCCESS: Now remove from UI (only after API confirmation)
+                logger.info(`[DELETE-FRONTEND] Delete confirmed by API, removing from UI: ${articleId}`);
                 setArticles(prev => prev.filter(a => a.id !== articleId));
 
-                // Show confirmation toast
-                showToast('success', 'Article permanently removed.');
+                // Show appropriate success message
+                if (result.alreadyDeleted) {
+                    showToast('info', 'Article was already removed.');
+                } else {
+                    showToast('success', result.message || 'Article permanently removed.');
+                }
 
                 // Trigger background refresh to ensure state stays in sync
-                fetchArticles(true);
+                // Use a slight delay to allow the toast to be seen
+                setTimeout(() => {
+                    fetchArticles(true);
+                }, 500);
             } else {
-                // 4. FAILURE — show error
-                showToast('error', result.error || "We couldn't complete the deletion. Please try again.");
+                // FAILURE: Show clear error, keep article in UI
+                const errorMessage = result.error || "We couldn't complete the deletion. Please try again.";
+                const errorCode = result.errorCode ? `[${result.errorCode}] ` : '';
+                logger.error(`[DELETE-FRONTEND] Delete failed: ${errorCode}${errorMessage}`);
+                showToast('error', `${errorCode}${errorMessage}`);
             }
         } catch (error) {
-            logger.error('Delete failed', error);
+            // Network or unexpected error
+            logger.error('[DELETE-FRONTEND] Delete failed with exception:', error);
             showToast('error', "Network error. Please check your connection and try again.");
         } finally {
-            // ALWAYS unlock the article
+            // STEP 4: ALWAYS unlock the article (re-enable button)
             setDeletingIds(prev => {
                 const next = new Set(prev);
                 next.delete(articleId);
                 return next;
             });
+            logger.info(`[DELETE-FRONTEND] Delete operation completed for: ${articleId}`);
         }
     }, [deletingIds, showToast, fetchArticles]);
 

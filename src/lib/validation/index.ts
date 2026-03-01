@@ -15,6 +15,7 @@ export {
     sanitizeStringArray,
     normalizeTags,
     generateSlug,
+    generateUniqueSlugSuffix,
     generateDraftId,
     // Validators
     isOnlyPunctuation,

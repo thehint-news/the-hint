@@ -6,13 +6,42 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-    title: "ನಮ್ಮ ಬಗ್ಗೆ | The Hint",
-    description: "ದಿ ಹಿಂಟ್‌ನ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ, ಸಂಪಾದಕೀಯ ಮಾನದಂಡಗಳು ಮತ್ತು ಓದುಗರಿಗೆ ಅದರ ಬದ್ಧತೆಯ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ.",
+    title: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ | The Hint News Kannada Newspaper",
+    description: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ ಸುದ್ದಿಗಳಿಗೆ ಸಮಗ್ರತೆ ಮತ್ತು ನಿಖರತೆಯ ಬದ್ಧತೆ.",
+    keywords: ["ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್", "ಕನ್ನಡ ಪತ್ರಿಕೆ", "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ", "ಕನ್ನಡ ಸುದ್ದಿ", "The Hint News Kannada Newspaper"],
+    alternates: {
+        canonical: "https://www.thehintnews.in/about",
+    },
+    openGraph: {
+        title: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ",
+        description: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ.",
+        url: "https://www.thehintnews.in/about",
+        type: "website",
+    },
 };
 
 export default function AboutPage() {
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'AboutPage',
+        name: 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ',
+        description: 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ ಸುದ್ದಿಗಳಿಗೆ ಸಮಗ್ರತೆ ಮತ್ತು ನಿಖರತೆಯ ಬದ್ಧತೆ.',
+        url: 'https://www.thehintnews.in/about',
+        mainEntity: {
+            '@type': 'NewsMediaOrganization',
+            '@id': 'https://www.thehintnews.in/#organization',
+            name: 'The Hint News',
+            alternateName: ['ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್', 'TheHintNews', 'The Hint Kannada News'],
+            description: 'The Hint News is a Kannada independent digital newspaper delivering comprehensive coverage of politics, crime, court, and world affairs.',
+        },
+    };
+
     return (
         <main id="main-content" className="flex-1">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <article className="about-page">
                 <div className="container-editorial">
                     <nav className="page-nav">

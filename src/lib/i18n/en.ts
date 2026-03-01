@@ -10,7 +10,9 @@ export const en = {
         name: "The Hint",
         tagline1: "Independent Journalism",
         tagline2: "Delivered as it happens.",
-        copyright: "© 2026 The Hint. All rights reserved.",
+        description: "The Hint News is a Kannada independent digital newspaper delivering comprehensive coverage of politics, crime, court, and world affairs with editorial integrity.",
+        keywords: "Kannada news, Karnataka news, The Hint News, Kannada newspaper, independent journalism, politics, crime news",
+        copyright: "© 2026 The Hint News. All rights reserved.",
     },
     nav: {
         home: "Home",

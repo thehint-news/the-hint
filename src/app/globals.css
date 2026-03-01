@@ -43,6 +43,24 @@
 }
 
 /* ----------------------------------------------------------------------------
+   UTILITY CLASSES
+   ---------------------------------------------------------------------------- */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide scrollbar for mobile navigation */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ----------------------------------------------------------------------------
    EDITORIAL NAVIGATION
    ---------------------------------------------------------------------------- */
 .page-nav {
@@ -268,57 +286,6 @@ button {
 }
 
 /* ----------------------------------------------------------------------------
-   HEADLINE TICKER
-   ---------------------------------------------------------------------------- */
-.headline-ticker {
-  background: var(--color-paper);
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-  overflow: hidden;
-  padding: 0.25rem 0;
-}
-
-.ticker-container {
-  display: flex;
-  width: max-content;
-  align-items: center;
-  animation: ticker-scroll 70s linear infinite;
-  white-space: nowrap;
-}
-
-.ticker-container:hover {
-  animation-play-state: paused;
-}
-
-.ticker-item {
-  font-family: var(--font-sans-full);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-ink-secondary);
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
-  padding-right: 2rem;
-  flex-shrink: 0;
-}
-
-.ticker-item::after {
-  content: "•";
-  color: var(--color-muted);
-  font-size: 8px;
-}
-
-@keyframes ticker-scroll {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-/* ----------------------------------------------------------------------------
    LAYOUT UTILITIES
    ---------------------------------------------------------------------------- */
 .container-editorial {
@@ -418,11 +385,11 @@ button {
 }
 
 /* ── Lead Story ─────────────────────────────────── */
-/* Container: full-width hero, 16:9, capped height */
+/* Container: full-width hero, 16:10 on desktop, 16:9 on mobile, capped height */
 .thumbnail-container:has(.thumbnail-lead) {
-  aspect-ratio: 16 / 9;
-  max-height: 470px;
-  min-height: 280px;
+  aspect-ratio: 16 / 10;
+  max-height: 750px;
+  min-height: 500px;
 }
 
 @media (max-width: 768px) {
@@ -1392,53 +1359,113 @@ a:focus:not(:focus-visible) {
 }
 
 /* ----------------------------------------------------------------------------
-   LEAD STORY CAROUSEL
-   Auto-rotating carousel for lead story with up to 3 images
+   LEAD STORY CAROUSEL - Luxury Newsroom Edition
+   World-class carousel styling for premium news presentation
    ---------------------------------------------------------------------------- */
 
-/* Carousel container */
+/* Carousel container - Editorial luxury styling */
 .lead-carousel {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
+  border-radius: 2px;
+  background: #0a0a0a;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 12px 24px -8px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
 }
 
-/* Track that slides */
+/* Sophisticated vignette overlay */
+.lead-carousel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.15) 100%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Multi-layer gradient overlay for text readability */
+.lead-carousel::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 180px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.5) 30%,
+    rgba(0, 0, 0, 0.2) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Track that slides - Editorial smoothness */
 .carousel-track {
   display: flex;
   width: 100%;
   height: 100%;
   will-change: transform;
+  transform: translateZ(0);
 }
 
-/* Individual slide */
+/* Individual slide - Cinema-quality presentation */
 .carousel-slide {
   flex: 0 0 100%;
   width: 100%;
   height: 100%;
   position: relative;
+  background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
 }
 
-/* Navigation buttons */
+/* Ken Burns effect - subtle editorial zoom */
+.carousel-slide img {
+  transition: transform 8s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transform: scale(1);
+}
+
+.carousel-slide:hover img {
+  transform: scale(1.05);
+}
+
+/* Luxury Navigation buttons - Architectural design */
 .carousel-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 50%;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.2s ease, background-color 0.15s ease;
-  z-index: 10;
-  color: var(--color-ink);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition:
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 30;
+  color: #ffffff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.carousel-nav svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.5;
+  transition: transform 0.2s ease;
 }
 
 .thumbnail-container:hover .carousel-nav {
@@ -1446,60 +1473,152 @@ a:focus:not(:focus-visible) {
 }
 
 .carousel-nav:hover {
-  background: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.95);
+  color: #0a0a0a;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.carousel-nav:hover svg {
+  transform: translateX(2px);
+}
+
+.carousel-prev:hover svg {
+  transform: translateX(-2px);
+}
+
+.carousel-nav:active {
+  transform: translateY(-50%) scale(0.96);
 }
 
 .carousel-nav:focus-visible {
   opacity: 1;
-  outline: 2px solid var(--color-ink);
-  outline-offset: 2px;
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 4px;
 }
 
 .carousel-prev {
-  left: 1rem;
+  left: 2rem;
 }
 
 .carousel-next {
-  right: 1rem;
+  right: 2rem;
 }
 
-/* Dots indicator */
+/* Editorial Dots - Minimalist luxury design */
 .carousel-dots {
   position: absolute;
-  bottom: 1rem;
+  bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 0.5rem;
-  z-index: 10;
-  padding: 0.375rem 0.75rem;
+  gap: 1rem;
+  z-index: 30;
+  padding: 0.75rem 1.5rem;
   background: rgba(0, 0, 0, 0.4);
-  border-radius: 9999px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .carousel-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.3);
   cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.15s ease;
+  transition:
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    width 0.3s ease;
   padding: 0;
+  position: relative;
+}
+
+.carousel-dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: transparent;
 }
 
 .carousel-dot:hover {
-  background: rgba(255, 255, 255, 0.8);
-}
-
-.carousel-dot.active {
-  background: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.6);
   transform: scale(1.2);
 }
 
+.carousel-dot.active {
+  background: #ffffff;
+  transform: scale(1);
+  width: 24px;
+  border-radius: 3px;
+}
+
 .carousel-dot:focus-visible {
-  outline: 2px solid white;
-  outline-offset: 2px;
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 3px;
+}
+
+/* Progress indicator bar - Editorial timeline */
+.carousel-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 30;
+}
+
+.carousel-progress-bar {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* Image counter - Editorial badge */
+.carousel-counter {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  z-index: 30;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Slide number indicator - Editorial typography */
+.carousel-slide-number {
+  position: absolute;
+  bottom: 2.25rem;
+  left: 2rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  z-index: 30;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.carousel-slide-number span {
+  opacity: 0.5;
 }
 
 /* Screen reader only */
@@ -1515,24 +1634,146 @@ a:focus:not(:focus-visible) {
   border: 0;
 }
 
-/* Responsive carousel adjustments */
-@media (max-width: 768px) {
-  .carousel-nav {
-    width: 36px;
-    height: 36px;
-    opacity: 1;
-    /* Always show on mobile for better UX */
-  }
-
+/* Responsive - Maintains luxury on all devices */
+@media (max-width: 1024px) {
   .carousel-prev {
-    left: 0.5rem;
+    left: 1.5rem;
   }
 
   .carousel-next {
-    right: 0.5rem;
+    right: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .lead-carousel {
+    border-radius: 0;
+  }
+
+  .lead-carousel::after {
+    height: 140px;
+  }
+
+  .carousel-nav {
+    width: 44px;
+    height: 44px;
+    opacity: 0.85;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .carousel-nav svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .carousel-prev {
+    left: 1rem;
+  }
+
+  .carousel-next {
+    right: 1rem;
   }
 
   .carousel-dots {
-    bottom: 0.5rem;
+    bottom: 1.5rem;
+    padding: 0.625rem 1.25rem;
+    gap: 0.75rem;
+  }
+
+  .carousel-dot {
+    width: 5px;
+    height: 5px;
+  }
+
+  .carousel-dot.active {
+    width: 18px;
+  }
+
+  .carousel-counter {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.625rem;
+  }
+
+  .carousel-slide-number {
+    bottom: 1.75rem;
+    left: 1.25rem;
+    font-size: 0.6875rem;
+  }
+}
+
+/* Ultra-premium easing curves */
+@media (prefers-reduced-motion: no-preference) {
+  .carousel-track {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .carousel-slide img {
+    animation: kenBurns 20s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes kenBurns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.08) translate(-1%, -1%);
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   SKELETON LOADER ANIMATIONS
+   ---------------------------------------------------------------------------- */
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes fade-in-skeleton {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-skeleton {
+  animation: fade-in-skeleton 0.2s ease-out forwards;
+}
+
+/* Skeleton animation delays for staggered effect */
+.animation-delay-100 {
+  animation-delay: 0.1s;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer {
+    animation: none;
+    background: #F0F0F0;
+  }
+  .animate-fade-in-skeleton {
+    animation: none;
+    opacity: 1;
   }
 }

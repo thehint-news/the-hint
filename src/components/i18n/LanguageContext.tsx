@@ -39,6 +39,7 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
     const pathname = usePathname();
     const [language, setLanguage] = useState<Language>(initialLanguage);
     const [isTransitioning, setIsTransitioning] = useState(false);
+    const [pendingPath, setPendingPath] = useState<string | null>(null);
 
     // Sync with route pathname (for client-side route changes)
     useEffect(() => {
@@ -47,7 +48,19 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
         if (routeLang !== language) {
             setLanguage(routeLang);
         }
-    }, [pathname, language]);
+
+        // Clear transitioning state when we reach the target path
+        // This ensures skeleton stays visible during navigation
+        if (pendingPath && pathname === pendingPath) {
+            // Keep skeleton visible for at least 800ms after navigation completes
+            // This creates a smooth "content swap" effect
+            const timer = setTimeout(() => {
+                setIsTransitioning(false);
+                setPendingPath(null);
+            }, 800);
+            return () => clearTimeout(timer);
+        }
+    }, [pathname, language, pendingPath]);
 
     const toggleLanguage = useCallback(() => {
         if (isTransitioning) return;
@@ -70,14 +83,21 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
             targetPath = currentPath.replace(/^\/en/, '') || '/';
         }
 
+        // Store the target path to detect when navigation completes
+        setPendingPath(targetPath);
+
         // Update local state immediately for UI feedback
         setLanguage(newLang);
 
         // Navigate using Next.js router for smooth client-side transition
-        // (Now works correctly because we have a single root layout)
         router.push(targetPath);
 
-        setIsTransitioning(false);
+        // Fallback: Clear transitioning state after 2.5 seconds max
+        // This prevents skeleton from showing indefinitely if navigation fails
+        setTimeout(() => {
+            setIsTransitioning(false);
+            setPendingPath(null);
+        }, 2500);
     }, [language, isTransitioning, router]);
 
     return (

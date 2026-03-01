@@ -71,19 +71,6 @@ export function LeadStory({ article }: LeadStoryProps) {
     const [isTransitioning, setIsTransitioning] = useState(false);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Debug logging
-    useEffect(() => {
-        if (article) {
-            console.log('[LeadStory] Article received:', {
-                id: article.id,
-                title: article.title.substring(0, 30),
-                hasLeadMedia: !!article.leadMedia,
-                leadImagesCount: article.leadMedia?.images?.length || 0,
-                hasImage: !!article.image,
-            });
-        }
-    }, [article]);
-
     if (!article) {
         return null;
     }
@@ -93,8 +80,6 @@ export function LeadStory({ article }: LeadStoryProps) {
     const useCarousel = leadImages.length >= 2;
     const displayImages = leadImages.length > 0 ? leadImages :
         article.image ? [{ url: article.image, alt: article.title }] : [];
-
-    console.log('[LeadStory] Rendering with:', { useCarousel, displayImagesCount: displayImages.length, leadImagesCount: leadImages.length });
 
     // Thumbnail is now guaranteed through the data layer (reader.ts)
     // which extracts first body image if no explicit image is set

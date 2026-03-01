@@ -42,8 +42,9 @@ export async function generateMetadata({ params }: EnglishSectionPageProps): Pro
         const hrefLang = buildSectionHrefLang(section.slug, siteUrl);
 
         return {
-            title: `${sectionName} News`,
-            description: sectionDesc,
+            title: `${sectionName} | The Hint News`,
+            description: `${sectionDesc}. Read the latest ${sectionName} news from Karnataka and around the world on The Hint News.`,
+            keywords: [sectionName, 'The Hint News', 'Kannada news', 'Karnataka news', sectionName.toLowerCase()],
             alternates: {
                 canonical: `/en/${section.slug}`,
                 languages: {
@@ -52,14 +53,14 @@ export async function generateMetadata({ params }: EnglishSectionPageProps): Pro
                     'x-default': hrefLang.xDefault,
                 },
             },
-            // Both languages indexable now (Phase 3)
             robots: { index: true, follow: true },
             openGraph: {
-                title: `${sectionName} News | ${t.brand.name}`,
+                title: `${sectionName} | The Hint News`,
                 description: sectionDesc,
                 type: 'website',
                 url: `/en/${section.slug}`,
                 locale: 'en_US',
+                siteName: 'The Hint News',
             },
         };
     } catch {

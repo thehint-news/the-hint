@@ -20,6 +20,7 @@ import {
     transformToValidatedData,
     PublishArticleInput,
     generateSlug,
+    generateUniqueSlugSuffix,
 } from '@/lib/validation';
 import { contentGit, DraftData, PublishedArticleData } from '@/lib/git';
 import { logger } from '@/lib/feedback/console-guard';
@@ -134,13 +135,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         // Transform to validated data
         const articleData = transformToValidatedData(input);
 
-        // DEBUG: Log lead story data
-        logger.info('[PUBLISH] Transformed article data:', {
-            isLead: articleData.isLead,
-            hasLeadMedia: !!articleData.leadMedia,
-            leadImagesCount: articleData.leadMedia?.images?.length || 0,
-        });
-
         // Validate slug is not empty after transformation
         if (!articleData.slug) {
             return userResponse(
@@ -152,22 +146,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
 
         // Check if slug already exists (allow updates)
-        const targetSlug = articleData.slug;
+        let targetSlug = articleData.slug;
         const inputSlug = typeof input.slug === 'string' && input.slug ? input.slug : null;
         const isSelfUpdate = inputSlug && inputSlug === targetSlug;
 
+        // If slug exists and this is not a self-update, generate a unique suffix
         if (!isSelfUpdate && await contentGit.slugExists(articleData.section as Section, targetSlug)) {
-            return userResponse(
-                false,
-                `An article with this title already exists in ${articleData.section}.`,
-                {
-                    errors: [{
-                        field: 'headline',
-                        message: `An article with this title already exists in the ${articleData.section} section`
-                    }]
-                },
-                409
-            );
+            // Generate unique suffix using headline + timestamp for hash
+            const hashInput = `${articleData.headline}-${Date.now()}`;
+            targetSlug = generateUniqueSlugSuffix(targetSlug, hashInput);
+
+            // Update articleData with new unique slug
+            articleData.slug = targetSlug;
+
+            logger.info(`[PUBLISH] Generated unique slug with suffix: ${targetSlug}`);
         }
 
         // Get draft ID if provided
@@ -178,32 +170,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         // If this article is marked as lead, attempt to enforce single-lead constraint
         // This runs in the background and doesn't block publishing if it fails
         if (articleData.isLead) {
-            logger.info('[PUBLISH] Lead story enforcement started for:', targetSlug);
             try {
                 const { findCurrentLead, atomicallySwapLead } = await import('@/lib/lead/enforcement');
                 const currentLead = await findCurrentLead();
-                logger.info('[PUBLISH] Current lead found:', currentLead ? `${currentLead.slug} in ${currentLead.section}` : 'none');
 
                 // Only swap if this is a different article
                 if (!currentLead || currentLead.slug !== targetSlug || currentLead.section !== articleData.section) {
-                    const leadSwapResult = await atomicallySwapLead(
+                    await atomicallySwapLead(
                         articleData.section as Section,
                         targetSlug,
                         articleData.headline,
                         currentLead
                     );
-
-                    if (leadSwapResult.success) {
-                        logger.info('[PUBLISH] Lead swap successful');
-                    } else {
-                        logger.warn('[PUBLISH] Lead swap failed (non-blocking):', leadSwapResult.message);
-                        // Don't fail the publish - just log the warning
-                        // The article will still be published with isLead=true
-                    }
                 }
-            } catch (leadError) {
-                logger.error('[PUBLISH] Lead enforcement error (non-blocking):', leadError);
+            } catch {
                 // Don't fail the publish if lead enforcement errors
+                // The article will still be published with isLead=true
             }
         }
 

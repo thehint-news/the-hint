@@ -840,14 +840,14 @@ export function BlockEditor({
             {/* Blocks */}
             <div className={styles.blocksContainer}>
                 {blocks.length === 0 ? (
-                    // Empty state - add first paragraph
+                    // Empty state - show add block menu
                     <div className={styles.emptyState}>
                         <button
                             type="button"
                             className={styles.addFirstBlock}
-                            onClick={() => insertBlock('paragraph', 0)}
+                            onClick={() => openInsertMenu(0)}
                         >
-                            + Start writing
+                            + Add block
                         </button>
                     </div>
                 ) : (

@@ -453,10 +453,30 @@ class GitService {
                 message
             };
         } catch (error: unknown) {
-            const err = error as { status?: number };
-            if ((err.status === 409 || err.status === 422) && retryCount < 3) {
+            const err = error as { status?: number; message?: string };
+
+            // PART 1: ATOMIC DELETE - Handle Git 409 Conflicts with explicit SHA refetch
+            if ((err.status === 409 || err.status === 422) && retryCount < 2) {
+                logger.warn(`[GIT-SERVICE] Git conflict detected (status: ${err.status}), refetching latest SHA and retrying... (attempt ${retryCount + 1}/2)`);
+
+                // Add small delay to allow concurrent operations to settle
+                await new Promise(resolve => setTimeout(resolve, 100 * (retryCount + 1)));
+
+                // Retry with fresh SHA fetch (recursive call will fetch new SHA)
                 return this.commitFiles(filesPaths, message, staging, retryCount + 1);
             }
+
+            // If we've exhausted retries, throw a clear error
+            if ((err.status === 409 || err.status === 422) && retryCount >= 2) {
+                logger.error(`[GIT-SERVICE] Git conflict persisted after retries. Concurrent modification detected.`);
+                throw new GitOperationError(
+                    `Git conflict: ${err.message || 'Concurrent modification detected'}`,
+                    GitErrorType.CONFLICT,
+                    'Another user is modifying content. Please refresh and try again.',
+                    error as Error
+                );
+            }
+
             throw this.translateError(error);
         }
     }

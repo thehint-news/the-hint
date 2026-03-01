@@ -78,13 +78,17 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(siteUrl),
     title: {
-      default: t.brand.name,
+      default: lang === 'kn'
+        ? "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ – ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆ"
+        : "The Hint News – Kannada Independent Digital Newspaper",
       template: `%s | ${t.brand.name}`,
     },
     description: lang === 'kn'
-      ? "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ ನಡೆದಂತೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ. ಸಮಗ್ರತೆ ಮತ್ತು ಆಳದೊಂದಿಗೆ ಅಧಿಕೃತ ಸುದ್ದಿ ಪ್ರಸಾರ."
-      : "Independent journalism delivered as it happens. Comprehensive and in-depth authoritative news coverage.",
-    keywords: ["news", "politics", "world affairs", "crime", "court", "opinion", "journalism", "independent news", "kannada"],
+      ? "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ."
+      : "The Hint News delivers independent journalism in Kannada. Comprehensive coverage of Karnataka politics, crime, court, and world affairs with editorial integrity.",
+    keywords: lang === 'kn'
+      ? ["ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್", "ಕನ್ನಡ ಸುದ್ದಿ", "ಕರ್ನಾಟಕ ಸುದ್ದಿ", "ಕನ್ನಡ ಪತ್ರಿಕೆ", "ರಾಜಕೀಯ", "ಕ್ರೈಂ", "ನ್ಯಾಯಾಲಯ", "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ"]
+      : ["The Hint News", "Kannada news", "Karnataka news", "Kannada newspaper", "politics", "crime", "court", "independent journalism", "digital newspaper"],
     authors: [{ name: "The Hint Editorial Board" }],
     robots: {
       index: true,
@@ -102,22 +106,35 @@ export async function generateMetadata(): Promise<Metadata> {
       languages,
     },
     openGraph: {
-      title: t.brand.name,
+      title: lang === 'kn'
+        ? "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ – ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆ"
+        : "The Hint News – Kannada Independent Digital Newspaper",
       description: lang === 'kn'
-        ? "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ ನಡೆದಂತೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ. ಸಮಗ್ರತೆ ಮತ್ತು ಆಳದೊಂದಿಗೆ ಅಧಿಕೃತ ಸುದ್ದಿ ಪ್ರಸಾರ."
-        : "Independent journalism delivered as it happens. Comprehensive and in-depth authoritative news coverage.",
+        ? "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ."
+        : "The Hint News delivers independent journalism in Kannada. Comprehensive coverage of Karnataka politics, crime, court, and world affairs with editorial integrity.",
       url: new URL(siteUrl),
       siteName: t.brand.name,
       locale: lang === 'kn' ? 'kn_IN' : 'en_US',
       type: 'website',
+      images: [
+        {
+          url: `${siteUrl}/brand/logo.png`,
+          width: 1200,
+          height: 630,
+          alt: lang === 'kn' ? 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್' : 'The Hint News',
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: t.brand.name,
+      title: lang === 'kn'
+        ? "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ – ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆ"
+        : "The Hint News – Kannada Independent Digital Newspaper",
       description: lang === 'kn'
-        ? "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ ನಡೆದಂತೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ."
-        : "Independent journalism delivered as it happens.",
+        ? "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ."
+        : "The Hint News delivers independent journalism in Kannada.",
       creator: "@thehintnews",
+      images: [`${siteUrl}/brand/logo.png`],
     },
     verification: {
       // google: '...', // Placeholder for verification code
@@ -139,22 +156,16 @@ export default async function RootLayout({
   const cookieLang = await getLanguageFromCookie();
   const lang: Language = isEnglishRoute ? 'en' : (cookieLang === 'en' ? 'en' : 'kn');
 
-  // Fetch articles for global UI elements (Ticker, Updated Indicator)
-  let tickerHeadlines: string[] = [];
+  // Fetch articles for global UI elements (Updated Indicator)
   let latestUpdate: string | undefined = undefined;
 
   try {
     const allArticles = await getAllArticles();
     // Latest update timestamp (from any article)
     latestUpdate = allArticles.length > 0 ? allArticles[0].publishedAt : undefined;
-    // Ticker headlines: No opinion, max 6, latest first
-    tickerHeadlines = allArticles
-      .filter(a => a.contentType !== 'opinion')
-      .slice(0, 6)
-      .map(a => a.title);
   } catch (error) {
     console.error('[RootLayout] Failed to fetch global article data:', error);
-    // Fallback: Empty ticker, undefined update property
+    // Fallback: undefined update property
   }
 
   // Language attribute for HTML tag
@@ -174,7 +185,7 @@ export default async function RootLayout({
         <LanguageProvider initialLanguage={lang}>
           <PageViewTracker />
           <div className="min-h-screen flex flex-col">
-            <Header latestUpdate={latestUpdate} tickerHeadlines={tickerHeadlines} />
+            <Header latestUpdate={latestUpdate} />
             <ScrollToTop />
             {children}
             <Footer />

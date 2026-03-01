@@ -92,8 +92,47 @@ export async function SectionPageContent({ sectionSlug, currentPage, lang }: Sec
     // Build hreflang URLs
     const hrefLang = buildSectionHrefLang(section.slug, siteUrl);
 
+    // JSON-LD Structured Data
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'CollectionPage',
+                '@id': `${siteUrl}${lang === 'en' ? '/en' : ''}/${section.slug}#collection`,
+                url: `${siteUrl}${lang === 'en' ? '/en' : ''}/${section.slug}`,
+                name: `${sectionName} - ${lang === 'kn' ? 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್' : 'The Hint News'}`,
+                description: sectionDesc,
+                inLanguage: lang === 'en' ? 'en' : 'kn',
+                isPartOf: {
+                    '@id': 'https://www.thehintnews.in/#website',
+                },
+            },
+            {
+                '@type': 'BreadcrumbList',
+                '@id': `${siteUrl}${lang === 'en' ? '/en' : ''}/${section.slug}#breadcrumb`,
+                itemListElement: [
+                    {
+                        '@type': 'ListItem',
+                        position: 1,
+                        name: lang === 'kn' ? 'ಮುಖಪುಟ' : 'Home',
+                        item: siteUrl,
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 2,
+                        name: sectionName,
+                    },
+                ],
+            },
+        ],
+    };
+
     return (
         <main id="main-content" className="flex-1">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             {/* hreflang links */}
             <link rel="alternate" hrefLang="kn" href={hrefLang.kn} />
             <link rel="alternate" hrefLang="en" href={hrefLang.en} />

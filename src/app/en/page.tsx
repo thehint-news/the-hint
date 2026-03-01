@@ -21,13 +21,12 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-    const lang = SECONDARY_LANGUAGE;
-    const t = getTranslationsForLang(lang);
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
 
     return {
-        title: t.brand.name,
-        description: "Independent journalism delivered as it happens. Comprehensive and in-depth authoritative news coverage.",
+        title: "The Hint News – Kannada Independent Digital Newspaper",
+        description: "The Hint News delivers independent journalism in Kannada. Comprehensive coverage of Karnataka politics, crime, court, and world affairs with editorial integrity.",
+        keywords: ["The Hint News", "Kannada news", "Karnataka news", "Kannada newspaper", "politics", "crime", "court", "independent journalism", "digital newspaper"],
         alternates: {
             canonical: `${siteUrl}/en`,
             languages: {
@@ -36,15 +35,22 @@ export async function generateMetadata(): Promise<Metadata> {
                 'x-default': siteUrl,
             },
         },
-        // Both languages indexable now (Phase 3)
         robots: { index: true, follow: true },
         openGraph: {
-            title: t.brand.name,
-            description: "Independent journalism delivered as it happens.",
+            title: "The Hint News – Kannada Independent Digital Newspaper",
+            description: "The Hint News delivers independent journalism in Kannada. Comprehensive coverage of Karnataka politics, crime, court, and world affairs.",
             url: `${siteUrl}/en`,
-            siteName: t.brand.name,
+            siteName: "The Hint News",
             locale: 'en_US',
             type: 'website',
+            images: [
+                {
+                    url: `${siteUrl}/brand/logo.png`,
+                    width: 1200,
+                    height: 630,
+                    alt: 'The Hint News',
+                },
+            ],
         },
     };
 }
@@ -95,28 +101,52 @@ export default async function EnglishHomePage() {
                 '@type': 'WebSite',
                 '@id': 'https://www.thehintnews.in/en/#website',
                 url: 'https://www.thehintnews.in/en',
-                name: t.brand.name,
-                description: 'Independent journalism delivered as it happens.',
+                name: 'The Hint News',
+                alternateName: ['ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್', 'TheHintNews'],
+                description: 'The Hint News delivers independent journalism in Kannada. Comprehensive coverage of Karnataka politics, crime, court, and world affairs.',
                 publisher: {
                     '@id': 'https://www.thehintnews.in/#organization'
                 },
-                inLanguage: 'en'
+                inLanguage: 'en',
+                isAccessibleForFree: true,
             },
             {
-                '@type': 'Organization',
+                '@type': 'NewsMediaOrganization',
                 '@id': 'https://www.thehintnews.in/#organization',
-                name: 'The Hint',
+                name: 'The Hint News',
+                alternateName: ['ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್', 'TheHintNews', 'The Hint Kannada News'],
                 url: 'https://www.thehintnews.in/',
                 logo: {
                     '@type': 'ImageObject',
-                    url: 'https://www.thehintnews.in/logo.png'
+                    url: 'https://www.thehintnews.in/brand/logo.png',
+                    width: 512,
+                    height: 512,
                 },
+                image: {
+                    '@type': 'ImageObject',
+                    url: 'https://www.thehintnews.in/brand/logo.png',
+                    width: 1200,
+                    height: 630,
+                },
+                description: 'The Hint News is a Kannada independent digital newspaper delivering comprehensive coverage of politics, crime, court, and world affairs with editorial integrity.',
                 sameAs: [
                     'https://twitter.com/thehintnews',
                     'https://www.facebook.com/thehintnews',
                     'https://www.instagram.com/thehintnews',
                     'https://www.youtube.com/@thehintnews'
-                ]
+                ],
+                address: {
+                    '@type': 'PostalAddress',
+                    addressCountry: 'IN',
+                    addressRegion: 'Karnataka',
+                },
+                areaServed: {
+                    '@type': 'Place',
+                    name: 'Karnataka',
+                },
+                inLanguage: ['kn', 'en'],
+                publishingPrinciples: 'https://www.thehintnews.in/about',
+                ethicsPolicy: 'https://www.thehintnews.in/about',
             }
         ]
     };

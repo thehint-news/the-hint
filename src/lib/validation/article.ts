@@ -84,24 +84,102 @@ export function normalizeTags(input: unknown): string[] {
 }
 
 /**
- * Generate a URL-safe slug from a headline.
- * - Lowercase
- * - Hyphen-separated
- * - Remove punctuation (preserves Unicode letters/numbers like Kannada, Hindi, etc.)
- * - Deterministic
+ * Common stop words in English and Kannada to remove from slugs
  */
-export function generateSlug(headline: string): string {
-    return headline
+const STOP_WORDS = new Set([
+    // English stop words
+    'a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by',
+    'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did',
+    'will', 'would', 'could', 'should', 'may', 'might', 'must', 'shall', 'can', 'need',
+    'this', 'that', 'these', 'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they',
+    'what', 'which', 'who', 'whom', 'whose', 'where', 'when', 'why', 'how',
+    'about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'as', 'at',
+    'before', 'behind', 'below', 'beneath', 'beside', 'between', 'beyond', 'during',
+    'except', 'from', 'into', 'like', 'near', 'off', 'over', 'past', 'since', 'through',
+    'throughout', 'till', 'toward', 'under', 'until', 'upon', 'within', 'without',
+    // Kannada common words (transliterated)
+    'matte', 'haagu', 'yaava', 'elli', 'yaaru', 'hege', 'yaake', 'iddaru', 'ellaru',
+    'ivalu', 'avanu', 'avalu', 'adu', 'ivaru', 'avar', 'nanna', 'ninna', 'avana',
+    'all', 'even', 'now', 'then', 'here', 'there', 'again', 'further', 'once',
+    'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own',
+    'same', 'so', 'than', 'too', 'very', 'just', 'also',
+]);
+
+/**
+ * Generate a URL-safe slug from a headline using first 5 meaningful words.
+ * - Takes first 5 words (or fewer if headline is shorter)
+ * - Removes stop words optionally
+ * - Lowercase, hyphen-separated
+ * - Removes punctuation (preserves Unicode letters/numbers like Kannada, Hindi, etc.)
+ * - Deterministic and immutable after publish
+ * 
+ * @param headline - The article headline
+ * @param maxWords - Maximum number of words to use (default: 5)
+ * @param removeStopWords - Whether to filter out stop words (default: true)
+ * @returns URL-safe slug
+ */
+export function generateSlug(
+    headline: string,
+    maxWords: number = 5,
+    removeStopWords: boolean = true
+): string {
+    // Normalize: lowercase and remove punctuation except spaces
+    const normalized = headline
         .toLowerCase()
         .trim()
-        // Replace spaces and underscores with hyphens
-        .replace(/[\s_]+/g, '-')
-        // Remove all characters except Unicode letters, Unicode numbers, and hyphens
-        .replace(/[^\p{L}\p{N}-]/gu, '')
-        // Remove consecutive hyphens
-        .replace(/-+/g, '-')
-        // Remove leading/trailing hyphens
-        .replace(/^-+|-+$/g, '');
+        // Replace common punctuation with spaces (not hyphens, to separate words)
+        .replace(/[.,!?;:'"()[\]{}_]/g, ' ')
+        // Keep only Unicode letters, numbers, and spaces
+        .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+        // Normalize multiple spaces
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    // Split into words
+    let words = normalized.split(' ').filter(word => word.length > 0);
+
+    // Remove stop words if enabled (but ensure we keep at least some words)
+    if (removeStopWords && words.length > 1) {
+        const filtered = words.filter(word => !STOP_WORDS.has(word));
+        // Only use filtered if we still have meaningful words
+        if (filtered.length > 0) {
+            words = filtered;
+        }
+    }
+
+    // Take first N words (or all if fewer)
+    words = words.slice(0, maxWords);
+
+    // Join with hyphens
+    return words.join('-');
+}
+
+/**
+ * Generate a unique slug by appending a short hash suffix if needed.
+ * Use this when checking for duplicate slugs.
+ * 
+ * @param baseSlug - The base slug from generateSlug
+ * @param hashInput - Input to generate hash from (e.g., timestamp or article ID)
+ * @returns Unique slug with hash suffix if needed
+ */
+export function generateUniqueSlugSuffix(baseSlug: string, hashInput?: string): string {
+    if (!hashInput) {
+        // Use timestamp and random component
+        const timestamp = Date.now().toString(36).slice(-3);
+        const random = Math.random().toString(36).substring(2, 4);
+        return `${baseSlug}-${timestamp}${random}`;
+    }
+
+    // Generate short hash from input
+    let hash = 0;
+    for (let i = 0; i < hashInput.length; i++) {
+        const char = hashInput.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    // Convert to alphanumeric, take first 4 chars
+    const hashStr = Math.abs(hash).toString(36).substring(0, 4);
+    return `${baseSlug}-${hashStr}`;
 }
 
 /**

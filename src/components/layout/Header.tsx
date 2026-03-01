@@ -18,26 +18,24 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { SubscribeModal } from "../features/SubscribeModal";
 import { SearchOverlay } from "../features/SearchOverlay";
-import { LanguageToggle } from "@/components/i18n";
-import { kn } from "@/lib/i18n/kn";
+import { en } from "@/lib/i18n/en";
 
 
 const NAVIGATION_ITEMS = [
-    { label: kn.nav.home, href: "/" },
-    { label: kn.nav.local, href: "/local" },
-    { label: kn.nav.politics, href: "/politics" },
-    { label: kn.nav.world, href: "/world-affairs" },
-    { label: kn.nav.crime, href: "/crime" },
-    { label: kn.nav.court, href: "/court" },
-    { label: kn.nav.opinion, href: "/opinion" },
+    { label: en.nav.home, href: "/" },
+    { label: en.nav.local, href: "/local" },
+    { label: en.nav.politics, href: "/politics" },
+    { label: en.nav.world, href: "/world-affairs" },
+    { label: en.nav.crime, href: "/crime" },
+    { label: en.nav.court, href: "/court" },
+    { label: en.nav.opinion, href: "/opinion" },
 ] as const;
 
 interface HeaderProps {
     latestUpdate?: string; // ISO timestamp of latest published article
-    tickerHeadlines?: string[];
 }
 
-export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
+export function Header({ latestUpdate }: HeaderProps) {
     const [currentDate, setCurrentDate] = useState<string>("");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
@@ -71,11 +69,11 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
         const diff = Date.now() - new Date(isoString).getTime();
         const minutes = Math.floor(diff / 60000);
 
-        if (minutes < 1) return kn.time.updatedJustNow;
-        if (minutes < 60) return kn.time.updatedMinutesAgo(minutes);
+        if (minutes < 1) return en.time.updatedJustNow;
+        if (minutes < 60) return en.time.updatedMinutesAgo(minutes);
         const hours = Math.floor(minutes / 60);
-        if (hours < 24) return kn.time.updatedHoursAgo(hours);
-        return `${kn.time.updatedOn}${new Date(isoString).toLocaleDateString("kn-IN")}`;
+        if (hours < 24) return en.time.updatedHoursAgo(hours);
+        return `${en.time.updatedOn}${new Date(isoString).toLocaleDateString("en-US")}`;
     };
 
     const updatedString = latestUpdate ? getUpdatedString(latestUpdate) : "";
@@ -93,7 +91,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
             <header role="banner" className="sticky top-0 z-50 bg-[#F7F6F2]">
                 {/* Skip Link for Accessibility */}
                 <a href="#main-content" className="skip-link">
-                    {kn.nav.skipToMain}
+                    {en.nav.skipToMain}
                 </a>
 
                 {/* Mobile Menu 'News Index' Drawer */}
@@ -107,14 +105,14 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
 
                     {/* Vertical Rail Menu - Redesigned */}
                     <div
-                        className={`fixed inset-y-0 left-0 z-40 w-[90vw] max-w-[360px] bg-[#F7F6F2] border-r border-[#111111] flex flex-col transform transition-transform duration-300 ease-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+                        className={`fixed inset-y-0 left-0 z-40 w-[85vw] sm:w-[70vw] max-w-[320px] sm:max-w-[360px] bg-[#F7F6F2] border-r border-[#111111] flex flex-col transform transition-transform duration-300 ease-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
                             }`}
                     >
                         {/* Drawer Header */}
-                        <div className="px-6 pt-8 pb-6 flex justify-between items-start">
+                        <div className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 flex justify-between items-start">
                             <div className="flex flex-col gap-1">
-                                <span className="font-serif text-2xl font-black tracking-tight leading-none text-[#111]">
-                                    {kn.brand.name}
+                                <span className="text-xl sm:text-2xl font-black tracking-tight leading-none text-[#111]" style={{ fontFamily: 'var(--font-serif)' }}>
+                                    {en.brand.name}
                                 </span>
                                 <span className="font-sans text-[10px] font-medium text-[#666] uppercase tracking-wide pl-0.5">
                                     {currentDate}
@@ -122,7 +120,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                             </div>
                             <button
                                 onClick={() => setIsMenuOpen(false)}
-                                className="p-2 -mr-2 text-[#111] opacity-60 hover:opacity-100 transition-opacity"
+                                className="p-2 -mr-2 text-[#111] opacity-60 hover:opacity-100 transition-opacity touch-manipulation"
                                 aria-label="Close menu"
                             >
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -133,27 +131,27 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                         </div>
 
                         {/* Search Field Stylized Button */}
-                        <div className="px-6 pb-5">
+                        <div className="px-4 sm:px-6 pb-4 sm:pb-5">
                             <button
                                 onClick={() => { setIsSearchOpen(true); setIsMenuOpen(false); }}
-                                className="w-full flex items-center gap-3 bg-white border border-[#E5E5E5] px-3 py-2.5 text-[#888] hover:border-[#111] hover:text-[#111] transition-colors group shadow-sm"
+                                className="w-full flex items-center gap-3 bg-white border border-[#E5E5E5] px-3 py-2.5 text-[#888] hover:border-[#111] hover:text-[#111] transition-colors group shadow-sm touch-manipulation"
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#AAA] group-hover:text-[#111] transition-colors">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
-                                <span className="font-sans text-xs font-medium pt-0.5">{kn.nav.searchPlaceholder}</span>
+                                <span className="font-sans text-xs font-medium pt-0.5">{en.nav.searchPlaceholder}</span>
                             </button>
                         </div>
 
                         {/* Navigation Links */}
-                        <nav className="flex-1 overflow-y-auto px-6">
+                        <nav className="flex-1 overflow-y-auto px-4 sm:px-6">
                             <ul className="space-y-0 border-t border-[#E5E5E5]/60">
                                 {NAVIGATION_ITEMS.map((item) => (
                                     <li key={item.href}>
                                         <Link
                                             href={item.href}
-                                            className="block font-serif text-base text-[#111] py-2.5 border-b border-[#E5E5E5]/60 hover:pl-3 transition-all duration-300"
+                                            className="block font-serif text-sm sm:text-base text-[#111] py-2.5 border-b border-[#E5E5E5]/60 hover:pl-3 transition-all duration-300 touch-manipulation"
                                             onClick={() => setIsMenuOpen(false)}
                                         >
                                             {item.label}
@@ -162,19 +160,12 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                                 ))}
                             </ul>
 
-                            <div className="mt-8 mb-8 space-y-6">
-                                <Link
-                                    href="/"
-                                    onClick={() => setIsMenuOpen(false)}
-                                    className="flex items-center gap-2 font-sans text-xs font-bold uppercase tracking-widest text-[#6B6B6B] hover:text-[#111] group"
-                                >                                    <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all">→</span>
-                                </Link>
-
+                            <div className="mt-6 sm:mt-8 mb-6 sm:mb-8 space-y-4 sm:space-y-6">
                                 <button
                                     onClick={() => { setIsSubscribeOpen(true); setIsMenuOpen(false); }}
-                                    className="w-full bg-[#111] text-[#F7F6F2] font-sans font-bold uppercase tracking-widest text-sm py-3 hover:bg-[#333] transition-colors shadow-sm"
+                                    className="w-full bg-[#111] text-[#F7F6F2] font-sans font-bold uppercase tracking-widest text-sm py-3 hover:bg-[#333] transition-colors shadow-sm touch-manipulation"
                                 >
-                                    {kn.nav.subscribeMobileButton}
+                                    {en.nav.subscribeMobileButton}
                                 </button>
                             </div>
                         </nav>
@@ -182,48 +173,41 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                 </div>
 
                 {/* Utility Bar (Top Right Desktop) */}
-                <div className="hidden md:flex justify-end items-center container-editorial py-1 gap-6 border-b border-[#E5E5E5]">
+                <div className="hidden md:flex justify-end items-center container-editorial py-0.5 gap-3 lg:gap-6 border-b border-[#E5E5E5]">
                     {updatedString && (
-                        <span className="font-sans text-[10px] text-[#8A8A8A] uppercase tracking-wide">
+                        <span className="font-sans text-[9px] text-[#8A8A8A] uppercase tracking-wide hidden sm:inline">
                             {updatedString}
                         </span>
                     )}
 
-                    {/* Language Toggle - Desktop (Moved to utility bar for better UX) */}
-                    <div className="flex items-center">
-                        <LanguageToggle variant="desktop" />
-                    </div>
-
-                    <Link href="/" className="font-sans text-[11px] font-medium uppercase tracking-widest text-[#6B6B6B] hover:text-[#111]">
-                        {kn.nav.todaysPaper}
+                    <Link href="/" className="font-sans text-[9px] font-medium uppercase tracking-widest text-[#6B6B6B] hover:text-[#111] whitespace-nowrap">
+                        {en.nav.todaysPaper}
                     </Link>
                 </div>
 
                 {/* Masthead */}
                 <div className="container-editorial relative z-20 bg-[#F7F6F2]">
-                    <div className="md:hidden flex justify-between items-center py-4 border-b border-[#111]">
+                    {/* Mobile Header (below md: 768px) */}
+                    <div className="md:hidden flex justify-between items-center py-2 sm:py-3 border-b border-[#111]">
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="p-2 -ml-2"
+                            className="p-1.5 -ml-1.5 touch-manipulation"
                             aria-label="Open menu"
                         >
-                            <div className="w-5 h-px bg-[#111] mb-1.5"></div>
-                            <div className="w-5 h-px bg-[#111] mb-1.5"></div>
-                            <div className="w-5 h-px bg-[#111]"></div>
+                            <div className="w-4 h-px bg-[#111] mb-1"></div>
+                            <div className="w-4 h-px bg-[#111] mb-1"></div>
+                            <div className="w-4 h-px bg-[#111]"></div>
                         </button>
 
-                        <Link href="/" className="no-underline">
-                            <h1 className="font-serif text-4xl font-black tracking-tight text-[#111] leading-none pb-1">{kn.brand.name}</h1>
+                        <Link href="/" className="no-underline flex-1 text-center px-2">
+                            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#111] leading-none" style={{ fontFamily: 'var(--font-serif)' }}>{en.brand.name}</h1>
                         </Link>
 
-                        {/* Mobile Language Toggle & Search */}
-                        <div className="flex items-center gap-2">
-                            <div className="md:hidden">
-                                <LanguageToggle variant="compact" />
-                            </div>
+                        {/* Mobile Search */}
+                        <div className="flex items-center gap-1 sm:gap-2">
                             <button
                                 onClick={() => setIsSearchOpen(true)}
-                                className="p-2 -mr-2 text-[#111]"
+                                className="p-2 -mr-2 text-[#111] touch-manipulation"
                                 aria-label="Search"
                             >
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -234,24 +218,51 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                         </div>
                     </div>
 
-                    {/* Desktop Masthead Content */}
-                    <div className="hidden md:block pt-4 pb-2 text-center">
+                    {/* Mobile Navigation Bar - Horizontal Scrollable */}
+                    <nav className="md:hidden border-t border-[#E5E5E5] bg-[#F7F6F2]">
+                        <div className="overflow-x-auto scrollbar-hide">
+                            <ul className="flex items-center gap-1 px-2 py-1.5 min-w-max">
+                                {NAVIGATION_ITEMS.map((item) => {
+                                    const isActive = item.href === '/'
+                                        ? pathname === '/'
+                                        : pathname?.startsWith(item.href);
+
+                                    return (
+                                        <li key={item.href}>
+                                            <Link
+                                                href={item.href}
+                                                className={`block px-2.5 py-1 font-sans text-[11px] font-medium rounded-full whitespace-nowrap transition-colors touch-manipulation ${isActive
+                                                    ? 'bg-[#111] text-[#F7F6F2]'
+                                                    : 'text-[#444] hover:bg-[#E5E5E5]'
+                                                    }`}
+                                            >
+                                                {item.label}
+                                            </Link>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    </nav>
+
+                    {/* Tablet & Desktop Masthead Content (md and above: 768px+) */}
+                    <div className="hidden md:block pt-1 lg:pt-2 pb-0.5 text-center">
                         {currentDate && (
-                            <time className="block font-sans text-xs font-medium text-[#6B6B6B] mb-2">
+                            <time className="block font-sans text-[9px] lg:text-[10px] font-medium text-[#6B6B6B] mb-0.5 lg:mb-1">
                                 {currentDate}
                             </time>
                         )}
                         <Link href="/" className="inline-block no-underline">
-                            <h1 className="masthead-title leading-none">{kn.brand.name}</h1>
+                            <h1 className="masthead-title leading-none text-4xl lg:text-5xl" style={{ fontFamily: 'var(--font-serif)' }}>{en.brand.name}</h1>
                         </Link>
                     </div>
 
                     {/* Divider */}
-                    <hr className="hidden md:block border-t border-[#111] mt-2 mb-1" />
+                    <hr className="hidden md:block border-t border-[#111] mt-1.5 mb-0.5" />
 
-                    {/* Desktop Navigation */}
-                    <nav className="hidden md:flex justify-between items-center py-2 relative">
-                        <ul className="flex flex-1 justify-center gap-8 list-none m-0 p-0">
+                    {/* Tablet & Desktop Navigation (md and above: 768px+) */}
+                    <nav className="hidden md:flex justify-between items-center py-1 relative">
+                        <ul className="flex flex-1 justify-center gap-4 lg:gap-6 xl:gap-8 list-none m-0 p-0 px-4 lg:px-0">
                             {NAVIGATION_ITEMS.map((item) => {
                                 const isActive = item.href === '/'
                                     ? pathname === '/'
@@ -261,7 +272,7 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                                     <li key={item.href}>
                                         <Link
                                             href={item.href}
-                                            className={`nav-link text-[13px] tracking-widest font-bold ${isActive ? 'text-[#111] after:scale-x-100' : 'text-[#444]'}`}
+                                            className={`nav-link text-[11px] lg:text-[13px] tracking-widest font-bold whitespace-nowrap ${isActive ? 'text-[#111] after:scale-x-100' : 'text-[#444]'}`}
                                         >
                                             {item.label}
                                         </Link>
@@ -270,8 +281,8 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                             })}
                         </ul>
 
-                        {/* Search & Subscribe - Separate Actions */}
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-4">
+                        {/* Search & Subscribe - Responsive positioning */}
+                        <div className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 items-center gap-2 xl:gap-4">
                             <button
                                 onClick={() => setIsSearchOpen(true)}
                                 className="flex items-center gap-2 px-3 py-2 rounded-full text-[#444] hover:bg-[#E5E5E5] hover:text-[#111] transition-all duration-200 group"
@@ -281,49 +292,45 @@ export function Header({ latestUpdate, tickerHeadlines = [] }: HeaderProps) {
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
-                                <span className="font-sans text-[11px] font-bold uppercase tracking-widest">
-                                    {kn.nav.searchButton}
+                                <span className="font-sans text-[11px] font-bold uppercase tracking-widest hidden xl:inline">
+                                    {en.nav.searchButton}
                                 </span>
                             </button>
 
                             <button
                                 onClick={() => setIsSubscribeOpen(true)}
-                                className="bg-[#111] text-[#F7F6F2] font-sans text-sm font-bold uppercase tracking-widest px-6 py-2 rounded-full hover:bg-[#333] transition-colors shadow-sm"
+                                className="bg-[#111] text-[#F7F6F2] font-sans text-xs xl:text-sm font-bold uppercase tracking-widest px-4 xl:px-6 py-2 rounded-full hover:bg-[#333] transition-colors shadow-sm whitespace-nowrap"
                             >
-                                {kn.nav.subscribeDesktopButton}
+                                <span className="hidden xl:inline">{en.nav.subscribeDesktopButton}</span>
+                                <span className="xl:hidden">{en.nav.subscribeMobileButton}</span>
                             </button>
                         </div>
                     </nav>
 
-
-                </div>
-
-                {/* News Ticker */}
-                {tickerHeadlines.length > 0 && (
-                    <div className="headline-ticker border-y border-[#111] py-1 bg-[#F7F6F2]">
-                        <div className="container-editorial flex items-center">
-                            <span className="font-sans text-[10px] font-black uppercase tracking-widest mr-4 text-[#E53935] whitespace-nowrap">
-                                {kn.nav.latest}
+                    {/* Mobile/Tablet Search & Subscribe Bar (md only: 768px-1024px) */}
+                    <div className="hidden md:flex lg:hidden justify-end items-center gap-3 py-2 border-t border-[#E5E5E5]">
+                        <button
+                            onClick={() => setIsSearchOpen(true)}
+                            className="flex items-center gap-2 px-3 py-2 rounded-full text-[#444] hover:bg-[#E5E5E5] hover:text-[#111] transition-all duration-200 group"
+                            aria-label="Search"
+                        >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70 group-hover:opacity-100">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <span className="font-sans text-[11px] font-bold uppercase tracking-widest">
+                                {en.nav.searchButton}
                             </span>
-                            <div className="flex-1 overflow-hidden relative">
-                                <div
-                                    className="ticker-container hover:pause"
-                                    style={{ animationPlayState: isSubscribeOpen ? 'paused' : undefined }}
-                                >
-                                    {[...tickerHeadlines, ...tickerHeadlines, ...tickerHeadlines, ...tickerHeadlines].map((headline, idx) => (
-                                        <Link
-                                            key={`${idx}-${headline}`}
-                                            href="/" // Ideally this would link to the specific article, but we strictly follow "Headlines scroll horizontally" and prop limitation for now.
-                                            className="ticker-item hover:underline decoration-1 underline-offset-2"
-                                        >
-                                            {headline}
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
+                        </button>
+
+                        <button
+                            onClick={() => setIsSubscribeOpen(true)}
+                            className="bg-[#111] text-[#F7F6F2] font-sans text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full hover:bg-[#333] transition-colors shadow-sm"
+                        >
+                            {en.nav.subscribeMobileButton}
+                        </button>
                     </div>
-                )}
+                </div>
             </header>
         </>
     );

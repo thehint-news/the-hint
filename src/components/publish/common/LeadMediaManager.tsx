@@ -269,11 +269,11 @@ export function LeadMediaManager({
                     }}
                     onDragLeave={() => setIsDragging(false)}
                     onDrop={handleDrop}
-                    onClick={openFilePicker}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
                             openFilePicker();
                         }
                     }}
@@ -285,6 +285,7 @@ export function LeadMediaManager({
                         accept="image/jpeg,image/png,image/webp"
                         multiple
                         onChange={handleFileInput}
+                        onClick={(e) => e.stopPropagation()}
                         className={styles.fileInput}
                         aria-hidden="true"
                     />

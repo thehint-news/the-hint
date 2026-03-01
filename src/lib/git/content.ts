@@ -376,59 +376,99 @@ class ContentGit {
     }
 
     /**
-     * DELETE: Remove a draft
-     * 
-     * OPTIMIZED: Skip redundant fileExists + loadDraft calls.
-     * The commit itself is idempotent — if the file doesn't exist in the tree,
-     * GitHub's Tree API will simply create a no-op commit.
-     * We catch 404 from getContent during commit and treat it as success (already deleted).
+     * DELETE: Remove a draft (DETERMINISTIC & ATOMIC)
+     *
+     * PART 2: SEPARATE DRAFT DELETE LOGIC
+     * - No ISR revalidation required
+     - Idempotent: safe to call multiple times
+     * - Returns structured result with operation details
+     *
+     * PERFORMANCE: Maximum 3 API calls (getFileInfo + commit operations)
      */
-    async deleteDraft(draftId: string): Promise<ContentOperationResult> {
+    async deleteDraft(draftId: string): Promise<ContentOperationResult<{
+        type: 'draft';
+        alreadyDeleted: boolean;
+        commitHash?: string;
+    }>> {
+        const operationId = `draft-del-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+
+        // PART 7: LOGGING - Delete request received
+        logger.info(`[DELETE-DRAFT] [${operationId}] START | draftId: ${draftId}`);
+
         try {
             const absolutePath = gitService.getDraftPath(draftId);
             const relativePath = gitService.getDraftRelativePath(draftId);
 
-            // Fetch latest SHA for logging & idempotency
+            // STEP 1: Fetch latest SHA (idempotency check)
+            logger.info(`[DELETE-DRAFT] [${operationId}] Fetching file info...`);
             const { sha } = await gitService.getFileInfo(relativePath);
-            logger.info(`[DELETE] SHA before delete (Draft): ${sha || 'Not Found'}`);
 
+            // PART 7: LOGGING - SHA before delete
+            logger.info(`[DELETE-DRAFT] [${operationId}] SHA before delete: ${sha || 'NOT_FOUND'}`);
+
+            // STEP 2: Handle already-deleted case (IDEMPOTENT)
             if (!sha) {
-                logger.info(`[DELETE] Git response: File already deleted, no commit needed.`);
+                logger.info(`[DELETE-DRAFT] [${operationId}] File already deleted, returning idempotent success`);
                 return {
                     success: true,
                     userMessage: 'Draft already removed.',
+                    data: { type: 'draft', alreadyDeleted: true }
                 };
             }
 
-            // Stage the delete
+            // STEP 3: Stage the delete
             const staging = createGitStaging();
             await gitService.deleteFile(absolutePath, staging);
+            logger.info(`[DELETE-DRAFT] [${operationId}] Staged for deletion: ${relativePath}`);
 
-            // Commit deletion — this is the ONLY set of API calls we need
-            const result = await gitService.commitDeletion(relativePath, `Remove draft: ${draftId}`, staging);
+            // STEP 4: Commit deletion (ATOMIC)
+            logger.info(`[DELETE-DRAFT] [${operationId}] Attempting Git commit...`);
+            const result = await gitService.commitDeletion(
+                relativePath,
+                `Remove draft: ${draftId}`,
+                staging
+            );
 
-            logger.info(`[DELETE] Git response: Commit ${result.success ? 'successful' : 'failed'} ${result.commitHash ? `(Hash: ${result.commitHash})` : ''}`);
+            // PART 7: LOGGING - Git response
+            logger.info(`[DELETE-DRAFT] [${operationId}] Git commit result: success=${result.success}, hash=${result.commitHash || 'N/A'}`);
 
             if (!result.success) {
+                logger.error(`[DELETE-DRAFT] [${operationId}] Git commit failed`);
                 return {
                     success: false,
-                    userMessage: 'Failed to delete draft.',
+                    userMessage: 'Failed to delete draft. Git commit was not confirmed.',
+                    error: new GitOperationError(
+                        'Commit returned unsuccessful',
+                        GitErrorType.UNKNOWN,
+                        'Deletion could not be confirmed. Please try again.'
+                    )
                 };
             }
+
+            // PART 7: LOGGING - Final success
+            logger.info(`[DELETE-DRAFT] [${operationId}] SUCCESS | Commit: ${result.commitHash}`);
 
             return {
                 success: true,
-                userMessage: 'Draft deleted.',
+                userMessage: 'Draft deleted successfully.',
+                data: {
+                    type: 'draft',
+                    alreadyDeleted: false,
+                    commitHash: result.commitHash
+                }
             };
+
         } catch (error) {
-            logger.error('Failed to delete draft', error);
+            logger.error(`[DELETE-DRAFT] [${operationId}] ERROR:`, error);
             const gitError = gitService.translateError(error);
 
-            // If the file was already gone (404 during tree creation), treat as success
+            // PART 5: IDEMPOTENCY - Treat already deleted as success
             if (gitError.type === GitErrorType.NOT_FOUND) {
+                logger.info(`[DELETE-DRAFT] [${operationId}] Caught NOT_FOUND, treating as idempotent success`);
                 return {
                     success: true,
                     userMessage: 'Draft already removed.',
+                    data: { type: 'draft', alreadyDeleted: true }
                 };
             }
 
@@ -441,67 +481,133 @@ class ContentGit {
     }
 
     /**
-     * DELETE: Remove a published article
-     * 
-     * OPTIMIZED: Single getFileInfo call (1 API call) to check existence + get headline,
-     * then direct commit (5 API calls). Total: 6 API calls (was 8-9).
-     * If file doesn't exist, returns success (idempotent).
+     * DELETE: Remove a published article (DETERMINISTIC & ATOMIC)
+     *
+     * PART 2: SEPARATE PUBLISHED DELETE LOGIC
+     * - Returns structured result with ISR paths that need revalidation
+     * - Idempotent: safe to call multiple times
+     * - Returns article metadata for ISR coordination
+     *
+     * PERFORMANCE: Maximum 3 API calls (getFileInfo + commit operations)
      */
-    async deletePublishedArticle(section: Section, slug: string): Promise<ContentOperationResult> {
+    async deletePublishedArticle(section: Section, slug: string): Promise<ContentOperationResult<{
+        type: 'published';
+        section: string;
+        slug: string;
+        alreadyDeleted: boolean;
+        commitHash?: string;
+        title?: string;
+        /** Paths that MUST be revalidated after successful delete */
+        revalidationPaths: string[];
+    }>> {
+        const operationId = `pub-del-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+
+        // PART 7: LOGGING - Delete request received
+        logger.info(`[DELETE-PUBLISHED] [${operationId}] START | section: ${section}, slug: ${slug}`);
+
         try {
             const absolutePath = gitService.getPublishedPath(section, slug);
             const relativePath = gitService.getPublishedRelativePath(section, slug);
 
-            // Single API call: check existence + get content for commit message
+            // STEP 1: Fetch latest SHA and content (single API call for idempotency + metadata)
+            logger.info(`[DELETE-PUBLISHED] [${operationId}] Fetching file info...`);
             const { content, sha } = await gitService.getFileInfo(relativePath);
 
-            logger.info(`[DELETE] SHA before delete (Published): ${sha || 'Not Found'}`);
+            // PART 7: LOGGING - SHA before delete
+            logger.info(`[DELETE-PUBLISHED] [${operationId}] SHA before delete: ${sha || 'NOT_FOUND'}`);
 
+            // STEP 2: Handle already-deleted case (IDEMPOTENT)
             if (!sha) {
-                // Already deleted — idempotent success
-                logger.info(`[DELETE] Git response: File already deleted, no commit needed.`);
+                logger.info(`[DELETE-PUBLISHED] [${operationId}] File already deleted, returning idempotent success`);
                 return {
                     success: true,
                     userMessage: 'Article already removed.',
+                    data: {
+                        type: 'published',
+                        section,
+                        slug,
+                        alreadyDeleted: true,
+                        revalidationPaths: ['/', `/${section}`, `/${section}/${slug}`]
+                    }
                 };
             }
 
-            // Extract headline for commit message (from content we already have)
+            // STEP 3: Extract metadata for commit message and response
             let headline = slug;
+            let articleData: PublishedArticleData | null = null;
+
             if (content) {
-                const article = this.parseMarkdownFrontmatter(content, section, slug);
-                if (article && article.title) {
-                    headline = article.title;
+                articleData = this.parseMarkdownFrontmatter(content, section, slug);
+                if (articleData && articleData.title) {
+                    headline = articleData.title;
                 }
             }
 
-            // Stage + commit deletion
+            logger.info(`[DELETE-PUBLISHED] [${operationId}] Article title: ${headline}`);
+
+            // STEP 4: Stage + commit deletion (ATOMIC)
             const staging = createGitStaging();
             await gitService.deleteFile(absolutePath, staging);
-            const result = await gitService.commitDeletion(relativePath, `Remove article: ${headline}`, staging);
+            logger.info(`[DELETE-PUBLISHED] [${operationId}] Staged for deletion: ${relativePath}`);
 
-            logger.info(`[DELETE] Git response: Commit ${result.success ? 'successful' : 'failed'} ${result.commitHash ? `(Hash: ${result.commitHash})` : ''}`);
+            logger.info(`[DELETE-PUBLISHED] [${operationId}] Attempting Git commit...`);
+            const result = await gitService.commitDeletion(
+                relativePath,
+                `Remove article: ${headline}`,
+                staging
+            );
+
+            // PART 7: LOGGING - Git response
+            logger.info(`[DELETE-PUBLISHED] [${operationId}] Git commit result: success=${result.success}, hash=${result.commitHash || 'N/A'}`);
 
             if (!result.success) {
+                logger.error(`[DELETE-PUBLISHED] [${operationId}] Git commit failed`);
                 return {
                     success: false,
-                    userMessage: 'Failed to delete article.',
+                    userMessage: 'Failed to delete article. Git commit was not confirmed.',
+                    error: new GitOperationError(
+                        'Commit returned unsuccessful',
+                        GitErrorType.UNKNOWN,
+                        'Deletion could not be confirmed. Please try again.'
+                    )
                 };
             }
 
+            // PART 7: LOGGING - Final success
+            logger.info(`[DELETE-PUBLISHED] [${operationId}] SUCCESS | Commit: ${result.commitHash}`);
+
+            // PART 3: Return revalidation paths for ISR coordination
             return {
                 success: true,
-                userMessage: 'Article removed.',
+                userMessage: 'Article removed successfully.',
+                data: {
+                    type: 'published',
+                    section,
+                    slug,
+                    alreadyDeleted: false,
+                    commitHash: result.commitHash,
+                    title: headline,
+                    revalidationPaths: ['/', `/${section}`, `/${section}/${slug}`]
+                }
             };
+
         } catch (error) {
-            logger.error('Failed to delete published article', error);
+            logger.error(`[DELETE-PUBLISHED] [${operationId}] ERROR:`, error);
             const gitError = gitService.translateError(error);
 
-            // If the file was already gone, treat as success
+            // PART 5: IDEMPOTENCY - Treat already deleted as success
             if (gitError.type === GitErrorType.NOT_FOUND) {
+                logger.info(`[DELETE-PUBLISHED] [${operationId}] Caught NOT_FOUND, treating as idempotent success`);
                 return {
                     success: true,
                     userMessage: 'Article already removed.',
+                    data: {
+                        type: 'published',
+                        section,
+                        slug,
+                        alreadyDeleted: true,
+                        revalidationPaths: ['/', `/${section}`, `/${section}/${slug}`]
+                    }
                 };
             }
 
@@ -540,13 +646,10 @@ class ContentGit {
         };
     }): Promise<ContentOperationResult<{ slug: string; section: string; url: string; publishedAt: string; mode: 'create' | 'update' }>> {
         try {
-            const { section, slug, draftId, headline, isLead } = articleData;
-
-            logger.info(`[GIT-PUBLISH] Starting publish for: ${section}/${slug}, isLead: ${isLead}`);
+            const { section, slug, draftId, headline } = articleData;
 
             // 1. Check If File Exists (Detect Mode)
             const articleRelativePath = gitService.getPublishedRelativePath(section, slug);
-            logger.info(`[GIT-PUBLISH] Checking file info for: ${articleRelativePath}`);
 
             let existingFile: string | null = null;
             let existingSha: string | null = null;
@@ -555,9 +658,7 @@ class ContentGit {
                 const fileInfo = await gitService.getFileInfo(articleRelativePath);
                 existingFile = fileInfo.content;
                 existingSha = fileInfo.sha;
-                logger.info(`[GIT-PUBLISH] File info result: sha=${existingSha ? 'exists' : 'null'}`);
-            } catch (fileError) {
-                logger.warn(`[GIT-PUBLISH] Error getting file info:`, fileError);
+            } catch {
                 // File doesn't exist - this is OK for new articles
             }
 
@@ -623,19 +724,14 @@ class ContentGit {
             }
 
             // Write article
-            logger.info(`[GIT-PUBLISH] Writing article to: ${articlePath}`);
             await gitService.writeFileAtomic(articlePath, markdownContent, staging);
 
             // 5. Commit all
             const commitMessage = (mode === 'create' ? 'Publish article: ' : 'Update article: ') + headline;
-            logger.info(`[GIT-PUBLISH] Committing files: ${pathsToCommit.join(', ')}`);
             await gitService.commitFiles(pathsToCommit, commitMessage, staging);
-            logger.info(`[GIT-PUBLISH] Commit successful`);
 
             // Push async
             this.pushAsync();
-
-            logger.info(`[GIT-PUBLISH] Publish successful: ${section}/${slug}`);
 
             return {
                 success: true,
@@ -799,13 +895,6 @@ class ContentGit {
             }[];
         };
     }): string {
-        // DEBUG: Log lead story data
-        logger.info('[GIT-CONTENT] generateMarkdownContent received:', {
-            isLead: data.isLead,
-            hasLeadMedia: !!data.leadMedia,
-            leadImagesCount: data.leadMedia?.images?.length || 0,
-        });
-
         const frontmatter: Record<string, unknown> = {
             title: data.headline,
             subtitle: data.subheadline,
@@ -826,7 +915,6 @@ class ContentGit {
 
         // Add lead story fields if this is a lead article
         if (data.isLead === true) {
-            logger.info('[GIT-CONTENT] Adding lead story fields to frontmatter');
             frontmatter.isLead = true;
 
             // Only add leadMedia if it has valid images
@@ -845,10 +933,7 @@ class ContentGit {
                             ...(img.height && { height: img.height }),
                         })),
                     };
-                    logger.info(`[GIT-CONTENT] Added leadMedia with ${validImages.length} images`);
                 }
-            } else {
-                logger.info('[GIT-CONTENT] No leadMedia images to add');
             }
         }
 

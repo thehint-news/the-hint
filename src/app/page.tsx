@@ -39,12 +39,12 @@ export const revalidate = 60;
  * Generate SEO metadata for homepage
  */
 export async function generateMetadata(): Promise<Metadata> {
-  const t = getTranslationsForLang('kn');
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
 
   return {
-    title: t.brand.name,
-    description: "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ ನಡೆದಂತೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ. ಸಮಗ್ರತೆ ಮತ್ತು ಆಳದೊಂದಿಗೆ ಅಧಿಕೃತ ಸುದ್ದಿ ಪ್ರಸಾರ.",
+    title: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ – ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆ",
+    description: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ.",
+    keywords: ["ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್", "ಕನ್ನಡ ಸುದ್ದಿ", "ಕರ್ನಾಟಕ ಸುದ್ದಿ", "ಕನ್ನಡ ಪತ್ರಿಕೆ", "ರಾಜಕೀಯ", "ಕ್ರೈಂ", "ನ್ಯಾಯಾಲಯ", "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ"],
     alternates: {
       canonical: siteUrl,
       languages: {
@@ -53,15 +53,22 @@ export async function generateMetadata(): Promise<Metadata> {
         'x-default': siteUrl,
       },
     },
-    // Phase 3: Both languages indexable with route-based structure
     robots: { index: true, follow: true },
     openGraph: {
-      title: t.brand.name,
-      description: "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ ನಡೆದಂತೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ.",
+      title: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ – ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆ",
+      description: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ.",
       url: siteUrl,
-      siteName: t.brand.name,
+      siteName: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್",
       locale: 'kn_IN',
       type: 'website',
+      images: [
+        {
+          url: `${siteUrl}/brand/logo.png`,
+          width: 1200,
+          height: 630,
+          alt: 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್',
+        },
+      ],
     },
   };
 }
@@ -86,29 +93,8 @@ export default async function HomePage() {
 
   const { leadStory, topStories, sections } = homepageData;
 
-  // Debug logging for lead story
-  if (leadStory) {
-    console.log('[HomePage] Lead story found:', {
-      id: leadStory.id,
-      title: leadStory.title.substring(0, 30),
-      isLead: leadStory.isLead,
-      hasLeadMedia: !!leadStory.leadMedia,
-      leadImagesCount: leadStory.leadMedia?.images?.length || 0,
-    });
-  } else {
-    console.log('[HomePage] No lead story found');
-  }
-
   // Apply translations to all articles
   const localizedLeadStory = leadStory ? applyArticleTranslation(leadStory, lang) : null;
-
-  // Debug: Check if leadMedia survived translation
-  if (localizedLeadStory) {
-    console.log('[HomePage] Localized lead story:', {
-      hasLeadMedia: !!localizedLeadStory.leadMedia,
-      leadImagesCount: localizedLeadStory.leadMedia?.images?.length || 0,
-    });
-  }
 
   const localizedTopStories = applyArticleTranslations(topStories, lang);
   const localizedSections = {
@@ -135,30 +121,52 @@ export default async function HomePage() {
         '@type': 'WebSite',
         '@id': 'https://www.thehintnews.in/#website',
         url: 'https://www.thehintnews.in/',
-        name: t.brand.name,
-        description: lang === 'kn'
-          ? 'ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ ನಡೆದಂತೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ.'
-          : 'Independent journalism delivered as it happens.',
+        name: 'The Hint News',
+        alternateName: ['ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್', 'TheHintNews'],
+        description: 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ.',
         publisher: {
           '@id': 'https://www.thehintnews.in/#organization'
         },
-        inLanguage: 'kn'
+        inLanguage: 'kn',
+        isAccessibleForFree: true,
       },
       {
-        '@type': 'Organization',
+        '@type': 'NewsMediaOrganization',
         '@id': 'https://www.thehintnews.in/#organization',
-        name: 'The Hint',
+        name: 'The Hint News',
+        alternateName: ['ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್', 'TheHintNews', 'The Hint Kannada News'],
         url: 'https://www.thehintnews.in/',
         logo: {
           '@type': 'ImageObject',
-          url: 'https://www.thehintnews.in/logo.png'
+          url: 'https://www.thehintnews.in/brand/logo.png',
+          width: 512,
+          height: 512,
         },
+        image: {
+          '@type': 'ImageObject',
+          url: 'https://www.thehintnews.in/brand/logo.png',
+          width: 1200,
+          height: 630,
+        },
+        description: 'The Hint News is a Kannada independent digital newspaper delivering comprehensive coverage of politics, crime, court, and world affairs with editorial integrity.',
         sameAs: [
           'https://twitter.com/thehintnews',
           'https://www.facebook.com/thehintnews',
           'https://www.instagram.com/thehintnews',
           'https://www.youtube.com/@thehintnews'
-        ]
+        ],
+        address: {
+          '@type': 'PostalAddress',
+          addressCountry: 'IN',
+          addressRegion: 'Karnataka',
+        },
+        areaServed: {
+          '@type': 'Place',
+          name: 'Karnataka',
+        },
+        inLanguage: ['kn', 'en'],
+        publishingPrinciples: 'https://www.thehintnews.in/about',
+        ethicsPolicy: 'https://www.thehintnews.in/about',
       }
     ]
   };
