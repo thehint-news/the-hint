@@ -2014,5 +2014,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-01T05:13:16.171Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "cbbb730c-6ae5-4b15-8fed-cea6b3585a52",
+    "articleSlug": "fdgfdggfgfd",
+    "section": "politics",
+    "headline": "fdgfdggfgfd",
+    "summary": "fdgfdgfdg",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-01T05:18:13.490Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
