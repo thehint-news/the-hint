@@ -2110,5 +2110,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-02T15:19:58.687Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "1e2cabe7-ea48-413a-9cb0-91612f74ef13",
+    "articleSlug": "svtmtr-ptrikodym-ndedmte-tlupislaguttde",
+    "section": "crime",
+    "headline": "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ, ನಡೆದಂತೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ.",
+    "summary": "ಶಬರಿಮಲೆ ವಿಷಯವು ದೇವಾಲಯ ಪ್ರವೇಶ ವಿಷಯಕ್ಕೆ ಮಾತ್ರ ಸೀಮಿತವಾಗಿಲ್ಲ, ಬದಲಾಗಿ ಧಾರ್ಮಿಕ ಸ್ವಾತಂತ್ರ್ಯದ ಬಗ್ಗೆ ಮೂಲಭೂತ ಪ್ರಶ್ನೆಗಳನ್ನು ಇತ್ಯರ್ಥಪಡಿಸಲು ಒಂಬತ್ತು ನ್ಯಾಯಾಧೀಶರ ಪೀಠದ ಅಗತ್ಯವಿರುವ ಆಳವಾದ ಸಾಂವಿಧಾನಿಕ ಚರ್ಚೆಯನ್ನು ಹುಟ್ಟುಹಾಕಿದ ಕಾರಣ ಇದು ಅಸಾಧಾರಣವಾಯಿತು.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-02T15:56:50.005Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
