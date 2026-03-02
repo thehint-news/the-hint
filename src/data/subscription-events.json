@@ -2094,5 +2094,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-01T12:35:10.682Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "c39f59f0-0bdf-4309-b550-563090e24db5",
+    "articleSlug": "ಭ-ರತದ-ಎಐ-ಕ-ರ",
+    "section": "politics",
+    "headline": "ಭಾರತದ ಎಐ ಕ್ರಾಂತಿಗೆ ಜಿಯೋ ಇಂಟೆಲಿಜೆನ್ಸ್ ಮುನ್ನುಡಿ! ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆಯನ್ನು ಅಕ್ಷಯಪಾತ್ರೆಗೆ ಹೋಲಿಸಿದ ಮುಖೇಶ್ ಅಂಬಾನಿ!",
+    "summary": "ಭಾರತದ ಎಐ ಕ್ರಾಂತಿಗೆ ಜಿಯೋ ಇಂಟೆಲಿಜೆನ್ಸ್ ಮುನ್ನುಡಿ! ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆಯನ್ನು ಅಕ್ಷಯಪಾತ್ರೆಗೆ ಹೋಲಿಸಿದ ಮುಖೇಶ್ ಅಂಬಾನಿ!",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-02T15:19:30.282Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
