@@ -21,6 +21,20 @@ bodyBlocks:
       rtyrytryt
 
       rtytrytryt
+translations:
+  en:
+    title: dsfdsfdsdsfdsfd
+    subtitle: dsf
+    body: |-
+      > dsfdsfdsfdsfsdsf
+      > 
+      > retrtret
+      > 
+      > rtyrytryt
+      > 
+      > rtytrytryt
+    excerpt: dsf
+    translatedAt: '2026-03-02T16:50:08.339Z'
 ---
 
 > dsfdsfdsfdsfsdsf
