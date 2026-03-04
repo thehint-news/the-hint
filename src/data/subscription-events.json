@@ -2174,5 +2174,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-02T16:50:34.264Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "5c4f9d05-8b02-491d-abc6-bc012995df27",
+    "articleSlug": "dsfdsfdsdsfdsfd",
+    "section": "local",
+    "headline": "dsfdsfdsdsfdsfd",
+    "summary": "dsf",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-04T11:21:36.760Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
