@@ -40,7 +40,8 @@ export async function generateArticleMetadata({
     lang,
 }: ArticlePageContentProps & { siteUrl: string }) {
     const t = getTranslationsForLang(lang);
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
+    const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
+    const siteUrl = rawSiteUrl.endsWith('/') ? rawSiteUrl.slice(0, -1) : rawSiteUrl;
 
     let article;
     try {
@@ -149,7 +150,8 @@ export async function ArticlePageContent({ section, slug, lang }: ArticlePageCon
         .replace('-', ' ')
         .replace(/\b\w/g, (c) => c.toUpperCase());
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
+    const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
+    const siteUrl = rawSiteUrl.endsWith('/') ? rawSiteUrl.slice(0, -1) : rawSiteUrl;
     const hrefLang = buildArticleHrefLang(article.section, article.id, siteUrl);
 
     // JSON-LD Structured Data

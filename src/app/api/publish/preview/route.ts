@@ -115,14 +115,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
         // Return preview data for client-side rendering
         // The client will use the same article component to render
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+        const cleanUrl = siteUrl.endsWith('/') ? siteUrl.slice(0, -1) : siteUrl;
+
         return NextResponse.json(
             {
                 success: true,
                 message: 'Preview generated',
                 data: {
                     preview: previewData,
-                    // Include the URL this would have if published
-                    wouldBeUrl: `/${section}/${generatePreviewSlug(headline)}`,
+                    // Include the URL this would have if published (using absolute production domain)
+                    wouldBeUrl: `${cleanUrl}/${section}/${generatePreviewSlug(headline)}`,
                 },
             },
             { status: 200 }

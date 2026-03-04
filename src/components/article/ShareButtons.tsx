@@ -70,9 +70,14 @@ export function ShareButtons({
     const pathname = usePathname();
     const [copied, setCopied] = useState(false);
 
-    // Build absolute URL
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
-    const shareUrl = customUrl || `${siteUrl}${pathname}`;
+    // Build absolute URL - Strict production domain enforcement
+    const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
+    const siteUrl = rawSiteUrl.endsWith('/') ? rawSiteUrl.slice(0, -1) : rawSiteUrl;
+
+    // Ensure we don't share vercel.app links even if accessed through them
+    const baseShareUrl = siteUrl.includes('vercel.app') ? 'https://www.thehintnews.in' : siteUrl;
+
+    const shareUrl = customUrl || `${baseShareUrl}${pathname}`;
     const encodedUrl = encodeURIComponent(shareUrl);
     const encodedTitle = encodeURIComponent(title);
 

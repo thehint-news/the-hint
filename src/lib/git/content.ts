@@ -741,12 +741,15 @@ class ContentGit {
             // Push async
             this.pushAsync();
 
+            const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
+            const cleanUrl = rawSiteUrl.endsWith('/') ? rawSiteUrl.slice(0, -1) : rawSiteUrl;
+
             return {
                 success: true,
                 data: {
                     slug,
                     section,
-                    url: `/${section}/${slug}`,
+                    url: `${cleanUrl}/${section}/${slug}`,
                     publishedAt,
                     mode,
                 },

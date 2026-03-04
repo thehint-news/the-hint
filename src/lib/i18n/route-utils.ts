@@ -62,10 +62,11 @@ export function buildArticleHrefLang(
     en: string;
     xDefault: string;
 } {
+    const baseUrl = siteUrl.endsWith('/') ? siteUrl.slice(0, -1) : siteUrl;
     return {
-        kn: `${siteUrl}/${section}/${slug}`,
-        en: `${siteUrl}/en/${section}/${slug}`,
-        xDefault: `${siteUrl}/${section}/${slug}`,
+        kn: `${baseUrl}/${section}/${slug}`,
+        en: `${baseUrl}/en/${section}/${slug}`,
+        xDefault: `${baseUrl}/${section}/${slug}`,
     };
 }
 
@@ -80,10 +81,11 @@ export function buildSectionHrefLang(
     en: string;
     xDefault: string;
 } {
+    const baseUrl = siteUrl.endsWith('/') ? siteUrl.slice(0, -1) : siteUrl;
     return {
-        kn: `${siteUrl}/${section}`,
-        en: `${siteUrl}/en/${section}`,
-        xDefault: `${siteUrl}/${section}`,
+        kn: `${baseUrl}/${section}`,
+        en: `${baseUrl}/en/${section}`,
+        xDefault: `${baseUrl}/${section}`,
     };
 }
 

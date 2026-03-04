@@ -1,5 +1,7 @@
 /**
- * Next.js Middleware for Domain Proxy, Language Handling, and Slug Redirects
+ * Next.js Global Proxy for Domain Handling, Permissions, and Redirects
+ * 
+ * As of Next.js 16, this replaces the older 'middleware' convention.
  * 
  * Handles:
  * - Domain redirects (thehintnews.in -> www.thehintnews.in)
