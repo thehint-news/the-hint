@@ -705,6 +705,14 @@ class ContentGit {
                 image: articleData.thumbnail,
                 publishedAt,
                 updatedAt: mode === 'update' ? new Date().toISOString() : undefined,
+                translations: {
+                    en: {
+                        status: 'pending',
+                        title: headline, // Use original as placeholder
+                        subtitle: articleData.subheadline,
+                        translatedAt: new Date().toISOString(),
+                    } as any
+                }
             });
 
             const articlePath = gitService.getPublishedPath(section, slug);
@@ -885,6 +893,7 @@ class ContentGit {
         image?: string;
         publishedAt: string;
         updatedAt?: string;
+        translations?: any;
         isLead?: boolean;
         leadMedia?: {
             images: {
@@ -906,6 +915,7 @@ class ContentGit {
             placement: data.placement,
             tags: data.tags,
             sources: data.sources,
+            translations: data.translations || null,
         };
 
         // If bodyBlocks exist, add them to frontmatter (CANONICAL)
@@ -1126,6 +1136,7 @@ class ContentGit {
                 translations: {
                     ...((rawFrontmatter.translations as Record<string, unknown>) || {}),
                     en: {
+                        status: 'ready',
                         title: translation.title,
                         subtitle: translation.subheadline || existingArticle.subtitle,
                         body: translation.body,
@@ -1178,6 +1189,52 @@ class ContentGit {
                 userMessage: gitError.userMessage,
                 error: gitError,
             };
+        }
+
+    }
+
+    /**
+     * MARK TRANSLATION FAILED
+     * Sets internal state so UI knows translation failed to generate
+     */
+    async markTranslationFailed(section: Section, slug: string): Promise<ContentOperationResult> {
+        try {
+            const articleRelativePath = gitService.getPublishedRelativePath(section, slug);
+            const { content: existingFile, sha: existingSha } = await gitService.getFileInfo(articleRelativePath);
+
+            if (!existingFile || !existingSha) return { success: true, userMessage: 'Article not found' };
+
+            const yaml = await import('js-yaml');
+            const match = existingFile.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
+            if (!match) return { success: false, userMessage: 'Invalid article format' };
+
+            const rawFrontmatter = (yaml.load(match[1]) as Record<string, unknown>) || {};
+            const originalBody = match[2].trim();
+
+            const updatedFrontmatter = {
+                ...rawFrontmatter,
+                translations: {
+                    ...((rawFrontmatter.translations as Record<string, unknown>) || {}),
+                    en: {
+                        ...((rawFrontmatter.translations as any)?.en || {}),
+                        status: 'failed',
+                        translatedAt: new Date().toISOString()
+                    }
+                }
+            };
+
+            const fileContent = `---\n${yaml.dump(updatedFrontmatter, { lineWidth: -1, noRefs: true }).trim()}\n---\n\n${originalBody}\n`;
+
+            const articlePath = gitService.getPublishedPath(section, slug);
+            const staging = createGitStaging();
+            await gitService.writeFileAtomic(articlePath, fileContent, staging);
+            await gitService.commitFiles([articleRelativePath], `Mark translation failed: ${slug}`, staging);
+            this.pushAsync();
+
+            return { success: true, userMessage: 'Translation marked as failed' };
+        } catch (error) {
+            logger.error('Failed to mark translation failed', error);
+            return { success: false, userMessage: 'Error updating failure status' };
         }
     }
 

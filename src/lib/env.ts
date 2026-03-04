@@ -37,6 +37,9 @@ const REQUIRED_PRODUCTION = [
 
     // App
     'APP_BASE_URL',
+
+    // Translation
+    'GOOGLE_TRANSLATE_API_KEY',
 ];
 
 /** Subscription-specific variables (required for subscribe/unsubscribe to work) */

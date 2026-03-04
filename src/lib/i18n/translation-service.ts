@@ -100,22 +100,22 @@ async function translateText(request: TranslationRequest): Promise<TranslationRe
     }
 
     try {
-        const headers: Record<string, string> = {
-            'Content-Type': 'application/json',
-            'X-Goog-Api-Key': GOOGLE_TRANSLATE_API_KEY,
-        };
+        // Standard Google Cloud Translation API expects 'key' as a query parameter
+        // But some setups use X-Goog-Api-Key header. We'll use both for maximum compatibility.
+        const urlWithKey = `${TRANSLATION_API_URL}?key=${GOOGLE_TRANSLATE_API_KEY}`;
 
-        const body: Record<string, unknown> = {
-            q: request.text,
-            source: request.from,
-            target: request.to,
-            format: 'text',
-        };
-
-        const response = await fetch(TRANSLATION_API_URL, {
+        const response = await fetch(urlWithKey, {
             method: 'POST',
-            headers,
-            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Goog-Api-Key': (GOOGLE_TRANSLATE_API_KEY as string) || '',
+            },
+            body: JSON.stringify({
+                q: request.text,
+                target: request.to || 'en',
+                source: request.from || 'kn',
+                format: 'text',
+            }),
         });
 
         if (!response.ok) {

@@ -241,6 +241,16 @@ export async function ArticlePageContent({ section, slug, lang }: ArticlePageCon
 
             <article className={`${lang === 'kn' ? 'article-kannada-scope' : ''} px-6 pt-12 pb-4 max-w-[1200px] mx-auto lg:pl-20`}>
                 <div className="max-w-4xl mx-auto">
+                    {lang === 'en' && article.translations?.en?.status === 'pending' && (
+                        <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-700 text-sm">
+                            <strong>Note:</strong> Auto-translation is in progress. Showing original content in the meantime.
+                        </div>
+                    )}
+                    {lang === 'en' && article.translations?.en?.status === 'failed' && (
+                        <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-700 text-sm">
+                            <strong>Note:</strong> Auto-translation failed. Showing original content.
+                        </div>
+                    )}
                     <ArticleHeader
                         title={localizedArticle.title}
                         subtitle={localizedArticle.subtitle}

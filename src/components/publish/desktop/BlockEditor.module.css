@@ -551,14 +551,13 @@
         /* Even more space on mobile */
     }
 
-    /* Move controls on mobile - visible above block */
+    /* Move controls on mobile - brought inside to avoid overlap */
     .moveControls {
-        top: -24px;
-        right: 0;
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        padding: 0;
+        top: 10px;
+        right: 10px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 0 4px;
         opacity: 1 !important;
         transform: none !important;
         justify-content: flex-end;
@@ -653,7 +652,7 @@
     .paragraphBlock,
     .subheadingBlock {
         padding: 0.75rem !important;
-        padding-right: 3rem !important;
+        padding-right: 100px !important;
         font-size: 1rem;
         line-height: 1.75;
     }

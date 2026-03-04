@@ -266,14 +266,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                     );
 
                     if (updateResult.success) {
-                        logger.info(`[PUBLISH] Translation saved for ${targetSlug}`, {
-                            translatedAt: translation.translatedAt,
-                        });
-
-                        // Invalidate article cache after translation update
+                        logger.info(`[PUBLISH] Translation saved for ${targetSlug}`);
                         clearArticleCache();
-
-                        // Purge Next.js cache so the English pages recognize the newly saved translation
                         revalidatePath('/', 'page');
                         revalidatePath('/en', 'page');
                         revalidatePath(`/${articleData.section}`, 'page');
@@ -281,16 +275,24 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                         revalidatePath(`/${articleData.section}/${targetSlug}`, 'page');
                         revalidatePath(`/en/${articleData.section}/${targetSlug}`, 'page');
                     } else {
-                        logger.error(`[PUBLISH] Failed to save translation for ${targetSlug}`, {
-                            error: updateResult.error,
-                        });
+                        logger.error(`[PUBLISH] Failed to save translation for ${targetSlug}`, { error: updateResult.error });
+                        // If save failed, we should still try to mark as failed
+                        const { contentGit: git } = await import('@/lib/git');
+                        await git.markTranslationFailed(articleData.section as Section, targetSlug);
                     }
                 } else {
-                    logger.warn(`[PUBLISH] Translation generation returned null for ${targetSlug}`);
+                    logger.warn(`[PUBLISH] Translation generation returned null for ${targetSlug}. Marking as failed.`);
+                    const { contentGit: git } = await import('@/lib/git');
+                    await git.markTranslationFailed(articleData.section as Section, targetSlug);
                 }
             } catch (translationError) {
                 logger.error('[PUBLISH] Translation generation failed in background:', translationError);
-                // Non-blocking: Don't fail publish if translation fails
+                try {
+                    const { contentGit: git } = await import('@/lib/git');
+                    await git.markTranslationFailed(articleData.section as Section, targetSlug);
+                } catch (e) {
+                    logger.error('[PUBLISH] Emergency: Could not even mark translation as failed', e);
+                }
             }
         });
 
