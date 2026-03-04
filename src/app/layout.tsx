@@ -4,7 +4,6 @@ import { Playfair_Display, Inter, Anek_Kannada, Tiro_Kannada, Noto_Serif_Kannada
 import "./globals.css";
 import { getAllArticles } from "@/lib/content/reader";
 import {
-  getTranslationsForLang,
   Language,
   SUPPORTED_LANGUAGES,
 } from "@/lib/i18n";
@@ -63,7 +62,7 @@ import PageViewTracker from '@/components/analytics/PageViewTracker';
  */
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLanguageFromCookie();
-  const t = getTranslationsForLang(lang);
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
 
   // Build hreflang links for all supported languages
@@ -78,17 +77,15 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(siteUrl),
     title: {
-      default: lang === 'kn'
-        ? "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ – ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆ"
-        : "The Hint News – Kannada Independent Digital Newspaper",
-      template: `%s | ${t.brand.name}`,
+      default: "The Hint News – Digital Kannada Newspaper",
+      template: `%s | The Hint News`,
     },
     description: lang === 'kn'
-      ? "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ."
-      : "The Hint News delivers independent journalism in Kannada. Comprehensive coverage of Karnataka politics, crime, court, and world affairs with editorial integrity.",
+      ? "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ಸ್ಥಳೀಯ, ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳು ಮತ್ತು ಅಭಿಪ್ರಾಯಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ."
+      : "The Hint News delivers independent journalism in Kannada. Comprehensive coverage of local news, Karnataka politics, crime, court, world affairs, and opinion with editorial integrity.",
     keywords: lang === 'kn'
-      ? ["ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್", "ಕನ್ನಡ ಸುದ್ದಿ", "ಕರ್ನಾಟಕ ಸುದ್ದಿ", "ಕನ್ನಡ ಪತ್ರಿಕೆ", "ರಾಜಕೀಯ", "ಕ್ರೈಂ", "ನ್ಯಾಯಾಲಯ", "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ"]
-      : ["The Hint News", "Kannada news", "Karnataka news", "Kannada newspaper", "politics", "crime", "court", "independent journalism", "digital newspaper"],
+      ? ["ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್", "ಕನ್ನಡ ಸುದ್ದಿ", "ಸ್ಥಳೀಯ", "ಕರ್ನಾಟಕ ಸುದ್ದಿ", "ಕನ್ನಡ ಪತ್ರಿಕೆ", "ರಾಜಕೀಯ", "ಕ್ರೈಂ", "ನ್ಯಾಯಾಲಯ", "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ", "ಅಭಿಪ್ರಾಯ"]
+      : ["The Hint News", "Kannada news", "local news", "Karnataka news", "Kannada newspaper", "politics", "crime", "court", "independent journalism", "digital newspaper", "opinion"],
     authors: [{ name: "The Hint Editorial Board" }],
     robots: {
       index: true,
@@ -110,10 +107,10 @@ export async function generateMetadata(): Promise<Metadata> {
         ? "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ – ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆ"
         : "The Hint News – Kannada Independent Digital Newspaper",
       description: lang === 'kn'
-        ? "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ."
-        : "The Hint News delivers independent journalism in Kannada. Comprehensive coverage of Karnataka politics, crime, court, and world affairs with editorial integrity.",
+        ? "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ಸ್ಥಳೀಯ, ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳು ಮತ್ತು ಅಭಿಪ್ರಾಯಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ."
+        : "The Hint News delivers independent journalism in Kannada. Comprehensive coverage of local news, Karnataka politics, crime, court, world affairs, and opinion with editorial integrity.",
       url: new URL(siteUrl),
-      siteName: t.brand.name,
+      siteName: 'The Hint News',
       locale: lang === 'kn' ? 'kn_IN' : 'en_US',
       type: 'website',
       images: [

@@ -6,14 +6,14 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-    title: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ | The Hint News Kannada Newspaper",
-    description: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ ಸುದ್ದಿಗಳಿಗೆ ಸಮಗ್ರತೆ ಮತ್ತು ನಿಖರತೆಯ ಬದ್ಧತೆ.",
+    title: "ನಮ್ಮ ಬಗ್ಗೆ",
+    description: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ. ಸ್ಥಳೀಯ, ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳು ಮತ್ತು ಅಭಿಪ್ರಾಯಗಳ ಸುದ್ದಿಗಳಿಗೆ ಸಮಗ್ರತೆ ಮತ್ತು ನಿಖರತೆಯ ಬದ್ಧತೆ.",
     keywords: ["ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್", "ಕನ್ನಡ ಪತ್ರಿಕೆ", "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ", "ಕನ್ನಡ ಸುದ್ದಿ", "The Hint News Kannada Newspaper"],
     alternates: {
         canonical: "https://www.thehintnews.in/about",
     },
     openGraph: {
-        title: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ",
+        title: "ನಮ್ಮ ಬಗ್ಗೆ",
         description: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ.",
         url: "https://www.thehintnews.in/about",
         type: "website",
@@ -25,14 +25,14 @@ export default function AboutPage() {
         '@context': 'https://schema.org',
         '@type': 'AboutPage',
         name: 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ',
-        description: 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ ಸುದ್ದಿಗಳಿಗೆ ಸಮಗ್ರತೆ ಮತ್ತು ನಿಖರತೆಯ ಬದ್ಧತೆ.',
+        description: 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆಯ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ. ಸ್ಥಳೀಯ, ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳು ಮತ್ತು ಅಭಿಪ್ರಾಯಗಳ ಸುದ್ದಿಗಳಿಗೆ ಸಮಗ್ರತೆ ಮತ್ತು ನಿಖರತೆಯ ಬದ್ಧತೆ.',
         url: 'https://www.thehintnews.in/about',
         mainEntity: {
             '@type': 'NewsMediaOrganization',
             '@id': 'https://www.thehintnews.in/#organization',
             name: 'The Hint News',
             alternateName: ['ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್', 'TheHintNews', 'The Hint Kannada News'],
-            description: 'The Hint News is a Kannada independent digital newspaper delivering comprehensive coverage of politics, crime, court, and world affairs.',
+            description: 'The Hint News is a Kannada independent digital newspaper delivering comprehensive coverage of local news, politics, crime, court, world affairs, and opinion.',
         },
     };
 

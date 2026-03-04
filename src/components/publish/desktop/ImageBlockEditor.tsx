@@ -108,6 +108,8 @@ export function ImageBlockEditor({ block, onSave, onCancel }: ImageBlockEditorPr
                 setSrcset(result.data.srcset || '');
                 setWidth(result.data.width);
                 setHeight(result.data.height);
+                // Update preview to show the watermarked image from Supabase
+                setPreviewUrl(result.data.url);
             } else {
                 setUploadError(result.error || 'Upload failed');
             }

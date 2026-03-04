@@ -1106,21 +1106,25 @@ class ContentGit {
                 };
             }
 
-            // Reconstruct frontmatter with translation added
-            const updatedFrontmatter: Record<string, unknown> = {
-                title: existingArticle.title,
-                subtitle: existingArticle.subtitle,
-                contentType: existingArticle.contentType,
-                image: existingArticle.image,
-                status: existingArticle.status,
-                publishedAt: existingArticle.publishedAt,
-                updatedAt: existingArticle.updatedAt,
-                placement: existingArticle.placement,
-                tags: existingArticle.tags,
-                sources: existingArticle.sources,
-                bodyBlocks: existingArticle.bodyBlocks,
-                // Add translation
+            // Reconstruct frontmatter by parsing the RAW yaml to preserve ALL arbitrary metadata fields
+            const yaml = await import('js-yaml');
+            let rawFrontmatter: Record<string, unknown> = {};
+
+            const match = existingFile.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
+            if (match) {
+                rawFrontmatter = (yaml.load(match[1]) as Record<string, unknown>) || {};
+            } else if (existingFile.startsWith('---\n')) {
+                const end = existingFile.indexOf('\n---', 4);
+                if (end !== -1) {
+                    rawFrontmatter = (yaml.load(existingFile.substring(4, end)) as Record<string, unknown>) || {};
+                }
+            }
+
+            // Replace translations while keeping original frontmatter intact
+            const updatedFrontmatter = {
+                ...rawFrontmatter,
                 translations: {
+                    ...((rawFrontmatter.translations as Record<string, unknown>) || {}),
                     en: {
                         title: translation.title,
                         subtitle: translation.subheadline || existingArticle.subtitle,
@@ -1132,7 +1136,6 @@ class ContentGit {
             };
 
             // Generate updated markdown
-            const yaml = await import('js-yaml');
             const yamlBlock = yaml.dump(updatedFrontmatter, {
                 lineWidth: -1,
                 noRefs: true,

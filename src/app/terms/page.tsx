@@ -6,7 +6,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-    title: "ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು | The Hint",
+    title: "ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು",
     description: "ದಿ ಹಿಂಟ್ ವೆಬ್‌ಸೈಟ್‌ನ ಬಳಕೆಯನ್ನು ನಿಯಂತ್ರಿಸುವ ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳನ್ನು ಓದಿ.",
 };
 

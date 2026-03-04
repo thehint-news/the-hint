@@ -27,6 +27,7 @@ import { logger } from '@/lib/feedback/console-guard';
 import { revalidatePath } from 'next/cache';
 import { verifyAuth } from '@/lib/auth/session';
 import { translateArticle } from '@/lib/i18n/translation-service';
+import { clearArticleCache } from '@/lib/cache/article-cache';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -130,6 +131,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 { errors: validationResult.errors },
                 400
             );
+        }
+
+        // Fetch English translation for slug generation if slug is not explicitly provided
+        if (typeof input.slug !== 'string' || !input.slug.trim()) {
+            try {
+                const { translateTextToEnglish } = await import('@/lib/i18n/translation-service');
+                const englishHeadline = await translateTextToEnglish(input.headline as string);
+                if (englishHeadline) {
+                    // Update input with the English slug before validation transforms it
+                    input.slug = generateSlug(englishHeadline);
+                    logger.info(`[PUBLISH] Generated English slug from translation: ${input.slug}`);
+                }
+            } catch {
+                logger.warn('[PUBLISH] Failed to generate English slug via translation API, falling back to local generation');
+            }
         }
 
         // Transform to validated data
@@ -253,6 +269,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                         logger.info(`[PUBLISH] Translation saved for ${targetSlug}`, {
                             translatedAt: translation.translatedAt,
                         });
+
+                        // Invalidate article cache after translation update
+                        clearArticleCache();
+
+                        // Purge Next.js cache so the English pages recognize the newly saved translation
+                        revalidatePath('/', 'page');
+                        revalidatePath('/en', 'page');
+                        revalidatePath(`/${articleData.section}`, 'page');
+                        revalidatePath(`/en/${articleData.section}`, 'page');
+                        revalidatePath(`/${articleData.section}/${targetSlug}`, 'page');
+                        revalidatePath(`/en/${articleData.section}/${targetSlug}`, 'page');
                     } else {
                         logger.error(`[PUBLISH] Failed to save translation for ${targetSlug}`, {
                             error: updateResult.error,
@@ -300,10 +327,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             }
         });
 
+        // CACHE INVALIDATION: Clear article cache immediately after successful publish
+        clearArticleCache();
+
         // 7. On-demand revalidation
         revalidatePath('/', 'page');
+        revalidatePath('/en', 'page');
         revalidatePath(`/${articleData.section}`, 'page');
+        revalidatePath(`/en/${articleData.section}`, 'page');
         revalidatePath(`/${articleData.section}/${targetSlug}`, 'page');
+        revalidatePath(`/en/${articleData.section}/${targetSlug}`, 'page');
 
         return userResponse(
             true,

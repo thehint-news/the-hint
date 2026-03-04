@@ -4,6 +4,7 @@ import { logger } from '@/lib/feedback/console-guard';
 import { verifyAuth } from '@/lib/auth/session';
 import { revalidatePath } from 'next/cache';
 import { Section } from '@/lib/git/service';
+import { clearArticleCache } from '@/lib/cache/article-cache';
 
 /** Valid sections */
 const VALID_SECTIONS: Section[] = ['politics', 'crime', 'court', 'opinion', 'world-affairs', 'local'];
@@ -234,6 +235,9 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
 
                 logger.info(`[DELETE-API] [${requestId}] Draft deleted successfully: ${id}`);
 
+                // CACHE INVALIDATION: Clear article cache after draft delete
+                clearArticleCache();
+
                 // PART 6 - STRUCTURED API RESPONSE
                 const response: DeleteSuccessResponse = {
                     success: true,
@@ -271,7 +275,18 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
                     );
                 }
 
-                const safeSlug = slug.replace(/[^a-z0-9-]/gi, '-');
+                // BUG FIX: Removed incorrect ASCII-only sanitization that was breaking Unicode slugs
+                // The slug is already validated/sanitized when created via generateSlug() which supports Unicode
+                // Replacing Unicode chars with '-' was causing mismatches (e.g., 'ಮೊದಲ-ಲೇಖನ' -> '-------')
+                // Only trim whitespace and validate it's not empty after trim
+                const safeSlug = slug.trim();
+                if (!safeSlug) {
+                    logger.warn(`[DELETE-API] [${requestId}] Empty slug after trim`);
+                    return NextResponse.json(
+                        { success: false, error: 'Invalid article slug.', errorCode: 'VALIDATION' },
+                        { status: 400 }
+                    );
+                }
                 logger.info(`[DELETE-API] [${requestId}] Section: ${section}, Slug: ${safeSlug}`);
 
                 // Wait for Git confirmation before proceeding
@@ -286,6 +301,9 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
                 }
 
                 logger.info(`[DELETE-API] [${requestId}] Git commit confirmed for published article`);
+
+                // CACHE INVALIDATION: Clear article cache immediately after confirmed Git delete
+                clearArticleCache();
 
                 // PART 3 - CACHE & ISR COORDINATION
                 // Must trigger revalidation BEFORE returning success

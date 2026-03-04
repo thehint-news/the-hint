@@ -6,7 +6,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-    title: "ಸಂಪರ್ಕ | The Hint",
+    title: "ಸಂಪರ್ಕ",
     description: "ಸಾಮಾನ್ಯ ವಿಚಾರಣೆಗಳು, ಸುದ್ದಿ ಸುಳಿವುಗಳು, ಸಂಪಾದಕರಿಗೆ ಪತ್ರಗಳು, ತಿದ್ದುಪಡಿಗಳು ಮತ್ತು ಜಾಹೀರಾತುಗಳಿಗಾಗಿ ದಿ ಹಿಂಟ್ ಸುದ್ದಿಮನೆಯನ್ನು ತಲುಪಿ.",
 };
 

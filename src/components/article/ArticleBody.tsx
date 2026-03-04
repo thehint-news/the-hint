@@ -46,7 +46,8 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                     prose-li:text-lg prose-li:leading-relaxed prose-li:mb-2
                     prose-strong:font-bold
                     prose-img:block prose-img:w-full prose-img:mx-auto prose-img:my-8 prose-img:rounded-sm
-                    prose-blockquote:border-l-2 prose-blockquote:border-[#111] prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-[#444]">
+                    prose-blockquote:border-l-4 prose-blockquote:border-[#111] prose-blockquote:px-6 prose-blockquote:py-5 prose-blockquote:bg-[#f4f5f7] prose-blockquote:rounded-md prose-blockquote:shadow-inner prose-blockquote:text-[#1a1a1a]
+                    [&>blockquote>p]:italic [&>blockquote>p]:font-bold">
 
                 {blocks.map((block, index) => {
                     // Image Block - Display all body images
@@ -106,8 +107,14 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                             <blockquote
                                 key={block.id}
                                 style={{
-                                    borderLeft: '3px solid #111111',
+                                    borderLeft: '4px solid #111111',
                                     paddingLeft: '1.5rem',
+                                    paddingRight: '1.5rem',
+                                    paddingTop: '1.25rem',
+                                    paddingBottom: '1.25rem',
+                                    backgroundColor: '#f4f5f7',
+                                    borderRadius: '6px',
+                                    boxShadow: 'inset 0 2px 6px rgba(0, 0, 0, 0.04)',
                                     marginTop: '2.5rem',
                                     marginBottom: '2.5rem',
                                     marginLeft: 0,
@@ -116,9 +123,10 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                             >
                                 <p style={{
                                     fontStyle: 'italic',
+                                    fontWeight: 700,
                                     fontSize: 'clamp(1.125rem, 3vw, 1.25rem)',
                                     lineHeight: 1.65,
-                                    color: '#2B2B2B',
+                                    color: '#1a1a1a',
                                     fontFamily: 'var(--font-serif-full)',
                                     margin: 0,
                                     whiteSpace: 'pre-wrap',
@@ -127,7 +135,7 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                                 </p>
                                 {block.attribution && (
                                     <footer style={{
-                                        marginTop: '0.75rem',
+                                        marginTop: '1rem',
                                         fontSize: '0.875rem',
                                         color: '#595959',
                                         fontStyle: 'normal',

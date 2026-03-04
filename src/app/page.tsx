@@ -42,9 +42,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
 
   return {
-    title: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ – ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆ",
-    description: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ.",
-    keywords: ["ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್", "ಕನ್ನಡ ಸುದ್ದಿ", "ಕರ್ನಾಟಕ ಸುದ್ದಿ", "ಕನ್ನಡ ಪತ್ರಿಕೆ", "ರಾಜಕೀಯ", "ಕ್ರೈಂ", "ನ್ಯಾಯಾಲಯ", "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ"],
+    title: "The Hint News – Digital Kannada Newspaper",
+    description: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ಸ್ಥಳೀಯ, ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳು ಮತ್ತು ಅಭಿಪ್ರಾಯಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ.",
+    keywords: ["ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್", "ಕನ್ನಡ ಸುದ್ದಿ", "ಸ್ಥಳೀಯ", "ಕರ್ನಾಟಕ ಸುದ್ದಿ", "ಕನ್ನಡ ಪತ್ರಿಕೆ", "ರಾಜಕೀಯ", "ಕ್ರೈಂ", "ನ್ಯಾಯಾಲಯ", "ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮ", "ಅಭಿಪ್ರಾಯ"],
     alternates: {
       canonical: siteUrl,
       languages: {
@@ -55,10 +55,10 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     robots: { index: true, follow: true },
     openGraph: {
-      title: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ – ಕನ್ನಡ ಸ್ವತಂತ್ರ ಡಿಜಿಟಲ್ ಪತ್ರಿಕೆ",
-      description: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ.",
+      title: "The Hint News – Digital Kannada Newspaper",
+      description: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ಸ್ಥಳೀಯ, ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳು ಮತ್ತು ಅಭಿಪ್ರಾಯಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ.",
       url: siteUrl,
-      siteName: "ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್",
+      siteName: "The Hint News",
       locale: 'kn_IN',
       type: 'website',
       images: [
@@ -123,7 +123,7 @@ export default async function HomePage() {
         url: 'https://www.thehintnews.in/',
         name: 'The Hint News',
         alternateName: ['ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್', 'TheHintNews'],
-        description: 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ.',
+        description: 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ಕನ್ನಡದಲ್ಲಿ ಸ್ವತಂತ್ರ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಡೆದಂತೆ ತಲುಪಿಸುತ್ತದೆ. ಸ್ಥಳೀಯ, ರಾಜಕೀಯ, ಕ್ರೈಂ, ನ್ಯಾಯಾಲಯ, ವಿಶ್ವ ವಿದ್ಯಮಾನಗಳು ಮತ್ತು ಅಭಿಪ್ರಾಯಗಳ ಸಮಗ್ರ ಸುದ್ದಿ ವರದಿ.',
         publisher: {
           '@id': 'https://www.thehintnews.in/#organization'
         },
@@ -148,7 +148,7 @@ export default async function HomePage() {
           width: 1200,
           height: 630,
         },
-        description: 'The Hint News is a Kannada independent digital newspaper delivering comprehensive coverage of politics, crime, court, and world affairs with editorial integrity.',
+        description: 'The Hint News is a Kannada independent digital newspaper delivering comprehensive coverage of local news, politics, crime, court, world affairs, and opinion with editorial integrity.',
         sameAs: [
           'https://twitter.com/thehintnews',
           'https://www.facebook.com/thehintnews',

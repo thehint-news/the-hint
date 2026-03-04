@@ -53,12 +53,11 @@ export async function generateArticleMetadata({
         };
     }
 
-    // Check if English translation exists when requesting English
-    if (lang === 'en' && !hasEnglishTranslation(article)) {
-        return {
-            title: t.errors.notFound,
-            description: t.errors.notFoundDesc,
-        };
+    // EnglishRoute Debug Log for metadata
+    if (lang === 'en') {
+        const hasTranslation = hasEnglishTranslation(article);
+        console.log(`[EnglishRoute] Article exists: true`);
+        console.log(`[EnglishRoute] Translation exists: ${hasTranslation}`);
     }
 
     // Apply translation if available
@@ -100,7 +99,7 @@ export async function generateArticleMetadata({
             images: article.image ? [{ url: article.image, alt: localizedArticle.title }] : [],
             url: canonicalUrl,
             locale: lang === 'kn' ? 'kn_IN' : 'en_US',
-            siteName: lang === 'kn' ? 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್' : 'The Hint News',
+            siteName: 'The Hint News',
         },
         twitter: {
             card: 'summary_large_image',
@@ -129,9 +128,14 @@ export async function ArticlePageContent({ section, slug, lang }: ArticlePageCon
 
     const { article } = articleData;
 
-    // For English route, check if translation exists
-    if (lang === 'en' && !hasEnglishTranslation(article)) {
-        notFound();
+    // For English route, log state but never 404 (prevent ISR caching 404s)
+    if (lang === 'en') {
+        const hasTranslation = hasEnglishTranslation(article);
+        console.log(`[EnglishRoute] Article exists: true`);
+        console.log(`[EnglishRoute] Translation exists: ${hasTranslation}`);
+
+        // If no translation, we just proceed. `applyArticleTranslation` below 
+        // will automatically apply the Kannada fallback.
     }
 
     // Apply translation if available

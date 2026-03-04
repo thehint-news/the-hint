@@ -146,12 +146,10 @@ function handleDomainRedirect(request: NextRequest): NextResponse | null {
   const isVercelDomain = host.endsWith('.vercel.app');
   const isBareDomain = host === 'thehintnews.in';
 
-  // Only force redirect vercel domains if we are in production
-  // This preserves the ability to test PRs via preview URLs
-  const isProduction = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
-
-  if (isBareDomain || (isVercelDomain && isProduction)) {
+  // Force redirect ALL Vercel domains and bare domains to the main production URL
+  if (isBareDomain || isVercelDomain) {
     url.hostname = 'www.thehintnews.in';
+    // Clear port in case it was set
     url.port = '';
     url.protocol = 'https:';
     return NextResponse.redirect(url, 301);

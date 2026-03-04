@@ -11,9 +11,24 @@ import { ArticlePageContent, generateArticleMetadata } from '@/app/[section]/[sl
 import { SECONDARY_LANGUAGE } from '@/lib/i18n/language';
 import { ArticlePageWrapper } from '@/components/article';
 
-// Force dynamic rendering — GitHub API calls at build time cause timeouts
-export const dynamic = 'force-dynamic';
+// Allow ISR with dynamic fallback
+export const dynamicParams = true;
 export const revalidate = 60;
+
+import { getAllArticles } from '@/lib/content/reader';
+
+export async function generateStaticParams() {
+    try {
+        const articles = await getAllArticles();
+        return articles.map((article) => ({
+            section: article.section,
+            slug: article.id,
+        }));
+    } catch (error) {
+        console.error('Failed to generate static params (English route):', error);
+        return [];
+    }
+}
 
 interface EnglishArticlePageProps {
     params: Promise<{

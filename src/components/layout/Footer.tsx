@@ -35,16 +35,13 @@ export function Footer() {
 
                             {/* Column 1: Brand & Subscribe */}
                             <div className="text-center md:text-left">
-                                <Link href="/" className="hover:opacity-80 transition-opacity">
-                                    <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#e5e5e5] mb-3" style={{ fontFamily: 'var(--font-serif)' }}>
+                                <Link href="/" className="inline-block hover:opacity-80 transition-opacity mb-1">
+                                    <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#e5e5e5]" style={{ fontFamily: 'var(--font-serif)' }}>
                                         {en.brand.name}
                                     </h2>
                                 </Link>
-                                <p className="font-serif text-[15px] text-[#888] italic leading-relaxed mb-2">
-                                    {en.brand.tagline1}<br />{en.brand.tagline2}
-                                </p>
-                                <p className="font-sans text-[13px] text-[#666] leading-relaxed mb-4 max-w-xs">
-                                    {en.brand.description}
+                                <p className="font-sans text-[13px] text-[#999] tracking-wide mb-6">
+                                    Digital Kannada Newspaper
                                 </p>
                                 <button
                                     onClick={() => setIsSubscribeOpen(true)}

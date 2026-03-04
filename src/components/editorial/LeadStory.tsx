@@ -71,33 +71,11 @@ export function LeadStory({ article }: LeadStoryProps) {
     const [isTransitioning, setIsTransitioning] = useState(false);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    if (!article) {
-        return null;
-    }
-
     // Determine if we should use carousel or static image
-    const leadImages = article.leadMedia?.images || [];
+    const leadImages = article?.leadMedia?.images || [];
     const useCarousel = leadImages.length >= 2;
     const displayImages = leadImages.length > 0 ? leadImages :
-        article.image ? [{ url: article.image, alt: article.title }] : [];
-
-    // Thumbnail is now guaranteed through the data layer (reader.ts)
-    // which extracts first body image if no explicit image is set
-
-    const formattedDate = new Date(article.publishedAt).toLocaleDateString("kn-IN", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    });
-
-    const sectionLabel = (kn.sections as Record<string, string>)[article.section] || article.section
-        .replace("-", " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase());
-
-    const contentTypeStr = (kn.contentTypes as Record<string, string>)[article.contentType] || article.contentType;
-
-    const articleUrl = `/${article.section}/${article.id}`;
+        article?.image ? [{ url: article.image, alt: article.title }] : [];
 
     /**
      * Auto-rotation effect
@@ -144,6 +122,28 @@ export function LeadStory({ article }: LeadStoryProps) {
         const newIndex = (currentIndex + 1) % displayImages.length;
         goToSlide(newIndex);
     }, [currentIndex, displayImages.length, goToSlide]);
+
+    if (!article) {
+        return null;
+    }
+
+    // Thumbnail is now guaranteed through the data layer (reader.ts)
+    // which extracts first body image if no explicit image is set
+
+    const formattedDate = new Date(article.publishedAt).toLocaleDateString("kn-IN", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+
+    const sectionLabel = (kn.sections as Record<string, string>)[article.section] || article.section
+        .replace("-", " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+
+    const contentTypeStr = (kn.contentTypes as Record<string, string>)[article.contentType] || article.contentType;
+
+    const articleUrl = `/${article.section}/${article.id}`;
 
     return (
         <section style={{ marginBottom: "1.25rem" }} aria-labelledby="lead-story-heading">

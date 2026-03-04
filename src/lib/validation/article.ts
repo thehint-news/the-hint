@@ -110,7 +110,7 @@ const STOP_WORDS = new Set([
  * - Takes first 5 words (or fewer if headline is shorter)
  * - Removes stop words optionally
  * - Lowercase, hyphen-separated
- * - Removes punctuation (preserves Unicode letters/numbers like Kannada, Hindi, etc.)
+ * - Transliterates all script to english characters
  * - Deterministic and immutable after publish
  * 
  * @param headline - The article headline
@@ -123,13 +123,28 @@ export function generateSlug(
     maxWords: number = 5,
     removeStopWords: boolean = true
 ): string {
+    // Transliterate Unicode to ASCII first (e.g., Kannada script to English alphabet)
+    let transliterated = headline;
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const anyAsciiModule = require('any-ascii');
+        const anyAscii = anyAsciiModule.default || anyAsciiModule;
+
+        if (typeof anyAscii === 'function') {
+            transliterated = anyAscii(headline);
+        }
+    } catch {
+        // Fallback if not available
+        console.warn('any-ascii not available, skipping transliteration');
+    }
+
     // Normalize: lowercase and remove punctuation except spaces
-    const normalized = headline
+    const normalized = transliterated
         .toLowerCase()
         .trim()
-        // Replace common punctuation with spaces (not hyphens, to separate words)
-        .replace(/[.,!?;:'"()[\]{}_]/g, ' ')
-        // Keep only Unicode letters, numbers, and spaces
+        // Replace punctuation with spaces to separate words
+        .replace(/[.,!?;:'"()[\]{}_+\-=*&^%$#@~`|\\/><]/g, ' ')
+        // Keep alphanumeric and spaces, and fallback to unicode letters if transliteration failed
         .replace(/[^\p{L}\p{N}\s]/gu, ' ')
         // Normalize multiple spaces
         .replace(/\s+/g, ' ')

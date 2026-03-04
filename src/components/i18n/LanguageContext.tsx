@@ -71,16 +71,16 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
         // Update cookie for server-side consistency
         setClientLanguage(newLang);
 
-        // Calculate the target URL based on current path
-        const currentPath = window.location.pathname;
+        // Calculate the target URL based on Next.js pathname
+        // This avoids encoding mismatches with window.location.pathname on Unicode URLs
         let targetPath: string;
 
         if (newLang === 'en') {
             // Switching to English - add /en prefix
-            targetPath = currentPath.startsWith('/en') ? currentPath : `/en${currentPath}`;
+            targetPath = pathname.startsWith('/en') ? pathname : `/en${pathname}`;
         } else {
             // Switching to Kannada - remove /en prefix
-            targetPath = currentPath.replace(/^\/en/, '') || '/';
+            targetPath = pathname.replace(/^\/en/, '') || '/';
         }
 
         // Store the target path to detect when navigation completes
@@ -98,7 +98,7 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
             setIsTransitioning(false);
             setPendingPath(null);
         }, 2500);
-    }, [language, isTransitioning, router]);
+    }, [language, isTransitioning, router, pathname]);
 
     return (
         <LanguageContext.Provider value={{ language, toggleLanguage, isTransitioning }}>

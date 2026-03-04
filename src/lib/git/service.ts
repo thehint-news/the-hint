@@ -84,11 +84,8 @@ class GitService {
                 auth: token,
                 request: {
                     fetch: (url: string, opts: RequestInit) => {
-                        const modifiedOpts = { ...opts };
-                        delete modifiedOpts.next;
                         return fetch(url, {
-                            ...modifiedOpts,
-                            cache: 'no-store',
+                            ...opts,
                         });
                     }
                 }

@@ -14,6 +14,7 @@
 
 import { uploadToStorage, type StorageUploadResult } from './supabase-storage';
 import { validateImageFile, type MediaValidationResult } from '../validation/media';
+import { applyWatermark } from './watermark';
 
 // =============================================================================
 // TYPES
@@ -82,9 +83,12 @@ export async function processImageUpload(
     }
 
     try {
-        // 2. Upload to Supabase Storage
+        // 2. Apply watermark before upload
+        const watermarkedBuffer = await applyWatermark(buffer, mimeType);
+
+        // 3. Upload watermarked image to Supabase Storage
         const result: StorageUploadResult = await uploadToStorage(
-            buffer,
+            watermarkedBuffer,
             mimeType,
             providedDimensions
         );
@@ -96,7 +100,9 @@ export async function processImageUpload(
             };
         }
 
-        // 3. Return CDN-backed response
+        console.info('[MediaUpload] Upload completed');
+
+        // 4. Return CDN-backed response
         const { id, url, width, height, size } = result.data;
 
         return {

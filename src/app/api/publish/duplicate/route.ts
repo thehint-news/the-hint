@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { contentGit, PublishedArticleData } from '@/lib/git';
 import { Section, ContentType, Placement } from '@/lib/validation';
 import { verifyAuth } from '@/lib/auth/session';
+import { clearArticleCache } from '@/lib/cache/article-cache';
 
 /**
  * Generate a unique draft ID
@@ -127,6 +128,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 );
             }
 
+            // CACHE INVALIDATION: Clear cache after successful duplication
+            clearArticleCache();
+
             return userResponse(
                 true,
                 'Article duplicated successfully.',
@@ -218,6 +222,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                     500
                 );
             }
+
+            // CACHE INVALIDATION: Clear cache after successful duplication
+            clearArticleCache();
 
             return userResponse(
                 true,

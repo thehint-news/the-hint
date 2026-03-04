@@ -25,8 +25,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
     return {
         title: "The Hint News – Kannada Independent Digital Newspaper",
-        description: "The Hint News delivers independent journalism in Kannada. Comprehensive coverage of Karnataka politics, crime, court, and world affairs with editorial integrity.",
-        keywords: ["The Hint News", "Kannada news", "Karnataka news", "Kannada newspaper", "politics", "crime", "court", "independent journalism", "digital newspaper"],
+        description: "The Hint News delivers independent journalism in Kannada. Comprehensive coverage of local news, Karnataka politics, crime, court, world affairs, and opinion with editorial integrity.",
+        keywords: ["The Hint News", "Kannada news", "local news", "Karnataka news", "Kannada newspaper", "politics", "crime", "court", "independent journalism", "digital newspaper", "opinion"],
         alternates: {
             canonical: `${siteUrl}/en`,
             languages: {
@@ -38,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
         robots: { index: true, follow: true },
         openGraph: {
             title: "The Hint News – Kannada Independent Digital Newspaper",
-            description: "The Hint News delivers independent journalism in Kannada. Comprehensive coverage of Karnataka politics, crime, court, and world affairs.",
+            description: "The Hint News delivers independent journalism in Kannada. Comprehensive coverage of local news, Karnataka politics, crime, court, world affairs, and opinion.",
             url: `${siteUrl}/en`,
             siteName: "The Hint News",
             locale: 'en_US',
@@ -103,7 +103,7 @@ export default async function EnglishHomePage() {
                 url: 'https://www.thehintnews.in/en',
                 name: 'The Hint News',
                 alternateName: ['ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್', 'TheHintNews'],
-                description: 'The Hint News delivers independent journalism in Kannada. Comprehensive coverage of Karnataka politics, crime, court, and world affairs.',
+                description: 'The Hint News delivers independent journalism in Kannada. Comprehensive coverage of local news, Karnataka politics, crime, court, world affairs, and opinion.',
                 publisher: {
                     '@id': 'https://www.thehintnews.in/#organization'
                 },
@@ -128,7 +128,7 @@ export default async function EnglishHomePage() {
                     width: 1200,
                     height: 630,
                 },
-                description: 'The Hint News is a Kannada independent digital newspaper delivering comprehensive coverage of politics, crime, court, and world affairs with editorial integrity.',
+                description: 'The Hint News is a Kannada independent digital newspaper delivering comprehensive coverage of local news, politics, crime, court, world affairs, and opinion with editorial integrity.',
                 sameAs: [
                     'https://twitter.com/thehintnews',
                     'https://www.facebook.com/thehintnews',

@@ -153,6 +153,26 @@ async function translateText(request: TranslationRequest): Promise<TranslationRe
 }
 
 /**
+ * Translate simple text to English (helper for slugs)
+ */
+export async function translateTextToEnglish(text: string): Promise<string | null> {
+    try {
+        const result = await translateText({
+            text,
+            from: 'kn',
+            to: 'en',
+        });
+        if (result.success) {
+            return result.text;
+        }
+        return null;
+    } catch (e) {
+        logger.error('[TranslationService] translateTextToEnglish failed', { error: e });
+        return null;
+    }
+}
+
+/**
  * Split markdown content into chunks for translation
  * Preserves markdown structure
  */

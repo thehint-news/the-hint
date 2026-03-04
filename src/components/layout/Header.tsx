@@ -14,6 +14,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { SubscribeModal } from "../features/SubscribeModal";
@@ -110,10 +111,17 @@ export function Header({ latestUpdate }: HeaderProps) {
                     >
                         {/* Drawer Header */}
                         <div className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 flex justify-between items-start">
-                            <div className="flex flex-col gap-1">
-                                <span className="text-xl sm:text-2xl font-black tracking-tight leading-none text-[#111]" style={{ fontFamily: 'var(--font-serif)' }}>
-                                    {en.brand.name}
-                                </span>
+                            <div className="flex flex-col gap-3">
+                                <div className="h-[72px] sm:h-[84px] ml-0.5 mt-1">
+                                    <Image
+                                        src="/brand/logo.png"
+                                        alt={en.brand.name}
+                                        width={432}
+                                        height={607}
+                                        className="h-full w-auto object-contain object-left"
+                                        style={{ mixBlendMode: 'multiply', filter: 'grayscale(1) brightness(1.1) contrast(1.1)' }}
+                                    />
+                                </div>
                                 <span className="font-sans text-[10px] font-medium text-[#666] uppercase tracking-wide pl-0.5">
                                     {currentDate}
                                 </span>
@@ -188,7 +196,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                 {/* Masthead */}
                 <div className="container-editorial relative z-20 bg-[#F7F6F2]">
                     {/* Mobile Header (below md: 768px) */}
-                    <div className="md:hidden flex justify-between items-center py-2 sm:py-3 border-b border-[#111]">
+                    <div className="md:hidden flex justify-between items-center py-1.5 sm:py-2 border-b border-[#111]">
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             className="p-1.5 -ml-1.5 touch-manipulation"
@@ -199,8 +207,18 @@ export function Header({ latestUpdate }: HeaderProps) {
                             <div className="w-4 h-px bg-[#111]"></div>
                         </button>
 
-                        <Link href="/" className="no-underline flex-1 text-center px-2">
-                            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#111] leading-none" style={{ fontFamily: 'var(--font-serif)' }}>{en.brand.name}</h1>
+                        <Link href="/" className="no-underline flex-1 flex justify-center relative z-10">
+                            <div className="w-[220px] sm:w-[280px] flex items-center justify-center -mt-6 -mb-8 sm:-mt-8 sm:-mb-10">
+                                <Image
+                                    src="/brand/header-logo.png"
+                                    alt={en.brand.name}
+                                    priority
+                                    width={1280}
+                                    height={706}
+                                    className="w-full h-auto object-contain"
+                                    style={{ mixBlendMode: 'multiply', filter: 'grayscale(1) brightness(1.1) contrast(1.1)' }}
+                                />
+                            </div>
                         </Link>
 
                         {/* Mobile Search */}
@@ -246,19 +264,29 @@ export function Header({ latestUpdate }: HeaderProps) {
                     </nav>
 
                     {/* Tablet & Desktop Masthead Content (md and above: 768px+) */}
-                    <div className="hidden md:block pt-1 lg:pt-2 pb-0.5 text-center">
+                    <div className="hidden md:flex flex-col items-center pt-0 pb-0 text-center">
                         {currentDate && (
-                            <time className="block font-sans text-[9px] lg:text-[10px] font-medium text-[#6B6B6B] mb-0.5 lg:mb-1">
+                            <time className="block font-sans text-[10px] lg:text-[11px] font-medium text-[#6B6B6B] mt-1 lg:mt-2 mb-0 uppercase tracking-wider relative z-10">
                                 {currentDate}
                             </time>
                         )}
-                        <Link href="/" className="inline-block no-underline">
-                            <h1 className="masthead-title leading-none text-4xl lg:text-5xl" style={{ fontFamily: 'var(--font-serif)' }}>{en.brand.name}</h1>
+                        <Link href="/" className="inline-block no-underline hover:opacity-90 transition-opacity">
+                            <div className="w-[320px] md:w-[400px] lg:w-[500px] xl:w-[580px] mx-auto flex items-center justify-center -mt-12 -mb-6 lg:-mt-24 lg:-mb-16 xl:-mt-28 xl:-mb-20">
+                                <Image
+                                    src="/brand/header-logo.png"
+                                    alt={en.brand.name}
+                                    priority
+                                    width={1280}
+                                    height={706}
+                                    className="w-full h-auto object-contain"
+                                    style={{ mixBlendMode: 'multiply', filter: 'grayscale(1) brightness(1.1) contrast(1.1)' }}
+                                />
+                            </div>
                         </Link>
                     </div>
 
                     {/* Divider */}
-                    <hr className="hidden md:block border-t border-[#111] mt-1.5 mb-0.5" />
+                    <hr className="hidden md:block border-t border-[#111] mt-0.5 mb-0.5" />
 
                     {/* Tablet & Desktop Navigation (md and above: 768px+) */}
                     <nav className="hidden md:flex justify-between items-center py-1 relative">

@@ -12,9 +12,24 @@ import { ArticlePageContent, generateArticleMetadata } from './ArticlePageConten
 import { DEFAULT_LANGUAGE } from '@/lib/i18n/language';
 import { ArticlePageWrapper } from '@/components/article';
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
+// Allow ISR with dynamic fallback
+export const dynamicParams = true;
 export const revalidate = 60;
+
+import { getAllArticles } from '@/lib/content/reader';
+
+export async function generateStaticParams() {
+    try {
+        const articles = await getAllArticles();
+        return articles.map((article) => ({
+            section: article.section,
+            slug: article.id,
+        }));
+    } catch (error) {
+        console.error('Failed to generate static params:', error);
+        return [];
+    }
+}
 
 interface ArticlePageProps {
     params: Promise<{

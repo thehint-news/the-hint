@@ -44,11 +44,12 @@
 
 ### Reader Features
 - **Homepage**: Broadsheet layout with lead story, top stories, and section blocks
-- **Sections**: Politics, Crime, Court, Opinion, World Affairs
+- **Sections**: Local, Politics, Crime, Court, Opinion, World Affairs
 - **Article Pages**: Full content with metadata, recommendations, and social embeds
 - **Search**: Full-text article search
-- **Newsletter**: Subscription and unsubscription system
+- **Newsletter**: Robust subscription and reliable email broadcast system integrated with Resend
 - **Bilingual Support**: English and Kannada content
+- **High Performance**: Low-latency edge-optimized delivery with a robust server-side article cache
 
 ### Editor Features
 - **Publishing Console**: Full-featured article editor with block-based editing
@@ -156,11 +157,13 @@ the-hint-web/
 │   │   ├── newsroom/           # Editor login page
 │   │   ├── publish/            # Publishing console (auth-gated)
 │   │   ├── api/                # API route handlers
+│   │   │   ├── admin/          # Admin debug endpoints
 │   │   │   ├── auth/           # Magic link auth endpoints
 │   │   │   ├── publish/        # Article CRUD endpoints
 │   │   │   ├── media/          # Image/video upload endpoints
-│   │   │   ├── subscribe/      # Newsletter subscription
+│   │   │   ├── subscribe/      # Newsletter subscription & queueing
 │   │   │   └── search/         # Full-text article search
+│   │   ├── en/                 # English translations route group
 │   │   └── sitemap.ts          # Dynamic XML sitemap
 │   │
 │   ├── components/             # React UI components
@@ -177,14 +180,18 @@ the-hint-web/
 │   │   ├── auth/               # Magic link auth, JWT sessions
 │   │   ├── media/              # Image upload, video providers
 │   │   ├── subscription/       # Email queue, subscriber management
+│   │   ├── cache/              # Server-side in-memory caching for API optimization
+│   │   ├── i18n/               # Bilingual support (English & Kannada translations)
 │   │   └── env.ts              # Environment variable validation
 │   │
 │   └── content/                # Git-backed article content (Markdown)
+│       ├── local/
 │       ├── politics/
 │       ├── crime/
 │       ├── court/
 │       ├── opinion/
-│       └── world-affairs/
+│       ├── world-affairs/
+│       └── drafts/
 │
 ├── data/                       # Git-backed data files
 │   ├── subscribers.json        # Newsletter subscriber list
@@ -225,11 +232,15 @@ the-hint-web/
 
 4. **Single Authorized Editor**: The publishing console is gated to exactly one email address (`AUTHORIZED_EDITOR_EMAIL`). No multi-user auth.
 
+5. **Server-Side Caching**: A production-grade global in-memory cache layer limits GitHub API reads to prevent rate limiting, providing high performance and immediate cache invalidation on mutations (publish/edit/delete) without external KV stores.
+
+6. **Robust Background Processing**: Due to Vercel's serverless limits, async background jobs like newsletter broadcasting are handled gracefully via Git-based persistent message queues instead of relying on long-running workers.
+
 ### Content Sections
 
 The six editorial sections are:
 
-- `Local` — Regional news, city updates, and community events.
+- `local` — Regional news, city updates, and community events
 - `politics` — Political news and analysis
 - `crime` — Crime reports and investigations
 - `court` — Court proceedings and legal news

@@ -63,13 +63,10 @@ const CheckIcon = () => (
 
 export function ShareButtons({
     title,
-    description: _description,
     url: customUrl,
     variant = 'inline',
     className = '',
 }: ShareButtonsProps) {
-    // Note: _description is kept for future use in share text
-    // Currently WhatsApp, X, and Facebook don't use it in their share URLs
     const pathname = usePathname();
     const [copied, setCopied] = useState(false);
 

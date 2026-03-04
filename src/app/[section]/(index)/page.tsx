@@ -43,8 +43,8 @@ export async function generateMetadata({ params }: SectionPageProps): Promise<Me
         const hrefLang = buildSectionHrefLang(section.slug, siteUrl);
 
         return {
-            title: `${sectionName} | ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್`,
-            description: `${sectionDesc}. ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್ ನಲ್ಲಿ ಕರ್ನಾಟಕ ಮತ್ತು ವಿಶ್ವದ ಇತ್ತೀಚಿನ ${sectionName} ಸುದ್ದಿಗಳನ್ನು ಓದಿ.`,
+            title: `${sectionName} | The Hint News`,
+            description: `${sectionDesc}. The Hint News ನಲ್ಲಿ ಕರ್ನಾಟಕ ಮತ್ತು ವಿಶ್ವದ ಇತ್ತೀಚಿನ ${sectionName} ಸುದ್ದಿಗಳನ್ನು ಓದಿ.`,
             keywords: [sectionName, 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್', 'ಕನ್ನಡ ಸುದ್ದಿ', 'ಕರ್ನಾಟಕ ಸುದ್ದಿ', sectionName.toLowerCase()],
             alternates: {
                 canonical: `/${section.slug}`,
@@ -56,12 +56,12 @@ export async function generateMetadata({ params }: SectionPageProps): Promise<Me
             },
             robots: { index: true, follow: true },
             openGraph: {
-                title: `${sectionName} | ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್`,
+                title: `${sectionName} | The Hint News`,
                 description: sectionDesc,
                 type: 'website',
                 url: `/${section.slug}`,
                 locale: 'kn_IN',
-                siteName: 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್',
+                siteName: 'The Hint News',
             },
         };
     } catch {
