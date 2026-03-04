@@ -294,27 +294,7 @@ export function validateMediaBlocks(blocks: ContentBlock[]): MediaValidationResu
 
         // 2. Structural/Placement Rules for media and post blocks
         if (isImageBlock(block) || isVideoBlock(block) || isPostBlock(block)) {
-            // Cannot be first
-            if (i === 0) {
-                errors.push({
-                    type: 'article_starts_with_media',
-                    message: `${block.type.charAt(0).toUpperCase() + block.type.slice(1)} cannot be the first block in an article.`,
-                    blockId: block.id,
-                    blockIndex: i
-                });
-            }
-
-            // Cannot be last
-            if (i === blocks.length - 1) {
-                errors.push({
-                    type: 'article_ends_with_media',
-                    message: `${block.type.charAt(0).toUpperCase() + block.type.slice(1)} cannot be the last block in an article.`,
-                    blockId: block.id,
-                    blockIndex: i
-                });
-            }
-
-            // Cannot be consecutive (media next to media, or media next to post)
+            // Consecutive media blocks not allowed
             if (i > 0 && (isImageBlock(blocks[i - 1]) || isVideoBlock(blocks[i - 1]) || isPostBlock(blocks[i - 1]))) {
                 errors.push({
                     type: 'consecutive_media_blocks',
@@ -324,7 +304,7 @@ export function validateMediaBlocks(blocks: ContentBlock[]): MediaValidationResu
                 });
             }
 
-            // Must have text context
+            // Must have text context - checking if it's flanked correctly if not at edges
             const prevIsText = i > 0 && isTextBlock(blocks[i - 1]);
             const nextIsText = i < blocks.length - 1 && isTextBlock(blocks[i + 1]);
 
@@ -446,8 +426,6 @@ export function isValidBlockOrder(blocks: ContentBlock[]): MediaValidationResult
     const result = validateMediaBlocks(blocks);
 
     const orderErrors = result.errors.filter(e =>
-        e.type === 'article_starts_with_media' ||
-        e.type === 'article_ends_with_media' ||
         e.type === 'consecutive_media_blocks' ||
         e.type === 'no_text_context_before' ||
         e.type === 'no_text_context_after'

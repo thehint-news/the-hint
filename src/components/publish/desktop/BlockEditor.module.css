@@ -458,24 +458,24 @@
     }
 }
 
-/* Move Controls - Redesigned as Horizontal Pill */
+/* Move Controls - Refined Editorial Reorder/Delete Toolbar */
 .moveControls {
     position: absolute;
-    top: 10px;
+    bottom: 10px;
     right: 10px;
     display: flex;
     flex-direction: row;
     align-items: center;
     background: white;
     border: 1px solid #e0e0e0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    border-radius: 20px;
-    padding: 0 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Sophisticated shadow */
+    border-radius: 4px; /* Editorial square-ish style */
+    padding: 2px;
     opacity: 0;
-    transform: translateY(5px);
+    transform: translateY(-5px);
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 20;
-    height: 28px;
+    height: 32px;
 }
 
 .blockWrapper:hover .moveControls {
@@ -553,15 +553,18 @@
 
     /* Move controls on mobile - brought inside to avoid overlap */
     .moveControls {
-        top: 10px;
+        bottom: 10px;
+        top: auto;
         right: 10px;
         border: 1px solid #e0e0e0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        padding: 0 4px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        padding: 2px;
         opacity: 1 !important;
         transform: none !important;
-        justify-content: flex-end;
-        gap: 8px;
+        background: white;
+        border-radius: 6px;
+        height: 36px;
+        gap: 4px;
     }
 
     .moveButton,

@@ -22,10 +22,10 @@ import { join } from 'path';
 // =============================================================================
 
 /** Watermark width as a fraction of image width */
-const WATERMARK_SCALE = 0.05; // Reduced to 5% since we are trimming the large transparent padding
+const WATERMARK_SCALE = 0.15; // Increased to 15% for visibility as requested
 
 /** Base margin in pixels (for a ~1200px wide image) */
-const BASE_MARGIN = 24;
+const BASE_MARGIN = 32;
 
 /** Reference width for base margin calculation */
 const REFERENCE_WIDTH = 1200;
@@ -49,18 +49,27 @@ function loadWatermarkLogo(): Buffer {
         return cachedLogoBuffer;
     }
 
-    // In Next.js, process.cwd() points to the project root
-    const logoPath = join(process.cwd(), 'public', 'brand', 'watermark-logo.png');
+    // Try multiple paths to accommodate different deployment environments
+    const possiblePaths = [
+        join(process.cwd(), 'public', 'brand', 'watermark-logo.png'),
+        join(process.cwd(), '.next', 'server', 'public', 'brand', 'watermark-logo.png'),
+        join(process.cwd(), 'brand', 'watermark-logo.png'),
+    ];
 
-    try {
-        cachedLogoBuffer = readFileSync(logoPath);
-        // Use console.info — preserved in production builds
-        console.info('[MediaUpload] Watermark logo loaded:', logoPath, `(${cachedLogoBuffer.length} bytes)`);
-        return cachedLogoBuffer;
-    } catch (error) {
-        console.error('[MediaUpload] FATAL: Watermark logo not found at:', logoPath, error);
-        throw new Error(`Watermark logo not found at ${logoPath}`);
+    let lastError: any = null;
+    for (const logoPath of possiblePaths) {
+        try {
+            cachedLogoBuffer = readFileSync(logoPath);
+            console.info('[MediaUpload] Watermark logo loaded successfully from:', logoPath);
+            return cachedLogoBuffer;
+        } catch (error) {
+            lastError = error;
+            // Continue to next path
+        }
     }
+
+    console.error('[MediaUpload] FATAL: Watermark logo not found in any search path:', possiblePaths);
+    throw new Error(`Watermark logo not found. Error: ${lastError?.message || 'unknown'}`);
 }
 
 // =============================================================================
@@ -135,16 +144,17 @@ export async function applyWatermark(
         console.info(`[MediaUpload] Step 3: Watermark width=${watermarkWidth}px, margin=${margin}px`);
 
         // Resize watermark logo to target width (maintaining aspect ratio)
-        // Trim away all the massive transparent padding from the raw PNG file
-        // Then resize it nicely so its visible edges are what we position!
+        // No trimming - use the raw asset's bounds to ensure predictable behavior
         const resizedLogo = await sharp(logoBuffer)
-            .trim()
-            .resize({ width: watermarkWidth, fit: 'inside' })
+            .resize({
+                width: watermarkWidth,
+                withoutEnlargement: true,
+                fit: 'inside'
+            })
             .ensureAlpha()
             .png()
             .toBuffer();
 
-        // No opacity reduction - kept 100% opaque as requested
         const finalWatermark = resizedLogo;
 
         // Get the actual dimensions of the resized watermark
@@ -197,8 +207,8 @@ export async function applyWatermark(
         const elapsed = Date.now() - startTime;
         console.error(`[MediaUpload] ❌ Watermark FAILED after ${elapsed}ms:`, error);
 
-        // Graceful degradation: return original image if watermarking fails
-        // This ensures upload never breaks due to watermark issues
-        return imageBuffer;
+        // ENFORCED: If watermarking is compulsory, we should throw if it fails 
+        // to prevent non-watermarked images from leaking onto the site.
+        throw new Error(`Watermarking failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 }

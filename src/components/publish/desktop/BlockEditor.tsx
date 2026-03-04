@@ -40,7 +40,7 @@ import {
     PostPlatform,
     PostMetadata,
 } from '@/lib/content/media-types';
-import { canInsertMediaAt, isValidBlockOrder } from '@/lib/validation/media';
+import { canInsertMediaAt } from '@/lib/validation/media';
 import { MediaCounter } from '../common/MediaCounter';
 import { ImageBlockEditor } from './ImageBlockEditor';
 import { VideoBlockEditor } from './VideoBlockEditor';
@@ -209,13 +209,7 @@ export function BlockEditor({
         // Swap
         [newBlocks[index], newBlocks[targetIndex]] = [newBlocks[targetIndex], newBlocks[index]];
 
-        // Reorder checks - enforce validity
-        const validation = isValidBlockOrder(newBlocks);
-        if (!validation.isValid) {
-            // In a real app we'd toast here, but for now strict refusal
-            return;
-        }
-
+        // Relaxed validation during editing - reorder blocks (updates indices) and save
         updateBlocks(reorderBlocks(newBlocks));
     }, [blocks, updateBlocks]);
 
@@ -487,7 +481,7 @@ export function BlockEditor({
                     </button>
                 )}
 
-                {/* Move Controls */}
+                {/* Move Controls - Brought Down to Bottom Right */}
                 <div className={styles.moveControls}>
                     <button
                         type="button"
@@ -496,7 +490,9 @@ export function BlockEditor({
                         disabled={index === 0}
                         title="Move Up"
                     >
-                        ▲
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="18 15 12 9 6 15"></polyline>
+                        </svg>
                     </button>
                     <button
                         type="button"
@@ -505,7 +501,9 @@ export function BlockEditor({
                         disabled={index === blocks.length - 1}
                         title="Move Down"
                     >
-                        ▼
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
                     <button
                         type="button"
@@ -513,7 +511,10 @@ export function BlockEditor({
                         onClick={() => deleteBlock(block.id)}
                         title="Delete Block"
                     >
-                        ✕
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
                     </button>
                 </div>
 
@@ -583,7 +584,7 @@ export function BlockEditor({
                     </button>
                 )}
 
-                {/* Move Controls */}
+                {/* Move Controls - Brought Down to Bottom Right */}
                 <div className={styles.moveControls}>
                     <button
                         type="button"
@@ -592,7 +593,9 @@ export function BlockEditor({
                         disabled={index === 0}
                         title="Move Up"
                     >
-                        ▲
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="18 15 12 9 6 15"></polyline>
+                        </svg>
                     </button>
                     <button
                         type="button"
@@ -601,7 +604,9 @@ export function BlockEditor({
                         disabled={index === blocks.length - 1}
                         title="Move Down"
                     >
-                        ▼
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
                     <button
                         type="button"
@@ -609,7 +614,10 @@ export function BlockEditor({
                         onClick={() => deleteBlock(block.id)}
                         title="Delete Block"
                     >
-                        ✕
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
                     </button>
                 </div>
 
@@ -668,7 +676,7 @@ export function BlockEditor({
                     </button>
                 )}
 
-                {/* Move Controls */}
+                {/* Move Controls - Brought Down to Bottom Right */}
                 <div className={styles.moveControls}>
                     <button
                         type="button"
@@ -677,7 +685,9 @@ export function BlockEditor({
                         disabled={index === 0}
                         title="Move Up"
                     >
-                        ▲
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="18 15 12 9 6 15"></polyline>
+                        </svg>
                     </button>
                     <button
                         type="button"
@@ -686,7 +696,9 @@ export function BlockEditor({
                         disabled={index === blocks.length - 1}
                         title="Move Down"
                     >
-                        ▼
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
                     <button
                         type="button"
@@ -694,7 +706,10 @@ export function BlockEditor({
                         onClick={() => deleteBlock(block.id)}
                         title="Delete Block"
                     >
-                        ✕
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
                     </button>
                 </div>
 
@@ -763,7 +778,7 @@ export function BlockEditor({
                     </button>
                 )}
 
-                {/* Move Controls */}
+                {/* Move Controls - Brought Down to Bottom Right */}
                 <div className={styles.moveControls}>
                     <button
                         type="button"
@@ -772,7 +787,9 @@ export function BlockEditor({
                         disabled={index === 0}
                         title="Move Up"
                     >
-                        ▲
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="18 15 12 9 6 15"></polyline>
+                        </svg>
                     </button>
                     <button
                         type="button"
@@ -781,7 +798,9 @@ export function BlockEditor({
                         disabled={index === blocks.length - 1}
                         title="Move Down"
                     >
-                        ▼
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
                     <button
                         type="button"
@@ -789,7 +808,10 @@ export function BlockEditor({
                         onClick={() => deleteBlock(block.id)}
                         title="Delete Block"
                     >
-                        ✕
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
                     </button>
                 </div>
 
