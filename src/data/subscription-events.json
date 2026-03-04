@@ -2264,11 +2264,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-04T15:57:44.691Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
     "totalSubscribers": 2,
-    "lastAttemptAt": "2026-03-04T15:57:55.875Z"
+    "lastAttemptAt": "2026-03-04T15:57:59.522Z"
   }
 ]
