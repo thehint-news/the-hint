@@ -18,7 +18,7 @@ import {
     ContentParseError,
 } from './types';
 import path from 'path';
-import { getCachedArticles, setCachedArticles } from '../cache/article-cache';
+import { getCachedArticlesList, getCachedArticleBySlug, setCachedArticlesList, setCachedArticleBySlug } from '../cache/article-cache';
 
 /** Valid section folder names */
 const VALID_SECTIONS: Section[] = [
@@ -172,45 +172,47 @@ async function readSectionArticles(section: Section): Promise<Article[]> {
 
 /**
  * Get all articles from all sections.
- *
- * Backed by a 60-second in-memory cache. On cache HIT, returns
- * immediately with zero GitHub API calls. On MISS, fetches all
- * sections from GitHub, stores in cache, and returns.
- *
- * React `cache()` is kept for per-request deduplication within
- * a single SSR/RSC render pass.
  */
 export const getAllArticles = cache(async function getAllArticles(): Promise<Article[]> {
-    // 1. Check server-side cache
-    const cached = getCachedArticles();
-    if (cached !== null) {
+    const { data: cached, isStale } = getCachedArticlesList();
+    if (cached && !isStale) {
         return cached;
     }
 
-    // 2. Cache MISS — fetch fresh from GitHub
-    const results = await Promise.all(
-        VALID_SECTIONS.map(section => readSectionArticles(section))
-    );
+    try {
+        const results = await Promise.all(
+            VALID_SECTIONS.map(section => readSectionArticles(section))
+        );
 
-    const allArticles = results.flat();
+        const allArticles = results.flat();
+        allArticles.sort((a, b) => {
+            const dateA = new Date(a.publishedAt).getTime();
+            const dateB = new Date(b.publishedAt).getTime();
+            return dateB - dateA;
+        });
 
-    // Sort by publishedAt descending (newest first)
-    allArticles.sort((a, b) => {
-        const dateA = new Date(a.publishedAt).getTime();
-        const dateB = new Date(b.publishedAt).getTime();
-        return dateB - dateA;
-    });
+        for (const a of allArticles) {
+            setCachedArticleBySlug(a.id, a);
+        }
 
-    // 3. Store in cache for subsequent reads
-    setCachedArticles(allArticles);
+        const listData = allArticles.map(a => {
+            const { body, bodyBlocks, ...meta } = a;
+            return meta as Article;
+        });
 
-    return allArticles;
+        setCachedArticlesList(listData);
+        return listData;
+    } catch (error) {
+        if (cached) {
+            console.warn('[getAllArticles] GitHub API failed, serving stale list cache');
+            return cached;
+        }
+        throw error;
+    }
 });
 
 /**
  * Get a single article by section and slug.
- *
- * Derives from the cached article list to avoid individual GitHub API calls.
  */
 export const getArticleBySlug = cache(async function getArticleBySlug(section: string, slug: string): Promise<Article | null> {
     if (!isValidSection(section)) {
@@ -221,13 +223,23 @@ export const getArticleBySlug = cache(async function getArticleBySlug(section: s
         );
     }
 
-    // Derive from the full cached list instead of making individual GitHub API calls
-    const allArticles = await getAllArticles();
-    const found = allArticles.find(
-        (article) => article.section === section && article.id === slug
-    );
+    const { data: cached, isStale } = getCachedArticleBySlug(slug);
+    if (cached && !isStale) {
+        return cached;
+    }
 
-    return found ?? null;
+    try {
+        const filePath = `src/content/${section}/${slug}.md`;
+        const article = await readArticleFile(filePath, section as Section);
+        setCachedArticleBySlug(slug, article);
+        return article;
+    } catch (error) {
+        if (cached) {
+            console.warn(`[getArticleBySlug] GitHub API failed for ${slug}, serving stale cache`);
+            return cached;
+        }
+        return null;
+    }
 });
 
 /**

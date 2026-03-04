@@ -49,14 +49,14 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                     prose-blockquote:border-l-4 prose-blockquote:border-[#111] prose-blockquote:px-6 prose-blockquote:py-5 prose-blockquote:bg-[#f4f5f7] prose-blockquote:rounded-md prose-blockquote:shadow-inner prose-blockquote:text-[#1a1a1a]
                     [&>blockquote>p]:italic [&>blockquote>p]:font-bold">
 
-                {blocks.map((block, index) => {
+                {blocks.map((block) => {
                     // Image Block - Display all body images
                     if (isImageBlock(block)) {
                         return (
                             <div key={block.id} className="not-prose">
                                 <ImageBlockRenderer
                                     block={block}
-                                    isAboveFold={index < 2}
+                                    isAboveFold={false}
                                 />
                             </div>
                         );

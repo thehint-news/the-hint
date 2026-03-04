@@ -157,40 +157,15 @@ export async function fetchOEmbedData(url: string): Promise<OEmbedResponse> {
         return finalData;
 
     } catch (error) {
-        // FALLBACK: Synthesize the official HTML payload to allow client SDK to render
-        // This is triggered if fetch fails, 404s, or times out.
-        if (platform === 'x') {
-            return {
-                html: `<blockquote class="twitter-tweet"><a href="${url}"></a></blockquote>`
-            };
-        } else if (platform === 'tiktok') {
-            const videoIdMatch = url.match(/video\/(\d+)/);
-            const videoId = videoIdMatch ? videoIdMatch[1] : '';
-            return {
-                html: `<blockquote class="tiktok-embed" cite="${url}" data-video-id="${videoId}" style="max-width: 605px;min-width: 325px;" ><section><a target="_blank" title="TikTok" href="${url}"></a></section></blockquote>`
-            };
-        } else if (platform === 'youtube') {
-            const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&]+)/i);
-            const videoId = ytMatch ? ytMatch[1] : '';
-            return {
-                html: `<iframe class="oembed-iframe" width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
-            };
-        } else if (platform === 'linkedin') {
-            const liMatch = url.match(/-(\d{19,20})/);
-            if (liMatch && liMatch[1]) {
-                const activityId = liMatch[1];
-                return {
-                    html: `<iframe src="https://www.linkedin.com/embed/feed/update/urn:li:activity:${activityId}" height="600" width="100%" frameborder="0" allowfullscreen="" title="Embedded post"></iframe>`
-                };
-            }
-            if (url.includes('/embed/')) {
-                return {
-                    html: `<iframe src="${url}" height="600" width="100%" frameborder="0" allowfullscreen="" title="Embedded post"></iframe>`
-                };
-            }
-        }
+        // FALLBACK: Display plain link preview instead of embed
         console.error(`[oEmbed] Fetch failed for ${url}:`, error);
-        throw error;
+        return {
+            html: `<div class="embed-fallback" style="padding: 1rem; border: 1px solid #ccc; border-radius: 4px; font-family: sans-serif; word-break: break-all;">
+                <a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline;">
+                    ${url}
+                </a>
+            </div>`
+        };
     }
 }
 

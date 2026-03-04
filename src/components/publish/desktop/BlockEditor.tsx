@@ -572,15 +572,16 @@ export function BlockEditor({
     const renderImageBlock = (block: ImageBlock, index: number) => {
         return (
             <div key={block.id} className={styles.blockWrapper}>
-                {/* Insert button above */}
-                <button
-                    type="button"
-                    className={styles.insertButton}
-                    onClick={() => openInsertMenu(index)}
-                    title="Insert block"
-                >
-                    +
-                </button>
+                {index > 0 && (
+                    <button
+                        type="button"
+                        className={styles.insertButton}
+                        onClick={() => openInsertMenu(index)}
+                        title="Insert block"
+                    >
+                        +
+                    </button>
+                )}
 
                 {/* Move Controls */}
                 <div className={styles.moveControls}>
@@ -656,15 +657,16 @@ export function BlockEditor({
     const renderVideoBlock = (block: VideoBlock, index: number) => {
         return (
             <div key={block.id} className={styles.blockWrapper}>
-                {/* Insert button above */}
-                <button
-                    type="button"
-                    className={styles.insertButton}
-                    onClick={() => openInsertMenu(index)}
-                    title="Insert block"
-                >
-                    +
-                </button>
+                {index > 0 && (
+                    <button
+                        type="button"
+                        className={styles.insertButton}
+                        onClick={() => openInsertMenu(index)}
+                        title="Insert block"
+                    >
+                        +
+                    </button>
+                )}
 
                 {/* Move Controls */}
                 <div className={styles.moveControls}>
@@ -750,15 +752,16 @@ export function BlockEditor({
     const renderPostBlock = (block: PostBlock, index: number) => {
         return (
             <div key={block.id} className={styles.blockWrapper}>
-                {/* Insert button above */}
-                <button
-                    type="button"
-                    className={styles.insertButton}
-                    onClick={() => openInsertMenu(index)}
-                    title="Insert block"
-                >
-                    +
-                </button>
+                {index > 0 && (
+                    <button
+                        type="button"
+                        className={styles.insertButton}
+                        onClick={() => openInsertMenu(index)}
+                        title="Insert block"
+                    >
+                        +
+                    </button>
+                )}
 
                 {/* Move Controls */}
                 <div className={styles.moveControls}>

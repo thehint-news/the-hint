@@ -1,5 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchOEmbedData, detectOEmbedPlatform } from '@/lib/content/oembed';
+import { checkRateLimit } from '@/lib/rate-limit';
+import * as dns from 'dns';
+
+const ALLOWED_PLATFORMS = [
+    'youtube.com', 'youtu.be', 'twitter.com', 'x.com',
+    'instagram.com', 'facebook.com', 'vimeo.com'
+];
+
+async function isSafeUrl(urlString: string): Promise<boolean> {
+    try {
+        const url = new URL(urlString);
+        const host = url.hostname.toLowerCase();
+
+        let allowed = false;
+        for (const p of ALLOWED_PLATFORMS) {
+            if (host === p || host.endsWith('.' + p)) {
+                allowed = true;
+                break;
+            }
+        }
+        if (!allowed) {
+            return false;
+        }
+
+        const addresses = await dns.promises.lookup(host, { all: true });
+        for (const addr of addresses) {
+            const ip = addr.address;
+            if (
+                ip === 'localhost' ||
+                ip.startsWith('127.') ||
+                ip.startsWith('169.254.') ||
+                ip.startsWith('10.') ||
+                ip.startsWith('192.168.') ||
+                ip.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./)
+            ) {
+                return false;
+            }
+        }
+        return true;
+    } catch {
+        return false;
+    }
+}
 
 /**
  * GET /api/oembed
@@ -13,12 +56,28 @@ import { fetchOEmbedData, detectOEmbedPlatform } from '@/lib/content/oembed';
  * /api/oembed?url=https://x.com/username/status/123
  */
 export async function GET(request: NextRequest) {
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    if (checkRateLimit(ip)) {
+        return NextResponse.json(
+            { error: 'Too many requests. Please try again later.' },
+            { status: 429 }
+        );
+    }
+
     try {
         const url = request.nextUrl.searchParams.get('url');
 
         if (!url) {
             return NextResponse.json(
                 { error: 'Missing URL parameter' },
+                { status: 400 }
+            );
+        }
+
+        const safe = await isSafeUrl(url);
+        if (!safe) {
+            return NextResponse.json(
+                { error: 'Unsupported or unsafe URL domain' },
                 { status: 400 }
             );
         }

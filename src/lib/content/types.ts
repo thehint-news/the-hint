@@ -56,6 +56,8 @@ export const MAX_LEAD_IMAGES = 3;
  * Stored in frontmatter translations field
  */
 export interface ArticleTranslation {
+    /** Translation status */
+    status?: 'pending' | 'ready' | 'failed';
     /** Translated headline */
     title: string;
     /** Translated subtitle/deck */

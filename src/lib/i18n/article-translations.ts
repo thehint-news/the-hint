@@ -12,7 +12,7 @@ import { Article } from '@/lib/content/types';
 /**
  * Apply translation to an article
  * Returns a new article object with translated content (if available)
- * Falls back to original if translation doesn't exist
+ * Falls back to original if translation doesn't exist or is not ready
  */
 export function applyArticleTranslation(
     article: Article,
@@ -25,7 +25,7 @@ export function applyArticleTranslation(
 
     // Check if translation exists for the requested language
     const translation = article.translations?.[language];
-    if (!translation) {
+    if (!translation || translation.status === 'pending' || translation.status === 'failed') {
         // Fallback to original Kannada
         return article;
     }
@@ -43,13 +43,14 @@ export function applyArticleTranslation(
 }
 
 /**
- * Check if an article has a translation for the given language
+ * Check if an article has a VALID translation for the given language
  */
 export function hasTranslation(article: Article, language: Language): boolean {
     if (language === DEFAULT_LANGUAGE) {
         return true; // Original is always available
     }
-    return !!article.translations?.[language];
+    const t = article.translations?.[language];
+    return !!(t && t.status !== 'pending' && t.status !== 'failed');
 }
 
 /**
@@ -59,11 +60,13 @@ export function hasTranslation(article: Article, language: Language): boolean {
 export function getArticleTranslationInfo(article: Article): {
     hasEnglishTranslation: boolean;
     translatedAt: string | null;
+    status: 'pending' | 'ready' | 'failed' | null;
 } {
     const enTranslation = article.translations?.en;
     return {
-        hasEnglishTranslation: !!enTranslation,
+        hasEnglishTranslation: !!(enTranslation && enTranslation.status !== 'pending' && enTranslation.status !== 'failed'),
         translatedAt: enTranslation?.translatedAt ?? null,
+        status: enTranslation?.status ?? null,
     };
 }
 

@@ -211,6 +211,24 @@ function handleLanguage(request: NextRequest): NextResponse {
 export async function proxy(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
 
+  // Authentication check for publish routes
+  if (pathname.startsWith('/publish') || pathname.startsWith('/api/publish')) {
+    const sessionToken = request.cookies.get('the_hint_session')?.value;
+    if (!sessionToken) {
+      return NextResponse.redirect(new URL('/newsroom', request.url));
+    }
+    try {
+      const { jwtVerify } = await import('jose');
+      const SECRET = new TextEncoder().encode(process.env.MAGIC_LINK_SECRET || 'default_secret_CHANGE_ME');
+      const { payload } = await jwtVerify(sessionToken, SECRET);
+      if (!payload.email) {
+        return NextResponse.redirect(new URL('/newsroom', request.url));
+      }
+    } catch {
+      return NextResponse.redirect(new URL('/newsroom', request.url));
+    }
+  }
+
   // Skip system routes immediately
   if (pathname.startsWith('/_next') ||
     pathname.startsWith('/favicon') ||
@@ -232,6 +250,11 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     return slugRedirect;
   }
 
+  // If this is an API route (e.g. /api/publish passed through matcher), and passed auth, let it go
+  if (pathname.startsWith('/api')) {
+    return NextResponse.next();
+  }
+
   // 3. Handle language detection
   const langResponse = handleLanguage(request);
 
@@ -248,13 +271,6 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|icon.png|apple-icon.png|robots.txt|sitemap.xml).*)',
+    '/((?!api/admin|api/subscribe|api/search|api/auth|api/internal|api/media|api/unsubscribe|api/oembed|_next/static|_next/image|favicon.ico|icon.png|apple-icon.png|robots.txt|sitemap.xml).*)',
   ],
 };

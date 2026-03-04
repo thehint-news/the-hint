@@ -1,10 +1,18 @@
-
 import { NextResponse } from 'next/server';
 import { getAllArticles } from '@/lib/content';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    if (checkRateLimit(ip)) {
+        return NextResponse.json(
+            { results: [], error: 'Too many requests. Please try again later.' },
+            { status: 429 }
+        );
+    }
+
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q');
 

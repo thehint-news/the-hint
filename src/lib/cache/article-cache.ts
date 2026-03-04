@@ -1,116 +1,79 @@
-/**
- * Server-Side Article Cache Module
- *
- * In-memory cache for GitHub article reads with TTL-based expiration
- * and deterministic invalidation on mutations.
- *
- * ARCHITECTURE:
- * - Uses Node.js global scope to survive module reloads in dev
- * - TTL of 60 seconds for automatic refresh
- * - Immediate invalidation on publish/edit/delete/duplicate
- * - Safe for Vercel serverless (each instance has its own memory, TTL handles staleness)
- * - Never caches mutations, auth state, or per-user data
- *
- * SECURITY:
- * - Does NOT expose GitHub tokens
- * - Does NOT log full article payloads
- * - Only caches public content (Article[])
- */
-
 import type { Article } from '../content/types';
 
-// ---------------------------------------------------------------------------
-// Cache Structure
-// ---------------------------------------------------------------------------
-
-interface CacheEntry {
+interface ListCacheEntry {
     data: Article[];
     timestamp: number;
 }
 
-/** TTL in milliseconds — 60 seconds */
+interface SlugCacheEntry {
+    data: Article;
+    timestamp: number;
+}
+
 const CACHE_TTL_MS = 60_000;
 
-// ---------------------------------------------------------------------------
-// Global Store (survives HMR in dev, per-instance in serverless)
-// ---------------------------------------------------------------------------
-
-// Use `globalThis` so the store survives Next.js HMR module reloads in dev.
-// In production / Vercel, each serverless instance gets its own store — this is
-// acceptable because TTL = 60 s and mutations clear the instance's cache.
-
 declare global {
-    var __articleCache: CacheEntry | undefined;
+    var __articlesListCache: ListCacheEntry | undefined;
+    var __articleBySlugCache: Map<string, SlugCacheEntry> | undefined;
 }
 
-function getStore(): CacheEntry | undefined {
-    return globalThis.__articleCache;
+if (!globalThis.__articleBySlugCache) {
+    globalThis.__articleBySlugCache = new Map();
 }
-
-function setStore(entry: CacheEntry): void {
-    globalThis.__articleCache = entry;
-}
-
-function deleteStore(): void {
-    globalThis.__articleCache = undefined;
-}
-
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
 
 /**
- * Retrieve cached articles if they exist and the TTL has not expired.
- *
- * @returns The cached Article[] or `null` if the cache is cold / expired.
+ * Get cached articles list. Returns { data, isStale }
  */
-export function getCachedArticles(): Article[] | null {
-    const entry = getStore();
-
+export function getCachedArticlesList(): { data: Article[] | null, isStale: boolean } {
+    const entry = globalThis.__articlesListCache;
     if (!entry) {
-        console.log('[Cache] MISS — no cached data');
-        return null;
+        return { data: null, isStale: false };
     }
-
     const age = Date.now() - entry.timestamp;
-
-    if (age >= CACHE_TTL_MS) {
-        console.log(`[Cache] MISS — expired (age: ${Math.round(age / 1000)}s, TTL: ${CACHE_TTL_MS / 1000}s)`);
-        deleteStore();
-        return null;
-    }
-
-    console.log(`[Cache] HIT — age: ${Math.round(age / 1000)}s`);
-    return entry.data;
+    return { data: entry.data, isStale: age >= CACHE_TTL_MS };
 }
 
-/**
- * Store a fresh set of articles in the cache.
- *
- * Call this immediately after a successful GitHub API fetch.
- *
- * @param articles The full Article[] fetched from GitHub.
- */
-export function setCachedArticles(articles: Article[]): void {
-    setStore({
+export function setCachedArticlesList(articles: Article[]): void {
+    globalThis.__articlesListCache = {
         data: articles,
         timestamp: Date.now(),
-    });
-    console.log(`[Cache] SET — ${articles.length} articles cached`);
+    };
 }
 
 /**
- * Immediately invalidate the article cache.
- *
- * **MUST** be called after every successful mutation:
- * - Publish
- * - Edit (re-publish)
- * - Delete
- * - Duplicate (creates a draft — optional but safe)
- *
- * This forces the next `getAllArticles()` call to fetch fresh from GitHub.
+ * Get cached article by slug. Returns { data, isStale }
  */
+export function getCachedArticleBySlug(slug: string): { data: Article | null, isStale: boolean } {
+    const entry = globalThis.__articleBySlugCache!.get(slug);
+    if (!entry) {
+        return { data: null, isStale: false };
+    }
+    const age = Date.now() - entry.timestamp;
+    return { data: entry.data, isStale: age >= CACHE_TTL_MS };
+}
+
+export function setCachedArticleBySlug(slug: string, article: Article): void {
+    globalThis.__articleBySlugCache!.set(slug, {
+        data: article,
+        timestamp: Date.now(),
+    });
+}
+
+/**
+ * Keep the old function signature for legacy usages if any, but it acts like getCachedArticlesList without stale info
+ */
+export function getCachedArticles(): Article[] | null {
+    const { data, isStale } = getCachedArticlesList();
+    if (isStale) return null; // strictly require fresh
+    return data;
+}
+
+export function setCachedArticles(articles: Article[]): void {
+    setCachedArticlesList(articles);
+}
+
 export function clearArticleCache(): void {
-    deleteStore();
-    console.log('[Cache] INVALIDATED');
+    globalThis.__articlesListCache = undefined;
+    globalThis.__articleBySlugCache!.clear();
+    console.log('[Cache] INVALIDATED both caches');
 }

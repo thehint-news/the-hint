@@ -7,7 +7,6 @@
  * - Logo loaded from filesystem (/public/brand/watermark-logo.png)
  * - Positioned bottom-right with proportional margins
  * - Watermark width = 15% of image width
- * - Opacity: 0.6
  * - Logo background removed (transparent composite)
  * - Supports: JPG, PNG, WEBP
  * - Processes in <200ms target
@@ -23,10 +22,7 @@ import { join } from 'path';
 // =============================================================================
 
 /** Watermark width as a fraction of image width */
-const WATERMARK_SCALE = 0.15;
-
-/** Watermark opacity (0-1). Lower = more transparent */
-const WATERMARK_OPACITY = 0.6;
+const WATERMARK_SCALE = 0.05; // Reduced to 5% since we are trimming the large transparent padding
 
 /** Base margin in pixels (for a ~1200px wide image) */
 const BASE_MARGIN = 24;
@@ -139,36 +135,29 @@ export async function applyWatermark(
         console.info(`[MediaUpload] Step 3: Watermark width=${watermarkWidth}px, margin=${margin}px`);
 
         // Resize watermark logo to target width (maintaining aspect ratio)
-        // Convert to PNG with alpha channel for clean compositing
+        // Trim away all the massive transparent padding from the raw PNG file
+        // Then resize it nicely so its visible edges are what we position!
         const resizedLogo = await sharp(logoBuffer)
+            .trim()
             .resize({ width: watermarkWidth, fit: 'inside' })
             .ensureAlpha()
             .png()
             .toBuffer();
 
-        // Apply opacity by modifying the alpha channel using dest-in blend
-        // This multiplies every pixel's alpha by WATERMARK_OPACITY
-        const opacityByte = Math.round(255 * WATERMARK_OPACITY);
-        const watermarkWithOpacity = await sharp(resizedLogo)
-            .composite([{
-                input: Buffer.from([255, 255, 255, opacityByte]),
-                raw: { width: 1, height: 1, channels: 4 },
-                tile: true,
-                blend: 'dest-in',
-            }])
-            .png()
-            .toBuffer();
+        // No opacity reduction - kept 100% opaque as requested
+        const finalWatermark = resizedLogo;
 
         // Get the actual dimensions of the resized watermark
-        const watermarkMeta = await sharp(watermarkWithOpacity).metadata();
+        const watermarkMeta = await sharp(finalWatermark).metadata();
         const wmWidth = watermarkMeta.width || watermarkWidth;
         const wmHeight = watermarkMeta.height || watermarkWidth;
 
         console.info(`[MediaUpload] Step 4: Watermark resized to ${wmWidth}x${wmHeight}`);
 
-        // Calculate position (bottom-right with margin)
-        const left = imageWidth - wmWidth - margin;
-        const top = imageHeight - wmHeight - margin;
+        // Calculate position offset from the bottom-right corner (closer to the edge)
+        const layoutMargin = Math.round(imageWidth * 0.02);
+        const left = Math.max(0, imageWidth - wmWidth - layoutMargin);
+        const top = Math.max(0, imageHeight - wmHeight - layoutMargin);
 
         // Ensure position is valid (watermark fits within image)
         if (left < 0 || top < 0) {
@@ -183,7 +172,7 @@ export async function applyWatermark(
 
         const watermarkedBuffer = await sharp(imageBuffer)
             .composite([{
-                input: watermarkWithOpacity,
+                input: finalWatermark,
                 left,
                 top,
                 blend: 'over',

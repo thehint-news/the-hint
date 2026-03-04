@@ -2,41 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { addSubscriber } from '@/lib/subscription';
 import { logger } from '@/lib/feedback/console-guard';
 import { validateSubscriptionEnv } from '@/lib/env';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-
-const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
-const MAX_REQUESTS = 5;
-const rateLimitMap = new Map<string, { count: number; expires: number }>();
-
-function isRateLimited(ip: string): boolean {
-    const now = Date.now();
-    const record = rateLimitMap.get(ip);
-
-    if (!record) {
-        rateLimitMap.set(ip, { count: 1, expires: now + RATE_LIMIT_WINDOW });
-        return false;
-    }
-
-    if (now > record.expires) {
-        rateLimitMap.set(ip, { count: 1, expires: now + RATE_LIMIT_WINDOW });
-        return false;
-    }
-
-    if (record.count >= MAX_REQUESTS) {
-        return true;
-    }
-
-    record.count++;
-    return false;
-}
 
 export async function POST(request: NextRequest) {
     logger.info('[SUBSCRIBE] Checkpoint: API route entered');
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
 
-    if (isRateLimited(ip)) {
+    if (checkRateLimit(ip)) {
         logger.error(`[SUBSCRIBE] Checkpoint: Rate limited IP ${ip}`);
         return NextResponse.json(
             { success: false, error: 'Too many requests. Please try again later.' },
