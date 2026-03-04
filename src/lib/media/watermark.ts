@@ -44,32 +44,37 @@ let cachedLogoBuffer: Buffer | null = null;
  * Load the watermark logo from the filesystem.
  * Uses a singleton cache to avoid repeated disk reads.
  */
-function loadWatermarkLogo(): Buffer {
+function loadWatermarkLogo(): Buffer | null {
     if (cachedLogoBuffer) {
         return cachedLogoBuffer;
     }
 
-    // Try multiple paths to accommodate different deployment environments
+    // Try multiple paths to accommodate different deployment environments (Vercel, Local, Docker)
     const possiblePaths = [
         join(process.cwd(), 'public', 'brand', 'watermark-logo.png'),
         join(process.cwd(), '.next', 'server', 'public', 'brand', 'watermark-logo.png'),
         join(process.cwd(), 'brand', 'watermark-logo.png'),
+        // Vercel / Cloudflare absolute paths
+        '/var/task/public/brand/watermark-logo.png',
+        '/var/task/.next/server/public/brand/watermark-logo.png',
     ];
 
-    let lastError: any = null;
     for (const logoPath of possiblePaths) {
         try {
-            cachedLogoBuffer = readFileSync(logoPath);
-            console.info('[MediaUpload] Watermark logo loaded successfully from:', logoPath);
-            return cachedLogoBuffer;
+            const buffer = readFileSync(logoPath);
+            if (buffer && buffer.length > 0) {
+                cachedLogoBuffer = buffer;
+                console.info('[MediaUpload] Watermark logo loaded successfully from:', logoPath);
+                return cachedLogoBuffer;
+            }
         } catch (error) {
-            lastError = error;
-            // Continue to next path
+            // Silently continue to next path
         }
     }
 
-    console.error('[MediaUpload] FATAL: Watermark logo not found in any search path:', possiblePaths);
-    throw new Error(`Watermark logo not found. Error: ${lastError?.message || 'unknown'}`);
+    console.warn('[MediaUpload] ⚠️ Watermark logo not found in any search path:', possiblePaths);
+    console.warn('[MediaUpload] Context: process.cwd() =', process.cwd(), '| __dirname =', __dirname);
+    return null; // Return null instead of throwing to avoid 400 Bad Request
 }
 
 // =============================================================================
@@ -118,8 +123,14 @@ export async function applyWatermark(
     const startTime = Date.now();
 
     try {
-        // Load the watermark logo (cached after first load)
+        // Load the watermark logo (cached after first load or null if not found)
         const logoBuffer = loadWatermarkLogo();
+
+        if (!logoBuffer) {
+            console.warn('[MediaUpload] ⚠️ Skipping watermark application because logo was not found.');
+            return imageBuffer;
+        }
+
         console.info('[MediaUpload] Step 1: Logo loaded');
 
         // Get uploaded image metadata

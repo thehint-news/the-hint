@@ -105,6 +105,7 @@ export function VideoBlockEditor({
         try {
             const formData = new FormData();
             formData.append('file', file);
+            formData.append('watermark', 'true'); // Required for article body media (posters)
 
             const response = await fetch('/api/media/upload', {
                 method: 'POST',

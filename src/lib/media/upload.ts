@@ -65,7 +65,8 @@ export async function processImageUpload(
     buffer: Buffer,
     filename: string,
     mimeType: string,
-    providedDimensions?: { width: number; height: number }
+    providedDimensions?: { width: number; height: number },
+    shouldWatermark: boolean = false // Optional flag
 ): Promise<ImageUploadResult> {
     // 1. Validate file
     const validation = validateImageFile({
@@ -83,12 +84,16 @@ export async function processImageUpload(
     }
 
     try {
-        // 2. Apply watermark before upload
-        const watermarkedBuffer = await applyWatermark(buffer, mimeType);
+        // 2. Apply watermark ONLY if requested (usually for article body images)
+        let finalBuffer = buffer;
+        if (shouldWatermark) {
+            console.info('[MediaUpload] Watermark requested for body image');
+            finalBuffer = await applyWatermark(buffer, mimeType);
+        }
 
-        // 3. Upload watermarked image to Supabase Storage
+        // 3. Upload to Supabase Storage
         const result: StorageUploadResult = await uploadToStorage(
-            watermarkedBuffer,
+            finalBuffer,
             mimeType,
             providedDimensions
         );

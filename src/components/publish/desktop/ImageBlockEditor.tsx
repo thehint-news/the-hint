@@ -95,6 +95,7 @@ export function ImageBlockEditor({ block, onSave, onCancel }: ImageBlockEditorPr
         try {
             const formData = new FormData();
             formData.append('file', file);
+            formData.append('watermark', 'true'); // Required for article body images
 
             const response = await fetch('/api/media/upload', {
                 method: 'POST',

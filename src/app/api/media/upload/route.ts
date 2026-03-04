@@ -112,9 +112,10 @@ export async function POST(request: NextRequest): Promise<NextResponse<UploadRes
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
-        // Get dimensions from form data if provided
+        // Get dimensions and watermark flag from form data
         const widthStr = formData.get('width');
         const heightStr = formData.get('height');
+        const shouldWatermark = formData.get('watermark') === 'true'; // New flag
         let providedDimensions: { width: number; height: number } | undefined;
 
         if (widthStr && heightStr) {
@@ -130,7 +131,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<UploadRes
             buffer,
             file.name,
             file.type,
-            providedDimensions
+            providedDimensions,
+            shouldWatermark
         );
 
         if (!result.success) {
