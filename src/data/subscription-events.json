@@ -2254,5 +2254,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-04T15:53:15.109Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "76dde2e0-6632-49d2-923b-a9f44c7ae9ed",
+    "articleSlug": "vanijy-kaigarika-vlykke-vidyut-dr",
+    "section": "crime",
+    "headline": "ವಾಣಿಜ್ಯ, ಕೈಗಾರಿಕಾ ವಲಯಕ್ಕೆ ವಿದ್ಯುತ್ ದರ ಏರಿಕೆ ಶಾಕ್; ಆದ್ರೆ ರೈತರಿಗೆ ಗುಡ್ ನ್ಯೂಸ್!",
+    "summary": "2025–26ನೇ ಸಾಲಿನ ಕೃಷಿ ಪಂಪ್ ಸೆಟ್‌ಗಳ ವಿದ್ಯುತ್ ದರವನ್ನು ರಾಜ್ಯಾದ್ಯಂತ ಪ್ರತಿ ಯೂನಿಟ್‌ಗೆ 8.30 ರೂ.ಗಳಿಂದ 6.57 ರೂಪಾಯಿಗೆ ಇಳಿಕೆ ಮಾಡಲಾಗಿದೆ.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-04T15:57:44.691Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
