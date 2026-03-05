@@ -11,10 +11,28 @@ tags: []
 sources: []
 translations:
   en:
-    status: pending
-    title: 71 ವರ್ಷದ ಅಜ್ಜನಿಗೆ ಪೋಕ್ಸೊ ಕೇಸ್‌ನಲ್ಲಿ 3 ವರ್ಷ ಶಿಕ್ಷೆ
-    subtitle: ಸರಕಾರದ ಪರವಾಗಿ ಸರಕಾರಿ ಅಭಿಯೋಜಕ ಬೇಳೂರು ಪ್ರಕಾಶ್ಚಂದ್ರ ಶೆಟ್ಟಿ ವಾದಿಸಿದ್ದಾರೆ.
-    translatedAt: '2026-03-05T11:09:14.088Z'
+    status: ready
+    title: 71-year-old grandfather sentenced to 3 years in POCSO case
+    subtitle: Government prosecutor Belur Prakashchandra Shetty argued for the government.
+    body: |-
+      :::image
+      src: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/65a7aebd46286ddb.jpg
+      alt: Pocso case conviction
+      width: 2240
+      height: 1260
+      srcset: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/65a7aebd46286ddb.jpg 2240w
+      :::
+
+      Udupi: The Additional District and Sessions Court and the POCSO Court have convicted the accused in the case of sexually assaulting a 13-year-old girl at a D-Mart store in the city. 
+      The accused has been identified as Louis Rangel (71). 
+
+      ## Case details: 
+
+      On July 12, 2025, when the victim girl went to the city's D-Mart with her mother, the accused also approached the girl from behind and sexually harassed her. When the frightened girl returned, he apologized. Later, a case was registered at the women's police station that he sexually harassed her again. 
+
+      POCSO court judge Srinivas Suvarna, who conducted the hearing of the case, sentenced the accused to 3 years of simple imprisonment and a fine of ₹ 3,000 under Section 8 and Section 12 of the POCSO Act. The order directed that ₹ 1,000 be paid to the government and ₹ 2,000 to the victim. Belur Public Prosecutor Prakashchandra Shetty argued on behalf of the government.
+    excerpt: Government prosecutor Belur Prakashchandra Shetty argued for the government.
+    translatedAt: '2026-03-05T11:09:40.070Z'
 bodyBlocks:
   - id: ima-mmdbevvu-6rhg
     type: image
