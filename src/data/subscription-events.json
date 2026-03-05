@@ -2318,5 +2318,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-05T02:46:17.174Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "308ab4de-e666-42ad-af88-2e458f79c271",
+    "articleSlug": "hell-if-re-iranian-ll",
+    "section": "world-affairs",
+    "headline": "'ನರಕ.. ಇರಾನ್ ಅಲ್ಲದವರಾದ್ರೆ ಮುಚ್ಕೊಂ*ರಿ': Khamenei ಸಾವಿಗೆ ಅಳುವ ಭಾರತೀಯ ಮುಸ್ಲಿಂ ಮಹಿಳೆಯರ ಲೇವಡಿ ಮಾಡಿದ ಇರಾನ್ ಮಹಿಳೆಯರು!",
+    "summary": "ಅಮೆರಿಕ ಮತ್ತು ಇಸ್ರೇಲ್ ನ ಜಂಟಿ ಸೇನಾ ಕಾರ್ಯಾಚರಣೆಯಲ್ಲಿ ಇರಾನ್ ನ ಸರ್ವೋಚ್ಛ ನಾಯಕ ಆಯತೊಲ್ಲಾ ಅಲಿ ಖಮೆನಿ ಸಾವನ್ನಪ್ಪಿದ್ದು, ಇದರ ಬೆನ್ನಲ್ಲೇ ಭಾರತ ಮತ್ತು ಇರಾನ್ ಮಹಿಳೆಯರ ನಡುವೆ ಇದೀಗ 'Digital war' ಆರಂಭವಾಗಿದೆ.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-05T03:06:05.947Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
