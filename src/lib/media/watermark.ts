@@ -6,11 +6,12 @@
  * - Watermark is applied once during upload, before storage
  * - Logo loaded from filesystem (/public/brand/watermark-logo.png)
  * - Positioned bottom-right with proportional margins
- * - Watermark width = 15% of image width
+ * - Watermark width = 15% of image width (min 24px for tiny images)
  * - Logo background removed (transparent composite)
- * - Supports: JPG, PNG, WEBP
+ * - Supports: JPG, PNG, WEBP, AVIF
  * - Processes in <200ms target
  * - No double watermarking (only runs on fresh uploads)
+ * - ANY image size is accepted — no size restrictions
  */
 
 import sharp from 'sharp';
@@ -22,13 +23,16 @@ import { join } from 'path';
 // =============================================================================
 
 /** Watermark width as a fraction of image width */
-const WATERMARK_SCALE = 0.15; // Increased to 15% for visibility as requested
+const WATERMARK_SCALE = 0.15;
 
-/** Base margin in pixels (for a ~1200px wide image) */
-const BASE_MARGIN = 32;
+/** Minimum watermark width in pixels (for very small images) */
+const MIN_WATERMARK_PX = 24;
 
-/** Reference width for base margin calculation */
-const REFERENCE_WIDTH = 1200;
+/** Margin as a fraction of image width */
+const MARGIN_SCALE = 0.02;
+
+/** Minimum margin in pixels */
+const MIN_MARGIN_PX = 4;
 
 // =============================================================================
 // WATERMARK LOGO CACHE
@@ -67,14 +71,14 @@ function loadWatermarkLogo(): Buffer | null {
                 console.info('[MediaUpload] Watermark logo loaded successfully from:', logoPath);
                 return cachedLogoBuffer;
             }
-        } catch (error) {
+        } catch {
             // Silently continue to next path
         }
     }
 
     console.warn('[MediaUpload] ⚠️ Watermark logo not found in any search path:', possiblePaths);
     console.warn('[MediaUpload] Context: process.cwd() =', process.cwd(), '| __dirname =', __dirname);
-    return null; // Return null instead of throwing to avoid 400 Bad Request
+    return null;
 }
 
 // =============================================================================
@@ -103,18 +107,22 @@ function getOutputFormat(mimeType: string): {
 /**
  * Apply The Hint logo watermark to an image buffer.
  *
+ * Works with ANY image size — no restrictions. For very small images the
+ * watermark is scaled down proportionally and clamped to fit. For very large
+ * images the watermark scales up to remain visible.
+ *
  * Processing steps:
  * 1. Read uploaded image metadata (width/height)
- * 2. Calculate watermark size (15% of image width)
- * 3. Calculate proportional margin
- * 4. Resize watermark logo to target size with transparency
- * 5. Apply opacity reduction
- * 6. Composite watermark onto bottom-right of image
+ * 2. Calculate watermark size (15% of image width, min 24px)
+ * 3. Resize watermark logo to target size (allows enlargement)
+ * 4. Clamp watermark to fit within image bounds
+ * 5. Calculate bottom-right position with proportional margin
+ * 6. Composite watermark onto image
  * 7. Export in original format
  *
  * @param imageBuffer - The raw uploaded image buffer
  * @param mimeType - The MIME type of the uploaded image
- * @returns The watermarked image buffer
+ * @returns The watermarked image buffer (or original on graceful failure)
  */
 export async function applyWatermark(
     imageBuffer: Buffer,
@@ -127,7 +135,7 @@ export async function applyWatermark(
         const logoBuffer = loadWatermarkLogo();
 
         if (!logoBuffer) {
-            console.warn('[MediaUpload] ⚠️ Skipping watermark application because logo was not found.');
+            console.warn('[MediaUpload] ⚠️ Skipping watermark — logo not found.');
             return imageBuffer;
         }
 
@@ -145,46 +153,64 @@ export async function applyWatermark(
         const imageHeight = metadata.height;
         console.info(`[MediaUpload] Step 2: Image is ${imageWidth}x${imageHeight}`);
 
-        // Calculate watermark dimensions
-        const watermarkWidth = Math.round(imageWidth * WATERMARK_SCALE);
+        // Calculate target watermark width — 15% of image width, min 24px
+        const rawWatermarkWidth = Math.round(imageWidth * WATERMARK_SCALE);
+        const targetWatermarkWidth = Math.max(MIN_WATERMARK_PX, rawWatermarkWidth);
 
-        // Scale margin proportionally based on image size
-        const marginScale = imageWidth / REFERENCE_WIDTH;
-        const margin = Math.round(BASE_MARGIN * marginScale);
+        // Calculate margin — 2% of image width, min 4px
+        const margin = Math.max(MIN_MARGIN_PX, Math.round(imageWidth * MARGIN_SCALE));
 
-        console.info(`[MediaUpload] Step 3: Watermark width=${watermarkWidth}px, margin=${margin}px`);
+        console.info(`[MediaUpload] Step 3: Target watermark width=${targetWatermarkWidth}px, margin=${margin}px`);
 
         // Resize watermark logo to target width (maintaining aspect ratio)
-        // No trimming - use the raw asset's bounds to ensure predictable behavior
+        // withoutEnlargement is FALSE — we allow scaling up for large images
         const resizedLogo = await sharp(logoBuffer)
             .resize({
-                width: watermarkWidth,
-                withoutEnlargement: true,
-                fit: 'inside'
+                width: targetWatermarkWidth,
+                withoutEnlargement: false,
+                fit: 'inside',
             })
             .ensureAlpha()
             .png()
             .toBuffer();
 
-        const finalWatermark = resizedLogo;
-
         // Get the actual dimensions of the resized watermark
-        const watermarkMeta = await sharp(finalWatermark).metadata();
-        const wmWidth = watermarkMeta.width || watermarkWidth;
-        const wmHeight = watermarkMeta.height || watermarkWidth;
+        const watermarkMeta = await sharp(resizedLogo).metadata();
+        let wmWidth = watermarkMeta.width || targetWatermarkWidth;
+        let wmHeight = watermarkMeta.height || targetWatermarkWidth;
 
         console.info(`[MediaUpload] Step 4: Watermark resized to ${wmWidth}x${wmHeight}`);
 
-        // Calculate position offset from the bottom-right corner (closer to the edge)
-        const layoutMargin = Math.round(imageWidth * 0.02);
-        const left = Math.max(0, imageWidth - wmWidth - layoutMargin);
-        const top = Math.max(0, imageHeight - wmHeight - layoutMargin);
+        // Safety clamp: if the watermark is larger than the image (very tiny
+        // uploaded images), shrink it to fit within the image with margin
+        const maxWmWidth = Math.max(1, imageWidth - margin * 2);
+        const maxWmHeight = Math.max(1, imageHeight - margin * 2);
 
-        // Ensure position is valid (watermark fits within image)
-        if (left < 0 || top < 0) {
-            console.error('[MediaUpload] Image too small for watermark, skipping');
-            return imageBuffer;
+        let finalWatermark = resizedLogo;
+
+        if (wmWidth > maxWmWidth || wmHeight > maxWmHeight) {
+            console.info(`[MediaUpload] Step 4b: Clamping watermark to fit within ${maxWmWidth}x${maxWmHeight}`);
+            finalWatermark = await sharp(resizedLogo)
+                .resize({
+                    width: maxWmWidth,
+                    height: maxWmHeight,
+                    fit: 'inside',
+                    withoutEnlargement: true,
+                })
+                .ensureAlpha()
+                .png()
+                .toBuffer();
+
+            const clampedMeta = await sharp(finalWatermark).metadata();
+            wmWidth = clampedMeta.width || maxWmWidth;
+            wmHeight = clampedMeta.height || maxWmHeight;
+            console.info(`[MediaUpload] Step 4c: Clamped watermark to ${wmWidth}x${wmHeight}`);
         }
+
+        // Calculate position: bottom-right corner with margin
+        // Clamp to 0 so we never get negative coordinates
+        const left = Math.max(0, imageWidth - wmWidth - margin);
+        const top = Math.max(0, imageHeight - wmHeight - margin);
 
         console.info(`[MediaUpload] Step 5: Position left=${left}, top=${top}`);
 
@@ -218,8 +244,11 @@ export async function applyWatermark(
         const elapsed = Date.now() - startTime;
         console.error(`[MediaUpload] ❌ Watermark FAILED after ${elapsed}ms:`, error);
 
-        // ENFORCED: If watermarking is compulsory, we should throw if it fails 
-        // to prevent non-watermarked images from leaking onto the site.
-        throw new Error(`Watermarking failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        // Graceful fallback: return the original image so the upload doesn't fail.
+        // The image will be uploaded without a watermark, which is better than
+        // blocking the user from adding content entirely.
+        console.warn('[MediaUpload] ⚠️ Returning original image without watermark due to processing error.');
+        return imageBuffer;
     }
 }
+

@@ -196,7 +196,10 @@ export const getAllArticles = cache(async function getAllArticles(): Promise<Art
         }
 
         const listData = allArticles.map(a => {
-            const { body, bodyBlocks, ...meta } = a;
+            // Omit heavy body content from the list cache
+            const meta = { ...a };
+            delete (meta as Record<string, unknown>).body;
+            delete (meta as Record<string, unknown>).bodyBlocks;
             return meta as Article;
         });
 
@@ -233,7 +236,7 @@ export const getArticleBySlug = cache(async function getArticleBySlug(section: s
         const article = await readArticleFile(filePath, section as Section);
         setCachedArticleBySlug(slug, article);
         return article;
-    } catch (error) {
+    } catch {
         if (cached) {
             console.warn(`[getArticleBySlug] GitHub API failed for ${slug}, serving stale cache`);
             return cached;

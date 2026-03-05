@@ -16,6 +16,8 @@ export {
     uploadToStorage,
     deleteFromStorage,
     extractDimensions,
+    extractStorageKeyFromUrl,
+    deleteMultipleFromStorage,
     type StorageUploadResult,
 } from './supabase-storage';
 

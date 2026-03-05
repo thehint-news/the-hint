@@ -410,7 +410,7 @@ export function VideoBlockEditor({
                                         <input
                                             id="thumbnail-upload"
                                             type="file"
-                                            accept="image/jpeg,image/png,image/webp"
+                                            accept="image/jpeg,image/png,image/webp,image/avif"
                                             className={styles.hiddenInput}
                                             onChange={handleThumbnailUpload}
                                             disabled={isUploadingThumbnail}

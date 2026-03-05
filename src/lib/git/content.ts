@@ -51,6 +51,7 @@ export interface DraftData {
 /** Published article metadata (extracted from frontmatter) */
 /** English translation data */
 export interface ArticleTranslation {
+    status?: 'pending' | 'ready' | 'failed';
     title: string;
     subtitle: string;
     body: string;
@@ -711,7 +712,7 @@ class ContentGit {
                         title: headline, // Use original as placeholder
                         subtitle: articleData.subheadline,
                         translatedAt: new Date().toISOString(),
-                    } as any
+                    } as Partial<ArticleTranslation> & Record<string, unknown>
                 }
             });
 
@@ -881,6 +882,44 @@ class ContentGit {
     }
 
     /**
+     * READ: Load a published article by section and slug.
+     * Returns parsed article data including all image references.
+     */
+    async loadPublishedArticle(section: Section, slug: string): Promise<ContentOperationResult<PublishedArticleData>> {
+        try {
+            const relativePath = gitService.getPublishedRelativePath(section, slug);
+            const { content } = await gitService.getFileInfo(relativePath);
+
+            if (!content) {
+                return {
+                    success: false,
+                    userMessage: 'Article not found.',
+                };
+            }
+
+            const parsed = this.parseMarkdownFrontmatter(content, section, slug);
+            if (!parsed) {
+                return {
+                    success: false,
+                    userMessage: 'Could not parse article.',
+                };
+            }
+
+            return {
+                success: true,
+                data: parsed,
+                userMessage: 'Article loaded.',
+            };
+        } catch (error) {
+            logger.error('Failed to load published article', error);
+            return {
+                success: false,
+                userMessage: 'Failed to load article.',
+            };
+        }
+    }
+
+    /**
      * Generate markdown content with frontmatter
      * Uses js-yaml for safe dumping
      */
@@ -896,7 +935,7 @@ class ContentGit {
         image?: string;
         publishedAt: string;
         updatedAt?: string;
-        translations?: any;
+        translations?: Record<string, unknown>;
         isLead?: boolean;
         leadMedia?: {
             images: {
@@ -1023,6 +1062,7 @@ class ContentGit {
                 if (enTranslation && typeof enTranslation === 'object') {
                     translations = {
                         en: {
+                            status: (enTranslation.status as ArticleTranslation['status']) || undefined,
                             title: String(enTranslation.title || data.title),
                             subtitle: String(enTranslation.subtitle || data.subtitle || ''),
                             body: String(enTranslation.body || body),
@@ -1219,7 +1259,7 @@ class ContentGit {
                 translations: {
                     ...((rawFrontmatter.translations as Record<string, unknown>) || {}),
                     en: {
-                        ...((rawFrontmatter.translations as any)?.en || {}),
+                        ...(((rawFrontmatter.translations as Record<string, unknown>)?.en as Record<string, unknown>) || {}),
                         status: 'failed',
                         translatedAt: new Date().toISOString()
                     }

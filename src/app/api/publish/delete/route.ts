@@ -1,15 +1,66 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { contentGit } from '@/lib/git';
+import { NextRequest, NextResponse, after } from 'next/server';
+import { contentGit, PublishedArticleData } from '@/lib/git';
 import { logger } from '@/lib/feedback/console-guard';
 import { verifyAuth } from '@/lib/auth/session';
 import { revalidatePath } from 'next/cache';
 import { Section } from '@/lib/git/service';
 import { clearArticleCache } from '@/lib/cache/article-cache';
+import { extractStorageKeyFromUrl, deleteMultipleFromStorage } from '@/lib/media';
 
 /** Valid sections */
 const VALID_SECTIONS: Section[] = ['politics', 'crime', 'court', 'opinion', 'world-affairs', 'local'];
 
 const AUTH_EXPIRED_MESSAGE = 'Session expired. Please log in again.';
+
+// =============================================================================
+// SUPABASE IMAGE CLEANUP
+// =============================================================================
+
+/**
+ * Extract all Supabase storage keys from a parsed article.
+ * Collects URLs from: thumbnail, image blocks, video poster thumbnails, lead media.
+ */
+function collectArticleImageKeys(article: PublishedArticleData): string[] {
+    const urls: string[] = [];
+
+    // 1. Thumbnail image
+    if (article.image) {
+        urls.push(article.image);
+    }
+
+    // 2. Body block images and video poster thumbnails
+    if (article.bodyBlocks && Array.isArray(article.bodyBlocks)) {
+        for (const block of article.bodyBlocks) {
+            if (block.type === 'image' && 'src' in block && typeof block.src === 'string') {
+                urls.push(block.src);
+            }
+            if (block.type === 'video' && 'posterThumbnail' in block && typeof block.posterThumbnail === 'string') {
+                urls.push(block.posterThumbnail);
+            }
+        }
+    }
+
+    // 3. Lead media images
+    if (article.leadMedia?.images) {
+        for (const img of article.leadMedia.images) {
+            if (img.url) {
+                urls.push(img.url);
+            }
+        }
+    }
+
+    // Convert URLs to storage keys, filtering out non-Supabase URLs
+    const keys: string[] = [];
+    for (const url of urls) {
+        const key = extractStorageKeyFromUrl(url);
+        if (key) {
+            keys.push(key);
+        }
+    }
+
+    // Deduplicate (same image could appear as thumbnail + lead media)
+    return [...new Set(keys)];
+}
 
 /**
  * PART 5: DELETE LOCK MECHANISM
@@ -289,6 +340,19 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
                 }
                 logger.info(`[DELETE-API] [${requestId}] Section: ${section}, Slug: ${safeSlug}`);
 
+                // PRE-DELETE: Load article content to extract image URLs before Git deletes the file
+                let imageKeysToClean: string[] = [];
+                try {
+                    const loadResult = await contentGit.loadPublishedArticle(section as Section, safeSlug);
+                    if (loadResult.success && loadResult.data) {
+                        imageKeysToClean = collectArticleImageKeys(loadResult.data);
+                        logger.info(`[DELETE-API] [${requestId}] Found ${imageKeysToClean.length} Supabase image(s) to clean up`);
+                    }
+                } catch {
+                    // Non-fatal: if we can't read images, still proceed with deletion
+                    logger.warn(`[DELETE-API] [${requestId}] Could not read article for image cleanup (proceeding with delete)`);
+                }
+
                 // Wait for Git confirmation before proceeding
                 const result = await contentGit.deletePublishedArticle(section as Section, safeSlug);
 
@@ -342,6 +406,21 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
                 };
 
                 logger.info(`[DELETE-API] [${requestId}] ========== DELETE REQUEST SUCCESS (PUBLISHED) ==========`);
+
+                // SUPABASE CLEANUP: Delete article images from storage in background
+                // Non-blocking — runs after the response is sent
+                if (imageKeysToClean.length > 0) {
+                    after(async () => {
+                        try {
+                            logger.info(`[DELETE-API] [${requestId}] Cleaning up ${imageKeysToClean.length} Supabase image(s): ${imageKeysToClean.join(', ')}`);
+                            const deleted = await deleteMultipleFromStorage(imageKeysToClean);
+                            logger.info(`[DELETE-API] [${requestId}] Supabase cleanup complete: ${deleted}/${imageKeysToClean.length} images deleted`);
+                        } catch (e) {
+                            logger.error(`[DELETE-API] [${requestId}] Supabase cleanup failed (non-fatal):`, e);
+                        }
+                    });
+                }
+
                 return NextResponse.json(response, { status: 200 });
             }
 

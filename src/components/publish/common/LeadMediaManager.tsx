@@ -33,7 +33,7 @@ interface LeadMediaManagerProps {
 }
 
 const MAX_FILE_SIZE_MB = 5;
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
 
 /**
  * LeadMediaManager - Lead Story Thumbnail Manager
@@ -60,7 +60,7 @@ export function LeadMediaManager({
     const processFile = useCallback(async (file: File): Promise<LeadStoryImageData | null> => {
         // Validate file type
         if (!ALLOWED_TYPES.includes(file.type)) {
-            setUploadError('Only JPEG, PNG, and WebP images are allowed');
+            setUploadError('Only JPEG, PNG, WebP, and AVIF images are allowed');
             return null;
         }
 
@@ -282,7 +282,7 @@ export function LeadMediaManager({
                     <input
                         ref={fileInputRef}
                         type="file"
-                        accept="image/jpeg,image/png,image/webp"
+                        accept="image/jpeg,image/png,image/webp,image/avif"
                         multiple
                         onChange={handleFileInput}
                         onClick={(e) => e.stopPropagation()}
@@ -308,7 +308,7 @@ export function LeadMediaManager({
                             Click or drag images here
                         </span>
                         <span className={styles.dropHint}>
-                            JPEG, PNG, WebP up to {MAX_FILE_SIZE_MB}MB
+                            JPEG, PNG, WebP, AVIF up to {MAX_FILE_SIZE_MB}MB
                         </span>
                     </div>
                 </div>

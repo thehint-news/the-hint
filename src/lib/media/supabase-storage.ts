@@ -302,3 +302,60 @@ export async function deleteFromStorage(key: string): Promise<boolean> {
         return false;
     }
 }
+
+/**
+ * Extract the storage key from a Supabase public URL.
+ * URL format: https://{project}.supabase.co/storage/v1/object/public/{bucket}/{key}
+ * Returns null if the URL is not from our Supabase storage.
+ */
+export function extractStorageKeyFromUrl(url: string): string | null {
+    try {
+        const config = getSupabaseConfig();
+        if (!config) return null;
+
+        // Match the Supabase storage URL pattern
+        // e.g. https://xxx.supabase.co/storage/v1/object/public/article-images/articles/2026/03/abc123.webp
+        const bucketPrefix = `/storage/v1/object/public/${config.bucket}/`;
+        const idx = url.indexOf(bucketPrefix);
+        if (idx === -1) return null;
+
+        const key = url.substring(idx + bucketPrefix.length);
+        // Basic validation: key should start with "articles/" and have content
+        if (!key || !key.startsWith('articles/')) return null;
+
+        return key;
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * Delete multiple images from storage in a single call.
+ * Fire-and-forget safe — never throws.
+ * Returns the count of successfully deleted keys.
+ */
+export async function deleteMultipleFromStorage(keys: string[]): Promise<number> {
+    if (keys.length === 0) return 0;
+
+    try {
+        const config = getSupabaseConfig();
+        if (!config) return 0;
+
+        const client = getServerClient();
+        if (!client) return 0;
+
+        const { error } = await client.storage
+            .from(config.bucket)
+            .remove(keys);
+
+        if (error) {
+            console.error('[SUPABASE] Batch delete error:', error.message);
+            return 0;
+        }
+
+        return keys.length;
+    } catch (e) {
+        console.error('[SUPABASE] Batch delete failed:', e);
+        return 0;
+    }
+}
