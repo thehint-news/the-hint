@@ -2350,5 +2350,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-05T08:25:43.746Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "4af3572d-f38a-40bd-8eaa-7a46fbebfbf6",
+    "articleSlug": "people-kapu-buried-sorake-memorial",
+    "section": "politics",
+    "headline": "ಕಾಪುವಿನ ಜನತೆ ಸೊರಕೆಯವರನ್ನು ನೆನಪಿನ ಸಮಾಧಿಯಲ್ಲಿ ಹೂತು ಹಾಕಿದ್ದಾರೆ - ಜಿತೇಂದ್ರ ಶೆಟ್ಟಿ ಉದ್ಯಾವರ",
+    "summary": "ಕಾಪುವಿನಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ ಪಕ್ಷದ ಶವಪೆಟ್ಟಿಗೆ ಕೊನೆಯ ಮೊಳೆಯನ್ನು ಸೊರಕೆಯವರೇ ಹೊಡೆಯುತ್ತಿದ್ದಾರೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-05T08:30:09.566Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
