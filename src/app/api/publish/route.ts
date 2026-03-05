@@ -234,65 +234,81 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
 
         // Generate English translation in background
-        // This runs async without blocking the publish response
+        // This runs async without blocking the publish response.
+        // Includes pipeline-level retry: if first attempt fails, waits and retries once.
         after(async () => {
-            try {
-                logger.info(`[PUBLISH] Starting translation generation for ${targetSlug}`);
+            const PIPELINE_MAX_ATTEMPTS = 2;
+            const PIPELINE_RETRY_DELAY_MS = 5_000; // 5 seconds between pipeline attempts
 
-                // Prepare article for translation
-                const articleForTranslation = {
-                    title: articleData.headline,
-                    subheadline: articleData.subheadline,
-                    body: articleData.body || '',
-                    excerpt: articleData.subheadline, // Use subheadline as excerpt if no explicit excerpt
-                };
+            // Allow the publish Git commit to settle on disk before we read-modify-write
+            await new Promise(r => setTimeout(r, 2_000));
 
-                // Generate translation
-                const translation = await translateArticle(articleForTranslation);
-
-                if (translation) {
-                    // Update the article file with translation
-                    const { contentGit } = await import('@/lib/git');
-                    const updateResult = await contentGit.updateTranslation(
-                        articleData.section as Section,
-                        targetSlug,
-                        {
-                            title: translation.title,
-                            subheadline: translation.subheadline,
-                            body: translation.body,
-                            excerpt: translation.excerpt,
-                            translatedAt: translation.translatedAt,
-                        }
-                    );
-
-                    if (updateResult.success) {
-                        logger.info(`[PUBLISH] Translation saved for ${targetSlug}`);
-                        clearArticleCache();
-                        revalidatePath('/', 'page');
-                        revalidatePath('/en', 'page');
-                        revalidatePath(`/${articleData.section}`, 'page');
-                        revalidatePath(`/en/${articleData.section}`, 'page');
-                        revalidatePath(`/${articleData.section}/${targetSlug}`, 'page');
-                        revalidatePath(`/en/${articleData.section}/${targetSlug}`, 'page');
-                    } else {
-                        logger.error(`[PUBLISH] Failed to save translation for ${targetSlug}`, { error: updateResult.error });
-                        // If save failed, we should still try to mark as failed
-                        const { contentGit: git } = await import('@/lib/git');
-                        await git.markTranslationFailed(articleData.section as Section, targetSlug);
-                    }
-                } else {
-                    logger.warn(`[PUBLISH] Translation generation returned null for ${targetSlug}. Marking as failed.`);
-                    const { contentGit: git } = await import('@/lib/git');
-                    await git.markTranslationFailed(articleData.section as Section, targetSlug);
-                }
-            } catch (translationError) {
-                logger.error('[PUBLISH] Translation generation failed in background:', translationError);
+            for (let pipelineAttempt = 1; pipelineAttempt <= PIPELINE_MAX_ATTEMPTS; pipelineAttempt++) {
                 try {
-                    const { contentGit: git } = await import('@/lib/git');
-                    await git.markTranslationFailed(articleData.section as Section, targetSlug);
-                } catch (e) {
-                    logger.error('[PUBLISH] Emergency: Could not even mark translation as failed', e);
+                    logger.info(`[PUBLISH] Translation pipeline attempt ${pipelineAttempt}/${PIPELINE_MAX_ATTEMPTS} for ${targetSlug}`);
+
+                    // Prepare article for translation
+                    const articleForTranslation = {
+                        title: articleData.headline,
+                        subheadline: articleData.subheadline,
+                        body: articleData.body || '',
+                        excerpt: articleData.subheadline,
+                    };
+
+                    // Generate translation (translateArticle already has per-API-call retries)
+                    const translation = await translateArticle(articleForTranslation);
+
+                    if (translation) {
+                        // Update the article file with translation
+                        const { contentGit } = await import('@/lib/git');
+                        const updateResult = await contentGit.updateTranslation(
+                            articleData.section as Section,
+                            targetSlug,
+                            {
+                                title: translation.title,
+                                subheadline: translation.subheadline,
+                                body: translation.body,
+                                excerpt: translation.excerpt,
+                                translatedAt: translation.translatedAt,
+                            }
+                        );
+
+                        if (updateResult.success) {
+                            logger.info(`[PUBLISH] ✅ Translation saved for ${targetSlug} (attempt ${pipelineAttempt})`);
+                            clearArticleCache();
+                            revalidatePath('/', 'page');
+                            revalidatePath('/en', 'page');
+                            revalidatePath(`/${articleData.section}`, 'page');
+                            revalidatePath(`/en/${articleData.section}`, 'page');
+                            revalidatePath(`/${articleData.section}/${targetSlug}`, 'page');
+                            revalidatePath(`/en/${articleData.section}/${targetSlug}`, 'page');
+                            return; // ← SUCCESS – exit the retry loop
+                        } else {
+                            logger.error(`[PUBLISH] Git save failed for translation of ${targetSlug}`, { error: updateResult.error });
+                            // Fall through to retry
+                        }
+                    } else {
+                        logger.warn(`[PUBLISH] translateArticle returned null for ${targetSlug}`);
+                        // Fall through to retry
+                    }
+                } catch (translationError) {
+                    logger.error(`[PUBLISH] Translation pipeline attempt ${pipelineAttempt} threw:`, translationError);
                 }
+
+                // If not the last attempt, wait before retrying the entire pipeline
+                if (pipelineAttempt < PIPELINE_MAX_ATTEMPTS) {
+                    logger.info(`[PUBLISH] Waiting ${PIPELINE_RETRY_DELAY_MS}ms before translation retry...`);
+                    await new Promise(r => setTimeout(r, PIPELINE_RETRY_DELAY_MS));
+                }
+            }
+
+            // All pipeline attempts exhausted – mark as failed
+            logger.error(`[PUBLISH] ❌ All translation pipeline attempts failed for ${targetSlug}. Marking as failed.`);
+            try {
+                const { contentGit: git } = await import('@/lib/git');
+                await git.markTranslationFailed(articleData.section as Section, targetSlug);
+            } catch (e) {
+                logger.error('[PUBLISH] Emergency: Could not mark translation as failed', e);
             }
         });
 

@@ -245,12 +245,12 @@ export async function ArticlePageContent({ section, slug, lang }: ArticlePageCon
                 <div className="max-w-4xl mx-auto">
                     {lang === 'en' && article.translations?.en?.status === 'pending' && (
                         <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-700 text-sm">
-                            <strong>Note:</strong> Auto-translation is in progress. Showing original content in the meantime.
+                            ⏳ <strong>Translation in progress</strong> — The English version of this article will be available shortly. Showing original content in the meantime.
                         </div>
                     )}
                     {lang === 'en' && article.translations?.en?.status === 'failed' && (
                         <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-700 text-sm">
-                            <strong>Note:</strong> Auto-translation failed. Showing original content.
+                            🔄 <strong>Translation pending</strong> — The English translation is being regenerated. Showing original content in the meantime.
                         </div>
                     )}
                     <ArticleHeader
