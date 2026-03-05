@@ -1,37 +1,22 @@
 ---
 title: ಕುಡಿಯುವ ನೀರಿಗೆ ಸಮಸ್ಯೆಯಾಗದಂತೆ ಕ್ರಮ ವಹಿಸಿ - ಕಿರಣ್ ಕೊಡ್ಗಿ
-subtitle: ಕುಡಿಯುವ ನೀರಿನ ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ
+subtitle: ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ
 contentType: news
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/3553676d2d13c6c1.jpg
 status: published
 publishedAt: '2026-03-05T10:43:57.007Z'
-updatedAt: null
+updatedAt: '2026-03-05T11:03:17.045Z'
 placement: standard
-tags: []
+tags:
+  - ಕುಡಿಯುವ ನೀರಿನ
+  - ಕುಂದಾಪುರ ತಾಲೂಕು ಪಂಚಾಯಿತಿ
 sources: []
 translations:
   en:
-    status: ready
-    title: Take steps to ensure that drinking water does not become a problem - Kiran Kodgi
-    subtitle: Take precautions now to avoid drinking water problems.
-    body: |-
-      :::image
-      src: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/d52471b26d15ee42.jpg
-      alt: Kundapura MLA meeting
-      width: 1599
-      height: 720
-      srcset: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/d52471b26d15ee42.jpg 1599w
-      :::
-
-      Kundapura: MLA A. Kiran Kumar Kodgi instructed the officials to take precautions now to avoid drinking water problems in the summer. 
-
-      He was speaking at a meeting of officials held at the Kundapur Taluk Panchayat Hall on Thursday to resolve the drinking water problem in the wake of the increasing heat. 
-
-      Officials of various departments should take precautionary measures to avoid any problem. PDOs should ensure that there is no problem of drinking water in rural areas as well. Taluk-level officials and Gram Panchayat officials should work in coordination. He directed that steps should be taken so that people do not face drinking water problems in any village. 
-
-      Kundapur Taluk Tehsildar Pradeep Kurdekar, Taluk Panchayat Executive Officer, Taluk Panchayat officials, Gram Panchayat Development Officers, Gram Karnikas, and officials concerned with the Panchayat Drinking Water Scheme and officials concerned with the Task Force were present on the stage.
-    excerpt: Take precautions now to avoid drinking water problems.
-    translatedAt: '2026-03-05T10:44:23.389Z'
+    status: pending
+    title: ಕುಡಿಯುವ ನೀರಿಗೆ ಸಮಸ್ಯೆಯಾಗದಂತೆ ಕ್ರಮ ವಹಿಸಿ - ಕಿರಣ್ ಕೊಡ್ಗಿ
+    subtitle: ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ
+    translatedAt: '2026-03-05T11:03:17.045Z'
 bodyBlocks:
   - id: ima-mmdbnx3r-vuhm
     type: image
