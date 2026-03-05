@@ -2414,5 +2414,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-05T10:14:53.633Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "5ea6876c-d02d-4787-b853-fbd4b189b944",
+    "articleSlug": "71-year-old-grandfather-sentenced",
+    "section": "court",
+    "headline": "71 ವರ್ಷದ ಅಜ್ಜನಿಗೆ ಪೋಕ್ಸೊ ಕೇಸ್‌ನಲ್ಲಿ 3 ವರ್ಷ ಶಿಕ್ಷೆ",
+    "summary": "ಸರಕಾರದ ಪರವಾಗಿ ಸರಕಾರಿ ಅಭಿಯೋಜಕ ಬೇಳೂರು ಪ್ರಕಾಶ್ಚಂದ್ರ ಶೆಟ್ಟಿ ವಾದಿಸಿದ್ದಾರೆ.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-05T10:19:05.344Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
