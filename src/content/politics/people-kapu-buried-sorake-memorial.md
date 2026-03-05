@@ -5,50 +5,16 @@ contentType: news
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/506e39dd48dad3e6.png
 status: published
 publishedAt: '2026-03-05T08:25:23.815Z'
-updatedAt: null
+updatedAt: '2026-03-05T08:30:07.077Z'
 placement: lead
 tags: []
 sources: []
 translations:
   en:
-    status: ready
-    title: The people of Kapu have buried Sorake in a memorial tomb - Jitendra Shetty Udyavara
-    subtitle: Sorake is the one who is driving the final nail in the coffin of the Congress party in Kapu.
-    body: |-
-      :::image
-      src: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/9c4bec79e3f86eb5.png
-      alt: Jithendra Shetty Udyavara v/s Vinay Kumar Sorake
-      width: 1536
-      height: 1024
-      credit: Chatgpt
-      srcset: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/9c4bec79e3f86eb5.png 1536w
-      :::
-
-      Udupi: Vinay Kumar Sorake, who was an MLA from the Congress and won from the Kapu constituency, later became the state minister. But this time, the people who have made the gentleman politician Suresh Shetty Gurme win have buried Vinay Kumar Sorake in a memorial tomb, said Kaup Mandal President Jitendra Shetty Udyavar. 
-
-      Vinay Kumar Sorake, who is frustrated by the defeat, is doing dirty politics because people are forgetting him. It is no secret that Sorake, who cannot tolerate MLA Suresh Shetty working across the constituency in a non-partisan manner, is trying to smear the dignity of the MLA. 
-
-      Injustice to God
-
-      In the selection of members of the temple management committee, people who have never even come near the temple door are being selected, preventing Hindu temples from developing, and trying to keep the temples under his control is an unforgivable crime. The people of Kaup will not tolerate injustice even to God. Give a befitting reply. 
-
-      Ajatashatru's birthday disruption
-
-      Ajatashatru from BJP has created problems for the festival held at Kaup Beach as part of Atal Bihari Vajpayee's birthday celebrations. He has pressured the officials to remove the BJP flag and banners installed on the national highway, which not only shows Sorake's frustrated attitude, but it is also true that he is in tears. 
-
-      Limitless in propaganda
-
-      MLA Gurme Suresh Shetty had planned to carry out the renovation of the Perdoor temple without politics. But Vinay Kumar Sorake was the one who created confusion and tried to prevent the renovation work from succeeding. Even today, the people of the constituency know that MLA Gurme Suresh Shetty is trying to do the work of God without politics. 
-
-      The strategy of shooting bullets in the air 
-
-      The deception of the intelligent is terrible. Sorake is intelligent, so the deceptions he commits will remain the same. Vinay Kumar Sorake has been lying and shooting in the air for the past two and a half years, with the courage to say what he accused, what gentle and decent MLAs will not respond to. Now it is time to give an answer to all that. The BJP is ready to give a list of the injustices done by Vinay Kumar Sorake to the people of the constituency. 
-
-      Two-faced personality
-
-      According to officials and Congress workers, Sorake has a two-faced personality. Few people trust him. Therefore, the people of the constituency have blessed him once and rejected him twice. In the midst of the difficulty of getting a ticket next time, Sorake is the one who is driving the final nail in the coffin of the Congress party in Kapu, he said in a press release.
-    excerpt: Sorake is the one who is driving the final nail in the coffin of the Congress party in Kapu.
-    translatedAt: '2026-03-05T08:25:50.005Z'
+    status: pending
+    title: ಕಾಪುವಿನ ಜನತೆ ಸೊರಕೆಯವರನ್ನು ನೆನಪಿನ ಸಮಾಧಿಯಲ್ಲಿ ಹೂತು ಹಾಕಿದ್ದಾರೆ - ಜಿತೇಂದ್ರ ಶೆಟ್ಟಿ ಉದ್ಯಾವರ
+    subtitle: ಕಾಪುವಿನಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ ಪಕ್ಷದ ಶವಪೆಟ್ಟಿಗೆ ಕೊನೆಯ ಮೊಳೆಯನ್ನು ಸೊರಕೆಯವರೇ ಹೊಡೆಯುತ್ತಿದ್ದಾರೆ
+    translatedAt: '2026-03-05T08:30:07.077Z'
 bodyBlocks:
   - id: ima-mmd76a2y-7jbo
     type: image
@@ -64,7 +30,7 @@ bodyBlocks:
     type: paragraph
     order: 1
     content: |-
-      ಉಡುಪಿ: ಕಾಪು ಕ್ಷೇತ್ರದಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ನಿಂದ ಗೆದ್ದು ಶಾಸಕರಾಗಿದ್ದ ವಿನಯ್ ಕುಮಾರ್ ಸೊರಕೆಯವರು ನಂತರ ರಾಜ್ಯದ ಸಚಿವರಾಗಿದ್ದಾರೆ. ಆದರೆ ಈ ಬಾರಿ ಸಜ್ಜನ ರಾಜಕಾರಣಿ ಸುರೇಶ್ ಶೆಟ್ಟಿ ಗುರ್ಮೆಯವರನ್ನು ಗೆಲ್ಲಿಸಿರುವ ಜನತೆ ವಿನಯ್ ಕುಮಾರ್ ಸೊರಕೆಯವರನ್ನು ನೆನಪಿನ ಸಮಾಧಿಯಲ್ಲಿ ಹೂತು ಹಾಕಿದ್ದಾರೆ ಎಂದು ಕಾಪು ಮಂಡಲ ಅಧ್ಯಕ್ಷ ಜಿತೇಂದ್ರ ಶೆಟ್ಟಿ ಉದ್ಯಾವರ ಕಿಡಿ ಕಾರಿದ್ದಾರೆ. 
+      ಉಡುಪಿ: ಕಾಪು ಕ್ಷೇತ್ರದಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ನಿಂದ ಗೆದ್ದು ಶಾಸಕರಾಗಿದ್ದ ವಿನಯ್ ಕುಮಾರ್ ಸೊರಕೆಯವರು ನಂತರ ರಾಜ್ಯದ ಸಚಿವರಾಗಿದ್ದಾರೆ. ಆದರೆ ಈ ಬಾರಿ ಸಜ್ಜನ ರಾಜಕಾರಣಿ ಸುರೇಶ್ ಶೆಟ್ಟಿ ಗುರ್ಮೆಯವರನ್ನು ಗೆಲ್ಲಿಸಿರುವ ಜನತೆ ವಿನಯ್ ಕುಮಾರ್ ಸೊರಕೆಯವರನ್ನು ನೆನಪಿನ ಸಮಾಧಿಯಲ್ಲಿ ಹೂತು ಹಾಕಿದ್ದಾರೆ ಎಂದು ಕಾಪು ಬಿಜೆಪಿ ಮಂಡಲ ಅಧ್ಯಕ್ಷ ಜಿತೇಂದ್ರ ಶೆಟ್ಟಿ ಉದ್ಯಾವರ ಕಿಡಿ ಕಾರಿದ್ದಾರೆ. 
 
       ಸೋಲಿನ ಹತಾಶೆಯಲ್ಲಿರುವ ವಿನಯ್ ಕುಮಾರ್ ಸೊರಕೆಯವರು, ಜನ ನನ್ನನ್ನು ಮರೆಯುತ್ತಿದ್ದಾರೆ ಎಂಬ ಕಾರಣಕ್ಕೆ ಹೊಲಸು ರಾಜಕಾರಣ ಮಾಡುತ್ತಿದ್ದಾರೆ. ಶಾಸಕ ಸುರೇಶ್ ಶೆಟ್ಟಿಯವರು ಪಕ್ಷಾತೀತವಾಗಿ ಕ್ಷೇತ್ರದಾದ್ಯಂತ ಕೆಲಸವನ್ನು ಮಾಡುತ್ತಿರುವುದನ್ನು ಸಹಿಸದ ಸೊರಕೆಯವರು, ಶಾಸಕರ ಘನತೆಗೆ ಕಪ್ಪು ಮಸಿ ಬಳಿಯಲು ಪ್ರಯತ್ನಿಸುತ್ತಿರುವುದು ಗುಟ್ಟಾಗಿ ಉಳಿದಿಲ್ಲ. 
 
@@ -98,7 +64,7 @@ credit: Chatgpt
 srcset: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/9c4bec79e3f86eb5.png 1536w
 :::
 
-ಉಡುಪಿ: ಕಾಪು ಕ್ಷೇತ್ರದಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ನಿಂದ ಗೆದ್ದು ಶಾಸಕರಾಗಿದ್ದ ವಿನಯ್ ಕುಮಾರ್ ಸೊರಕೆಯವರು ನಂತರ ರಾಜ್ಯದ ಸಚಿವರಾಗಿದ್ದಾರೆ. ಆದರೆ ಈ ಬಾರಿ ಸಜ್ಜನ ರಾಜಕಾರಣಿ ಸುರೇಶ್ ಶೆಟ್ಟಿ ಗುರ್ಮೆಯವರನ್ನು ಗೆಲ್ಲಿಸಿರುವ ಜನತೆ ವಿನಯ್ ಕುಮಾರ್ ಸೊರಕೆಯವರನ್ನು ನೆನಪಿನ ಸಮಾಧಿಯಲ್ಲಿ ಹೂತು ಹಾಕಿದ್ದಾರೆ ಎಂದು ಕಾಪು ಮಂಡಲ ಅಧ್ಯಕ್ಷ ಜಿತೇಂದ್ರ ಶೆಟ್ಟಿ ಉದ್ಯಾವರ ಕಿಡಿ ಕಾರಿದ್ದಾರೆ. 
+ಉಡುಪಿ: ಕಾಪು ಕ್ಷೇತ್ರದಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ನಿಂದ ಗೆದ್ದು ಶಾಸಕರಾಗಿದ್ದ ವಿನಯ್ ಕುಮಾರ್ ಸೊರಕೆಯವರು ನಂತರ ರಾಜ್ಯದ ಸಚಿವರಾಗಿದ್ದಾರೆ. ಆದರೆ ಈ ಬಾರಿ ಸಜ್ಜನ ರಾಜಕಾರಣಿ ಸುರೇಶ್ ಶೆಟ್ಟಿ ಗುರ್ಮೆಯವರನ್ನು ಗೆಲ್ಲಿಸಿರುವ ಜನತೆ ವಿನಯ್ ಕುಮಾರ್ ಸೊರಕೆಯವರನ್ನು ನೆನಪಿನ ಸಮಾಧಿಯಲ್ಲಿ ಹೂತು ಹಾಕಿದ್ದಾರೆ ಎಂದು ಕಾಪು ಬಿಜೆಪಿ ಮಂಡಲ ಅಧ್ಯಕ್ಷ ಜಿತೇಂದ್ರ ಶೆಟ್ಟಿ ಉದ್ಯಾವರ ಕಿಡಿ ಕಾರಿದ್ದಾರೆ. 
 
 ಸೋಲಿನ ಹತಾಶೆಯಲ್ಲಿರುವ ವಿನಯ್ ಕುಮಾರ್ ಸೊರಕೆಯವರು, ಜನ ನನ್ನನ್ನು ಮರೆಯುತ್ತಿದ್ದಾರೆ ಎಂಬ ಕಾರಣಕ್ಕೆ ಹೊಲಸು ರಾಜಕಾರಣ ಮಾಡುತ್ತಿದ್ದಾರೆ. ಶಾಸಕ ಸುರೇಶ್ ಶೆಟ್ಟಿಯವರು ಪಕ್ಷಾತೀತವಾಗಿ ಕ್ಷೇತ್ರದಾದ್ಯಂತ ಕೆಲಸವನ್ನು ಮಾಡುತ್ತಿರುವುದನ್ನು ಸಹಿಸದ ಸೊರಕೆಯವರು, ಶಾಸಕರ ಘನತೆಗೆ ಕಪ್ಪು ಮಸಿ ಬಳಿಯಲು ಪ್ರಯತ್ನಿಸುತ್ತಿರುವುದು ಗುಟ್ಟಾಗಿ ಉಳಿದಿಲ್ಲ. 
 
