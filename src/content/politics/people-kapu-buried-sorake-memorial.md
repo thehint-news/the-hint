@@ -14,10 +14,44 @@ tags:
 sources: []
 translations:
   en:
-    status: pending
-    title: ಕಾಪುವಿನ ಜನತೆ ಸೊರಕೆಯವರನ್ನು ನೆನಪಿನ ಸಮಾಧಿಯಲ್ಲಿ ಹೂತು ಹಾಕಿದ್ದಾರೆ - ಜಿತೇಂದ್ರ ಶೆಟ್ಟಿ ಉದ್ಯಾವರ
-    subtitle: ಕಾಪುವಿನಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ ಪಕ್ಷದ ಶವಪೆಟ್ಟಿಗೆ ಕೊನೆಯ ಮೊಳೆಯನ್ನು ಸೊರಕೆಯವರೇ ಹೊಡೆಯುತ್ತಿದ್ದಾರೆ
-    translatedAt: '2026-03-05T10:54:20.022Z'
+    status: ready
+    title: The people of Kapu have buried Sorake in a memorial tomb - Jitendra Shetty Udyavara
+    subtitle: Sorake is the one who is driving the final nail in the coffin of the Congress party in Kapu.
+    body: |-
+      :::image
+      src: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/9c4bec79e3f86eb5.png
+      alt: Jithendra shetty Udyavara v/s Vinay Kumar Sorake
+      width: 1536
+      height: 1024
+      credit: AI Generated
+      srcset: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/9c4bec79e3f86eb5.png 1536w
+      :::
+
+      Udupi: Vinay Kumar Sorake, who won from the Congress in the Kaup constituency and became an MLA, has since become a minister of the state. But this time, the people who made the gentleman politician Suresh Shetty Gurme win have buried Vinay Kumar Sorake in a memorial tomb, said Kaup BJP Mandal President Jitendra Shetty Udyavar. 
+
+      Vinay Kumar Sorake, who is frustrated by the defeat, is doing dirty politics because people are forgetting him. It is no secret that Sorake, who cannot tolerate MLA Suresh Shetty working across the constituency in a non-partisan manner, is trying to smear the dignity of the MLA. 
+
+      ## Injustice to God
+
+      In the selection of members of the temple management committee, people who have never even come near the door of the temple are being selected, and it is an unforgivable crime to prevent Hindu temples from developing, and to try to keep the temples under his control. The people of Kaup will not tolerate injustice even to God. Give a befitting reply. 
+
+      ## Ajatashatru's birthday disruption
+
+      Ajatashatru from BJP has created problems for the festival held at Kaup Beach as part of Atal Bihari Vajpayee's birthday celebrations. The fact that he pressured the officials to remove the BJP flag and banners installed on the national highway not only shows Sorake's frustrated attitude, but also shows that he is in tears. 
+
+      ## Limitless in propaganda
+
+      MLA Gurme Suresh Shetty had planned to carry out the renovation of the Perdoor temple without politics. But Vinay Kumar Sorake was the one who created confusion and tried to prevent the renovation work from succeeding. Even today, the people of the constituency know that MLA Gurme Suresh Shetty is trying to do the work of God without politics. 
+
+      ## The trick of shooting a bullet in the air 
+
+      The deception of the intelligent is terrible. Sorake is intelligent, so the deceptions he commits will remain the same. Vinay Kumar Sorake has been lying and shooting in the air for the past two and a half years, with the courage of not knowing what he accused, what the gentle and decent MLAs will not respond to. Now it is time to give an answer to all that. The BJP is ready to give a list of the injustices done by Vinay Kumar Sorake to the people of the constituency. 
+
+      ## Two-faced personality
+
+      According to officials and Congress workers, Sorake has a two-faced personality. Few people trust him. Therefore, the people of the constituency have blessed him once and rejected him twice. In the midst of the difficulty of getting a ticket next time, Sorake is the one who is driving the final nail in the coffin of the Congress party in Kapu, he said in a press release.
+    excerpt: Sorake is the one who is driving the final nail in the coffin of the Congress party in Kapu.
+    translatedAt: '2026-03-05T10:54:46.026Z'
 bodyBlocks:
   - id: ima-mmd76a2y-7jbo
     type: image
