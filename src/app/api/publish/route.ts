@@ -253,6 +253,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                         subheadline: articleData.subheadline,
                         body: articleData.body || '',
                         excerpt: articleData.subheadline,
+                        tags: articleData.tags,
+                        sources: articleData.sources,
                     };
 
                     // Generate translation (translateArticle already has per-API-call retries)
@@ -269,6 +271,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                                 subheadline: translation.subheadline,
                                 body: translation.body,
                                 excerpt: translation.excerpt,
+                                tags: translation.tags,
+                                sources: translation.sources,
                                 translatedAt: translation.translatedAt,
                             }
                         );

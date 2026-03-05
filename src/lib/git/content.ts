@@ -1134,6 +1134,8 @@ class ContentGit {
             subheadline?: string;
             body: string;
             excerpt?: string;
+            tags?: string[];
+            sources?: string[];
             translatedAt: string;
         }
     ): Promise<ContentOperationResult> {
@@ -1184,6 +1186,8 @@ class ContentGit {
                         subtitle: translation.subheadline || existingArticle.subtitle,
                         body: translation.body,
                         excerpt: translation.excerpt || translation.subheadline || existingArticle.subtitle,
+                        tags: translation.tags || existingArticle.tags,
+                        sources: translation.sources || existingArticle.sources,
                         translatedAt: translation.translatedAt,
                     },
                 },

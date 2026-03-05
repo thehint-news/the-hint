@@ -91,6 +91,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             subheadline: article.subtitle,
             body: article.body || '',
             excerpt: article.subtitle,
+            tags: article.tags,
+            sources: article.sources,
         });
 
         if (!translation) {
@@ -110,6 +112,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 subheadline: translation.subheadline,
                 body: translation.body,
                 excerpt: translation.excerpt,
+                tags: translation.tags,
+                sources: translation.sources,
                 translatedAt: translation.translatedAt,
             }
         );

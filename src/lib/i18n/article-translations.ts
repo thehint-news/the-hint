@@ -39,6 +39,9 @@ export function applyArticleTranslation(
         ...(translation.body && { body: translation.body }),
         // Only override bodyBlocks if translation has them
         ...(translation.bodyBlocks && { bodyBlocks: translation.bodyBlocks }),
+        // Override tags and sources if available
+        ...(translation.tags && { tags: translation.tags }),
+        ...(translation.sources && { sources: translation.sources }),
     };
 }
 

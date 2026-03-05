@@ -83,6 +83,8 @@ interface ArticleTranslationInput {
     subheadline?: string;
     body: string; // Markdown content
     excerpt?: string;
+    tags?: string[];
+    sources?: string[];
 }
 
 interface ArticleTranslationOutput {
@@ -90,6 +92,8 @@ interface ArticleTranslationOutput {
     subheadline?: string;
     body: string;
     excerpt?: string;
+    tags?: string[];
+    sources?: string[];
     translatedAt: string;
     model: string;
 }
@@ -334,6 +338,31 @@ export async function translateArticle(
             translatedBody = translatedChunks.join('\n\n');
         }
 
+        // ── 5) Tags and Sources (optional) ───────────────────────────────
+        let translatedTags = article.tags;
+        if (article.tags && article.tags.length > 0) {
+            const tagsRes = [];
+            for (const tag of article.tags) {
+                const tr = await translateText({ text: tag, from: 'kn', to: 'en' });
+                if (tr.success) tagsRes.push(tr.text);
+                else tagsRes.push(tag);
+                await sleep(INTER_CHUNK_DELAY_MS);
+            }
+            translatedTags = tagsRes;
+        }
+
+        let translatedSources = article.sources;
+        if (article.sources && article.sources.length > 0) {
+            const srcRes = [];
+            for (const src of article.sources) {
+                const tr = await translateText({ text: src, from: 'kn', to: 'en' });
+                if (tr.success) srcRes.push(tr.text);
+                else srcRes.push(src);
+                await sleep(INTER_CHUNK_DELAY_MS);
+            }
+            translatedSources = srcRes;
+        }
+
         const elapsed = Date.now() - startTime;
         logger.info(`[TranslationService] ── Article translation complete (${elapsed}ms) ──`, {
             titlePreview: titleResult.text.slice(0, 80),
@@ -345,6 +374,8 @@ export async function translateArticle(
             subheadline: translatedSubheadline,
             body: translatedBody,
             excerpt: translatedExcerpt,
+            tags: translatedTags,
+            sources: translatedSources,
             translatedAt: new Date().toISOString(),
             model: 'google-translate-v2',
         };

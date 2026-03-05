@@ -5,19 +5,23 @@
  * Clean typography, simple borders, no distractions.
  */
 
-import { kn } from "@/lib/i18n/kn";
+import { Language } from "@/lib/i18n/language";
+import { getTranslationsForLang } from "@/lib/i18n";
 
 interface SourcesListProps {
     sources: string[];
+    lang: Language;
 }
 
-export function SourcesList({ sources }: SourcesListProps) {
-    if (sources.length === 0) {
+export function SourcesList({ sources, lang }: SourcesListProps) {
+    if (!sources || sources.length === 0) {
         return null;
     }
 
+    const t = getTranslationsForLang(lang);
+
     return (
-        <aside style={{ marginTop: '1.5rem' }}>
+        <aside style={{ margin: '2.5rem 0' }}>
             {/* Simple label */}
             <h3 style={{
                 fontFamily: 'var(--font-sans-full)',
@@ -28,7 +32,7 @@ export function SourcesList({ sources }: SourcesListProps) {
                 color: '#595959',
                 marginBottom: '0.75rem',
             }}>
-                {kn.article.sources}
+                {t.article.sources}
             </h3>
 
             {/* Clean list */}
@@ -36,7 +40,7 @@ export function SourcesList({ sources }: SourcesListProps) {
                 listStyle: 'none',
                 padding: 0,
                 margin: 0,
-                borderTop: '1px solid #D9D9D9',
+                borderTop: '1px solid #E5E5E5',
                 paddingTop: '0.75rem',
             }}>
                 {sources.map((source, index) => (
@@ -44,8 +48,8 @@ export function SourcesList({ sources }: SourcesListProps) {
                         key={index}
                         style={{
                             fontFamily: 'var(--font-serif-full)',
-                            fontSize: '0.875rem',
-                            lineHeight: 1.5,
+                            fontSize: '0.9375rem',
+                            lineHeight: 1.6,
                             color: '#2B2B2B',
                             marginBottom: '0.5rem',
                         }}

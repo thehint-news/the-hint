@@ -68,6 +68,10 @@ export interface ArticleTranslation {
     excerpt?: string;
     /** Translated content blocks (optional - if not provided, uses original bodyBlocks) */
     bodyBlocks?: ContentBlock[];
+    /** Translated tags */
+    tags?: string[];
+    /** Translated sources */
+    sources?: string[];
     /** Translation generation timestamp */
     translatedAt: string;
 }

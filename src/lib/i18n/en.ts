@@ -57,7 +57,8 @@ export const en = {
         copied: "Copied",
         correction: "Correction",
         updatedNotice: "This article has been updated since its original publication.",
-        sources: "Sources"
+        sources: "Sources",
+        keywords: "Keywords"
     },
     errors: {
         notFound: "Page Not Found",

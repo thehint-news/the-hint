@@ -50,7 +50,8 @@ export const kn = {
         copied: "ನಕಲಿಸಲಾಗಿದೆ",
         correction: "ತಿದ್ದುಪಡಿ",
         updatedNotice: "ಮೂಲ ಪ್ರಕಟಣೆಯ ನಂತರ ಈ ಲೇಖನವನ್ನು ನವೀಕರಿಸಲಾಗಿದೆ.",
-        sources: "ಮೂಲಗಳು"
+        sources: "ಮೂಲಗಳು",
+        keywords: "ಕೀವರ್ಡ್‌ಗಳು"
     },
     errors: {
         notFound: "ಪುಟ ಕಂಡುಬಂದಿಲ್ಲ",

@@ -17,6 +17,7 @@ import {
     ArticleHeader,
     ArticleBody,
     SourcesList,
+    TagsList,
     ContinueReading,
 } from '@/components/article';
 import { ShareButtons } from '@/components/article/ShareButtons';
@@ -269,13 +270,11 @@ export async function ArticlePageContent({ section, slug, lang }: ArticlePageCon
                         blocks={lang === 'en' ? undefined : localizedArticle.bodyBlocks}
                         content={localizedArticle.body}
                     />
+                    <TagsList tags={localizedArticle.tags} lang={lang} />
+                    <SourcesList sources={localizedArticle.sources} lang={lang} />
                 </div>
 
-                <div className="max-w-4xl mx-auto">
-                    <SourcesList sources={article.sources} />
-                </div>
-
-                <div className="max-w-4xl mx-auto">
+                <div className="max-w-4xl mx-auto mt-8">
                     <ContinueReading
                         items={recommendations}
                     />
