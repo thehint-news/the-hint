@@ -2462,5 +2462,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-05T10:29:28.705Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "4c499bf7-8e46-4be4-b85f-02a00346dc40",
+    "articleSlug": "take-steps-ensure-drinking-water",
+    "section": "local",
+    "headline": "ಕುಡಿಯುವ ನೀರಿಗೆ ಸಮಸ್ಯೆಯಾಗದಂತೆ ಕ್ರಮ ವಹಿಸಿ - ಕಿರಣ್ ಕೊಡ್ಗಿ",
+    "summary": "ಕುಡಿಯುವ ನೀರಿನ ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-05T10:43:59.512Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
