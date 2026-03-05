@@ -11,10 +11,10 @@ tags: []
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: ಕುಡಿಯುವ ನೀರಿಗೆ ಸಮಸ್ಯೆಯಾಗದಂತೆ ಕ್ರಮ ವಹಿಸಿ - ಕಿರಣ್ ಕೊಡ್ಗಿ
     subtitle: ಕುಡಿಯುವ ನೀರಿನ ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ
-    translatedAt: '2026-03-05T10:28:53.366Z'
+    translatedAt: '2026-03-05T10:29:35.538Z'
 bodyBlocks:
   - id: ima-mmdbnx3r-vuhm
     type: image
