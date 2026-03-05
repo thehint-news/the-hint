@@ -2,29 +2,19 @@
 title: 71 ವರ್ಷದ ಅಜ್ಜನಿಗೆ ಪೋಕ್ಸೊ ಕೇಸ್‌ನಲ್ಲಿ 3 ವರ್ಷ ಶಿಕ್ಷೆ
 subtitle: ಸರಕಾರದ ಪರವಾಗಿ ಸರಕಾರಿ ಅಭಿಯೋಜಕ ಬೇಳೂರು ಪ್ರಕಾಶ್ಚಂದ್ರ ಶೆಟ್ಟಿ ವಾದಿಸಿದ್ದಾರೆ.
 contentType: news
-image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/0831c4ae4942bef1.jpg
+image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/0f21f526f934fe19.jpg
 status: published
 publishedAt: '2026-03-05T10:10:51.737Z'
-updatedAt: '2026-03-05T10:14:33.840Z'
+updatedAt: '2026-03-05T10:19:02.804Z'
 placement: top
 tags: []
 sources: []
 translations:
   en:
-    status: ready
-    title: 71-year-old grandfather sentenced to 3 years in POCSO case
-    subtitle: Government prosecutor Belur Prakashchandra Shetty argued for the government.
-    body: |-
-      Udupi: The Additional District and Sessions Court and the POCSO Court have convicted the accused in the case of sexually harassing a 13-year-old girl at a D-Mart store in the city. 
-      The accused has been identified as Louis Ranjal (71). 
-
-      Case details: 
-
-      On July 12, 2025, when the victim girl had gone to the city's D-Mart with her mother, the accused also approached the girl from behind and sexually harassed her. When the girl returned, she was shocked and apologized. A case was registered at the women's police station that he had sexually harassed her again. 
-
-      POCSO Court Judge Srinivas Suvarna, who heard the case, sentenced the accused to 3 years of simple imprisonment and a fine of ₹ 3,000 under Section 8 and Section 12 of the POCSO Act. The order stated that ₹ 1,000 of the fine should be paid to the government and ₹ 2,000 to the victim. Government prosecutor Belur Prakashchandra Shetty argued for the government.
-    excerpt: Government prosecutor Belur Prakashchandra Shetty argued for the government.
-    translatedAt: '2026-03-05T10:14:39.148Z'
+    status: pending
+    title: 71 ವರ್ಷದ ಅಜ್ಜನಿಗೆ ಪೋಕ್ಸೊ ಕೇಸ್‌ನಲ್ಲಿ 3 ವರ್ಷ ಶಿಕ್ಷೆ
+    subtitle: ಸರಕಾರದ ಪರವಾಗಿ ಸರಕಾರಿ ಅಭಿಯೋಜಕ ಬೇಳೂರು ಪ್ರಕಾಶ್ಚಂದ್ರ ಶೆಟ್ಟಿ ವಾದಿಸಿದ್ದಾರೆ.
+    translatedAt: '2026-03-05T10:19:02.804Z'
 bodyBlocks:
   - id: par-mmdavbcp-otmk
     type: paragraph
