@@ -2440,10 +2440,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-05T10:21:26.937Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-03-05T10:28:59.020Z"
   },
   {
     "id": "175fc3c0-4ea5-4acc-a9a1-31a1cd533a18",
