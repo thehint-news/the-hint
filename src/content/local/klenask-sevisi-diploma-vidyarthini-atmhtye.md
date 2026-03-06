@@ -11,10 +11,10 @@ tags: []
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: ಕಳೆನಾಶಕ ಸೇವಿಸಿ ಡಿಪ್ಲೋಮಾ ವಿದ್ಯಾರ್ಥಿ ಆತ್ಮಹತ್ಯೆ
     subtitle: ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿನಿ
-    translatedAt: '2026-03-06T12:02:29.953Z'
+    translatedAt: '2026-03-06T12:02:39.586Z'
 bodyBlocks:
   - id: ima-mmesji9a-g9dp
     type: image
