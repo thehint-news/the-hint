@@ -15,10 +15,10 @@ tags:
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: ಯಾವುದೇ ದೂರದೃಷ್ಟಿ ಇಲ್ಲದ ನೀರಸ ಆಯವ್ಯಯ ಪತ್ರ ಇದು - ಬಿ.ವೈ.ವಿಜಯೇಂದ್ರ
     subtitle: ರಾಜ್ಯದ ಜನತೆಗೆ ನಿರಾಶೆ ಉಂಟು ಮಾಡಿದ  ಬಜೆಟ್
-    translatedAt: '2026-03-06T12:06:36.576Z'
+    translatedAt: '2026-03-06T12:06:46.225Z'
 bodyBlocks:
   - id: ima-mmeufuvy-cfys
     type: image
