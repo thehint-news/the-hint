@@ -2654,5 +2654,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-06T11:22:32.774Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "c01e5759-ff46-4186-b363-8b828fc31aa3",
+    "articleSlug": "kravli-jilley-palige-kral-bjet",
+    "section": "politics",
+    "headline": "ಕರಾವಳಿ ಜಿಲ್ಲೆಯ ಪಾಲಿಗೆ ಕರಾಳ ಬಜೆಟ್ : ಯಶ್ಪಾಲ್ ಸುವರ್ಣ",
+    "summary": "ಜನತೆಯ ನಿರೀಕ್ಷೆಯನ್ನು ಹುಸಿಯಾಗಿಸಿ ಗರಿಷ್ಠ ಸಾಲವನ್ನು ರಾಜ್ಯದ ಜನತೆಯ ಮೇಲೆ ಹೇರುವ ಮೂಲಕ \"ಸಾಲ ರಾಮಯ್ಯ\" ಆಗಿದ್ದಾರೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-06T11:24:58.402Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
