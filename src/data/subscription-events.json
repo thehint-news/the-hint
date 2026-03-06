@@ -2718,5 +2718,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-06T11:49:20.448Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "cecba68f-3745-4caf-8bb8-38a4f9bccf1a",
+    "articleSlug": "15-vrsglimd-tlemresikomdidd-aropi-bmdhn",
+    "section": "crime",
+    "headline": "15 ವರ್ಷಗಳಿಂದ ತಲೆಮರೆಸಿಕೊಂಡಿದ್ದ ಆರೋಪಿ ಬಂಧನ",
+    "summary": "ಉಡುಪಿ ನಗರ ಪೊಲೀಸ್ ಠಾಣೆಯ ಪ್ರಭಾರ ನಿರೀಕ್ಷಕರಾದ ಮಹೇಶ್ ಪ್ರಸಾದ್ ಅವರ ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ಬಂಧಿಸಿದ್ದಾರೆ.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-06T11:52:16.021Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
