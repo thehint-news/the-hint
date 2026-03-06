@@ -2766,5 +2766,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-06T12:02:44.851Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "f09ebaac-720f-429c-b58a-449d58635074",
+    "articleSlug": "yavude-durdrsti-illd-nirs-ayvyy",
+    "section": "politics",
+    "headline": "ಯಾವುದೇ ದೂರದೃಷ್ಟಿ ಇಲ್ಲದ ನೀರಸ ಆಯವ್ಯಯ ಪತ್ರ ಇದು - ಬಿ.ವೈ.ವಿಜಯೇಂದ್ರ",
+    "summary": "ರಾಜ್ಯದ ಜನತೆಗೆ ನಿರಾಶೆ ಉಂಟು ಮಾಡಿದ  ಬಜೆಟ್",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-06T12:02:57.218Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
