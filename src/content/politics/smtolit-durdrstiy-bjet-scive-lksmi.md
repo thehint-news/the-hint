@@ -11,10 +11,10 @@ tags: []
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: 'ಸಮತೋಲಿತ, ದೂರದೃಷ್ಟಿಯ ಬಜೆಟ್:  ಸಚಿವೆ ಲಕ್ಷ್ಮೀ ಹೆಬ್ಬಾಳಕರ್'
     subtitle: ಮಕ್ಕಳ ಪರ ಯೋಜನೆಗಳಿಗೆ 63,135 ಕೋಟಿ ರೂಪಾಯಿ ಮೀಸಲಿಡಲಾಗಿದೆ.
-    translatedAt: '2026-03-06T11:16:35.518Z'
+    translatedAt: '2026-03-06T11:16:45.220Z'
 bodyBlocks:
   - id: ima-mmespuo0-q8do
     type: image
