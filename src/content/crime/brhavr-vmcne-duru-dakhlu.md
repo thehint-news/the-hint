@@ -11,10 +11,10 @@ tags: []
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: ಬ್ರಹಾವರ ವಂಚನೆ - ದೂರು ದಾಖಲು
     subtitle: ಶಿರಿಯಾರದ ಎಸ್.ಯೋಗೀಶ್ ಎಂಬವರ ಮಾಲಕತ್ವದ ವಿಶ್ವಂಬರ ಕ್ಯಾಶ್ಯೂ ಇಂಡಸ್ಟ್ರೀಸ್‌ನಲ್ಲಿ ವಂಚನೆ
-    translatedAt: '2026-03-06T11:19:20.774Z'
+    translatedAt: '2026-03-06T11:19:30.463Z'
 bodyBlocks:
   - id: ima-mmesw2wn-ctau
     type: image
