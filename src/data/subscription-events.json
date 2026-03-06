@@ -2622,5 +2622,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-06T11:16:52.096Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "0eb737e1-bc31-4c74-8d4d-b3042472f8f7",
+    "articleSlug": "brhavr-vmcne-duru-dakhlu",
+    "section": "crime",
+    "headline": "ಬ್ರಹಾವರ ವಂಚನೆ - ದೂರು ದಾಖಲು",
+    "summary": "ಶಿರಿಯಾರದ ಎಸ್.ಯೋಗೀಶ್ ಎಂಬವರ ಮಾಲಕತ್ವದ ವಿಶ್ವಂಬರ ಕ್ಯಾಶ್ಯೂ ಇಂಡಸ್ಟ್ರೀಸ್‌ನಲ್ಲಿ ವಂಚನೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-06T11:19:23.246Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
