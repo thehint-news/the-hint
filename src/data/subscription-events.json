@@ -2780,5 +2780,19 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": []
+  },
+  {
+    "id": "4abe28e5-37fe-4ab5-8d85-048cfd7d0257",
+    "articleSlug": "klenask-sevisi-diploma-vidyarthini-atmhtye",
+    "section": "local",
+    "headline": "ಕಳೆನಾಶಕ ಸೇವಿಸಿ ಡಿಪ್ಲೋಮಾ ವಿದ್ಯಾರ್ಥಿ ಆತ್ಮಹತ್ಯೆ",
+    "summary": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-06T12:03:23.122Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
