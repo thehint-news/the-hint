@@ -14,10 +14,10 @@ tags:
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: 'ದಕ್ಷಿಣ ಕನ್ನಡ ಜಿಲ್ಲೆಯ ಅಭಿವೃದ್ಧಿಗೆ ಹೊಸ ಭಾಷ್ಯ ಬರೆದ ರಾಜ್ಯ ಬಜೆಟ್: ಶಾಸಕ ಮಂಜುನಾಥ ಭಂಡಾರಿ ಶ್ಲಾಘನೆ'
     subtitle: ಕರಾವಳಿ ಅಭಿವೃದ್ಧಿಗೆ ಹೊಸ ಆಯಾಮ
-    translatedAt: '2026-03-06T11:38:42.002Z'
+    translatedAt: '2026-03-06T11:38:51.804Z'
 bodyBlocks:
   - id: ima-mmet9em0-1s8r
     type: image
