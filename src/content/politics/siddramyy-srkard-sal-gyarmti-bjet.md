@@ -13,10 +13,10 @@ tags:
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: 'ಸಿದ್ದರಾಮಯ್ಯ ಸರಕಾರದ ''ಸಾಲ ಗ್ಯಾರಂಟಿ'' ಬಜೆಟ್ : ಕ್ಯಾಪ್ಟನ್ ಗಣೇಶ್ ಕಾರ್ಣಿಕ್'
     subtitle: 17 ಬಾರಿ ಬಜೆಟ್ ಮಂಡಿಸಿದ ಮುಖ್ಯಮಂತ್ರಿಗಳು ಎಲ್ಲೋ ಸಾಲ ಮಾಡಿಯಾದ್ರೂ ಅಧಿಕಾರಕ್ಕೆ ಅಂಟಿಕೊಳ್ಳುವ ಕಸರತ್ತು ಮಾಡಿದಂತೆ ತೋರುತ್ತಿದೆ
-    translatedAt: '2026-03-06T11:44:15.411Z'
+    translatedAt: '2026-03-06T11:44:25.189Z'
 bodyBlocks:
   - id: ima-mmeton80-d9ye
     type: image
