@@ -2814,5 +2814,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-06T12:06:51.315Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "612c46ae-6aa2-42d4-8a7c-a6944727129d",
+    "articleSlug": "ma-8-rmdu-timgleylli-sahityotsv",
+    "section": "local",
+    "headline": "ಮಾ.8 ರಂದು ತಿಂಗಳೆಯಲ್ಲಿ ಸಾಹಿತ್ಯೋತ್ಸವ",
+    "summary": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-06T12:21:07.399Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
