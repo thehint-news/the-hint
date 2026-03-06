@@ -5,8 +5,8 @@ contentType: news
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/a0473e2bccd109ab.jpg
 status: published
 publishedAt: '2026-03-06T12:01:28.083Z'
-updatedAt: null
-placement: standard
+updatedAt: '2026-03-06T12:02:54.750Z'
+placement: top
 tags:
   - ಮುಖ್ಯಮಂತ್ರಿ ಸಿದ್ದರಾಮಯ್ಯ
   - ಬಿ.ವೈ.ವಿಜಯೇಂದ್ರ
@@ -15,10 +15,10 @@ tags:
 sources: []
 translations:
   en:
-    status: failed
+    status: pending
     title: ಯಾವುದೇ ದೂರದೃಷ್ಟಿ ಇಲ್ಲದ ನೀರಸ ಆಯವ್ಯಯ ಪತ್ರ ಇದು - ಬಿ.ವೈ.ವಿಜಯೇಂದ್ರ
     subtitle: ರಾಜ್ಯದ ಜನತೆಗೆ ನಿರಾಶೆ ಉಂಟು ಮಾಡಿದ  ಬಜೆಟ್
-    translatedAt: '2026-03-06T12:01:37.861Z'
+    translatedAt: '2026-03-06T12:02:54.750Z'
 bodyBlocks:
   - id: ima-mmeufuvy-cfys
     type: image
