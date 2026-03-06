@@ -2638,5 +2638,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-06T11:19:35.608Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "0800b342-3b9d-4f4e-bb6b-dfe18d23ed71",
+    "articleSlug": "sald-horeyomdige-gayd-mele-bre",
+    "section": "politics",
+    "headline": "ಸಾಲದ ಹೊರೆಯೊಂದಿಗೆ ಗಾಯದ ಮೇಲೆ ಬರೆ ಎಳೆದ ಅಭಿವೃದ್ಧಿ ಶೂನ್ಯ ರಾಜ್ಯ ಬಜೆಟ್ : ಕುತ್ಯಾರು ನವೀನ್ ಶೆಟ್ಟಿ",
+    "summary": "ಅಧಿಕಾರಕ್ಕಾಗಿ ಜಾರಿಗೊಳಿಸಿದ್ದ ಗ್ಯಾರಂಟಿಗಳ ನಿರ್ವಹಣೆಗೆ ಪರದಾಡುತ್ತಿರುವ ರಾಜ್ಯ ಸರಕಾರ ಯುವ ನಿಧಿ ಗ್ಯಾರಂಟಿಗೆ ಎಳ್ಳು ನೀರು ಬಿಟ್ಟಂತಾಗಿದೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-06T11:22:14.609Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
