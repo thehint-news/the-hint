@@ -14,10 +14,10 @@ tags:
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: ಮಾ.8 ರಂದು ತಿಂಗಳೆಯಲ್ಲಿ ಸಾಹಿತ್ಯೋತ್ಸವ
     subtitle: ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ "ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ.
-    translatedAt: '2026-03-06T12:21:04.899Z'
+    translatedAt: '2026-03-06T12:21:14.633Z'
 bodyBlocks:
   - id: ima-mmev4bhz-8yk5
     type: image
