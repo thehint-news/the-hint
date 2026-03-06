@@ -2606,5 +2606,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-06T11:10:21.098Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "d2422a9b-f3a4-47e6-83d4-ae3dfbb9c95f",
+    "articleSlug": "smtolit-durdrstiy-bjet-scive-lksmi",
+    "section": "politics",
+    "headline": "ಸಮತೋಲಿತ, ದೂರದೃಷ್ಟಿಯ ಬಜೆಟ್:  ಸಚಿವೆ ಲಕ್ಷ್ಮೀ ಹೆಬ್ಬಾಳಕರ್",
+    "summary": "ಮಕ್ಕಳ ಪರ ಯೋಜನೆಗಳಿಗೆ 63,135 ಕೋಟಿ ರೂಪಾಯಿ ಮೀಸಲಿಡಲಾಗಿದೆ.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-06T11:16:37.948Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
