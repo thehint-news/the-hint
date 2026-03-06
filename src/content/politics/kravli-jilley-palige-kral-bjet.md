@@ -11,10 +11,10 @@ tags: []
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: 'ಕರಾವಳಿ ಜಿಲ್ಲೆಯ ಪಾಲಿಗೆ ಕರಾಳ ಬಜೆಟ್ : ಯಶ್ಪಾಲ್ ಸುವರ್ಣ'
     subtitle: ಜನತೆಯ ನಿರೀಕ್ಷೆಯನ್ನು ಹುಸಿಯಾಗಿಸಿ ಗರಿಷ್ಠ ಸಾಲವನ್ನು ರಾಜ್ಯದ ಜನತೆಯ ಮೇಲೆ ಹೇರುವ ಮೂಲಕ "ಸಾಲ ರಾಮಯ್ಯ" ಆಗಿದ್ದಾರೆ
-    translatedAt: '2026-03-06T11:24:55.842Z'
+    translatedAt: '2026-03-06T11:25:05.635Z'
 bodyBlocks:
   - id: ima-mmet45z7-axng
     type: image
