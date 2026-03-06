@@ -2776,12 +2776,12 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-06T12:02:57.218Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
     "totalSubscribers": 2,
-    "lastAttemptAt": "2026-03-06T12:03:41.378Z"
+    "lastAttemptAt": "2026-03-06T12:03:51.296Z"
   },
   {
     "id": "4abe28e5-37fe-4ab5-8d85-048cfd7d0257",
