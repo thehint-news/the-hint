@@ -11,10 +11,10 @@ tags: []
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: 'ಸಾಲದ ಹೊರೆಯೊಂದಿಗೆ ಗಾಯದ ಮೇಲೆ ಬರೆ ಎಳೆದ ಅಭಿವೃದ್ಧಿ ಶೂನ್ಯ ರಾಜ್ಯ ಬಜೆಟ್ : ಕುತ್ಯಾರು ನವೀನ್ ಶೆಟ್ಟಿ'
     subtitle: ಅಧಿಕಾರಕ್ಕಾಗಿ ಜಾರಿಗೊಳಿಸಿದ್ದ ಗ್ಯಾರಂಟಿಗಳ ನಿರ್ವಹಣೆಗೆ ಪರದಾಡುತ್ತಿರುವ ರಾಜ್ಯ ಸರಕಾರ ಯುವ ನಿಧಿ ಗ್ಯಾರಂಟಿಗೆ ಎಳ್ಳು ನೀರು ಬಿಟ್ಟಂತಾಗಿದೆ
-    translatedAt: '2026-03-06T11:22:12.033Z'
+    translatedAt: '2026-03-06T11:22:21.875Z'
 bodyBlocks:
   - id: ima-mmeszv6i-91g8
     type: image
