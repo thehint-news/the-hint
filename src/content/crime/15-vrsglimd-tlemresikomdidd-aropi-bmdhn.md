@@ -14,10 +14,10 @@ tags:
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: 15 ವರ್ಷಗಳಿಂದ ತಲೆಮರೆಸಿಕೊಂಡಿದ್ದ ಆರೋಪಿ ಬಂಧನ
     subtitle: ಉಡುಪಿ ನಗರ ಪೊಲೀಸ್ ಠಾಣೆಯ ಪ್ರಭಾರ ನಿರೀಕ್ಷಕರಾದ ಮಹೇಶ್ ಪ್ರಸಾದ್ ಅವರ ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ಬಂಧಿಸಿದ್ದಾರೆ.
-    translatedAt: '2026-03-06T11:52:13.544Z'
+    translatedAt: '2026-03-06T11:52:23.227Z'
 bodyBlocks:
   - id: ima-mmetykah-bmjy
     type: image
