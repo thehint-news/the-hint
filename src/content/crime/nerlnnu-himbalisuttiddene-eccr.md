@@ -11,10 +11,10 @@ tags: []
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: ನೆರಳನ್ನೂ ಹಿಂಬಾಲಿಸುತ್ತಿದ್ದೇನೆ. ಎಚ್ಚರ...!
     subtitle: ಉಡುಪಿ ಜಿಲ್ಲೆಯಲ್ಲಿ ಇನ್ನು ಮುಂದೆ ನೆರಳು ಕೂಡ ಪೋಲಿಸರ ಕಣ್ಗಾವಲಿನಿಂದ ತಪ್ಪಿಸಿಕೊಳ್ಳುವುದು ಕಷ್ಟ..!
-    translatedAt: '2026-03-06T16:39:28.599Z'
+    translatedAt: '2026-03-06T16:39:38.452Z'
 bodyBlocks:
   - id: ima-mmf45fnv-1hxv
     type: image
