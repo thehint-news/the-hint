@@ -2702,5 +2702,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-06T11:44:30.106Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "d9648a11-7ecd-44aa-8ffa-63d97e301719",
+    "articleSlug": "15-vrsglimd-tlemresikomdidd-aropi-bmdhn",
+    "section": "crime",
+    "headline": "15 ವರ್ಷಗಳಿಂದ ತಲೆಮರೆಸಿಕೊಂಡಿದ್ದ ಆರೋಪಿ ಬಂಧನ",
+    "summary": "ಉಡುಪಿ ನಗರ ಪೊಲೀಸ್ ಠಾಣೆಯ ಪ್ರಭಾರ ನಿರೀಕ್ಷಕರಾದ ಮಹೇಶ್ ಪ್ರಸಾದ್ ಅವರ ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ಬೆಂಗಳೂರಿನ ತಲಘಟ್ಟಪುರದಲ್ಲಿ ಆರೋಪಿಯನ್ನು ಪತ್ತೆಹಚ್ಚಿ ವಶಕ್ಕೆ ಪಡೆದುಕೊಳ್ಳಲಾಗಿದ್ದು",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-06T11:49:02.325Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
