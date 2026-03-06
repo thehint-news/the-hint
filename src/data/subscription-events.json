@@ -2830,5 +2830,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-06T12:21:19.565Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "e19d6abc-94a7-4886-81ed-5c50e82cc411",
+    "articleSlug": "nerlnnu-himbalisuttiddene-eccr",
+    "section": "crime",
+    "headline": "ನೆರಳನ್ನೂ ಹಿಂಬಾಲಿಸುತ್ತಿದ್ದೇನೆ. ಎಚ್ಚರ...!",
+    "summary": "ಉಡುಪಿ ಜಿಲ್ಲೆಯಲ್ಲಿ ಇನ್ನು ಮುಂದೆ ನೆರಳು ಕೂಡ ಪೋಲಿಸರ ಕಣ್ಗಾವಲಿನಿಂದ ತಪ್ಪಿಸಿಕೊಳ್ಳುವುದು ಕಷ್ಟ..!",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-06T16:39:31.204Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
