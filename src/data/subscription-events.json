@@ -2686,5 +2686,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-06T11:38:56.749Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "845360d3-8fe3-4eda-8ac2-e7811d20cad7",
+    "articleSlug": "siddramyy-srkard-sal-gyarmti-bjet",
+    "section": "politics",
+    "headline": "ಸಿದ್ದರಾಮಯ್ಯ ಸರಕಾರದ 'ಸಾಲ ಗ್ಯಾರಂಟಿ' ಬಜೆಟ್ : ಕ್ಯಾಪ್ಟನ್ ಗಣೇಶ್ ಕಾರ್ಣಿಕ್",
+    "summary": "17 ಬಾರಿ ಬಜೆಟ್ ಮಂಡಿಸಿದ ಮುಖ್ಯಮಂತ್ರಿಗಳು ಎಲ್ಲೋ ಸಾಲ ಮಾಡಿಯಾದ್ರೂ ಅಧಿಕಾರಕ್ಕೆ ಅಂಟಿಕೊಳ್ಳುವ ಕಸರತ್ತು ಮಾಡಿದಂತೆ ತೋರುತ್ತಿದೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-06T11:44:17.919Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
