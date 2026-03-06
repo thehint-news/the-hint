@@ -14,10 +14,10 @@ tags:
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: 15 ವರ್ಷಗಳಿಂದ ತಲೆಮರೆಸಿಕೊಂಡಿದ್ದ ಆರೋಪಿ ಬಂಧನ
     subtitle: ಉಡುಪಿ ನಗರ ಪೊಲೀಸ್ ಠಾಣೆಯ ಪ್ರಭಾರ ನಿರೀಕ್ಷಕರಾದ ಮಹೇಶ್ ಪ್ರಸಾದ್ ಅವರ ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ಬೆಂಗಳೂರಿನ ತಲಘಟ್ಟಪುರದಲ್ಲಿ ಆರೋಪಿಯನ್ನು ಪತ್ತೆಹಚ್ಚಿ ವಶಕ್ಕೆ ಪಡೆದುಕೊಳ್ಳಲಾಗಿದ್ದು
-    translatedAt: '2026-03-06T11:48:59.765Z'
+    translatedAt: '2026-03-06T11:49:09.685Z'
 bodyBlocks:
   - id: ima-mmetykah-bmjy
     type: image
