@@ -1,20 +1,20 @@
 ---
-title: ಕಳೆನಾಶಕ ಸೇವಿಸಿ ಡಿಪ್ಲೋಮಾ ವಿದ್ಯಾರ್ಥಿನಿ ಆತ್ಮಹತ್ಯೆ
+title: ಕಳೆನಾಶಕ ಸೇವಿಸಿ ಡಿಪ್ಲೋಮಾ ವಿದ್ಯಾರ್ಥಿ ಆತ್ಮಹತ್ಯೆ
 subtitle: ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿನಿ
 contentType: news
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/d7287eda986806cc.jpg
 status: published
 publishedAt: '2026-03-06T11:10:06.105Z'
-updatedAt: null
+updatedAt: '2026-03-06T12:02:29.953Z'
 placement: top
 tags: []
 sources: []
 translations:
   en:
-    status: failed
-    title: ಕಳೆನಾಶಕ ಸೇವಿಸಿ ಡಿಪ್ಲೋಮಾ ವಿದ್ಯಾರ್ಥಿನಿ ಆತ್ಮಹತ್ಯೆ
+    status: pending
+    title: ಕಳೆನಾಶಕ ಸೇವಿಸಿ ಡಿಪ್ಲೋಮಾ ವಿದ್ಯಾರ್ಥಿ ಆತ್ಮಹತ್ಯೆ
     subtitle: ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿನಿ
-    translatedAt: '2026-03-06T11:10:15.983Z'
+    translatedAt: '2026-03-06T12:02:29.953Z'
 bodyBlocks:
   - id: ima-mmesji9a-g9dp
     type: image
