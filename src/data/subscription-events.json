@@ -2862,5 +2862,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-06T16:46:07.649Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "97299095-3f09-4625-9c5d-c3fb8f3a92cb",
+    "articleSlug": "hlvaru-desglu-mdhysthike-vhislu-mumde",
+    "section": "world-affairs",
+    "headline": "ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ವಹಿಸಲು ಮುಂದೆ ಬಂದಿವೆ - ಇರಾನ್ ಅಧ್ಯಕ್ಷ",
+    "summary": "ಸಂಘರ್ಷವನ್ನು ಪರಿಹರಿಸಲು ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ಪ್ರಯತ್ನಗಳನ್ನು ಪ್ರಾರಂಭಿಸಿವೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-07T06:44:05.056Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
