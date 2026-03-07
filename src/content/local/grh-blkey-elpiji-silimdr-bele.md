@@ -13,10 +13,10 @@ tags:
 sources: []
 translations:
   en:
-    status: pending
+    status: failed
     title: ಗೃಹ ಬಳಕೆಯ ಎಲ್‌ಪಿಜಿ ಸಿಲಿಂಡರ್‌ ಬೆಲೆ 60 ರೂ. ಏರಿಕೆ
     subtitle: ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ
-    translatedAt: '2026-03-07T06:48:45.868Z'
+    translatedAt: '2026-03-07T06:48:55.558Z'
 bodyBlocks:
   - id: ima-mmfynu3t-mbt6
     type: image
