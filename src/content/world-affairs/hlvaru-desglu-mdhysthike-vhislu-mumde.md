@@ -13,10 +13,10 @@ sources:
   - Kannadaprabha
 translations:
   en:
-    status: pending
+    status: failed
     title: ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ವಹಿಸಲು ಮುಂದೆ ಬಂದಿವೆ - ಇರಾನ್ ಅಧ್ಯಕ್ಷ
     subtitle: ಸಂಘರ್ಷವನ್ನು ಪರಿಹರಿಸಲು ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ಪ್ರಯತ್ನಗಳನ್ನು ಪ್ರಾರಂಭಿಸಿವೆ
-    translatedAt: '2026-03-07T06:44:02.605Z'
+    translatedAt: '2026-03-07T06:44:12.307Z'
 bodyBlocks:
   - id: ima-mmfyh3oy-ludj
     type: image
