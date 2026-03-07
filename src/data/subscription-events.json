@@ -2910,5 +2910,19 @@
     "sentEmails": [],
     "totalSubscribers": 2,
     "lastAttemptAt": "2026-03-07T11:57:18.415Z"
+  },
+  {
+    "id": "8334cd98-b48e-4131-a8e4-92c3ee84d1bc",
+    "articleSlug": "guru-prmprege-heccu-ottu",
+    "section": "politics",
+    "headline": "ಗುರು ಪರಂಪರೆಗೆ ಹೆಚ್ಚು ಒತ್ತು ನೀಡುತ್ತಿರುವ ಮಠ ಮಾನ್ಯಗಳು: ಸಚಿವೆ ಲಕ್ಷ್ಮೀ ಹೆಬ್ಬಾಳಕರ್",
+    "summary": "ಹುಣಸೂರಿನ ಮಾದಹಳ್ಳಿಯ ಶ್ರೀ ಉಕ್ಕಿನಕಂತೆ ಮಠದಲ್ಲಿ ನಡೆದ ಸಮಾರಂಭದಲ್ಲಿ ಹೇಳಿಕೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-07T12:00:33.034Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
