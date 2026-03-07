@@ -123,8 +123,8 @@ export default function PublishPage() {
     // Client hints
     const clientHints = getClientHints(formData);
 
-    // Cache staleness threshold (5 minutes)
-    const CACHE_TTL_MS = 5 * 60 * 1000;
+    // Cache staleness threshold (30 minutes)
+    const CACHE_TTL_MS = 30 * 60 * 1000;
 
     /**
      * Generate unique toast ID
@@ -682,7 +682,7 @@ export default function PublishPage() {
     // Session Timer Hook
     const { timeLeft, showWarning: showSessionWarning, isExtending: isSessionExtending, handleExtendSession, handleLogout: triggerLogout } = useSessionTimer({
         onLogout: stableLogout,
-        onExtendSuccess: () => showToast('success', 'Session extended for 5 minutes'),
+        onExtendSuccess: () => showToast('success', 'Session extended for 30 minutes'),
     });
 
     return (

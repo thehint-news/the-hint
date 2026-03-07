@@ -5,13 +5,13 @@ import { cookies } from 'next/headers';
 const SECRET = new TextEncoder().encode(process.env.MAGIC_LINK_SECRET || 'default_secret_CHANGE_ME');
 const ALG = 'HS256';
 export const COOKIE_NAME = 'the_hint_session';
-const TOKEN_EXPIRY = '6m'; // 1 minute grace period for inflight auto-save requests
+const TOKEN_EXPIRY = '31m'; // 1 minute grace period for inflight auto-save requests
 
 export async function createSession(email: string, createdAt?: number) {
     // If createdAt is provided (from magic link iat), use it to set strict session start and end
-    // session = 5 minutes + 1m grace period from email sent time
+    // session = 30 minutes + 1m grace period from email sent time
     const issuedAt = createdAt;
-    const expirationTime = createdAt ? (createdAt + 6 * 60) : TOKEN_EXPIRY;
+    const expirationTime = createdAt ? (createdAt + 31 * 60) : TOKEN_EXPIRY;
 
     const token = await new SignJWT({ email })
         .setProtectedHeader({ alg: ALG })
@@ -30,7 +30,7 @@ export async function createSession(email: string, createdAt?: number) {
         secure: isProductionDeployed,
         sameSite: 'lax',
         path: '/',
-        maxAge: 6 * 60, // 6 minutes in seconds to match grace period
+        maxAge: 31 * 60, // 31 minutes in seconds to match grace period
     });
 }
 

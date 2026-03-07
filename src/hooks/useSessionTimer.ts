@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-const SESSION_DURATION_MS = 5 * 60 * 1000; // 5 minutes
+const SESSION_DURATION_MS = 30 * 60 * 1000; // 30 minutes
 const WARNING_THRESHOLD_MS = 15 * 1000; // 15 seconds remaining
 const CHANNEL_NAME = 'the_hint_session_control';
 
