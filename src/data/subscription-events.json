@@ -2942,5 +2942,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-07T12:04:06.881Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "43b866fa-6379-4581-9746-445efc93a3e4",
+    "articleSlug": "d-k-udupi-minu",
+    "section": "local",
+    "headline": "ದ.ಕ, ಉಡುಪಿ ಮೀನು ಮಾರಾಟ ಫೆಡರೇಶನ್ ವತಿಯಿಂದ ಉಡುಪಿ ಜಿಲ್ಲಾಸ್ಪತ್ರೆಗೆ ಎಕ್ಸ್ ರೇ ಯಂತ್ರ ಹಸ್ತಾಂತರ",
+    "summary": "ಜಿಲ್ಲಾಸ್ಪತ್ರೆಯಲ್ಲಿ ದಿನನಿತ್ಯ ಚಿಕಿತ್ಸೆಗೆ ಬರುವ ನೂರಾರು ರೋಗಿಗಳಿಗೆ ಸಹಕಾರಿ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-07T12:07:22.870Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
