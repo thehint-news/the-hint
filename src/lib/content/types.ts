@@ -1,5 +1,5 @@
 import { ContentBlock } from './media-types';
-import { Language } from '@/lib/i18n/language';
+
 
 /**
  * Article Content Types
@@ -51,35 +51,6 @@ export interface LeadMedia {
 /** Maximum number of lead story images allowed */
 export const MAX_LEAD_IMAGES = 3;
 
-/**
- * Article translation data structure
- * Stored in frontmatter translations field
- */
-export interface ArticleTranslation {
-    /** Translation status */
-    status?: 'pending' | 'ready' | 'failed';
-    /** Translated headline */
-    title: string;
-    /** Translated subtitle/deck */
-    subtitle: string;
-    /** Translated body content (markdown or plain text) */
-    body?: string;
-    /** Translated excerpt/summary */
-    excerpt?: string;
-    /** Translated content blocks (optional - if not provided, uses original bodyBlocks) */
-    bodyBlocks?: ContentBlock[];
-    /** Translated tags */
-    tags?: string[];
-    /** Translated sources */
-    sources?: string[];
-    /** Translation generation timestamp */
-    translatedAt: string;
-}
-
-/**
- * Map of translations by language code
- */
-export type ArticleTranslations = Partial<Record<Language, ArticleTranslation>>;
 
 /**
  * Complete Article type with all required and optional fields
@@ -125,8 +96,6 @@ export interface Article {
     /** Featured image URL (optional) */
     image?: string;
 
-    /** Translations by language code - optional for backwards compatibility */
-    translations?: ArticleTranslations;
 
     /** Whether this article is the designated lead story (only ONE can be true globally) */
     isLead?: boolean;
@@ -151,8 +120,6 @@ export interface ArticleFrontmatter {
     sources?: string[];
     status?: 'published' | 'draft';
     bodyBlocks?: ContentBlock[];
-    /** Optional translations map for multilingual support */
-    translations?: ArticleTranslations;
     /** Whether this article is the designated lead story */
     isLead?: boolean;
     /** Lead story carousel media - only valid if isLead === true */

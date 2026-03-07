@@ -26,7 +26,6 @@ import { contentGit, DraftData, PublishedArticleData } from '@/lib/git';
 import { logger } from '@/lib/feedback/console-guard';
 import { revalidatePath } from 'next/cache';
 import { verifyAuth } from '@/lib/auth/session';
-import { translateArticle } from '@/lib/i18n/translation-service';
 import { clearArticleCache } from '@/lib/cache/article-cache';
 
 export const runtime = 'nodejs';
@@ -133,19 +132,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             );
         }
 
-        // Fetch English translation for slug generation if slug is not explicitly provided
+        // Generate slug from headline if not explicitly provided
         if (typeof input.slug !== 'string' || !input.slug.trim()) {
-            try {
-                const { translateTextToEnglish } = await import('@/lib/i18n/translation-service');
-                const englishHeadline = await translateTextToEnglish(input.headline as string);
-                if (englishHeadline) {
-                    // Update input with the English slug before validation transforms it
-                    input.slug = generateSlug(englishHeadline);
-                    logger.info(`[PUBLISH] Generated English slug from translation: ${input.slug}`);
-                }
-            } catch {
-                logger.warn('[PUBLISH] Failed to generate English slug via translation API, falling back to local generation');
-            }
+            input.slug = generateSlug(input.headline as string);
+            logger.info(`[PUBLISH] Generated slug from headline: ${input.slug}`);
         }
 
         // Transform to validated data
@@ -233,88 +223,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             );
         }
 
-        // Generate English translation in background
-        // This runs async without blocking the publish response.
-        // Includes pipeline-level retry: if first attempt fails, waits and retries once.
-        after(async () => {
-            const PIPELINE_MAX_ATTEMPTS = 2;
-            const PIPELINE_RETRY_DELAY_MS = 5_000; // 5 seconds between pipeline attempts
-
-            // Allow the publish Git commit to settle on disk before we read-modify-write
-            await new Promise(r => setTimeout(r, 2_000));
-
-            for (let pipelineAttempt = 1; pipelineAttempt <= PIPELINE_MAX_ATTEMPTS; pipelineAttempt++) {
-                try {
-                    logger.info(`[PUBLISH] Translation pipeline attempt ${pipelineAttempt}/${PIPELINE_MAX_ATTEMPTS} for ${targetSlug}`);
-
-                    // Prepare article for translation
-                    const articleForTranslation = {
-                        title: articleData.headline,
-                        subheadline: articleData.subheadline,
-                        body: articleData.body || '',
-                        excerpt: articleData.subheadline,
-                        tags: articleData.tags,
-                        sources: articleData.sources,
-                    };
-
-                    // Generate translation (translateArticle already has per-API-call retries)
-                    const translation = await translateArticle(articleForTranslation);
-
-                    if (translation) {
-                        // Update the article file with translation
-                        const { contentGit } = await import('@/lib/git');
-                        const updateResult = await contentGit.updateTranslation(
-                            articleData.section as Section,
-                            targetSlug,
-                            {
-                                title: translation.title,
-                                subheadline: translation.subheadline,
-                                body: translation.body,
-                                excerpt: translation.excerpt,
-                                tags: translation.tags,
-                                sources: translation.sources,
-                                translatedAt: translation.translatedAt,
-                            }
-                        );
-
-                        if (updateResult.success) {
-                            logger.info(`[PUBLISH] ✅ Translation saved for ${targetSlug} (attempt ${pipelineAttempt})`);
-                            clearArticleCache();
-                            revalidatePath('/', 'page');
-                            revalidatePath('/en', 'page');
-                            revalidatePath(`/${articleData.section}`, 'page');
-                            revalidatePath(`/en/${articleData.section}`, 'page');
-                            revalidatePath(`/${articleData.section}/${targetSlug}`, 'page');
-                            revalidatePath(`/en/${articleData.section}/${targetSlug}`, 'page');
-                            return; // ← SUCCESS – exit the retry loop
-                        } else {
-                            logger.error(`[PUBLISH] Git save failed for translation of ${targetSlug}`, { error: updateResult.error });
-                            // Fall through to retry
-                        }
-                    } else {
-                        logger.warn(`[PUBLISH] translateArticle returned null for ${targetSlug}`);
-                        // Fall through to retry
-                    }
-                } catch (translationError) {
-                    logger.error(`[PUBLISH] Translation pipeline attempt ${pipelineAttempt} threw:`, translationError);
-                }
-
-                // If not the last attempt, wait before retrying the entire pipeline
-                if (pipelineAttempt < PIPELINE_MAX_ATTEMPTS) {
-                    logger.info(`[PUBLISH] Waiting ${PIPELINE_RETRY_DELAY_MS}ms before translation retry...`);
-                    await new Promise(r => setTimeout(r, PIPELINE_RETRY_DELAY_MS));
-                }
-            }
-
-            // All pipeline attempts exhausted – mark as failed
-            logger.error(`[PUBLISH] ❌ All translation pipeline attempts failed for ${targetSlug}. Marking as failed.`);
-            try {
-                const { contentGit: git } = await import('@/lib/git');
-                await git.markTranslationFailed(articleData.section as Section, targetSlug);
-            } catch (e) {
-                logger.error('[PUBLISH] Emergency: Could not mark translation as failed', e);
-            }
-        });
 
         // Send article notification emails to subscribers.
         // We use Next.js `after()` to run this securely in the background
@@ -354,11 +262,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
         // 7. On-demand revalidation
         revalidatePath('/', 'page');
-        revalidatePath('/en', 'page');
         revalidatePath(`/${articleData.section}`, 'page');
-        revalidatePath(`/en/${articleData.section}`, 'page');
         revalidatePath(`/${articleData.section}/${targetSlug}`, 'page');
-        revalidatePath(`/en/${articleData.section}/${targetSlug}`, 'page');
 
         return userResponse(
             true,

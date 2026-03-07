@@ -19,6 +19,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import { ContentBlock } from '../content/media-types';
 
+
 /** Draft data structure */
 export interface DraftData {
     draftId: string;
@@ -49,15 +50,6 @@ export interface DraftData {
 }
 
 /** Published article metadata (extracted from frontmatter) */
-/** English translation data */
-export interface ArticleTranslation {
-    status?: 'pending' | 'ready' | 'failed';
-    title: string;
-    subtitle: string;
-    body: string;
-    excerpt: string;
-    translatedAt: string;
-}
 
 /** Published article metadata (extracted from frontmatter) */
 export interface PublishedArticleData {
@@ -75,9 +67,6 @@ export interface PublishedArticleData {
     image?: string;
     bodyBlocks?: ContentBlock[];
     body?: string;
-    translations?: {
-        en?: ArticleTranslation;
-    };
     /** Whether this article is the designated lead story */
     isLead?: boolean;
     /** Lead story carousel media - only present if isLead === true */
@@ -706,14 +695,6 @@ class ContentGit {
                 image: articleData.thumbnail,
                 publishedAt,
                 updatedAt: mode === 'update' ? new Date().toISOString() : undefined,
-                translations: {
-                    en: {
-                        status: 'pending',
-                        title: headline, // Use original as placeholder
-                        subtitle: articleData.subheadline,
-                        translatedAt: new Date().toISOString(),
-                    } as Partial<ArticleTranslation> & Record<string, unknown>
-                }
             });
 
             const articlePath = gitService.getPublishedPath(section, slug);
@@ -935,7 +916,6 @@ class ContentGit {
         image?: string;
         publishedAt: string;
         updatedAt?: string;
-        translations?: Record<string, unknown>;
         isLead?: boolean;
         leadMedia?: {
             images: {
@@ -957,7 +937,6 @@ class ContentGit {
             placement: data.placement,
             tags: data.tags,
             sources: data.sources,
-            translations: data.translations || null,
         };
 
         // If bodyBlocks exist, add them to frontmatter (CANONICAL)
@@ -1018,6 +997,10 @@ class ContentGit {
      * Parse markdown frontmatter to extract article data
      * Now uses js-yaml for robust parsing including bodyBlocks
      */
+    /**
+     * Parse markdown frontmatter to extract article data
+     * Now uses js-yaml for robust parsing including bodyBlocks
+     */
     private parseMarkdownFrontmatter(content: string, section: string, slug: string): PublishedArticleData | null {
         try {
             // Robust regex from parser.ts
@@ -1049,30 +1032,6 @@ class ContentGit {
                 return null;
             }
 
-            // Default contentType for legacy content
-            if (!data.contentType) {
-                logger.warn(`Missing 'contentType' in ${slug}, defaulting to 'news'`);
-            }
-
-            // Parse translations if present
-            let translations: PublishedArticleData['translations'] = undefined;
-            if (data.translations && typeof data.translations === 'object') {
-                const transData = data.translations as Record<string, unknown>;
-                const enTranslation = transData.en as Record<string, unknown> | undefined;
-                if (enTranslation && typeof enTranslation === 'object') {
-                    translations = {
-                        en: {
-                            status: (enTranslation.status as ArticleTranslation['status']) || undefined,
-                            title: String(enTranslation.title || data.title),
-                            subtitle: String(enTranslation.subtitle || data.subtitle || ''),
-                            body: String(enTranslation.body || body),
-                            excerpt: String(enTranslation.excerpt || enTranslation.subtitle || data.subtitle || ''),
-                            translatedAt: String(enTranslation.translatedAt || new Date().toISOString()),
-                        },
-                    };
-                }
-            }
-
             // Parse lead media if present
             let leadMedia: PublishedArticleData['leadMedia'] = undefined;
             if (data.leadMedia && typeof data.leadMedia === 'object') {
@@ -1090,12 +1049,12 @@ class ContentGit {
                                 width: typeof image.width === 'number' ? image.width : undefined,
                                 height: typeof image.height === 'number' ? image.height : undefined,
                             };
-                        }).filter(img => img.url && img.alt),
+                        }).filter(img => img.url && img.alt)
                     };
                 }
             }
 
-            return {
+            const article: PublishedArticleData = {
                 slug,
                 section,
                 title: String(data.title),
@@ -1112,176 +1071,14 @@ class ContentGit {
                 image: data.image ? String(data.image) : undefined,
                 bodyBlocks: Array.isArray(data.bodyBlocks) ? data.bodyBlocks as ContentBlock[] : undefined,
                 body,
-                translations,
                 isLead: data.isLead === true,
                 leadMedia: leadMedia && leadMedia.images.length > 0 ? leadMedia : undefined,
             };
+
+            return article;
         } catch (error) {
             logger.error('Failed to parse frontmatter', error);
             return null;
-        }
-    }
-
-    /**
-     * UPDATE TRANSLATION: Update article with English translation
-     * Called after automatic translation generation
-     */
-    async updateTranslation(
-        section: Section,
-        slug: string,
-        translation: {
-            title: string;
-            subheadline?: string;
-            body: string;
-            excerpt?: string;
-            tags?: string[];
-            sources?: string[];
-            translatedAt: string;
-        }
-    ): Promise<ContentOperationResult> {
-        try {
-            const articleRelativePath = gitService.getPublishedRelativePath(section, slug);
-            const { content: existingFile, sha: existingSha } = await gitService.getFileInfo(articleRelativePath);
-
-            if (!existingFile || !existingSha) {
-                return {
-                    success: false,
-                    userMessage: 'Article not found',
-                    errorType: GitErrorType.NOT_FOUND,
-                };
-            }
-
-            // Parse existing article
-            const existingArticle = this.parseMarkdownFrontmatter(existingFile, section, slug);
-            if (!existingArticle) {
-                return {
-                    success: false,
-                    userMessage: 'Failed to parse existing article',
-                    errorType: GitErrorType.VALIDATION_ERROR,
-                };
-            }
-
-            // Reconstruct frontmatter by parsing the RAW yaml to preserve ALL arbitrary metadata fields
-            const yaml = await import('js-yaml');
-            let rawFrontmatter: Record<string, unknown> = {};
-
-            const match = existingFile.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
-            if (match) {
-                rawFrontmatter = (yaml.load(match[1]) as Record<string, unknown>) || {};
-            } else if (existingFile.startsWith('---\n')) {
-                const end = existingFile.indexOf('\n---', 4);
-                if (end !== -1) {
-                    rawFrontmatter = (yaml.load(existingFile.substring(4, end)) as Record<string, unknown>) || {};
-                }
-            }
-
-            // Replace translations while keeping original frontmatter intact
-            const updatedFrontmatter = {
-                ...rawFrontmatter,
-                translations: {
-                    ...((rawFrontmatter.translations as Record<string, unknown>) || {}),
-                    en: {
-                        status: 'ready',
-                        title: translation.title,
-                        subtitle: translation.subheadline || existingArticle.subtitle,
-                        body: translation.body,
-                        excerpt: translation.excerpt || translation.subheadline || existingArticle.subtitle,
-                        tags: translation.tags || existingArticle.tags,
-                        sources: translation.sources || existingArticle.sources,
-                        translatedAt: translation.translatedAt,
-                    },
-                },
-            };
-
-            // Generate updated markdown
-            const yamlBlock = yaml.dump(updatedFrontmatter, {
-                lineWidth: -1,
-                noRefs: true,
-            }).trim();
-
-            let fileContent = `---\n${yamlBlock}\n---`;
-
-            // Preserve original body
-            const bodyMatch = existingFile.match(/---\s*[\r\n]+[\s\S]*?[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
-            const originalBody = bodyMatch ? bodyMatch[1].trim() : '';
-
-            if (originalBody) {
-                fileContent += `\n\n${originalBody}\n`;
-            } else {
-                fileContent += `\n`;
-            }
-
-            const articlePath = gitService.getPublishedPath(section, slug);
-            const staging = createGitStaging();
-
-            // Write updated article
-            await gitService.writeFileAtomic(articlePath, fileContent, staging);
-
-            // Commit
-            const commitMessage = `Update translation: ${existingArticle.title}`;
-            await gitService.commitFiles([articleRelativePath], commitMessage, staging);
-
-            // Push async
-            this.pushAsync();
-
-            return {
-                success: true,
-                userMessage: 'Translation updated successfully',
-            };
-        } catch (error) {
-            logger.error('Failed to update translation', error);
-            const gitError = gitService.translateError(error);
-            return {
-                success: false,
-                userMessage: gitError.userMessage,
-                error: gitError,
-            };
-        }
-
-    }
-
-    /**
-     * MARK TRANSLATION FAILED
-     * Sets internal state so UI knows translation failed to generate
-     */
-    async markTranslationFailed(section: Section, slug: string): Promise<ContentOperationResult> {
-        try {
-            const articleRelativePath = gitService.getPublishedRelativePath(section, slug);
-            const { content: existingFile, sha: existingSha } = await gitService.getFileInfo(articleRelativePath);
-
-            if (!existingFile || !existingSha) return { success: true, userMessage: 'Article not found' };
-
-            const yaml = await import('js-yaml');
-            const match = existingFile.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
-            if (!match) return { success: false, userMessage: 'Invalid article format' };
-
-            const rawFrontmatter = (yaml.load(match[1]) as Record<string, unknown>) || {};
-            const originalBody = match[2].trim();
-
-            const updatedFrontmatter = {
-                ...rawFrontmatter,
-                translations: {
-                    ...((rawFrontmatter.translations as Record<string, unknown>) || {}),
-                    en: {
-                        ...(((rawFrontmatter.translations as Record<string, unknown>)?.en as Record<string, unknown>) || {}),
-                        status: 'failed',
-                        translatedAt: new Date().toISOString()
-                    }
-                }
-            };
-
-            const fileContent = `---\n${yaml.dump(updatedFrontmatter, { lineWidth: -1, noRefs: true }).trim()}\n---\n\n${originalBody}\n`;
-
-            const articlePath = gitService.getPublishedPath(section, slug);
-            const staging = createGitStaging();
-            await gitService.writeFileAtomic(articlePath, fileContent, staging);
-            await gitService.commitFiles([articleRelativePath], `Mark translation failed: ${slug}`, staging);
-            this.pushAsync();
-
-            return { success: true, userMessage: 'Translation marked as failed' };
-        } catch (error) {
-            logger.error('Failed to mark translation failed', error);
-            return { success: false, userMessage: 'Error updating failure status' };
         }
     }
 

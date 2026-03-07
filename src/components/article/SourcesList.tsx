@@ -2,23 +2,20 @@
  * SourcesList Component
  * 
  * Minimal, editorial design matching The Hint's broadsheet theme.
- * Clean typography, simple borders, no distractions.
  */
 
-import { Language } from "@/lib/i18n/language";
-import { getTranslationsForLang } from "@/lib/i18n";
+import { kn } from "@/lib/i18n";
 
 interface SourcesListProps {
     sources: string[];
-    lang: Language;
 }
 
-export function SourcesList({ sources, lang }: SourcesListProps) {
+export function SourcesList({ sources }: SourcesListProps) {
     if (!sources || sources.length === 0) {
         return null;
     }
 
-    const t = getTranslationsForLang(lang);
+    const t = kn;
 
     return (
         <aside style={{ margin: '2.5rem 0' }}>

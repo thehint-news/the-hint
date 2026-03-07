@@ -1,25 +1,11 @@
 /**
- * Language Context Provider
- * 
- * Manages language state across the application.
- * Works with Next.js App Router for smooth language switching.
- * 
- * Features:
- * - Route-based language detection (/en routes are English)
- * - Smooth client-side navigation between languages
- * - No hydration mismatch
- * - Single root layout handles both languages
+ * Language Context Provider (Kannada Only)
  */
 
 "use client";
 
-import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import {
-    Language,
-    getToggleLanguage,
-    setClientLanguage,
-} from "@/lib/i18n";
+import React, { createContext, useContext } from "react";
+import { Language } from "@/lib/i18n";
 
 interface LanguageContextType {
     language: Language;
@@ -27,81 +13,20 @@ interface LanguageContextType {
     isTransitioning: boolean;
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+const LanguageContext = createContext<LanguageContextType | undefined>({
+    language: 'kn',
+    toggleLanguage: () => { }, // No-op
+    isTransitioning: false,
+});
 
 interface LanguageProviderProps {
     children: React.ReactNode;
-    initialLanguage: Language;
+    initialLanguage?: Language;
 }
 
-export function LanguageProvider({ children, initialLanguage }: LanguageProviderProps) {
-    const router = useRouter();
-    const pathname = usePathname();
-    const [language, setLanguage] = useState<Language>(initialLanguage);
-    const [isTransitioning, setIsTransitioning] = useState(false);
-    const [pendingPath, setPendingPath] = useState<string | null>(null);
-
-    // Sync with route pathname (for client-side route changes)
-    useEffect(() => {
-        const isEnglishRoute = pathname?.startsWith('/en');
-        const routeLang: Language = isEnglishRoute ? 'en' : 'kn';
-        if (routeLang !== language) {
-            setLanguage(routeLang);
-        }
-
-        // Clear transitioning state when we reach the target path
-        // This ensures skeleton stays visible during navigation
-        if (pendingPath && pathname === pendingPath) {
-            // Keep skeleton visible for at least 800ms after navigation completes
-            // This creates a smooth "content swap" effect
-            const timer = setTimeout(() => {
-                setIsTransitioning(false);
-                setPendingPath(null);
-            }, 800);
-            return () => clearTimeout(timer);
-        }
-    }, [pathname, language, pendingPath]);
-
-    const toggleLanguage = useCallback(() => {
-        if (isTransitioning) return;
-
-        const newLang = getToggleLanguage(language);
-        setIsTransitioning(true);
-
-        // Update cookie for server-side consistency
-        setClientLanguage(newLang);
-
-        // Calculate the target URL based on Next.js pathname
-        // This avoids encoding mismatches with window.location.pathname on Unicode URLs
-        let targetPath: string;
-
-        if (newLang === 'en') {
-            // Switching to English - add /en prefix
-            targetPath = pathname.startsWith('/en') ? pathname : `/en${pathname}`;
-        } else {
-            // Switching to Kannada - remove /en prefix
-            targetPath = pathname.replace(/^\/en/, '') || '/';
-        }
-
-        // Store the target path to detect when navigation completes
-        setPendingPath(targetPath);
-
-        // Update local state immediately for UI feedback
-        setLanguage(newLang);
-
-        // Navigate using Next.js router for smooth client-side transition
-        router.push(targetPath);
-
-        // Fallback: Clear transitioning state after 2.5 seconds max
-        // This prevents skeleton from showing indefinitely if navigation fails
-        setTimeout(() => {
-            setIsTransitioning(false);
-            setPendingPath(null);
-        }, 2500);
-    }, [language, isTransitioning, router, pathname]);
-
+export function LanguageProvider({ children }: LanguageProviderProps) {
     return (
-        <LanguageContext.Provider value={{ language, toggleLanguage, isTransitioning }}>
+        <LanguageContext.Provider value={{ language: 'kn', toggleLanguage: () => { }, isTransitioning: false }}>
             {children}
         </LanguageContext.Provider>
     );

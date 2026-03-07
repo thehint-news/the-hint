@@ -106,21 +106,21 @@ const STOP_WORDS = new Set([
 ]);
 
 /**
- * Generate a URL-safe slug from a headline using first 5 meaningful words.
- * - Takes first 5 words (or fewer if headline is shorter)
+ * Generate a URL-safe slug from a headline using first 4-5 meaningful words.
+ * - Takes first 4 words by default (or all if fewer)
  * - Removes stop words optionally
  * - Lowercase, hyphen-separated
  * - Transliterates all script to english characters
  * - Deterministic and immutable after publish
  * 
  * @param headline - The article headline
- * @param maxWords - Maximum number of words to use (default: 5)
+ * @param maxWords - Maximum number of words to use (default: 4)
  * @param removeStopWords - Whether to filter out stop words (default: true)
  * @returns URL-safe slug
  */
 export function generateSlug(
     headline: string,
-    maxWords: number = 5,
+    maxWords: number = 4,
     removeStopWords: boolean = true
 ): string {
     // Transliterate Unicode to ASCII first (e.g., Kannada script to English alphabet)

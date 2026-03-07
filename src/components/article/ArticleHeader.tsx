@@ -9,8 +9,6 @@
 
 import Link from 'next/link';
 import { kn } from "@/lib/i18n/kn";
-import { ShareButtons } from './ShareButtons';
-import { ArticleLanguageToggle, CompactArticleLanguageToggle } from './ArticleLanguageToggle';
 
 interface ArticleHeaderProps {
     title: string;
@@ -20,8 +18,6 @@ interface ArticleHeaderProps {
     contentTypeLabel?: string;
     publishedAt: string;
     updatedAt: string | null;
-    /** Optional: show share buttons in header (top right) */
-    showShareInHeader?: boolean;
 }
 
 export function ArticleHeader({
@@ -32,7 +28,6 @@ export function ArticleHeader({
     contentTypeLabel,
     publishedAt,
     updatedAt,
-    showShareInHeader = true,
 }: ArticleHeaderProps) {
     // Format dates
     const formattedPublished = new Date(publishedAt).toLocaleDateString('kn-IN', {
@@ -64,18 +59,7 @@ export function ArticleHeader({
                             </span>
                         )}
                 </div>
-                {showShareInHeader && (
-                    <div className="hidden md:flex items-center gap-4">
-                        {/* Language Toggle - Premium design */}
-                        <ArticleLanguageToggle />
-                        <div className="w-px h-6 bg-[#E0E0E0]" />
-                        <ShareButtons
-                            title={title}
-                            description={subtitle}
-                            variant="inline"
-                        />
-                    </div>
-                )}
+
             </div>
 
             {/* 2. Large Headline */}
@@ -107,16 +91,7 @@ export function ArticleHeader({
                         </>
                     )}
                 </div>
-                {showShareInHeader && (
-                    <div className="md:hidden flex items-center justify-between gap-4 flex-wrap">
-                        <CompactArticleLanguageToggle />
-                        <ShareButtons
-                            title={title}
-                            description={subtitle}
-                            variant="inline"
-                        />
-                    </div>
-                )}
+
             </div>
 
             {/* 5. Thin Horizontal Rule */}

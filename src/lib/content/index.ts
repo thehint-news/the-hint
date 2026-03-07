@@ -10,8 +10,6 @@ export type {
     ParsedArticle,
     ContentType,
     Section,
-    ArticleTranslation,
-    ArticleTranslations,
 } from './types';
 
 // Error classes

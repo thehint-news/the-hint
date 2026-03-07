@@ -4,20 +4,18 @@
  * Minimal, editorial design for rendering article tags/keywords.
  */
 
-import { Language } from "@/lib/i18n/language";
-import { getTranslationsForLang } from "@/lib/i18n";
+import { kn } from "@/lib/i18n";
 
 interface TagsListProps {
     tags: string[];
-    lang: Language;
 }
 
-export function TagsList({ tags, lang }: TagsListProps) {
+export function TagsList({ tags }: TagsListProps) {
     if (!tags || tags.length === 0) {
         return null;
     }
 
-    const t = getTranslationsForLang(lang);
+    const t = kn;
 
     return (
         <aside style={{ margin: '2.5rem 0' }}>

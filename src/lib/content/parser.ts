@@ -116,11 +116,6 @@ function validateFrontmatter(
         placement = 'lead';
     }
 
-    // Parse translations if present (loose validation)
-    let translations: ArticleFrontmatter['translations'] = undefined;
-    if (data.translations && typeof data.translations === 'object') {
-        translations = data.translations as ArticleFrontmatter['translations'];
-    }
 
     // Parse isLead if present
     const isLead: boolean | undefined = data.isLead === true ? true : undefined;
@@ -159,7 +154,6 @@ function validateFrontmatter(
         tags: (data.tags as string[]) ?? [],
         sources: (data.sources as string[]) ?? [],
         bodyBlocks: (data.bodyBlocks as ContentBlock[]) ?? undefined,
-        translations,
         isLead,
         leadMedia,
     };

@@ -19,17 +19,17 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { SubscribeModal } from "../features/SubscribeModal";
 import { SearchOverlay } from "../features/SearchOverlay";
-import { en } from "@/lib/i18n/en";
+import { kn } from "@/lib/i18n/kn";
 
 
 const NAVIGATION_ITEMS = [
-    { label: en.nav.home, href: "/" },
-    { label: en.nav.local, href: "/local" },
-    { label: en.nav.politics, href: "/politics" },
-    { label: en.nav.world, href: "/world-affairs" },
-    { label: en.nav.crime, href: "/crime" },
-    { label: en.nav.court, href: "/court" },
-    { label: en.nav.opinion, href: "/opinion" },
+    { label: kn.nav.home, href: "/" },
+    { label: kn.nav.local, href: "/local" },
+    { label: kn.nav.politics, href: "/politics" },
+    { label: kn.nav.world, href: "/world-affairs" },
+    { label: kn.nav.crime, href: "/crime" },
+    { label: kn.nav.court, href: "/court" },
+    { label: kn.nav.opinion, href: "/opinion" },
 ] as const;
 
 interface HeaderProps {
@@ -45,7 +45,7 @@ export function Header({ latestUpdate }: HeaderProps) {
 
     // Format fixed date for masthead
     useEffect(() => {
-        const formatted = new Date().toLocaleDateString("en-US", {
+        const formatted = new Date().toLocaleDateString("kn-IN", {
             weekday: "long",
             year: "numeric",
             month: "long",
@@ -70,11 +70,11 @@ export function Header({ latestUpdate }: HeaderProps) {
         const diff = Date.now() - new Date(isoString).getTime();
         const minutes = Math.floor(diff / 60000);
 
-        if (minutes < 1) return en.time.updatedJustNow;
-        if (minutes < 60) return en.time.updatedMinutesAgo(minutes);
+        if (minutes < 1) return kn.time.updatedJustNow;
+        if (minutes < 60) return kn.time.updatedMinutesAgo(minutes);
         const hours = Math.floor(minutes / 60);
-        if (hours < 24) return en.time.updatedHoursAgo(hours);
-        return `${en.time.updatedOn}${new Date(isoString).toLocaleDateString("en-US")}`;
+        if (hours < 24) return kn.time.updatedHoursAgo(hours);
+        return `${kn.time.updatedOn}${new Date(isoString).toLocaleDateString("kn-IN")}`;
     };
 
     const updatedString = latestUpdate ? getUpdatedString(latestUpdate) : "";
@@ -92,7 +92,7 @@ export function Header({ latestUpdate }: HeaderProps) {
             <header role="banner" className="sticky top-0 z-50 bg-[#F7F6F2]">
                 {/* Skip Link for Accessibility */}
                 <a href="#main-content" className="skip-link">
-                    {en.nav.skipToMain}
+                    {kn.nav.skipToMain}
                 </a>
 
                 {/* Mobile Menu 'News Index' Drawer */}
@@ -115,7 +115,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                                 <div className="h-[72px] sm:h-[84px] ml-0.5 mt-1">
                                     <Image
                                         src="/brand/logo.png"
-                                        alt={en.brand.name}
+                                        alt={kn.brand.name}
                                         width={432}
                                         height={607}
                                         className="h-full w-auto object-contain object-left"
@@ -148,7 +148,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
-                                <span className="font-sans text-xs font-medium pt-0.5">{en.nav.searchPlaceholder}</span>
+                                <span className="font-sans text-xs font-medium pt-0.5">{kn.nav.searchPlaceholder}</span>
                             </button>
                         </div>
 
@@ -173,7 +173,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                                     onClick={() => { setIsSubscribeOpen(true); setIsMenuOpen(false); }}
                                     className="w-full bg-[#111] text-[#F7F6F2] font-sans font-bold uppercase tracking-widest text-sm py-3 hover:bg-[#333] transition-colors shadow-sm touch-manipulation"
                                 >
-                                    {en.nav.subscribeMobileButton}
+                                    {kn.nav.subscribeMobileButton}
                                 </button>
                             </div>
                         </nav>
@@ -189,7 +189,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                     )}
 
                     <Link href="/" className="font-sans text-[9px] font-medium uppercase tracking-widest text-[#6B6B6B] hover:text-[#111] whitespace-nowrap">
-                        {en.nav.todaysPaper}
+                        {kn.nav.todaysPaper}
                     </Link>
                 </div>
 
@@ -211,7 +211,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                             <div className="w-[220px] sm:w-[280px] flex items-center justify-center -mt-6 -mb-8 sm:-mt-8 sm:-mb-10">
                                 <Image
                                     src="/brand/header-logo.png"
-                                    alt={en.brand.name}
+                                    alt={kn.brand.name}
                                     priority
                                     width={1280}
                                     height={706}
@@ -274,7 +274,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                             <div className="w-[320px] md:w-[400px] lg:w-[500px] xl:w-[580px] mx-auto flex items-center justify-center -mt-12 -mb-6 lg:-mt-24 lg:-mb-16 xl:-mt-28 xl:-mb-20">
                                 <Image
                                     src="/brand/header-logo.png"
-                                    alt={en.brand.name}
+                                    alt={kn.brand.name}
                                     priority
                                     width={1280}
                                     height={706}
@@ -321,7 +321,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
                                 <span className="font-sans text-[11px] font-bold uppercase tracking-widest hidden xl:inline">
-                                    {en.nav.searchButton}
+                                    {kn.nav.searchButton}
                                 </span>
                             </button>
 
@@ -329,8 +329,8 @@ export function Header({ latestUpdate }: HeaderProps) {
                                 onClick={() => setIsSubscribeOpen(true)}
                                 className="bg-[#111] text-[#F7F6F2] font-sans text-xs xl:text-sm font-bold uppercase tracking-widest px-4 xl:px-6 py-2 rounded-full hover:bg-[#333] transition-colors shadow-sm whitespace-nowrap"
                             >
-                                <span className="hidden xl:inline">{en.nav.subscribeDesktopButton}</span>
-                                <span className="xl:hidden">{en.nav.subscribeMobileButton}</span>
+                                <span className="hidden xl:inline">{kn.nav.subscribeDesktopButton}</span>
+                                <span className="xl:hidden">{kn.nav.subscribeMobileButton}</span>
                             </button>
                         </div>
                     </nav>
@@ -347,7 +347,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
                             <span className="font-sans text-[11px] font-bold uppercase tracking-widest">
-                                {en.nav.searchButton}
+                                {kn.nav.searchButton}
                             </span>
                         </button>
 
@@ -355,7 +355,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                             onClick={() => setIsSubscribeOpen(true)}
                             className="bg-[#111] text-[#F7F6F2] font-sans text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full hover:bg-[#333] transition-colors shadow-sm"
                         >
-                            {en.nav.subscribeMobileButton}
+                            {kn.nav.subscribeMobileButton}
                         </button>
                     </div>
                 </div>
@@ -363,4 +363,3 @@ export function Header({ latestUpdate }: HeaderProps) {
         </>
     );
 }
-

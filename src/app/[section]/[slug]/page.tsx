@@ -9,7 +9,6 @@
 
 import { Metadata } from 'next';
 import { ArticlePageContent, generateArticleMetadata } from './ArticlePageContent';
-import { DEFAULT_LANGUAGE } from '@/lib/i18n/language';
 import { ArticlePageWrapper } from '@/components/article';
 
 // Allow ISR with dynamic fallback
@@ -40,8 +39,7 @@ interface ArticlePageProps {
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
     const { section, slug } = await params;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
-    return generateArticleMetadata({ section, slug, lang: DEFAULT_LANGUAGE, siteUrl });
+    return generateArticleMetadata({ section, slug });
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
@@ -53,7 +51,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 <ArticlePageContent
                     section={section}
                     slug={slug}
-                    lang={DEFAULT_LANGUAGE}
                 />
             </ArticlePageWrapper>
         </main>

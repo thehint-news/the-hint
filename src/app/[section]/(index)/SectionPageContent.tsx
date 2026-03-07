@@ -1,19 +1,14 @@
 /**
- * Section Page Content (Shared Component)
+ * Section Page Content
  * 
- * Shared between Kannada and English section routes.
+ * Kannada section page content.
  */
 
 import { notFound } from 'next/navigation';
 import { getSectionPageData, InvalidSectionError } from '@/lib/content';
 import { SectionHeader, StoryList, Pagination, LeadStory } from '@/components/editorial';
 import { EmptyState } from '@/components/ui/EmptyState';
-import {
-    getTranslationsForLang,
-    applyArticleTranslations,
-    buildSectionHrefLang,
-} from '@/lib/i18n';
-import { Language } from '@/lib/i18n/language';
+import { kn } from '@/lib/i18n';
 
 // Pagination config
 const ARTICLES_PER_PAGE = 10;
@@ -21,11 +16,10 @@ const ARTICLES_PER_PAGE = 10;
 interface SectionPageContentProps {
     sectionSlug: string;
     currentPage: number;
-    lang: Language;
 }
 
-export async function SectionPageContent({ sectionSlug, currentPage, lang }: SectionPageContentProps) {
-    const t = getTranslationsForLang(lang);
+export async function SectionPageContent({ sectionSlug, currentPage }: SectionPageContentProps) {
+    const t = kn;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
 
     // Fetch section data
@@ -41,11 +35,8 @@ export async function SectionPageContent({ sectionSlug, currentPage, lang }: Sec
 
     const { section, articles: allArticles } = data;
 
-    // Apply translations to all articles
-    const localizedArticles = applyArticleTranslations(allArticles, lang);
-
     // Calculate pagination
-    const totalArticles = localizedArticles.length;
+    const totalArticles = allArticles.length;
     const totalPages = Math.ceil(totalArticles / ARTICLES_PER_PAGE);
 
     // Get localized strings
@@ -54,10 +45,10 @@ export async function SectionPageContent({ sectionSlug, currentPage, lang }: Sec
 
     // Get articles for current page
     const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
-    const pageArticles = localizedArticles.slice(startIndex, startIndex + ARTICLES_PER_PAGE);
+    const pageArticles = allArticles.slice(startIndex, startIndex + ARTICLES_PER_PAGE);
 
     // Handle empty section
-    if (localizedArticles.length === 0) {
+    if (allArticles.length === 0) {
         return (
             <main id="main-content" className="flex-1">
                 <div className="container-editorial" style={{ paddingTop: "2rem", paddingBottom: "3rem" }}>
@@ -67,12 +58,9 @@ export async function SectionPageContent({ sectionSlug, currentPage, lang }: Sec
                         description={sectionDesc}
                     />
                     <EmptyState
-                        title={lang === 'kn' ? 'ಯಾವುದೇ ಲೇಖನಗಳಿಲ್ಲ' : 'No Articles Found'}
-                        message={lang === 'kn'
-                            ? `ಈ ವಿಭಾಗದಲ್ಲಿ ಯಾವುದೇ ಲೇಖನಗಳು ಲಭ್ಯವಿಲ್ಲ.`
-                            : `No articles available in this section.`
-                        }
-                        actionLabel={lang === 'kn' ? 'ಮುಖ್ಯ ಸುದ್ದಿಗಳನ್ನು ಓದಿ' : 'Read Top Stories'}
+                        title="ಯಾವುದೇ ಲೇಖನಗಳಿಲ್ಲ"
+                        message={`ಈ ವಿಭಾಗದಲ್ಲಿ ಯಾವುದೇ ಲೇಖನಗಳು ಲಭ್ಯವಿಲ್ಲ.`}
+                        actionLabel="ಮುಖ್ಯ ಸುದ್ದಿಗಳನ್ನು ಓದಿ"
                         actionHref="/"
                     />
                 </div>
@@ -89,8 +77,7 @@ export async function SectionPageContent({ sectionSlug, currentPage, lang }: Sec
     const leadArticle = pageArticles[0];
     const feedArticles = pageArticles.slice(1);
 
-    // Build hreflang URLs
-    const hrefLang = buildSectionHrefLang(section.slug, siteUrl);
+    const canonicalUrl = `${siteUrl}/${section.slug}`;
 
     // JSON-LD Structured Data
     const jsonLd = {
@@ -98,23 +85,23 @@ export async function SectionPageContent({ sectionSlug, currentPage, lang }: Sec
         '@graph': [
             {
                 '@type': 'CollectionPage',
-                '@id': `${siteUrl}${lang === 'en' ? '/en' : ''}/${section.slug}#collection`,
-                url: `${siteUrl}${lang === 'en' ? '/en' : ''}/${section.slug}`,
-                name: `${sectionName} - ${lang === 'kn' ? 'ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್' : 'The Hint News'}`,
+                '@id': `${canonicalUrl}#collection`,
+                url: canonicalUrl,
+                name: `${sectionName} - ದಿ ಹಿಂಟ್ ನ್ಯೂಸ್`,
                 description: sectionDesc,
-                inLanguage: lang === 'en' ? 'en' : 'kn',
+                inLanguage: 'kn',
                 isPartOf: {
                     '@id': 'https://www.thehintnews.in/#website',
                 },
             },
             {
                 '@type': 'BreadcrumbList',
-                '@id': `${siteUrl}${lang === 'en' ? '/en' : ''}/${section.slug}#breadcrumb`,
+                '@id': `${canonicalUrl}#breadcrumb`,
                 itemListElement: [
                     {
                         '@type': 'ListItem',
                         position: 1,
-                        name: lang === 'kn' ? 'ಮುಖಪುಟ' : 'Home',
+                        name: 'ಮುಖಪುಟ',
                         item: siteUrl,
                     },
                     {
@@ -134,9 +121,8 @@ export async function SectionPageContent({ sectionSlug, currentPage, lang }: Sec
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             {/* hreflang links */}
-            <link rel="alternate" hrefLang="kn" href={hrefLang.kn} />
-            <link rel="alternate" hrefLang="en" href={hrefLang.en} />
-            <link rel="alternate" hrefLang="x-default" href={hrefLang.xDefault} />
+            <link rel="alternate" hrefLang="kn" href={canonicalUrl} />
+            <link rel="alternate" hrefLang="x-default" href={canonicalUrl} />
 
             {/* Section Header */}
             <div className="container-editorial" style={{ paddingTop: "2rem", paddingBottom: "0.5rem" }}>
