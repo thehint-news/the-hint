@@ -2878,5 +2878,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-07T06:44:17.318Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "83bad625-0126-4bbd-95b4-cedb27a2a704",
+    "articleSlug": "grh-blkey-elpiji-silimdr-bele",
+    "section": "local",
+    "headline": "ಗೃಹ ಬಳಕೆಯ ಎಲ್‌ಪಿಜಿ ಸಿಲಿಂಡರ್‌ ಬೆಲೆ 60 ರೂ. ಏರಿಕೆ",
+    "summary": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-07T06:48:48.302Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
