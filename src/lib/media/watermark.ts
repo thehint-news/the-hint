@@ -17,14 +17,14 @@ import { join } from 'path';
 // CONFIGURATION
 // =============================================================================
 
-/** Watermark width as a fraction of image width */
-const WATERMARK_SCALE = 0.15;
+/** Watermark width as a fraction of image width (Reduced for subtle appearance) */
+const WATERMARK_SCALE = 0.08;
 
-/** Minimum watermark width in pixels (for legibility on mobile) */
-const MIN_WATERMARK_PX = 40;
+/** Minimum watermark width in pixels (clamped for mobile visibility) */
+const MIN_WATERMARK_PX = 32;
 
-/** Margin as a fraction of image width (increased for premium spacing) */
-const MARGIN_SCALE = 0.03;
+/** Margin as a fraction of image width (Reduced for balance) */
+const MARGIN_SCALE = 0.02;
 
 /** Minimum margin in pixels */
 const MIN_MARGIN_PX = 8;

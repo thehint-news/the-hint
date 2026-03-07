@@ -103,14 +103,17 @@ const STOP_WORDS = new Set([
     'all', 'even', 'now', 'then', 'here', 'there', 'again', 'further', 'once',
     'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own',
     'same', 'so', 'than', 'too', 'very', 'just', 'also',
+    // Kannada common words (native script)
+    'ಮತ್ತು', 'ಹಾಗೂ', 'ಹಾಗು', 'ಮತ್ತೆ', 'ಈ', 'ಆ', 'ಎಂದು', 'ಎಂದ', 'ಮೇಲೆ', 'ಬಗ್ಗೆ',
+    'ರಿಂದ', 'ಇಲ್ಲದೆ', 'ಒಂದು', 'ಆದರೆ', 'ಕೂಡ', 'ಬಂದ', 'ಹೋಗಿ'
 ]);
 
 /**
  * Generate a URL-safe slug from a headline using first 4-5 meaningful words.
+ * - Supports Kannada Unicode characters for high readability
  * - Takes first 4 words by default (or all if fewer)
  * - Removes stop words optionally
- * - Lowercase, hyphen-separated
- * - Transliterates all script to english characters
+ * - Hyphen-separated
  * - Deterministic and immutable after publish
  * 
  * @param headline - The article headline
@@ -123,49 +126,38 @@ export function generateSlug(
     maxWords: number = 4,
     removeStopWords: boolean = true
 ): string {
-    // Transliterate Unicode to ASCII first (e.g., Kannada script to English alphabet)
-    let transliterated = headline;
-    try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const anyAsciiModule = require('any-ascii');
-        const anyAscii = anyAsciiModule.default || anyAsciiModule;
-
-        if (typeof anyAscii === 'function') {
-            transliterated = anyAscii(headline);
-        }
-    } catch {
-        // Fallback if not available
-        console.warn('any-ascii not available, skipping transliteration');
-    }
-
-    // Normalize: lowercase and remove punctuation except spaces
-    const normalized = transliterated
+    // Normalize: lowercase (for mixed content) and remove punctuation except spaces
+    // We use Unicode property escapes (\p{L} for letters, \p{N} for numbers, \p{M} for marks/vowels) 
+    // to preserve Kannada script while stripping punctuation.
+    const normalized = headline
         .toLowerCase()
         .trim()
-        // Replace punctuation with spaces to separate words
+        // Replace common punctuation with spaces
         .replace(/[.,!?;:'"()[\]{}_+\-=*&^%$#@~`|\\/><]/g, ' ')
-        // Keep alphanumeric and spaces, and fallback to unicode letters if transliteration failed
-        .replace(/[^\p{L}\p{N}\s]/gu, ' ')
-        // Normalize multiple spaces
+        // Keep only Unicode letters, numbers, marks (vowel signs), and spaces
+        .replace(/[^\p{L}\p{N}\p{M}\s]/gu, ' ')
+        // Normalize multiple spaces to single space
         .replace(/\s+/g, ' ')
         .trim();
 
     // Split into words
     let words = normalized.split(' ').filter(word => word.length > 0);
 
-    // Remove stop words if enabled (but ensure we keep at least some words)
+    // Remove stop words if enabled (works for both English and transliterated Kannada in our set)
     if (removeStopWords && words.length > 1) {
+        // Note: Our STOP_WORDS set contains transliterated Kannada. 
+        // For native Kannada script matching, we'd need a native script set.
+        // But the headline-splitting logic is robust.
         const filtered = words.filter(word => !STOP_WORDS.has(word));
-        // Only use filtered if we still have meaningful words
         if (filtered.length > 0) {
             words = filtered;
         }
     }
 
-    // Take first N words (or all if fewer)
+    // Take first N words
     words = words.slice(0, maxWords);
 
-    // Join with hyphens
+    // Join with hyphens. URL-encoding will happen at the routing/sharing level.
     return words.join('-');
 }
 

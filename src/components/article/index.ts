@@ -8,6 +8,7 @@ export { ArticleHeader } from './ArticleHeader';
 export { ArticleBody } from './ArticleBody';
 export { SourcesList } from './SourcesList';
 export { TagsList } from './TagsList';
+export { ShareButtons } from './ShareButtons';
 export { CorrectionNotice } from './CorrectionNotice';
 
 // Media block renderers

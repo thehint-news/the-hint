@@ -9,6 +9,7 @@
 
 import Link from 'next/link';
 import { kn } from "@/lib/i18n/kn";
+import { ShareButtons } from './ShareButtons';
 
 interface ArticleHeaderProps {
     title: string;
@@ -59,7 +60,9 @@ export function ArticleHeader({
                             </span>
                         )}
                 </div>
-
+                <div className="hidden md:block">
+                    <ShareButtons title={title} />
+                </div>
             </div>
 
             {/* 2. Large Headline */}
@@ -91,7 +94,11 @@ export function ArticleHeader({
                         </>
                     )}
                 </div>
-
+                <div className="md:hidden flex items-center mt-2">
+                    <ShareButtons
+                        title={title}
+                    />
+                </div>
             </div>
 
             {/* 5. Thin Horizontal Rule */}

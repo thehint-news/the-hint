@@ -10,6 +10,7 @@ export * from './language';
 
 // translations
 export { kn } from './kn';
+export { en } from './en';
 import { kn } from './kn';
 import { Language } from './language';
 
