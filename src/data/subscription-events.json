@@ -2888,11 +2888,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-07T06:48:48.302Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
     "totalSubscribers": 2,
-    "lastAttemptAt": "2026-03-07T06:49:06.562Z"
+    "lastAttemptAt": "2026-03-07T06:49:16.351Z"
   }
 ]
