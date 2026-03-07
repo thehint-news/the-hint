@@ -2894,5 +2894,19 @@
     "sentEmails": [],
     "totalSubscribers": 2,
     "lastAttemptAt": "2026-03-07T06:49:21.006Z"
+  },
+  {
+    "id": "063e984c-a834-4765-97eb-163a1ea74fc6",
+    "articleSlug": "mlpeylli-kolet-sthitiylli-svptte",
+    "section": "local",
+    "headline": "ಮಲ್ಪೆಯಲ್ಲಿ ಕೊಳೆತ ಸ್ಥಿತಿಯಲ್ಲಿ ಶವ‌ಪತ್ತೆ",
+    "summary": "ಸಮಾಜಸೇವಕ ನಿತ್ಯಾನಂದ ಒಳಕಾಡುವರ ನೇತ್ರತ್ವದಲ್ಲಿ ಕಳೇಬರ ಮೇಲಕೆತ್ತುವ ಕಾರ್ಯಚರಣೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-07T11:56:58.941Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
