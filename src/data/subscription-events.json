@@ -2904,11 +2904,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-07T11:56:58.941Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
     "totalSubscribers": 2,
-    "lastAttemptAt": "2026-03-07T11:57:10.190Z"
+    "lastAttemptAt": "2026-03-07T11:57:13.725Z"
   }
 ]
