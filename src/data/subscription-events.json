@@ -2920,10 +2920,10 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-07T12:00:33.034Z",
-    "status": "processing",
+    "status": "pending",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-03-07T12:00:36.132Z"
+    "totalSubscribers": 2
   }
 ]
