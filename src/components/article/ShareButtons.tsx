@@ -70,19 +70,18 @@ export function ShareButtons({
     const [copied, setCopied] = useState(false);
 
     // Build absolute URL - Strict production domain enforcement
-    const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
-    const siteUrl = rawSiteUrl.endsWith('/') ? rawSiteUrl.slice(0, -1) : rawSiteUrl;
-
-    // Ensure we don't share vercel.app links even if accessed through them
-    const baseShareUrl = siteUrl.includes('vercel.app') ? 'https://www.thehintnews.in' : siteUrl;
-
-    const shareUrl = customUrl || `${baseShareUrl}${pathname}`;
-    const encodedUrl = encodeURIComponent(shareUrl);
+    // We use the primary domain directly to ensure all shared links are canonical
+    const shareUrl = customUrl || `https://www.thehintnews.in${pathname}`;
+    // Ensure we decode first to prevent double-encoding (e.g., %25E0%25...)
+    const decodedUrl = decodeURIComponent(shareUrl);
+    const encodedUrl = encodeURIComponent(decodedUrl);
     const encodedTitle = encodeURIComponent(title);
 
     // Share handlers
     const shareToWhatsApp = useCallback(() => {
-        const text = `${title} ${shareUrl}`;
+        // Decode URL for readability in sharing apps (WhatsApp supports Unicode in links)
+        const readableUrl = decodeURIComponent(shareUrl);
+        const text = `${title}\n\n${readableUrl}`;
         window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
     }, [title, shareUrl]);
 
@@ -104,14 +103,16 @@ export function ShareButtons({
 
     const copyToClipboard = useCallback(async () => {
         try {
-            await navigator.clipboard.writeText(shareUrl);
+            // Provide decoded URL for human-readability
+            const readableUrl = decodeURIComponent(shareUrl);
+            await navigator.clipboard.writeText(readableUrl);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
             console.error('Failed to copy:', err);
             // Fallback for older browsers
             const textArea = document.createElement('textarea');
-            textArea.value = shareUrl;
+            textArea.value = decodeURIComponent(shareUrl);
             document.body.appendChild(textArea);
             textArea.select();
             document.execCommand('copy');

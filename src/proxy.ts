@@ -84,10 +84,9 @@ function handleDomainRedirect(request: NextRequest): NextResponse | null {
   const url = request.nextUrl.clone();
   const host = request.headers.get('host') || '';
 
-  const isVercelDomain = host.endsWith('.vercel.app');
   const isBareDomain = host === 'thehintnews.in';
 
-  if (isBareDomain || isVercelDomain) {
+  if (isBareDomain) {
     url.hostname = 'www.thehintnews.in';
     url.port = '';
     url.protocol = 'https:';
@@ -145,12 +144,8 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     },
   });
 
-  // Add no-index to vercel domains
-  const host = request.headers.get('host') || '';
-  if (host.endsWith('.vercel.app')) {
-    response.headers.set('x-robots-tag', 'noindex, nofollow');
-  }
-
+  // Only add no-index to internal deployments if HOST header is present and redirected.
+  // The robots.ts handles the main global crawl permissions.
   return response;
 }
 
