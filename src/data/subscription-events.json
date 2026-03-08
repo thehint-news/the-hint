@@ -3006,5 +3006,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-07T12:13:52.541Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "640ec951-dd36-4f03-8b45-2153776a3b06",
+    "articleSlug": "ಕಾಂಗ್ರೆಸ್-ಮುಖಂಡನ-ಆತ್ಮೀಯ-ಡ್ರಗ್ಸ್",
+    "section": "crime",
+    "headline": "ಕಾಂಗ್ರೆಸ್ ಮುಖಂಡನ ಆತ್ಮೀಯ ಡ್ರಗ್ಸ್ ಕೇಸ್‌ನಲ್ಲಿ ಅಂದರ್..!",
+    "summary": "ಬೆಳಪುವಿನ ನಿವಾಸಿಗಳಾದ ಝಹೀರ್ ಅಹ್ಮದ್ (66), ಸಯ್ಯದ್ ಶಮೀಮ್ (28)  ಬಂಧಿತ ಆರೋಪಿಗಳು",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-08T14:39:51.704Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
