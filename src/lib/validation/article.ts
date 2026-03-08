@@ -111,25 +111,29 @@ const STOP_WORDS = new Set([
 /**
  * Generate a URL-safe slug from a headline using first 4-5 meaningful words.
  * - Supports Kannada Unicode characters for high readability
- * - Takes first 4 words by default (or all if fewer)
+ * - Takes first 5 words by default (as per user spec)
  * - Removes stop words optionally
  * - Hyphen-separated
  * - Deterministic and immutable after publish
  * 
  * @param headline - The article headline
- * @param maxWords - Maximum number of words to use (default: 4)
+ * @param maxWords - Maximum number of words to use (default: 5)
  * @param removeStopWords - Whether to filter out stop words (default: true)
  * @returns URL-safe slug
  */
 export function generateSlug(
     headline: string,
-    maxWords: number = 4,
+    maxWords: number = 5,
     removeStopWords: boolean = true
 ): string {
-    // Normalize: lowercase (for mixed content) and remove punctuation except spaces
-    // We use Unicode property escapes (\p{L} for letters, \p{N} for numbers, \p{M} for marks/vowels) 
-    // to preserve Kannada script while stripping punctuation.
-    const normalized = headline
+    if (!headline) return '';
+
+    // Step 1: Normalize Unicode (NFC ensures canonical composition)
+    // CRITICAL for consistent matching and file paths
+    const normalizedInput = headline.normalize('NFC');
+
+    // Step 2: Clean and normalize whitespace/punctuation
+    const cleaned = normalizedInput
         .toLowerCase()
         .trim()
         // Replace common punctuation with spaces
@@ -140,25 +144,37 @@ export function generateSlug(
         .replace(/\s+/g, ' ')
         .trim();
 
-    // Split into words
-    let words = normalized.split(' ').filter(word => word.length > 0);
+    // Step 3: Split into words
+    let words = cleaned.split(' ').filter(word => word.length > 0);
 
-    // Remove stop words if enabled (works for both English and transliterated Kannada in our set)
+    // Step 4: Remove stop words if enabled
     if (removeStopWords && words.length > 1) {
-        // Note: Our STOP_WORDS set contains transliterated Kannada. 
-        // For native Kannada script matching, we'd need a native script set.
-        // But the headline-splitting logic is robust.
         const filtered = words.filter(word => !STOP_WORDS.has(word));
         if (filtered.length > 0) {
             words = filtered;
         }
     }
 
-    // Take first N words
+    // Step 5: Take first N words (4-5 is specified)
     words = words.slice(0, maxWords);
 
-    // Join with hyphens. URL-encoding will happen at the routing/sharing level.
-    return words.join('-');
+    // Step 6: Join with hyphens
+    let slug = words.join('-');
+
+    // Step 7: Production-grade Length Limit
+    // While URLs can be long, many social sharing platforms have issues with extremely long encoded strings.
+    // We limit raw characters to 100, which protects against extremely long encoded URLs.
+    if (slug.length > 100) {
+        // Safe truncate: split by characters (grapheme clusters would be better but this is good enough safely)
+        slug = slug.substring(0, 100);
+        // Clean up trailing hyphen or partial words if we cut in the middle
+        const lastHyphen = slug.lastIndexOf('-');
+        if (lastHyphen > 30) { // Only cut at hyphen if we have a reasonable length
+            slug = slug.substring(0, lastHyphen);
+        }
+    }
+
+    return slug;
 }
 
 /**
@@ -577,7 +593,20 @@ export function transformToValidatedData(input: PublishArticleInput): ValidatedA
     const status = input.status as ArticleStatus;
     const tags = normalizeTags(input.tags);
     const sources = sanitizeStringArray(input.sources);
-    const slug = typeof input.slug === 'string' && input.slug ? input.slug : generateSlug(headline);
+    // Slug determination: Clean and normalize even if provided manually
+    let slug = typeof input.slug === 'string' && input.slug ? input.slug : generateSlug(headline);
+
+    // Final safety clean for manually provided slugs:
+    // 1. NFC Normalize
+    // 2. Trim & Lowercase
+    // 3. Ensure no spaces (hyphenate)
+    // 4. Remove prohibited characters
+    slug = slug.normalize('NFC')
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\p{L}\p{N}\p{M}-]/gu, '');
+
     const bodyBlocks = Array.isArray(input.bodyBlocks) ? (input.bodyBlocks as ContentBlock[]) : undefined;
 
     // Parse isLead - must be explicitly true

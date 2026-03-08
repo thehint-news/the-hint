@@ -120,7 +120,7 @@ function validateSection(section: string): Section {
  * @throws InvalidSlugError if slug is invalid
  */
 function validateSlug(slug: string): string {
-    // Decode URI-encoded characters (browsers encode non-ASCII chars in URLs)
+    // Step 1: Decode URI-encoded characters (browsers encode non-ASCII chars in URLs)
     let decoded: string;
     try {
         decoded = decodeURIComponent(slug).trim();
@@ -128,13 +128,18 @@ function validateSlug(slug: string): string {
         decoded = slug.trim();
     }
 
-    // Check if empty
+    // Step 2: Normalize Unicode to NFC (Canonical Composition)
+    // CRITICAL: Matches the normalization used during slug generation to prevent 404s
+    // across different platforms (Mac NFD vs Windows/Linux NFC).
+    decoded = decoded.normalize('NFC');
+
+    // Step 3: Check if empty
     if (!decoded) {
         throw new InvalidSlugError(slug, 'Slug cannot be empty');
     }
 
-    // Check for valid characters: Unicode letters, Unicode numbers, and hyphens
-    const slugPattern = /^[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)*$/u;
+    // Step 4: Check for valid characters: Unicode letters, Unicode numbers, Marks (vowel signs), and hyphens
+    const slugPattern = /^[\p{L}\p{N}\p{M}]+(?:-[\p{L}\p{N}\p{M}]+)*$/u;
     if (!slugPattern.test(decoded)) {
         throw new InvalidSlugError(
             slug,
