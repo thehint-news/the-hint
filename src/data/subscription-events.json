@@ -3112,11 +3112,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-10T10:29:39.157Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
     "totalSubscribers": 3,
-    "lastAttemptAt": "2026-03-10T10:29:51.383Z"
+    "lastAttemptAt": "2026-03-10T10:29:55.040Z"
   }
 ]
