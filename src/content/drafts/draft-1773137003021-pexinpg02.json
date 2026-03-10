@@ -1,0 +1,26 @@
+{
+  "headline": "",
+  "subheadline": "",
+  "section": "politics",
+  "contentType": "news",
+  "body": ":::image\nsrc: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/5ab35659afec9327.webp\nalt: Mp Kota highway visit\nwidth: 1400\nheight: 964\nsrcset: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/5ab35659afec9327.webp 1400w\n:::",
+  "bodyBlocks": [
+    {
+      "id": "ima-mmkfzl7z-ghkj",
+      "type": "image",
+      "order": 0,
+      "src": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/5ab35659afec9327.webp",
+      "alt": "Mp Kota highway visit",
+      "width": 1400,
+      "height": 964,
+      "aspectRatio": "3:2",
+      "srcset": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/5ab35659afec9327.webp 1400w"
+    }
+  ],
+  "tags": [],
+  "sources": [],
+  "placement": "standard",
+  "draftId": "draft-1773137003021-pexinpg02",
+  "savedAt": "2026-03-10T10:03:23.021Z",
+  "createdAt": "2026-03-10T10:03:23.021Z"
+}
