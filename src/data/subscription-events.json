@@ -3150,5 +3150,19 @@
     "sentEmails": [],
     "totalSubscribers": 3,
     "lastAttemptAt": "2026-03-10T10:49:18.294Z"
+  },
+  {
+    "id": "f01a5233-a595-4bbc-9a46-b4bfc2ee3bbb",
+    "articleSlug": "ಅಪಘಾತದಲ್ಲಿ-ಗಾಯಗೊಂಡಿದ್ದ-ಬೈಕ್-ಸವಾರ-ಆಸ್ಪತ್ರೆಯಲ್ಲಿ",
+    "section": "local",
+    "headline": "ಅಪಘಾತದಲ್ಲಿ ಗಾಯಗೊಂಡಿದ್ದ ಬೈಕ್ ಸವಾರ ಆಸ್ಪತ್ರೆಯಲ್ಲಿ ನಿಧನ",
+    "summary": "ಸಂಭವಿಸಿ ಗಾಯಗೊಂಡಿದ್ದ ಬೈಕ್ ಸವಾರ ಮೊಹಮ್ಮದ್ ಝೈದ್ (19)",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-10T10:54:21.002Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
