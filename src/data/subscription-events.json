@@ -3022,5 +3022,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-08T14:49:57.634Z",
     "totalSubscribers": 2
+  },
+  {
+    "id": "7ca671ce-0698-432a-a12f-be51ae84e68b",
+    "articleSlug": "ಇಸ್ಪೀಟು-ಜುಗಾರಿ-ಆಡುತ್ತಿದ್ದ-10-ಮಂದಿ",
+    "section": "crime",
+    "headline": "ಇಸ್ಪೀಟು ಜುಗಾರಿ ಆಡುತ್ತಿದ್ದ 10 ಮಂದಿ ಬಂಧನ",
+    "summary": "ಬ್ರಹ್ಮಾವರ ಠಾಣಾ ವ್ಯಾಪ್ತಿಯ ಹನೇಹಳ್ಳಿಯಲ್ಲಿ ಬಂಧನ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-10T09:46:54.468Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
