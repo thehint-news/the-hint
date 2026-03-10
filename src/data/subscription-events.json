@@ -3118,5 +3118,19 @@
     "sentEmails": [],
     "totalSubscribers": 3,
     "lastAttemptAt": "2026-03-10T10:30:00.916Z"
+  },
+  {
+    "id": "0eb08ab1-4190-44f1-b5e0-d99fcf7e4ca7",
+    "articleSlug": "ಎಲ್-ಪಿಜಿ-ದರ-ಏರಿಕೆ-ವಿರುದ್ಧ",
+    "section": "politics",
+    "headline": "ಎಲ್‌ಪಿಜಿ ದರ ಏರಿಕೆ ವಿರುದ್ಧ ಕಾಂಗ್ರೆಸ್ ಧರಣಿ; ರಸ್ತೆ ಮಧ್ಯೆ ಒಲೆ ಉರಿಸಿ ಚಹಾ ಮಾಡಿ ಆಕ್ರೋಶ",
+    "summary": "ಬ್ರಹ್ಮಗಿರಿ ಸರ್ಕಲ್ ಬಳಿ ರಸ್ತೆ ಮಧ್ಯೆ ಕಟ್ಟಿಗೆ ಬಳಸಿ ಒಲೆ ಉರಿಸಿ ಚಹಾ ಮಾಡಿ ಪ್ರತಿಭಟನೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-10T10:43:43.922Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
