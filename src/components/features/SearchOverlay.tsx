@@ -95,11 +95,11 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         <div
             ref={overlayRef}
             onClick={handleOverlayClick}
-            className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm transition-all duration-300 flex justify-center items-start pt-0 md:pt-[10vh]"
+            className="fixed inset-0 z-60 bg-black/40 backdrop-blur-sm transition-all duration-300 flex justify-center items-start pt-0 md:pt-[10vh]"
             role="dialog"
             aria-modal="true"
         >
-            <div className="w-full md:max-w-3xl bg-[#F7F6F2] shadow-2xl border-b border-[#111] md:border md:rounded-lg animate-in slide-in-from-top-4 duration-300 max-h-[100vh] md:max-h-[80vh] flex flex-col overflow-hidden">
+            <div className="w-full md:max-w-3xl bg-[#F7F6F2] shadow-2xl border-b border-[#111] md:border md:rounded-lg animate-in slide-in-from-top-4 duration-300 max-h-screen md:max-h-[80vh] flex flex-col overflow-hidden">
                 <div className="w-full">
                     {/* Header / Input Area */}
                     <div className="relative py-6 px-6 flex items-center gap-4 border-b border-[#E5E5E5]">
@@ -119,7 +119,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                         />
                         <button
                             onClick={onClose}
-                            className="bg-transparent text-[#111] hover:text-[#555] transition-colors p-2 -mr-2"
+                            className="bg-transparent border-none outline-none text-[#111] hover:text-[#555] transition-colors p-2 -mr-2"
                             aria-label="Close search"
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

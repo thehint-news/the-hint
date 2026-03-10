@@ -65,7 +65,7 @@ export function SubscribeModal({ isOpen, onClose }: SubscribeModalProps) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
             {/* Backdrop */}
             <div
                 className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
@@ -76,7 +76,7 @@ export function SubscribeModal({ isOpen, onClose }: SubscribeModalProps) {
             <div className="relative w-full max-w-md bg-[#F7F6F2] border border-[#111] shadow-2xl p-8 transform transition-all">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-[#8A8A8A] hover:text-[#111] transition-colors"
+                    className="absolute top-4 right-4 text-[#8A8A8A] hover:text-[#111] transition-colors border-none bg-transparent outline-none"
                     aria-label="Close"
                 >
                     ✕
