@@ -3224,10 +3224,10 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-10T11:23:05.616Z",
-    "status": "processing",
+    "status": "pending",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-03-10T11:23:08.724Z"
+    "totalSubscribers": 3
   }
 ]
