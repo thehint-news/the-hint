@@ -3134,5 +3134,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-10T10:43:57.059Z",
     "totalSubscribers": 3
+  },
+  {
+    "id": "01d5947e-efc8-455b-a7d6-5d33b11023bc",
+    "articleSlug": "ಸ್ಮೃತಿ-ಇರಾನಿ-ಕಾಣುತ್ತಿಲ್ಲ-ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ",
+    "section": "politics",
+    "headline": "ಸ್ಮೃತಿ ಇರಾನಿ ಕಾಣುತ್ತಿಲ್ಲ : ಸಚಿವೆ ಲಕ್ಷ್ಮೀ ಹೆಬ್ಬಾಳಕರ್‌ ವ್ಯಂಗ್ಯ",
+    "summary": "ಮಹಿಳೆಯರಿಗೆ ಉಡುಗೊರೆ ನೀಡಿರುವ ಕೇಂದ್ರ ಸರ್ಕಾರಕ್ಕೆ ಅಭಿನಂದನೆ ಸಲ್ಲಿಸಲು ಬಯಸುವೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-10T10:48:54.209Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
