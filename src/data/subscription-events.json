@@ -3229,5 +3229,19 @@
     "processedCount": 0,
     "sentEmails": [],
     "totalSubscribers": 3
+  },
+  {
+    "id": "434b516e-01dd-49a6-ba30-d2ba803a2fad",
+    "articleSlug": "ಪೆರ್ಡೂರು-ದೇವಸ್ಥಾನದ-ವಿಚಾರದಲ್ಲಿ-ಸೊರಕೆ-ಬಹಿರಂಗ",
+    "section": "politics",
+    "headline": "ಪೆರ್ಡೂರು ದೇವಸ್ಥಾನದ ವಿಚಾರದಲ್ಲಿ ಸೊರಕೆ ಬಹಿರಂಗ ಚರ್ಚೆಗೆ ಬರಲಿ - ಸುರೇಶ್ ಶೇರ್ವೆಗಾರ್ ಸವಾಲು",
+    "summary": "ಮಂಗಳವಾರ, ಉಡುಪಿಯಲ್ಲಿ ಈ ಬಗ್ಗೆ ಸುದ್ದಿಗೋಷ್ಠಿ ನಡೆಸಿ ಮಾತನಾಡಿದರು.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-10T15:29:53.219Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
