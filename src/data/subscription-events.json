@@ -3102,5 +3102,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-10T10:27:28.508Z",
     "totalSubscribers": 3
+  },
+  {
+    "id": "93804def-86d0-497e-afc5-b5df8604a25f",
+    "articleSlug": "ಉಡುಪಿ-ಜಿಲ್ಲೆಯ-ಅಭಿವೃದ್ಧಿಯಲ್ಲಿ-ಮಹಿಳೆಯರ-ಕೊಡುಗೆ",
+    "section": "local",
+    "headline": "ಉಡುಪಿ ಜಿಲ್ಲೆಯ ಅಭಿವೃದ್ಧಿಯಲ್ಲಿ ಮಹಿಳೆಯರ ಕೊಡುಗೆ ಅಪಾರ : ಯಶ್ಪಾಲ್ ಸುವರ್ಣ",
+    "summary": "ಉಡುಪಿ ನಗರ ಬಿಜೆಪಿ ಹಾಗೂ ಮಹಿಳಾ ಮೋರ್ಚಾದ ವತಿಯಿಂದ ಆಯೋಜಿಸಿದ್ದ ವಿಶ್ವ ಮಹಿಳಾ ದಿನಾಚರಣೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-10T10:29:39.157Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
