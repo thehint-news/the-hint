@@ -3054,5 +3054,19 @@
     "sentEmails": [],
     "totalSubscribers": 3,
     "lastAttemptAt": "2026-03-10T10:05:54.059Z"
+  },
+  {
+    "id": "157f2b33-262a-42d1-b730-ff36e8ca21d4",
+    "articleSlug": "ವೃದ್ದೆಯ-ಬರ್ಬರ-ಹತ್ಯೆ",
+    "section": "crime",
+    "headline": "ವೃದ್ದೆಯ ಬರ್ಬರ ಹತ್ಯೆ..!",
+    "summary": "ಅರೋಪಿಗಳಿಬ್ಬರ ಬಂಧನ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-10T10:16:06.918Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
