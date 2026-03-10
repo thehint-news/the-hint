@@ -3112,10 +3112,10 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-10T10:29:39.157Z",
-    "status": "processing",
+    "status": "pending",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-03-10T10:29:42.185Z"
+    "totalSubscribers": 3
   }
 ]
