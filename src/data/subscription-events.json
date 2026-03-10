@@ -3038,5 +3038,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-10T09:47:06.714Z",
     "totalSubscribers": 3
+  },
+  {
+    "id": "8de55002-d2e3-4c47-83e2-77d09e823d6c",
+    "articleSlug": "ರಾಷ್ಟ್ರೀಯ-ಹೆದ್ದಾರಿ-169-ಎ-ಕಾಮಗಾರಿ",
+    "section": "local",
+    "headline": "ರಾಷ್ಟ್ರೀಯ ಹೆದ್ದಾರಿ 169 ಎ ಕಾಮಗಾರಿ ವೀಕ್ಷಿಸಿದ ಸಂಸದ ಕೋಟ",
+    "summary": "ಕುಂದಾಪುರದ ಸಹಾಯಕ ಕಮಿಷನರ್ ರಶ್ಮಿ, ಹೆಚ್ಚುವರಿ ಪೊಲೀಸ್ ಅಧಿಕ್ಷಕ ಸುಧಾಕರ್ ನಾಯಕ್, ರಾಷ್ಟ್ರೀಯ ಹೆದ್ದಾರಿ ಅಧಿಕಾರಿಗಳಾದ ಲೋಕೇಶ್, ಶಶಿಧರ್, ನವೀನ್ ಭಾಗಿ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-10T10:05:32.214Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
