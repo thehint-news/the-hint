@@ -3192,10 +3192,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-10T11:11:40.294Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-03-10T11:17:33.760Z"
   },
   {
     "id": "b4d2b108-ab77-4d18-a644-c19081588800",
