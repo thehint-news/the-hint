@@ -3214,5 +3214,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-10T11:18:00.294Z",
     "totalSubscribers": 3
+  },
+  {
+    "id": "99b039e5-816f-4f0f-aa18-85e2c0a3b687",
+    "articleSlug": "ತ್ರಿನಯ-ವೈದ್ಯಕೀಯ-ಚಿಕಿತ್ಸಾಲಯ-ಉದ್ಘಾಟನೆ",
+    "section": "local",
+    "headline": "'ತ್ರಿನಯ' ವೈದ್ಯಕೀಯ ಚಿಕಿತ್ಸಾಲಯ ಉದ್ಘಾಟನೆ",
+    "summary": "ಆಧುನಿಕ ತಂತ್ರಜ್ಞಾನದ ಯಂತ್ರಗಳನ್ನು ಒಳಗೊಂಡ ಚರ್ಮ, ಕೂದಲು ಮತ್ತು ಅಲಂಕಾರಿಕ ಚಿಕಿತ್ಸೆಗಳಿಗೆ ಇಲ್ಲಿ ಅವಕಾಶ ಕಲ್ಪಿಸಲಾಗಿದೆ.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-10T11:23:05.616Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
