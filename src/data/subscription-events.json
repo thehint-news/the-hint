@@ -3048,11 +3048,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-10T10:05:32.214Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
     "totalSubscribers": 3,
-    "lastAttemptAt": "2026-03-10T10:05:44.513Z"
+    "lastAttemptAt": "2026-03-10T10:05:48.234Z"
   }
 ]
