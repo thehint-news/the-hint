@@ -206,7 +206,7 @@ export function SubscribePopup() {
                     {/* Close Button */}
                     <button
                         onClick={handleDismiss}
-                        className="absolute top-4 right-4 text-[#8A8A8A] hover:text-[#111] transition-colors p-2"
+                        className="absolute top-4 right-4 text-[#8A8A8A] border-none bg-transparent hover:text-[#111] transition-colors p-2"
                         aria-label="Close popup"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse, after } from 'next/server';
-import { contentGit, PublishedArticleData } from '@/lib/git';
+import { contentGit, PublishedArticleData, DraftData } from '@/lib/git';
 import { logger } from '@/lib/feedback/console-guard';
 import { verifyAuth } from '@/lib/auth/session';
 import { revalidatePath } from 'next/cache';
@@ -63,6 +63,76 @@ function collectArticleImageKeys(article: PublishedArticleData): string[] {
 }
 
 /**
+ * Extract all Supabase storage keys from a draft.
+ * Collects URLs from: thumbnail, image blocks, video poster thumbnails, lead media.
+ */
+function collectDraftImageKeys(draft: DraftData): string[] {
+    const urls: string[] = [];
+
+    // 1. Thumbnail image
+    if (draft.thumbnail) {
+        urls.push(draft.thumbnail);
+    }
+
+    // 2. Body block images and video poster thumbnails
+    if (draft.bodyBlocks && Array.isArray(draft.bodyBlocks)) {
+        for (const block of draft.bodyBlocks) {
+            if (block.type === 'image' && 'src' in block && typeof block.src === 'string') {
+                urls.push(block.src);
+            }
+            if (block.type === 'video' && 'posterThumbnail' in block && typeof block.posterThumbnail === 'string') {
+                urls.push(block.posterThumbnail);
+            }
+        }
+    }
+
+    // 3. Lead media images
+    if (draft.leadMedia?.images) {
+        for (const img of draft.leadMedia.images) {
+            if (img.url) {
+                urls.push(img.url);
+            }
+        }
+    }
+
+    // Convert URLs to storage keys, filtering out non-Supabase URLs
+    const keys: string[] = [];
+    for (const url of urls) {
+        const key = extractStorageKeyFromUrl(url);
+        if (key) {
+            keys.push(key);
+        }
+    }
+
+    return [...new Set(keys)];
+}
+
+/**
+ * Delete images from Supabase storage with a single retry.
+ * Handles transient failures gracefully.
+ */
+async function deleteStorageWithRetry(keys: string[], requestId: string): Promise<void> {
+    logger.info(`[DELETE-STORAGE] [${requestId}] Cleaning up ${keys.length} Supabase image(s): ${keys.join(', ')}`);
+
+    const deleted = await deleteMultipleFromStorage(keys);
+    if (deleted === keys.length) {
+        logger.info(`[DELETE-STORAGE] [${requestId}] Supabase cleanup complete: ${deleted}/${keys.length} images deleted`);
+        return;
+    }
+
+    // First attempt returned 0 (failure) — retry once after 1 second
+    logger.warn(`[DELETE-STORAGE] [${requestId}] First cleanup attempt incomplete (${deleted}/${keys.length}), retrying in 1s...`);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const retryDeleted = await deleteMultipleFromStorage(keys);
+    if (retryDeleted > 0) {
+        logger.info(`[DELETE-STORAGE] [${requestId}] Retry cleanup complete: ${retryDeleted}/${keys.length} images deleted`);
+    } else {
+        logger.error(`[DELETE-STORAGE] [${requestId}] Retry cleanup also failed. ${keys.length} image(s) may be orphaned: ${keys.join(', ')}`);
+    }
+}
+
+/**
  * PART 5: DELETE LOCK MECHANISM
  * Prevents double-delete and parallel delete calls
  * Uses in-memory Map (resets on server restart, which is acceptable)
@@ -88,8 +158,8 @@ function acquireDeleteLock(articleId: string): string | null {
     const operationId = `del-${now}-${Math.random().toString(36).substr(2, 5)}`;
     deleteLocks.set(articleId, { timestamp: now, operationId });
 
-    // Clean up old locks periodically
-    if (deleteLocks.size > 100) {
+    // Clean up old locks periodically (aggressive threshold for serverless)
+    if (deleteLocks.size > 50) {
         cleanupOldLocks();
     }
 
@@ -274,6 +344,19 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
             if (type === 'draft' || id.startsWith('draft-')) {
                 logger.info(`[DELETE-API] [${requestId}] Routing to DRAFT delete handler | id: ${id}`);
 
+                // PRE-DELETE: Load draft content to extract image URLs before Git deletes the file
+                let draftImageKeysToClean: string[] = [];
+                try {
+                    const loadResult = await contentGit.loadDraft(id);
+                    if (loadResult.success && loadResult.data) {
+                        draftImageKeysToClean = collectDraftImageKeys(loadResult.data);
+                        logger.info(`[DELETE-API] [${requestId}] Found ${draftImageKeysToClean.length} Supabase image(s) in draft to clean up`);
+                    }
+                } catch {
+                    // Non-fatal: if we can't read images, still proceed with deletion
+                    logger.warn(`[DELETE-API] [${requestId}] Could not read draft for image cleanup (proceeding with delete)`);
+                }
+
                 const result = await contentGit.deleteDraft(id);
 
                 if (!result.success) {
@@ -301,6 +384,19 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
                 };
 
                 logger.info(`[DELETE-API] [${requestId}] ========== DELETE REQUEST SUCCESS (DRAFT) ==========`);
+
+                // SUPABASE CLEANUP: Delete draft images from storage in background
+                // Non-blocking — runs after the response is sent, with retry
+                if (draftImageKeysToClean.length > 0) {
+                    after(async () => {
+                        try {
+                            await deleteStorageWithRetry(draftImageKeysToClean, requestId);
+                        } catch (e) {
+                            logger.error(`[DELETE-API] [${requestId}] Draft Supabase cleanup failed (non-fatal):`, e);
+                        }
+                    });
+                }
+
                 return NextResponse.json(response, { status: 200 });
             }
 
@@ -376,33 +472,30 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
 
                 const revalidationResult = triggerRevalidation(revalidationPaths, requestId);
 
+                // PRODUCTION FIX: ISR revalidation failure is now a SOFT success.
+                // The Git deletion (source of truth) already succeeded. Telling the user
+                // it failed would be misleading and could cause them to retry, which is
+                // wasteful. The ISR cache will self-heal on the next visitor request.
                 if (!revalidationResult.success) {
-                    // PART 10: FAILURE CONDITIONS - Revalidation failure is a hard failure
-                    logger.error(`[DELETE-API] [${requestId}] CRITICAL: Revalidation failed after successful Git delete`);
-
-                    // Note: The article is deleted from Git but cache is stale
-                    // This is a partial success - we return error but include details
-                    return NextResponse.json(
-                        {
-                            success: false,
-                            error: "Article was deleted but cache revalidation failed. The page may show stale content. Please contact support.",
-                            errorCode: 'SERVER_ERROR'
-                        },
-                        { status: 500 }
-                    );
+                    logger.error(`[DELETE-API] [${requestId}] WARNING: Revalidation failed after successful Git delete — cache will self-heal`);
+                    // Continue to return success below, but with revalidated: false
                 }
 
-                logger.info(`[DELETE-API] [${requestId}] ISR revalidation successful for all paths`);
+                if (revalidationResult.success) {
+                    logger.info(`[DELETE-API] [${requestId}] ISR revalidation successful for all paths`);
+                }
 
                 // PART 6 - STRUCTURED API RESPONSE
                 const response: DeleteSuccessResponse = {
                     success: true,
                     type: 'published',
                     slug: safeSlug,
-                    revalidated: true,
+                    revalidated: revalidationResult.success,
                     alreadyDeleted: result.data.alreadyDeleted,
                     commitHash: result.data.commitHash,
-                    message: result.userMessage
+                    message: revalidationResult.success
+                        ? result.userMessage
+                        : result.userMessage + ' (Cache may take a moment to refresh.)'
                 };
 
                 logger.info(`[DELETE-API] [${requestId}] ========== DELETE REQUEST SUCCESS (PUBLISHED) ==========`);
@@ -412,9 +505,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
                 if (imageKeysToClean.length > 0) {
                     after(async () => {
                         try {
-                            logger.info(`[DELETE-API] [${requestId}] Cleaning up ${imageKeysToClean.length} Supabase image(s): ${imageKeysToClean.join(', ')}`);
-                            const deleted = await deleteMultipleFromStorage(imageKeysToClean);
-                            logger.info(`[DELETE-API] [${requestId}] Supabase cleanup complete: ${deleted}/${imageKeysToClean.length} images deleted`);
+                            await deleteStorageWithRetry(imageKeysToClean, requestId);
                         } catch (e) {
                             logger.error(`[DELETE-API] [${requestId}] Supabase cleanup failed (non-fatal):`, e);
                         }
