@@ -3196,5 +3196,19 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": []
+  },
+  {
+    "id": "b4d2b108-ab77-4d18-a644-c19081588800",
+    "articleSlug": "ಮಹಿಳಾ-ದಿನಾಚರಣೆ-ಅಂಗವಾಗಿ-ಡಾ-ಗೀತಾ",
+    "section": "local",
+    "headline": "ಮಹಿಳಾ ದಿನಾಚರಣೆ ಅಂಗವಾಗಿ ಡಾ.ಗೀತಾ ಅವರಿಗೆ ಮಹಿಳಾ ಕಾಂಗ್ರೆಸ್ ಸನ್ಮಾನ",
+    "summary": "ಜಿಲ್ಲಾ ಮಹಿಳಾ ಕಾಂಗ್ರೆಸ್ ಅಧ್ಯಕ್ಷೆ ಜ್ಯೋತಿ ಕ್ರೃಷ್ಣ ಹೆಬ್ಬಾರ್‌ ನೇತೃತ್ವದಲ್ಲಿ ಸನ್ಮಾನ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-10T11:17:30.634Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
