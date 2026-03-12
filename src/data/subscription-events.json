@@ -3308,5 +3308,19 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": []
+  },
+  {
+    "id": "bba7d233-5b72-4756-8d5d-e41ac8459d34",
+    "articleSlug": "30-ವರ್ಷದಿಂದ-ಕೊರಗ-ಸಮುದಾಯದ-ವ್ಯಕ್ತಿಯನ್ನು",
+    "section": "crime",
+    "headline": "30 ವರ್ಷದಿಂದ ಕೊರಗ ಸಮುದಾಯದ ವ್ಯಕ್ತಿಯನ್ನು ಜೀತಕ್ಕೆ ದುಡಿಸಿ ದೌರ್ಜನ್ಯ - ಆರೋಪಿ ಮಹಿಳೆ ಸೆರೆ",
+    "summary": "ರಜನಿ ಶೆಟ್ಟಿ ಬಂಧಿತ ಆರೋಪಿ.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-12T09:57:33.593Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
