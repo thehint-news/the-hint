@@ -3294,5 +3294,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-12T09:43:19.967Z",
     "totalSubscribers": 3
+  },
+  {
+    "id": "b93d2377-ce89-4712-83c0-866f4ec2cf7d",
+    "articleSlug": "ಉಡುಪಿ-ಜಿಲ್ಲೆಗೆ-ಸರಕಾರಿ-ಮೆಡಿಕಲ್-ಕಾಲೇಜು",
+    "section": "politics",
+    "headline": "ಉಡುಪಿ ಜಿಲ್ಲೆಗೆ ಸರಕಾರಿ ಮೆಡಿಕಲ್ ಕಾಲೇಜು ಮಂಜೂರಾತಿಗೆ  ಅಧಿವೇಶನದಲ್ಲಿ ಶಾಸಕ ಯಶ್ಪಾಲ್ ಸುವರ್ಣ ಆಗ್ರಹ",
+    "summary": "ಜಿಲ್ಲೆಯಲ್ಲಿ ಮೆಡಿಕಲ್ ಕಾಲೇಜು ನಿರ್ಮಾಣವಾದರೆ ಆರೋಗ್ಯ ಕ್ಷೇತ್ರಕ್ಕೆ ಹೆಚ್ಚಿನ ಬೆಂಬಲ ಸಿಕ್ಕಿದಂತಾಗುತ್ತದೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-12T09:47:30.020Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
