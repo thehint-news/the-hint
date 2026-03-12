@@ -3358,5 +3358,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-12T10:04:46.516Z",
     "totalSubscribers": 3
+  },
+  {
+    "id": "86b7dc5b-a552-419b-b284-ee6a5893d0ba",
+    "articleSlug": "ಹಾರ್ಮುಜ್-ಜಲಸಂಧಿಯಿಂದ-ಮುಂಬೈಗೆ-ಮೊದಲ-ತೈಲ",
+    "section": "world-affairs",
+    "headline": "ಹಾರ್ಮುಜ್ ಜಲಸಂಧಿಯಿಂದ ಮುಂಬೈಗೆ ಬಂದ ಮೊದಲ ತೈಲ ಹಡಗು..!",
+    "summary": "ಸೌದಿ ಅರೇಬಿಯಾದಿಂದ ಕಚ್ಚಾ ತೈಲವನ್ನು ಹೊತ್ತ ಲೈಬೀರಿಯನ್ ಧ್ವಜದ ಟ್ಯಾಂಕರ್ ಮುಂಬೈ ಬಂದರಿಗೆ ಆಗಮಿಸಿದೆ.",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-12T10:08:20.503Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
