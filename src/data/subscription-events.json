@@ -3326,5 +3326,19 @@
     "sentEmails": [],
     "totalSubscribers": 3,
     "lastAttemptAt": "2026-03-12T09:58:07.989Z"
+  },
+  {
+    "id": "7150f877-0cc1-4856-9b16-4b6da9f1c344",
+    "articleSlug": "ತಲೆಗೆ-ಚೊಂಬು-ಸಿಲುಕಿ-ಒದ್ದಾಡುತ್ತಿದ್ದ-ಕೋತಿಯ",
+    "section": "local",
+    "headline": "ತಲೆಗೆ ಚೊಂಬು ಸಿಲುಕಿ ಒದ್ದಾಡುತ್ತಿದ್ದ ಕೋತಿಯ ರಕ್ಷಣೆ",
+    "summary": "ಸ್ಥಳೀಯರ ಕಾರ್ಯಕ್ಕೆ ಮೆಚ್ಚುಗೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-12T10:00:02.619Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
