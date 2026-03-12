@@ -3262,5 +3262,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-12T09:35:25.532Z",
     "totalSubscribers": 3
+  },
+  {
+    "id": "32f4a408-313e-4be0-b49c-ead85c292a41",
+    "articleSlug": "ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ-ಹೆಬ್ಬಾಳಕರ್-ಅವರನ್ನು-ಭೇಟಿಯಾದ",
+    "section": "politics",
+    "headline": "ಸಚಿವೆ ಲಕ್ಷ್ಮೀ ಹೆಬ್ಬಾಳಕರ್ ಅವರನ್ನು ಭೇಟಿಯಾದ ಆಸ್ಟ್ರೇಲಿಯಾ ನಿಯೋಗ",
+    "summary": "ಅಕ್ಕಪಡೆ, ಗೃಹಲಕ್ಷ್ಮಿ, ಶಕ್ತಿ ಯೋಜನೆಗಳ ಮಾಹಿತಿ ಹಂಚಿಕೊಂಡ ಸಚಿವರು",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-12T09:37:55.629Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
