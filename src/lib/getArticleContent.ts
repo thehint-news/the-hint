@@ -1,16 +1,27 @@
 import { cache } from "react";
 import fs from "fs";
 import path from "path";
-import { getArticleIndex } from "./contentLoader";
 import { parseMarkdown } from "./content/parser"; // assuming we can still use this existing parser
 import { getArticleThumbnail } from "./content/thumbnail"; // assuming we still use this
 
+import { ArticleMetadata } from "./contentLoader";
+
 export const getArticleContent = cache(async (slug: string) => {
-    const index = await getArticleIndex();
-    const articleMeta = index.find(a => a.slug === slug);
+    // 1. Read Content Graph directly
+    const graphPath = path.join(process.cwd(), ".cache", "contentGraph.json");
+    if (!fs.existsSync(graphPath)) {
+        throw new Error("Content graph not found. Please run the content graph generator.");
+    }
+
+    const rawGraph = fs.readFileSync(graphPath, "utf-8");
+    const contentGraph = JSON.parse(rawGraph);
+    const articles = Object.values(contentGraph.articles) as ArticleMetadata[];
+
+    // 2. Locate Article Metadata
+    const articleMeta = articles.find((a) => a.slug === slug);
 
     if (!articleMeta) {
-        return null;
+        throw new Error(`Article metadata not found in content graph for slug: ${slug}`);
     }
 
     const { file, category } = articleMeta;
