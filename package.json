@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3002",
-    "build": "next build",
+    "build": "npm run generate-graph && npm run verify-content && next build",
+    "verify-content": "npx tsx scripts/verifyContentIndex.ts",
+    "generate-graph": "npx tsx scripts/generateContentGraph.ts",
     "start": "next start -p 3002",
     "lint": "eslint"
   },

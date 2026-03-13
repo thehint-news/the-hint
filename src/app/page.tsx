@@ -8,10 +8,8 @@ import { LeadStory, TopStories, SectionBlock } from "@/components/editorial";
 import { logger } from "@/lib/feedback";
 import { kn } from "@/lib/i18n";
 
-// Force dynamic rendering — GitHub API calls at build time cause timeouts
-// on Vercel's single-worker free plan. Content is still cached via ISR.
-export const dynamic = 'force-dynamic';
-export const revalidate = 60;
+// Use ISR for the homepage
+export const revalidate = 300;
 
 /**
  * Generate SEO metadata for homepage

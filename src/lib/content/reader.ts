@@ -8,16 +8,11 @@
  */
 
 import { cache } from 'react';
-import { gitService } from '../git/service';
-import { parseMarkdown } from './parser';
-import { getArticleThumbnail } from './thumbnail';
 import {
     Article,
     Section,
     ContentValidationError,
-    ContentParseError,
 } from './types';
-import path from 'path';
 import { getCachedArticlesList, getCachedArticleBySlug, setCachedArticlesList, setCachedArticleBySlug } from '../cache/article-cache';
 
 /** Valid section folder names */
@@ -37,137 +32,10 @@ function isValidSection(section: string): section is Section {
     return VALID_SECTIONS.includes(section as Section);
 }
 
-/**
- * Extract slug from filename (remove .md extension)
- */
-function getSlugFromFilename(filename: string): string {
-    return filename.replace(/\.md$/, '');
-}
 
-/**
- * Read and parse a single article file from Git
- */
-async function readArticleFile(filePath: string, expectedSection: Section): Promise<Article> {
-    const relPath = filePath; // GitService handles relative paths
 
-    // Read file content from Git
-    const content = await gitService.readFile(filePath);
-    if (content === null) {
-        throw new ContentParseError(
-            `Failed to read file: Not found in Git`,
-            relPath
-        );
-    }
-
-    // Parse markdown and frontmatter
-    const parsed = parseMarkdown(content, relPath);
-    const { frontmatter, body } = parsed;
-
-    // Extract slug from filename
-    const filename = path.basename(filePath);
-    const slug = getSlugFromFilename(filename);
-
-    // Validate: opinion contentType can only appear in opinion section
-    if (frontmatter.contentType === 'opinion' && expectedSection !== 'opinion') {
-        throw new ContentValidationError(
-            `Opinion articles can only be placed in the /opinion section. Found opinion article in /${expectedSection}`,
-            relPath,
-            'contentType'
-        );
-    }
-
-    // Validate: status must be published
-    if (frontmatter.status === 'draft') {
-        throw new ContentValidationError(
-            'Article is a draft',
-            relPath,
-            'status'
-        );
-    }
-
-    // Validate: publishedAt must be present
-    if (!frontmatter.publishedAt) {
-        throw new ContentValidationError(
-            'Article missing publishedAt date',
-            relPath,
-            'publishedAt'
-        );
-    }
-
-    // Validate: body cannot be empty (unless bodyBlocks are present)
-    // Relaxed check to allow migration to block-based editor without strict markdown sync requirement
-    if ((!body || body.trim().length === 0) && (!frontmatter.bodyBlocks || frontmatter.bodyBlocks.length === 0)) {
-        console.warn(`[READER] Article ${relPath} has empty body and no blocks. Proceeding with caution.`);
-        // potentially return default empty state or throw if strictness is required.
-        // For now, we allow it to prevent build failures.
-    }
-
-    // Placements
-    const validPlacements = ['lead', 'top', 'standard'];
-    let placement = frontmatter.placement;
-
-    if (!placement && (frontmatter as unknown as Record<string, unknown>).featured === true) {
-        placement = 'lead';
-    }
-
-    if (!placement || !validPlacements.includes(placement)) {
-        placement = 'standard';
-    }
-
-    // Resolve thumbnail: use explicit frontmatter image first,
-    // fall back to extracting first image from article body
-    const resolvedImage = getArticleThumbnail(frontmatter.image, body || '');
-
-    return {
-        id: slug,
-        section: expectedSection,
-        title: frontmatter.title,
-        subtitle: frontmatter.subtitle,
-        contentType: frontmatter.contentType,
-        publishedAt: frontmatter.publishedAt,
-        updatedAt: frontmatter.updatedAt ?? null,
-        placement: placement as 'lead' | 'top' | 'standard',
-        tags: frontmatter.tags ?? [],
-        sources: frontmatter.sources ?? [],
-        image: resolvedImage,
-        bodyBlocks: frontmatter.bodyBlocks,
-        body: body,
-        isLead: frontmatter.isLead === true,
-        leadMedia: frontmatter.leadMedia,
-    };
-}
-
-/**
- * Read all articles from a specific section in Git
- */
-async function readSectionArticles(section: Section): Promise<Article[]> {
-    const sectionPath = `src/content/${section}`;
-
-    // Read directory from Git
-    const files = await gitService.listFiles(sectionPath, '.md');
-
-    // Concurrency limit to prevent GitHub secondary rate limits but remain fast
-    const CONCURRENCY = 8;
-    const articlesOrNull: (Article | null)[] = [];
-
-    for (let i = 0; i < files.length; i += CONCURRENCY) {
-        const chunk = files.slice(i, i + CONCURRENCY);
-        const results = await Promise.all(
-            chunk.map(async (filename) => {
-                const filePath = `${sectionPath}/${filename}`;
-                try {
-                    return await readArticleFile(filePath, section);
-                } catch (error) {
-                    console.warn(`Skipping invalid article ${filename}: ${(error as Error).message}`);
-                    return null;
-                }
-            })
-        );
-        articlesOrNull.push(...results);
-    }
-
-    return articlesOrNull.filter((article): article is Article => article !== null);
-}
+import { getArticleIndex } from "../contentLoader";
+import { getArticleContent } from "../getArticleContent";
 
 /**
  * Get all articles from all sections.
@@ -179,34 +47,38 @@ export const getAllArticles = cache(async function getAllArticles(): Promise<Art
     }
 
     try {
-        const results = await Promise.all(
-            VALID_SECTIONS.map(section => readSectionArticles(section))
-        );
+        const index = await getArticleIndex();
+        
+        // Map minimalistic index metadata to the Article interface expected by components
+        const allArticles: Article[] = index.map(meta => ({
+            id: meta.slug,
+            section: meta.category as Section,
+            title: meta.title,
+            subtitle: meta.subtitle || '',
+            contentType: meta.contentType || 'news',
+            publishedAt: meta.date,
+            updatedAt: meta.updatedAt || null,
+            placement: ['lead', 'top', 'standard'].includes(meta.placement || '') ? (meta.placement as Extract<Article['placement'], string>) : 'standard',
+            tags: meta.tags || [],
+            sources: [],
+            image: meta.image || undefined,
+            isLead: meta.isLead || false,
+        }));
 
-        const allArticles = results.flat();
         allArticles.sort((a, b) => {
             const dateA = new Date(a.publishedAt).getTime();
             const dateB = new Date(b.publishedAt).getTime();
             return dateB - dateA;
         });
 
-        for (const a of allArticles) {
-            setCachedArticleBySlug(a.id, a);
-        }
-
-        const listData = allArticles.map(a => {
-            // Omit heavy body content from the list cache
-            const meta = { ...a };
-            delete (meta as Record<string, unknown>).body;
-            delete (meta as Record<string, unknown>).bodyBlocks;
-            return meta as Article;
-        });
-
-        setCachedArticlesList(listData);
-        return listData;
+        // We don't cache individual full articles here because we lack the body.
+        // It's okay, getArticleBySlug will use getArticleContent.
+        
+        setCachedArticlesList(allArticles);
+        return allArticles;
     } catch (error) {
         if (cached) {
-            console.warn('[getAllArticles] GitHub API failed, serving stale list cache');
+            console.warn('[getAllArticles] Raw CDN fetch failed, serving stale list cache');
             return cached;
         }
         throw error;
@@ -231,13 +103,19 @@ export const getArticleBySlug = cache(async function getArticleBySlug(section: s
     }
 
     try {
-        const filePath = `src/content/${section}/${slug}.md`;
-        const article = await readArticleFile(filePath, section as Section);
+        const fullArticleContent = await getArticleContent(slug);
+        
+        if (!fullArticleContent) {
+           return null;
+        }
+
+        const article: Article = fullArticleContent as unknown as Article; // Mapped properly in getArticleContent
+
         setCachedArticleBySlug(slug, article);
         return article;
     } catch {
         if (cached) {
-            console.warn(`[getArticleBySlug] GitHub API failed for ${slug}, serving stale cache`);
+            console.warn(`[getArticleBySlug] Fetch failed for ${slug}, serving stale cache`);
             return cached;
         }
         return null;

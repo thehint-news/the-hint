@@ -13,16 +13,16 @@ import { ArticlePageWrapper } from '@/components/article';
 
 // Allow ISR with dynamic fallback
 export const dynamicParams = true;
-export const revalidate = 60;
+export const revalidate = 300;
 
-import { getAllArticles } from '@/lib/content/reader';
+import { getArticleIndex } from '@/lib/contentLoader';
 
 export async function generateStaticParams() {
     try {
-        const articles = await getAllArticles();
-        return articles.map((article) => ({
-            section: article.section,
-            slug: article.id,
+        const index = await getArticleIndex();
+        return index.map((article) => ({
+            section: article.category,
+            slug: article.slug,
         }));
     } catch (error) {
         console.error('Failed to generate static params:', error);

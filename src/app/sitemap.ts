@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next';
-import { getAllArticles, getValidSections } from '@/lib/content/reader';
+import { getValidSections } from '@/lib/content/reader';
+import { getArticleIndex } from '@/lib/contentLoader';
 
-// Generate sitemap dynamically (GitHub API calls at build time cause timeouts)
-export const dynamic = 'force-dynamic';
+// Use ISR for sitemap since we have API limits under control
+export const revalidate = 300;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
@@ -70,22 +71,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // 3. Article Pages (Kannada)
     const articleRoutes: MetadataRoute.Sitemap = [];
     try {
-        const allArticles = await getAllArticles();
+        const index = await getArticleIndex();
 
-        for (const article of allArticles) {
-            const lastModified = article.updatedAt
-                ? new Date(article.updatedAt).toISOString()
-                : new Date(article.publishedAt).toISOString();
+        for (const meta of index) {
+            const lastModified = meta.date ? new Date(meta.date).toISOString() : currentDate;
 
             // Kannada article (always included)
             articleRoutes.push({
-                url: `${baseUrl}/${article.section}/${article.id}`,
+                url: `${baseUrl}/${meta.category}/${meta.slug}`,
                 lastModified,
                 changeFrequency: 'never',
                 priority: 0.8,
                 alternates: {
                     languages: {
-                        kn: `${baseUrl}/${article.section}/${article.id}`,
+                        kn: `${baseUrl}/${meta.category}/${meta.slug}`,
                     },
                 },
             });
