@@ -3406,5 +3406,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-13T15:18:20.012Z",
     "totalSubscribers": 3
+  },
+  {
+    "id": "d91c5ece-df9e-4b26-b15e-3e9a9b17f19d",
+    "articleSlug": "ಲೋಕಾ-ಬಲೆಗೆ-ಬಿದ್ದ-ಕೋಟಿ-ಒಡೆಯ",
+    "section": "crime",
+    "headline": "ಲೋಕಾ ಬಲೆಗೆ ಬಿದ್ದ ಕೋಟಿ ಒಡೆಯ ಉಡುಪಿ ಅಬಕಾರಿ ಡಿಸಿ..!",
+    "summary": "8.69 ಕೋಟಿ ಮೌಲ್ಯದ ಆಸ್ತಿ ಪತ್ತೆ !",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-13T15:19:19.918Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
