@@ -1,109 +1,61 @@
 import fs from 'fs';
 import path from 'path';
+import matter from 'gray-matter';
 
-const INDEX_PATH = path.join(process.cwd(), 'articles/index.json');
 const CONTENT_DIR = path.join(process.cwd(), 'src/content');
-
-interface IndexEntry {
-  slug: string;
-  category: string;
-}
 
 function runVerification() {
   let hasErrors = false;
+  let articleCount = 0;
 
-  // STEP 1 — Load Article Index
-  let indexData: IndexEntry[] = [];
-  try {
-    const rawData = fs.readFileSync(INDEX_PATH, 'utf-8');
-    indexData = JSON.parse(rawData);
-  } catch (err: unknown) {
-    console.error(`ERROR: Failed to read or parse index.json at ${INDEX_PATH}`);
-    if (err instanceof Error) {
-        console.error(err.message);
-    }
-    process.exit(1);
-  }
+  console.log('Verifying Markdown content metadata...');
 
-  const indexEntries = indexData.map((entry) => `${entry.category}/${entry.slug}`);
-
-  // STEP 2 — Scan Markdown Files
-  const markdownFiles: string[] = [];
-
-  if (fs.existsSync(CONTENT_DIR)) {
-    const categories = fs.readdirSync(CONTENT_DIR, { withFileTypes: true })
-      .filter((dirent) => dirent.isDirectory())
-      .map((dirent) => dirent.name);
-
-    for (const category of categories) {
-      // Ignore internal directories not serving as content sections
-      if (category === 'drafts' || category === 'images') {
-        continue;
-      }
-
-      const categoryPath = path.join(CONTENT_DIR, category);
-      const files = fs.readdirSync(categoryPath)
-        .filter((file) => file.endsWith('.md'))
-        .map((file) => `${category}/${file.replace('.md', '')}`);
-
-      markdownFiles.push(...files);
-    }
-  } else {
+  if (!fs.existsSync(CONTENT_DIR)) {
     console.error(`ERROR: Content directory not found at ${CONTENT_DIR}`);
     process.exit(1);
   }
 
-  // STEP 3 — Compare Markdown Files vs Index Entries
-  const indexSet = new Set(indexEntries);
-  const markdownSet = new Set(markdownFiles);
+  const categories = fs.readdirSync(CONTENT_DIR, { withFileTypes: true })
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => dirent.name)
+    .filter(name => !['drafts', 'images', '.git', '.vscode'].includes(name));
 
-  // CHECK A — Missing Index Entries
-  const missingInIndex = markdownFiles.filter((item) => !indexSet.has(item));
-  if (missingInIndex.length > 0) {
-    console.error("\nERROR: Articles exist in markdown but missing in index.json");
-    missingInIndex.forEach((item) => console.error(` - ${item}`));
-    hasErrors = true;
-  }
+  for (const category of categories) {
+    const categoryPath = path.join(CONTENT_DIR, category);
+    const files = fs.readdirSync(categoryPath).filter((file) => file.endsWith('.md'));
 
-  // CHECK B — Missing Markdown Files
-  const missingInMarkdown = indexEntries.filter((item) => !markdownSet.has(item));
-  if (missingInMarkdown.length > 0) {
-    console.error("\nERROR: Index references non-existent markdown files");
-    missingInMarkdown.forEach((item) => console.error(` - ${item}`));
-    hasErrors = true;
-  }
+    for (const file of files) {
+      articleCount++;
+      const mdPath = path.join(categoryPath, file);
+      const relativePath = `src/content/${category}/${file}`;
 
-  // STEP 4 — Detect Duplicate Articles
-  const seenIndex = new Set<string>();
-  const duplicates = new Set<string>();
+      try {
+        const fileContent = fs.readFileSync(mdPath, 'utf8');
+        const { data: frontmatter } = matter(fileContent);
 
-  for (const entry of indexEntries) {
-    if (seenIndex.has(entry)) {
-      duplicates.add(entry);
+        if (!frontmatter.title) {
+          console.error(`ERROR: Missing frontmatter field 'title' in ${relativePath}`);
+          hasErrors = true;
+        }
+
+        const date = frontmatter.date || frontmatter.publishedAt;
+        if (!date) {
+          console.error(`ERROR: Missing frontmatter field 'date' in ${relativePath}`);
+          hasErrors = true;
+        }
+      } catch (err: unknown) {
+        console.error(`ERROR: Failed to parse markdown frontmatter in ${relativePath}`);
+        if (err instanceof Error) console.error(err.message);
+        hasErrors = true;
+      }
     }
-    seenIndex.add(entry);
   }
 
-  if (duplicates.size > 0) {
-    console.error("\nERROR: Duplicate article identifiers detected.");
-    duplicates.forEach((item) => console.error(` - ${item}`));
-    hasErrors = true;
-  }
-
-  // STEP 5 — Validate Article Count
-  if (markdownFiles.length !== indexEntries.length) {
-    console.error("\nERROR: Article count mismatch detected.");
-    console.error(` - Markdown files: ${markdownFiles.length}`);
-    console.error(` - Index entries: ${indexEntries.length}`);
-    hasErrors = true;
-  }
-
-  // STEP 6 & 7 — Build Failure Behavior / Success Message
   if (hasErrors) {
-    console.error("\nValidation failed.");
+    console.error("\nContent validation failed.");
     process.exit(1);
   } else {
-    console.log("Content index validation passed.");
+    console.log(`\nContent validation passed. Verified ${articleCount} articles.`);
   }
 }
 

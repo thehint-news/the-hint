@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev -p 3002",
     "build": "npm run generate-graph && npm run verify-content && next build",
-    "verify-content": "npx tsx scripts/verifyContentIndex.ts",
-    "generate-graph": "npx tsx scripts/generateContentGraph.ts",
+    "verify-content": "tsx scripts/verifyContentIndex.ts",
+    "generate-graph": "tsx scripts/generateContentGraph.ts",
     "start": "next start -p 3002",
     "lint": "eslint"
   },
@@ -45,6 +45,7 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.18",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5",
     "vitest": "^4.0.18"
   }

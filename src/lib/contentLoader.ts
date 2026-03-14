@@ -1,12 +1,8 @@
 import { cache } from "react";
 import fs from "fs";
 import path from "path";
+import { execSync } from "child_process";
 import { LeadMedia } from "./content/types";
-
-const REPO_OWNER = process.env.GIT_REPO_OWNER || '';
-const REPO_NAME = process.env.GIT_REPO_NAME || '';
-const RAW_BASE_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main`;
-const RAW_INDEX_URL = `${RAW_BASE_URL}/articles/index.json`;
 
 export interface ArticleMetadata {
     slug: string;
@@ -23,6 +19,7 @@ export interface ArticleMetadata {
     isLead?: boolean;
     updatedAt?: string | null;
     leadMedia?: LeadMedia;
+    excerpt?: string | null;
 }
 
 export interface ContentGraph {
@@ -31,47 +28,42 @@ export interface ContentGraph {
     categories: Record<string, ArticleMetadata[]>;
 }
 
-function buildGraphFromIndex(indexData: ArticleMetadata[]): ContentGraph {
-    const graph: ContentGraph = { articles: {}, sortedArticles: [], categories: {} };
-    for (const entry of indexData) {
-        const id = `${entry.category}/${entry.slug}`;
-        graph.articles[id] = entry;
-        if (!graph.categories[entry.category]) {
-            graph.categories[entry.category] = [];
-        }
-        graph.categories[entry.category].push(entry);
-        graph.sortedArticles.push(entry);
-    }
-    graph.sortedArticles.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    for (const cat in graph.categories) {
-        graph.categories[cat].sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    }
-    return graph;
-}
-
+/**
+ * Loads the content graph from the local cache.
+ * Implements Fallback Regeneration (Issue 3) and react cache (Issue 5).
+ */
 export const getContentGraph = cache(async (): Promise<ContentGraph> => {
-    const isDevelopment = process.env.NODE_ENV === 'development';
     const localPath = path.join(process.cwd(), '.cache', 'contentGraph.json');
-    const isLocalBuild = fs.existsSync(localPath);
 
-    if (isDevelopment || isLocalBuild) {
+    // Attempt 1: Read existing cache
+    if (fs.existsSync(localPath)) {
         try {
             const rawFile = fs.readFileSync(localPath, 'utf8');
             return JSON.parse(rawFile) as ContentGraph;
         } catch (error) {
-            console.error("Local contentGraph.json read failed. Proceeding to CDN fetch fallback.", error);
+            console.error("Content graph corruption detected. Attempting recovery...", error);
         }
     }
 
+    // Attempt 2: Auto-regeneration fallback
     try {
-        const res = await fetch(RAW_INDEX_URL, { next: { revalidate: 300 } });
-        if (!res.ok) {
-            throw new Error(`Failed to load article index. Status: ${res.status}`);
+        console.warn("Content graph missing or corrupted. Triggering automatic regeneration...");
+        
+        // Execute the generation script programmatically
+        execSync("npm run generate-graph", { 
+            cwd: process.cwd(),
+            env: { ...process.env, NODE_ENV: process.env.NODE_ENV },
+            stdio: 'inherit' 
+        });
+
+        if (fs.existsSync(localPath)) {
+            const rawFile = fs.readFileSync(localPath, 'utf8');
+            return JSON.parse(rawFile) as ContentGraph;
         }
-        const data = await res.json();
-        return buildGraphFromIndex(data as ArticleMetadata[]);
+        
+        throw new Error("Regeneration script completed but contentGraph.json is still missing.");
     } catch (error) {
-        console.error("Failed to load article index:", error);
+        console.error("FATAL: Failed to load or regenerate the content graph. Deployment cannot proceed.", error);
         throw error;
     }
 });
