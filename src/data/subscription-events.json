@@ -3431,11 +3431,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-13T15:22:33.570Z",
-    "status": "processing",
+    "status": "pending",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-03-14T16:56:05.780Z"
+    "totalSubscribers": 3
   },
   {
     "id": "9ad1c545-06c1-4b4b-96b4-93939ba671dc",
