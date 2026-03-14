@@ -3463,11 +3463,11 @@
     "contentType": "opinion",
     "priority": "normal",
     "createdAt": "2026-03-14T17:44:53.233Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
     "totalSubscribers": 3,
-    "lastAttemptAt": "2026-03-14T17:45:05.700Z"
+    "lastAttemptAt": "2026-03-14T17:45:09.337Z"
   }
 ]
