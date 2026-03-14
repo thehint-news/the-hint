@@ -3435,5 +3435,19 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": []
+  },
+  {
+    "id": "9ad1c545-06c1-4b4b-96b4-93939ba671dc",
+    "articleSlug": "12-ಗಂಟೆಯೊಳಗೆ-ಕಳ್ಳತನ-ಪ್ರಕರಣ-ಭೇದಿಸಿದ",
+    "section": "crime",
+    "headline": "12 ಗಂಟೆಯೊಳಗೆ ಕಳ್ಳತನ ಪ್ರಕರಣ ಭೇದಿಸಿದ ಮಣಿಪಾಲ ಪೋಲಿಸರು..!",
+    "summary": "ಠಾಣಾಧಿಕಾರಿ ಮಹೇಶ್ ಪ್ರಸಾದ್ ನೇತೃತ್ವದ ತಂಡದ ಮಿಂಚಿನ ಕಾರ್ಯಾಚರಣೆ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-14T16:55:59.747Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
