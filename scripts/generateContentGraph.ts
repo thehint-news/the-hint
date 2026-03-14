@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { logger } from '../src/lib/feedback/console-guard';
 
 const INDEX_PATH = path.join(process.cwd(), 'articles/index.json');
 const CONTENT_DIR = path.join(process.cwd(), 'src/content');
@@ -21,6 +22,7 @@ interface ArticleMetadata {
   author?: string | null;
   isLead?: boolean;
   updatedAt?: string | null;
+  leadMedia?: unknown;
 }
 
 interface ContentGraph {
@@ -30,20 +32,20 @@ interface ContentGraph {
 }
 
 function runGeneration() {
-  console.log('Generating Content Graph with Frontmatter Parsing...');
+  logger.info('Generating Content Graph with Frontmatter Parsing...');
 
   if (!fs.existsSync(INDEX_PATH)) {
-    console.error(`ERROR: Failed to find index.json at ${INDEX_PATH}`);
+    logger.error(`Failed to find index.json at ${INDEX_PATH}`);
     process.exit(1);
   }
 
   const rawData = fs.readFileSync(INDEX_PATH, 'utf-8');
-  let indexData: any[] = [];
+  let indexData: ArticleMetadata[] = [];
   try {
     indexData = JSON.parse(rawData);
   } catch (err: unknown) {
-    console.error('ERROR: Failed to parse index.json');
-    if (err instanceof Error) console.error(err.message);
+    logger.error('Failed to parse index.json');
+    if (err instanceof Error) logger.error(err.message, err);
     process.exit(1);
   }
 
@@ -58,7 +60,7 @@ function runGeneration() {
     const mdPath = path.join(CONTENT_DIR, category, `${slug}.md`);
 
     if (!fs.existsSync(mdPath)) {
-      console.error(`ERROR: Failed to build graph. Missing markdown file for ${category}/${slug} at ${mdPath}`);
+      logger.error(`Failed to build graph. Missing markdown file for ${category}/${slug} at ${mdPath}`);
       process.exit(1);
     }
 
@@ -73,7 +75,7 @@ function runGeneration() {
       if (!title || !date) {
         throw new Error(`Missing required frontmatter (title or date/publishedAt) in ${category}/${slug}`);
       }
-
+      
       // STEP 4 — Build Metadata Object
       const article: ArticleMetadata = {
         slug: slug,
@@ -89,6 +91,7 @@ function runGeneration() {
         isLead: frontmatter.isLead === true || frontmatter.placement === 'lead' || frontmatter.featured === true || entry.isLead === true || entry.placement === 'lead',
         updatedAt: frontmatter.updatedAt || entry.updatedAt || null,
         subtitle: frontmatter.subtitle || entry.subtitle || '',
+        leadMedia: frontmatter.leadMedia || entry.leadMedia || null,
       };
 
       const id = `${category}/${slug}`;
@@ -101,8 +104,8 @@ function runGeneration() {
       graph.sortedArticles.push(article);
 
     } catch (err: unknown) {
-      console.error(`ERROR: Failed to parse markdown frontmatter for ${category}/${slug}`);
-      if (err instanceof Error) console.error(err.message);
+      logger.error(`Failed to parse markdown frontmatter for ${category}/${slug}`);
+      if (err instanceof Error) logger.error(err.message, err);
       process.exit(1);
     }
   }
@@ -125,10 +128,10 @@ function runGeneration() {
 
   try {
     fs.writeFileSync(GRAPH_PATH, JSON.stringify(graph, null, 2), 'utf-8');
-    console.log(`Content Graph generated successfully! Cached ${graph.sortedArticles.length} articles with full metadata.`);
+    logger.info(`Content Graph generated successfully! Cached ${graph.sortedArticles.length} articles with full metadata.`);
   } catch (err: unknown) {
-    console.error('ERROR: Failed to write contentGraph.json');
-    if (err instanceof Error) console.error(err.message);
+    logger.error('Failed to write contentGraph.json');
+    if (err instanceof Error) logger.error(err.message, err);
     process.exit(1);
   }
 }

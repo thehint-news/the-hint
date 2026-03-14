@@ -15,7 +15,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಕಾಪು ಶಾಸಕ ಗುರ್ಮೆ ಸುರೇಶ್‌ ಶೆಟ್ಟಿ ಕೇಳಿದ ಪ್ರಶ್ನೆಗೆ ಸಚಿವರ ಉತ್ತರ"
+      "subtitle": "ಕಾಪು ಶಾಸಕ ಗುರ್ಮೆ ಸುರೇಶ್‌ ಶೆಟ್ಟಿ ಕೇಳಿದ ಪ್ರಶ್ನೆಗೆ ಸಚಿವರ ಉತ್ತರ",
+      "leadMedia": null
     },
     "politics/dksin-knnd-jilley-abhivrddhige-hos": {
       "slug": "dksin-knnd-jilley-abhivrddhige-hos",
@@ -34,7 +35,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಕರಾವಳಿ ಅಭಿವೃದ್ಧಿಗೆ ಹೊಸ ಆಯಾಮ"
+      "subtitle": "ಕರಾವಳಿ ಅಭಿವೃದ್ಧಿಗೆ ಹೊಸ ಆಯಾಮ",
+      "leadMedia": null
     },
     "politics/guru-prmprege-heccu-ottu": {
       "slug": "guru-prmprege-heccu-ottu",
@@ -49,7 +51,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಹುಣಸೂರಿನ ಮಾದಹಳ್ಳಿಯ ಶ್ರೀ ಉಕ್ಕಿನಕಂತೆ ಮಠದಲ್ಲಿ ನಡೆದ ಸಮಾರಂಭದಲ್ಲಿ ಹೇಳಿಕೆ"
+      "subtitle": "ಹುಣಸೂರಿನ ಮಾದಹಳ್ಳಿಯ ಶ್ರೀ ಉಕ್ಕಿನಕಂತೆ ಮಠದಲ್ಲಿ ನಡೆದ ಸಮಾರಂಭದಲ್ಲಿ ಹೇಳಿಕೆ",
+      "leadMedia": null
     },
     "politics/kravli-jilley-palige-kral-bjet": {
       "slug": "kravli-jilley-palige-kral-bjet",
@@ -64,7 +67,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಜನತೆಯ ನಿರೀಕ್ಷೆಯನ್ನು ಹುಸಿಯಾಗಿಸಿ ಗರಿಷ್ಠ ಸಾಲವನ್ನು ರಾಜ್ಯದ ಜನತೆಯ ಮೇಲೆ ಹೇರುವ ಮೂಲಕ \"ಸಾಲ ರಾಮಯ್ಯ\" ಆಗಿದ್ದಾರೆ"
+      "subtitle": "ಜನತೆಯ ನಿರೀಕ್ಷೆಯನ್ನು ಹುಸಿಯಾಗಿಸಿ ಗರಿಷ್ಠ ಸಾಲವನ್ನು ರಾಜ್ಯದ ಜನತೆಯ ಮೇಲೆ ಹೇರುವ ಮೂಲಕ \"ಸಾಲ ರಾಮಯ್ಯ\" ಆಗಿದ್ದಾರೆ",
+      "leadMedia": null
     },
     "politics/people-kapu-buried-sorake-memorial": {
       "slug": "people-kapu-buried-sorake-memorial",
@@ -83,7 +87,8 @@
       "placement": "lead",
       "isLead": true,
       "updatedAt": "2026-03-05T10:54:20.022Z",
-      "subtitle": "ಕಾಪುವಿನಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ ಪಕ್ಷದ ಶವಪೆಟ್ಟಿಗೆ ಕೊನೆಯ ಮೊಳೆಯನ್ನು ಸೊರಕೆಯವರೇ ಹೊಡೆಯುತ್ತಿದ್ದಾರೆ"
+      "subtitle": "ಕಾಪುವಿನಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ ಪಕ್ಷದ ಶವಪೆಟ್ಟಿಗೆ ಕೊನೆಯ ಮೊಳೆಯನ್ನು ಸೊರಕೆಯವರೇ ಹೊಡೆಯುತ್ತಿದ್ದಾರೆ",
+      "leadMedia": null
     },
     "politics/rajy-srkardimd-dlitr-mislu": {
       "slug": "rajy-srkardimd-dlitr-mislu",
@@ -98,7 +103,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ದಲಿತರ ಮೀಸಲು ನಿಧಿಯನ್ನು ಮುಳುಗಿಸಿದ ನಂತರವಾದರೂ ಗ್ಯಾರಂಟಿ ಯೋಜನೆಗಳು ಸರಿಯಾದ 'ಹಳಿ'ಗಳ ಮೇಲೆ ಹೋಗುತ್ತಿದೆಯೇ?"
+      "subtitle": "ದಲಿತರ ಮೀಸಲು ನಿಧಿಯನ್ನು ಮುಳುಗಿಸಿದ ನಂತರವಾದರೂ ಗ್ಯಾರಂಟಿ ಯೋಜನೆಗಳು ಸರಿಯಾದ 'ಹಳಿ'ಗಳ ಮೇಲೆ ಹೋಗುತ್ತಿದೆಯೇ?",
+      "leadMedia": null
     },
     "politics/sald-horeyomdige-gayd-mele-bre": {
       "slug": "sald-horeyomdige-gayd-mele-bre",
@@ -113,7 +119,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಅಧಿಕಾರಕ್ಕಾಗಿ ಜಾರಿಗೊಳಿಸಿದ್ದ ಗ್ಯಾರಂಟಿಗಳ ನಿರ್ವಹಣೆಗೆ ಪರದಾಡುತ್ತಿರುವ ರಾಜ್ಯ ಸರಕಾರ ಯುವ ನಿಧಿ ಗ್ಯಾರಂಟಿಗೆ ಎಳ್ಳು ನೀರು ಬಿಟ್ಟಂತಾಗಿದೆ"
+      "subtitle": "ಅಧಿಕಾರಕ್ಕಾಗಿ ಜಾರಿಗೊಳಿಸಿದ್ದ ಗ್ಯಾರಂಟಿಗಳ ನಿರ್ವಹಣೆಗೆ ಪರದಾಡುತ್ತಿರುವ ರಾಜ್ಯ ಸರಕಾರ ಯುವ ನಿಧಿ ಗ್ಯಾರಂಟಿಗೆ ಎಳ್ಳು ನೀರು ಬಿಟ್ಟಂತಾಗಿದೆ",
+      "leadMedia": null
     },
     "politics/siddramyy-srkard-sal-gyarmti-bjet": {
       "slug": "siddramyy-srkard-sal-gyarmti-bjet",
@@ -131,7 +138,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "17 ಬಾರಿ ಬಜೆಟ್ ಮಂಡಿಸಿದ ಮುಖ್ಯಮಂತ್ರಿಗಳು ಎಲ್ಲೋ ಸಾಲ ಮಾಡಿಯಾದ್ರೂ ಅಧಿಕಾರಕ್ಕೆ ಅಂಟಿಕೊಳ್ಳುವ ಕಸರತ್ತು ಮಾಡಿದಂತೆ ತೋರುತ್ತಿದೆ"
+      "subtitle": "17 ಬಾರಿ ಬಜೆಟ್ ಮಂಡಿಸಿದ ಮುಖ್ಯಮಂತ್ರಿಗಳು ಎಲ್ಲೋ ಸಾಲ ಮಾಡಿಯಾದ್ರೂ ಅಧಿಕಾರಕ್ಕೆ ಅಂಟಿಕೊಳ್ಳುವ ಕಸರತ್ತು ಮಾಡಿದಂತೆ ತೋರುತ್ತಿದೆ",
+      "leadMedia": null
     },
     "politics/smtolit-durdrstiy-bjet-scive-lksmi": {
       "slug": "smtolit-durdrstiy-bjet-scive-lksmi",
@@ -146,7 +154,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಮಕ್ಕಳ ಪರ ಯೋಜನೆಗಳಿಗೆ 63,135 ಕೋಟಿ ರೂಪಾಯಿ ಮೀಸಲಿಡಲಾಗಿದೆ."
+      "subtitle": "ಮಕ್ಕಳ ಪರ ಯೋಜನೆಗಳಿಗೆ 63,135 ಕೋಟಿ ರೂಪಾಯಿ ಮೀಸಲಿಡಲಾಗಿದೆ.",
+      "leadMedia": null
     },
     "politics/yavude-durdrsti-illd-nirs-ayvyy": {
       "slug": "yavude-durdrsti-illd-nirs-ayvyy",
@@ -166,7 +175,8 @@
       "placement": "top",
       "isLead": false,
       "updatedAt": "2026-03-06T12:06:36.576Z",
-      "subtitle": "ರಾಜ್ಯದ ಜನತೆಗೆ ನಿರಾಶೆ ಉಂಟು ಮಾಡಿದ  ಬಜೆಟ್"
+      "subtitle": "ರಾಜ್ಯದ ಜನತೆಗೆ ನಿರಾಶೆ ಉಂಟು ಮಾಡಿದ  ಬಜೆಟ್",
+      "leadMedia": null
     },
     "politics/ಉಡುಪಿ-ಜಿಲ್ಲೆಗೆ-ಸರಕಾರಿ-ಮೆಡಿಕಲ್-ಕಾಲೇಜು": {
       "slug": "ಉಡುಪಿ-ಜಿಲ್ಲೆಗೆ-ಸರಕಾರಿ-ಮೆಡಿಕಲ್-ಕಾಲೇಜು",
@@ -185,7 +195,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಜಿಲ್ಲೆಯಲ್ಲಿ ಮೆಡಿಕಲ್ ಕಾಲೇಜು ನಿರ್ಮಾಣವಾದರೆ ಆರೋಗ್ಯ ಕ್ಷೇತ್ರಕ್ಕೆ ಹೆಚ್ಚಿನ ಬೆಂಬಲ ಸಿಕ್ಕಿದಂತಾಗುತ್ತದೆ"
+      "subtitle": "ಜಿಲ್ಲೆಯಲ್ಲಿ ಮೆಡಿಕಲ್ ಕಾಲೇಜು ನಿರ್ಮಾಣವಾದರೆ ಆರೋಗ್ಯ ಕ್ಷೇತ್ರಕ್ಕೆ ಹೆಚ್ಚಿನ ಬೆಂಬಲ ಸಿಕ್ಕಿದಂತಾಗುತ್ತದೆ",
+      "leadMedia": null
     },
     "politics/ಎಲ್-ಪಿಜಿ-ದರ-ಏರಿಕೆ-ವಿರುದ್ಧ": {
       "slug": "ಎಲ್-ಪಿಜಿ-ದರ-ಏರಿಕೆ-ವಿರುದ್ಧ",
@@ -200,7 +211,29 @@
       "placement": "lead",
       "isLead": true,
       "updatedAt": null,
-      "subtitle": "ಬ್ರಹ್ಮಗಿರಿ ಸರ್ಕಲ್ ಬಳಿ ರಸ್ತೆ ಮಧ್ಯೆ ಕಟ್ಟಿಗೆ ಬಳಸಿ ಒಲೆ ಉರಿಸಿ ಚಹಾ ಮಾಡಿ ಪ್ರತಿಭಟನೆ"
+      "subtitle": "ಬ್ರಹ್ಮಗಿರಿ ಸರ್ಕಲ್ ಬಳಿ ರಸ್ತೆ ಮಧ್ಯೆ ಕಟ್ಟಿಗೆ ಬಳಸಿ ಒಲೆ ಉರಿಸಿ ಚಹಾ ಮಾಡಿ ಪ್ರತಿಭಟನೆ",
+      "leadMedia": {
+        "images": [
+          {
+            "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/90c60855e9c87812.jpg",
+            "alt": "1003457318",
+            "width": 1280,
+            "height": 960
+          },
+          {
+            "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/4353a060141c121c.jpg",
+            "alt": "1003457315",
+            "width": 1280,
+            "height": 960
+          },
+          {
+            "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/088e5e0e71bc336c.jpg",
+            "alt": "1003457312",
+            "width": 1280,
+            "height": 960
+          }
+        ]
+      }
     },
     "politics/ಪೆರ್ಡೂರು-ದೇವಸ್ಥಾನದ-ವಿಚಾರದಲ್ಲಿ-ಸೊರಕೆ-ಬಹಿರಂಗ": {
       "slug": "ಪೆರ್ಡೂರು-ದೇವಸ್ಥಾನದ-ವಿಚಾರದಲ್ಲಿ-ಸೊರಕೆ-ಬಹಿರಂಗ",
@@ -218,7 +251,8 @@
       "placement": "lead",
       "isLead": true,
       "updatedAt": null,
-      "subtitle": "ಮಂಗಳವಾರ, ಉಡುಪಿಯಲ್ಲಿ ಈ ಬಗ್ಗೆ ಸುದ್ದಿಗೋಷ್ಠಿ ನಡೆಸಿ ಮಾತನಾಡಿದರು."
+      "subtitle": "ಮಂಗಳವಾರ, ಉಡುಪಿಯಲ್ಲಿ ಈ ಬಗ್ಗೆ ಸುದ್ದಿಗೋಷ್ಠಿ ನಡೆಸಿ ಮಾತನಾಡಿದರು.",
+      "leadMedia": null
     },
     "politics/ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ-ಹೆಬ್ಬಾಳಕರ್-ಅವರನ್ನು-ಭೇಟಿಯಾದ": {
       "slug": "ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ-ಹೆಬ್ಬಾಳಕರ್-ಅವರನ್ನು-ಭೇಟಿಯಾದ",
@@ -233,7 +267,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಅಕ್ಕಪಡೆ, ಗೃಹಲಕ್ಷ್ಮಿ, ಶಕ್ತಿ ಯೋಜನೆಗಳ ಮಾಹಿತಿ ಹಂಚಿಕೊಂಡ ಸಚಿವರು"
+      "subtitle": "ಅಕ್ಕಪಡೆ, ಗೃಹಲಕ್ಷ್ಮಿ, ಶಕ್ತಿ ಯೋಜನೆಗಳ ಮಾಹಿತಿ ಹಂಚಿಕೊಂಡ ಸಚಿವರು",
+      "leadMedia": null
     },
     "politics/ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ-ಹೆಬ್ಬಾಳ್ಕರ್-ಸಿಕ್ಸರ್-ಗೆ": {
       "slug": "ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ-ಹೆಬ್ಬಾಳ್ಕರ್-ಸಿಕ್ಸರ್-ಗೆ",
@@ -251,7 +286,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಇಲಾಖೆಯ ಸಿಬ್ಬಂದಿ  ಕ್ರೀಡಾಕೂಟಕ್ಕೆ ಸಚಿವರಿಂದ ಚಾಲನೆ"
+      "subtitle": "ಇಲಾಖೆಯ ಸಿಬ್ಬಂದಿ  ಕ್ರೀಡಾಕೂಟಕ್ಕೆ ಸಚಿವರಿಂದ ಚಾಲನೆ",
+      "leadMedia": null
     },
     "politics/ಸ್ಮೃತಿ-ಇರಾನಿ-ಕಾಣುತ್ತಿಲ್ಲ-ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ": {
       "slug": "ಸ್ಮೃತಿ-ಇರಾನಿ-ಕಾಣುತ್ತಿಲ್ಲ-ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ",
@@ -266,7 +302,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಮಹಿಳೆಯರಿಗೆ ಉಡುಗೊರೆ ನೀಡಿರುವ ಕೇಂದ್ರ ಸರ್ಕಾರಕ್ಕೆ ಅಭಿನಂದನೆ ಸಲ್ಲಿಸಲು ಬಯಸುವೆ"
+      "subtitle": "ಮಹಿಳೆಯರಿಗೆ ಉಡುಗೊರೆ ನೀಡಿರುವ ಕೇಂದ್ರ ಸರ್ಕಾರಕ್ಕೆ ಅಭಿನಂದನೆ ಸಲ್ಲಿಸಲು ಬಯಸುವೆ",
+      "leadMedia": null
     },
     "crime/15-vrsglimd-tlemresikomdidd-aropi-bmdhn": {
       "slug": "15-vrsglimd-tlemresikomdidd-aropi-bmdhn",
@@ -285,7 +322,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": "2026-03-06T11:52:13.544Z",
-      "subtitle": "ಉಡುಪಿ ನಗರ ಪೊಲೀಸ್ ಠಾಣೆಯ ಪ್ರಭಾರ ನಿರೀಕ್ಷಕರಾದ ಮಹೇಶ್ ಪ್ರಸಾದ್ ಅವರ ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ಬಂಧಿಸಿದ್ದಾರೆ."
+      "subtitle": "ಉಡುಪಿ ನಗರ ಪೊಲೀಸ್ ಠಾಣೆಯ ಪ್ರಭಾರ ನಿರೀಕ್ಷಕರಾದ ಮಹೇಶ್ ಪ್ರಸಾದ್ ಅವರ ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ಬಂಧಿಸಿದ್ದಾರೆ.",
+      "leadMedia": null
     },
     "crime/30-ವರ್ಷದಿಂದ-ಕೊರಗ-ಸಮುದಾಯದ-ವ್ಯಕ್ತಿಯನ್ನು": {
       "slug": "30-ವರ್ಷದಿಂದ-ಕೊರಗ-ಸಮುದಾಯದ-ವ್ಯಕ್ತಿಯನ್ನು",
@@ -305,7 +343,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ರಜನಿ ಶೆಟ್ಟಿ ಬಂಧಿತ ಆರೋಪಿ."
+      "subtitle": "ರಜನಿ ಶೆಟ್ಟಿ ಬಂಧಿತ ಆರೋಪಿ.",
+      "leadMedia": null
     },
     "crime/brhavr-vmcne-duru-dakhlu": {
       "slug": "brhavr-vmcne-duru-dakhlu",
@@ -320,7 +359,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಶಿರಿಯಾರದ ಎಸ್.ಯೋಗೀಶ್ ಎಂಬವರ ಮಾಲಕತ್ವದ ವಿಶ್ವಂಬರ ಕ್ಯಾಶ್ಯೂ ಇಂಡಸ್ಟ್ರೀಸ್‌ನಲ್ಲಿ ವಂಚನೆ"
+      "subtitle": "ಶಿರಿಯಾರದ ಎಸ್.ಯೋಗೀಶ್ ಎಂಬವರ ಮಾಲಕತ್ವದ ವಿಶ್ವಂಬರ ಕ್ಯಾಶ್ಯೂ ಇಂಡಸ್ಟ್ರೀಸ್‌ನಲ್ಲಿ ವಂಚನೆ",
+      "leadMedia": null
     },
     "crime/nerlnnu-himbalisuttiddene-eccr": {
       "slug": "nerlnnu-himbalisuttiddene-eccr",
@@ -335,7 +375,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": "2026-03-06T16:45:53.822Z",
-      "subtitle": "ಉಡುಪಿ ಜಿಲ್ಲೆಯಲ್ಲಿ ಇನ್ನು ಮುಂದೆ ನೆರಳು ಕೂಡ ಪೋಲಿಸರ ಕಣ್ಗಾವಲಿನಿಂದ ತಪ್ಪಿಸಿಕೊಳ್ಳುವುದು ಕಷ್ಟ..!"
+      "subtitle": "ಉಡುಪಿ ಜಿಲ್ಲೆಯಲ್ಲಿ ಇನ್ನು ಮುಂದೆ ನೆರಳು ಕೂಡ ಪೋಲಿಸರ ಕಣ್ಗಾವಲಿನಿಂದ ತಪ್ಪಿಸಿಕೊಳ್ಳುವುದು ಕಷ್ಟ..!",
+      "leadMedia": null
     },
     "crime/ಇಸ್ಪೀಟು-ಜುಗಾರಿ-ಆಡುತ್ತಿದ್ದ-10-ಮಂದಿ": {
       "slug": "ಇಸ್ಪೀಟು-ಜುಗಾರಿ-ಆಡುತ್ತಿದ್ದ-10-ಮಂದಿ",
@@ -350,7 +391,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಬ್ರಹ್ಮಾವರ ಠಾಣಾ ವ್ಯಾಪ್ತಿಯ ಹನೇಹಳ್ಳಿಯಲ್ಲಿ ಬಂಧನ"
+      "subtitle": "ಬ್ರಹ್ಮಾವರ ಠಾಣಾ ವ್ಯಾಪ್ತಿಯ ಹನೇಹಳ್ಳಿಯಲ್ಲಿ ಬಂಧನ",
+      "leadMedia": null
     },
     "crime/ಕಾಂಗ್ರೆಸ್-ಮುಖಂಡನ-ಆತ್ಮೀಯ-ಡ್ರಗ್ಸ್": {
       "slug": "ಕಾಂಗ್ರೆಸ್-ಮುಖಂಡನ-ಆತ್ಮೀಯ-ಡ್ರಗ್ಸ್",
@@ -370,7 +412,8 @@
       "placement": "lead",
       "isLead": true,
       "updatedAt": null,
-      "subtitle": "ಬೆಳಪುವಿನ ನಿವಾಸಿಗಳಾದ ಝಹೀರ್ ಅಹ್ಮದ್ (66), ಸಯ್ಯದ್ ಶಮೀಮ್ (28)  ಬಂಧಿತ ಆರೋಪಿಗಳು"
+      "subtitle": "ಬೆಳಪುವಿನ ನಿವಾಸಿಗಳಾದ ಝಹೀರ್ ಅಹ್ಮದ್ (66), ಸಯ್ಯದ್ ಶಮೀಮ್ (28)  ಬಂಧಿತ ಆರೋಪಿಗಳು",
+      "leadMedia": null
     },
     "crime/ಲೋಕಾ-ಬಲೆಗೆ-ಬಿದ್ದ-ಕೋಟಿ-ಒಡೆಯ": {
       "slug": "ಲೋಕಾ-ಬಲೆಗೆ-ಬಿದ್ದ-ಕೋಟಿ-ಒಡೆಯ",
@@ -389,7 +432,29 @@
       "placement": "lead",
       "isLead": true,
       "updatedAt": "2026-03-13T15:19:17.361Z",
-      "subtitle": "8.69 ಕೋಟಿ ಮೌಲ್ಯದ ಆಸ್ತಿ ಪತ್ತೆ !"
+      "subtitle": "8.69 ಕೋಟಿ ಮೌಲ್ಯದ ಆಸ್ತಿ ಪತ್ತೆ !",
+      "leadMedia": {
+        "images": [
+          {
+            "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/3abfa49534ce0537.jpg",
+            "alt": "1003472642",
+            "width": 1025,
+            "height": 1113
+          },
+          {
+            "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/171f1dfd9044e359.jpg",
+            "alt": "1003472626",
+            "width": 1080,
+            "height": 831
+          },
+          {
+            "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/82781454c309ef4d.jpg",
+            "alt": "1003472629",
+            "width": 1200,
+            "height": 1600
+          }
+        ]
+      }
     },
     "crime/ವೃದ್ದೆಯ-ಬರ್ಬರ-ಹತ್ಯೆ": {
       "slug": "ವೃದ್ದೆಯ-ಬರ್ಬರ-ಹತ್ಯೆ",
@@ -408,7 +473,8 @@
       "placement": "top",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಅರೋಪಿಗಳಿಬ್ಬರ ಬಂಧನ"
+      "subtitle": "ಅರೋಪಿಗಳಿಬ್ಬರ ಬಂಧನ",
+      "leadMedia": null
     },
     "court/71-year-old-grandfather-sentenced": {
       "slug": "71-year-old-grandfather-sentenced",
@@ -425,7 +491,8 @@
       "placement": "top",
       "isLead": false,
       "updatedAt": "2026-03-05T11:10:27.868Z",
-      "subtitle": "ಸರಕಾರದ ಪರವಾಗಿ ಸರಕಾರಿ ಅಭಿಯೋಜಕ ಬೇಳೂರು ಪ್ರಕಾಶ್ಚಂದ್ರ ಶೆಟ್ಟಿ ವಾದಿಸಿದ್ದಾರೆ."
+      "subtitle": "ಸರಕಾರದ ಪರವಾಗಿ ಸರಕಾರಿ ಅಭಿಯೋಜಕ ಬೇಳೂರು ಪ್ರಕಾಶ್ಚಂದ್ರ ಶೆಟ್ಟಿ ವಾದಿಸಿದ್ದಾರೆ.",
+      "leadMedia": null
     },
     "world-affairs/hlvaru-desglu-mdhysthike-vhislu-mumde": {
       "slug": "hlvaru-desglu-mdhysthike-vhislu-mumde",
@@ -442,7 +509,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಸಂಘರ್ಷವನ್ನು ಪರಿಹರಿಸಲು ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ಪ್ರಯತ್ನಗಳನ್ನು ಪ್ರಾರಂಭಿಸಿವೆ"
+      "subtitle": "ಸಂಘರ್ಷವನ್ನು ಪರಿಹರಿಸಲು ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ಪ್ರಯತ್ನಗಳನ್ನು ಪ್ರಾರಂಭಿಸಿವೆ",
+      "leadMedia": null
     },
     "world-affairs/ಅಮೆರಿಕ-ಇಸ್ರೇಲ್-ಗೆ-ಷರತ್ತು-ಹಾಕಿ": {
       "slug": "ಅಮೆರಿಕ-ಇಸ್ರೇಲ್-ಗೆ-ಷರತ್ತು-ಹಾಕಿ",
@@ -457,7 +525,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಯಾವುದೇ ನಿರ್ಣಯವು ಇರಾನ್‌ನ ಕಾನೂನುಬದ್ಧ ಹಕ್ಕುಗಳನ್ನು ಗುರುತಿಸಬೇಕು ಮತ್ತು ದೇಶವು ಭವಿಷ್ಯದ ದಾಳಿಯನ್ನು ಎದುರಿಸುವುದಿಲ್ಲ ಎಂದು ಖಾತರಿಪಡಿಸಬೇಕು ಎಂದು ಇರಾನ್ ಅಧ್ಯಕ್ಷ ಮಸೌದ್ ಪೆಜೆಶ್ಕಿಯಾನ್ ಹೇಳಿದ್ದಾರೆ."
+      "subtitle": "ಯಾವುದೇ ನಿರ್ಣಯವು ಇರಾನ್‌ನ ಕಾನೂನುಬದ್ಧ ಹಕ್ಕುಗಳನ್ನು ಗುರುತಿಸಬೇಕು ಮತ್ತು ದೇಶವು ಭವಿಷ್ಯದ ದಾಳಿಯನ್ನು ಎದುರಿಸುವುದಿಲ್ಲ ಎಂದು ಖಾತರಿಪಡಿಸಬೇಕು ಎಂದು ಇರಾನ್ ಅಧ್ಯಕ್ಷ ಮಸೌದ್ ಪೆಜೆಶ್ಕಿಯಾನ್ ಹೇಳಿದ್ದಾರೆ.",
+      "leadMedia": null
     },
     "world-affairs/ಹಾರ್ಮುಜ್-ಜಲಸಂಧಿಯಿಂದ-ಮುಂಬೈಗೆ-ಮೊದಲ-ತೈಲ": {
       "slug": "ಹಾರ್ಮುಜ್-ಜಲಸಂಧಿಯಿಂದ-ಮುಂಬೈಗೆ-ಮೊದಲ-ತೈಲ",
@@ -472,7 +541,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಸೌದಿ ಅರೇಬಿಯಾದಿಂದ ಕಚ್ಚಾ ತೈಲವನ್ನು ಹೊತ್ತ ಲೈಬೀರಿಯನ್ ಧ್ವಜದ ಟ್ಯಾಂಕರ್ ಮುಂಬೈ ಬಂದರಿಗೆ ಆಗಮಿಸಿದೆ."
+      "subtitle": "ಸೌದಿ ಅರೇಬಿಯಾದಿಂದ ಕಚ್ಚಾ ತೈಲವನ್ನು ಹೊತ್ತ ಲೈಬೀರಿಯನ್ ಧ್ವಜದ ಟ್ಯಾಂಕರ್ ಮುಂಬೈ ಬಂದರಿಗೆ ಆಗಮಿಸಿದೆ.",
+      "leadMedia": null
     },
     "local/d-k-udupi-minu": {
       "slug": "d-k-udupi-minu",
@@ -487,7 +557,8 @@
       "placement": "top",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಜಿಲ್ಲಾಸ್ಪತ್ರೆಯಲ್ಲಿ ದಿನನಿತ್ಯ ಚಿಕಿತ್ಸೆಗೆ ಬರುವ ನೂರಾರು ರೋಗಿಗಳಿಗೆ ಸಹಕಾರಿ"
+      "subtitle": "ಜಿಲ್ಲಾಸ್ಪತ್ರೆಯಲ್ಲಿ ದಿನನಿತ್ಯ ಚಿಕಿತ್ಸೆಗೆ ಬರುವ ನೂರಾರು ರೋಗಿಗಳಿಗೆ ಸಹಕಾರಿ",
+      "leadMedia": null
     },
     "local/grh-blkey-elpiji-silimdr-bele": {
       "slug": "grh-blkey-elpiji-silimdr-bele",
@@ -505,7 +576,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ"
+      "subtitle": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ",
+      "leadMedia": null
     },
     "local/karkl-ptrikabhvnkke-rajyadhyks-sivanmd": {
       "slug": "karkl-ptrikabhvnkke-rajyadhyks-sivanmd",
@@ -522,7 +594,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಕಾರ್ಕಳ ತಾಲೂಕು ಕಾರ್ಯನಿರತ ಪತ್ರಕರ್ತರ ಸಂಘದ ವತಿಯಿಂದ ಸನ್ಮಾನ"
+      "subtitle": "ಕಾರ್ಕಳ ತಾಲೂಕು ಕಾರ್ಯನಿರತ ಪತ್ರಕರ್ತರ ಸಂಘದ ವತಿಯಿಂದ ಸನ್ಮಾನ",
+      "leadMedia": null
     },
     "local/klenask-sevisi-diploma-vidyarthini-atmhtye": {
       "slug": "klenask-sevisi-diploma-vidyarthini-atmhtye",
@@ -537,7 +610,8 @@
       "placement": "top",
       "isLead": false,
       "updatedAt": "2026-03-06T12:03:20.712Z",
-      "subtitle": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ"
+      "subtitle": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ",
+      "leadMedia": null
     },
     "local/ma-8-rmdu-timgleylli-sahityotsv": {
       "slug": "ma-8-rmdu-timgleylli-sahityotsv",
@@ -556,7 +630,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ."
+      "subtitle": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ.",
+      "leadMedia": null
     },
     "local/mlpeylli-kolet-sthitiylli-svptte": {
       "slug": "mlpeylli-kolet-sthitiylli-svptte",
@@ -571,7 +646,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಸಮಾಜಸೇವಕ ನಿತ್ಯಾನಂದ ಒಳಕಾಡುವರ ನೇತ್ರತ್ವದಲ್ಲಿ ಕಳೇಬರ ಮೇಲಕೆತ್ತುವ ಕಾರ್ಯಚರಣೆ"
+      "subtitle": "ಸಮಾಜಸೇವಕ ನಿತ್ಯಾನಂದ ಒಳಕಾಡುವರ ನೇತ್ರತ್ವದಲ್ಲಿ ಕಳೇಬರ ಮೇಲಕೆತ್ತುವ ಕಾರ್ಯಚರಣೆ",
+      "leadMedia": null
     },
     "local/ptrkrt-hesrinlli-blakmel-dmdhege": {
       "slug": "ptrkrt-hesrinlli-blakmel-dmdhege",
@@ -586,7 +662,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಉಡುಪಿ ಜಿಲ್ಲೆ–ತಾಲೂಕು ಪತ್ರಕರ್ತರ ಸಂಘಗಳ ಪದಗ್ರಹಣ"
+      "subtitle": "ಉಡುಪಿ ಜಿಲ್ಲೆ–ತಾಲೂಕು ಪತ್ರಕರ್ತರ ಸಂಘಗಳ ಪದಗ್ರಹಣ",
+      "leadMedia": null
     },
     "local/take-steps-ensure-drinking-water": {
       "slug": "take-steps-ensure-drinking-water",
@@ -604,7 +681,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": "2026-03-05T11:07:59.152Z",
-      "subtitle": "ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ"
+      "subtitle": "ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ",
+      "leadMedia": null
     },
     "local/visv-mhila-dinacrney-sulgitti": {
       "slug": "visv-mhila-dinacrney-sulgitti",
@@ -619,7 +697,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಶಾಸಕ ಎ ಕಿರಣ್ ಕುಮಾರ್ ಕೊಡ್ಗಿ, ಮಹಿಳಾ ಮೋರ್ಚಾ ಅಧ್ಯಕ್ಷೆ ಸೌರಭಿ ಪೈ ಭಾಗಿ"
+      "subtitle": "ಶಾಸಕ ಎ ಕಿರಣ್ ಕುಮಾರ್ ಕೊಡ್ಗಿ, ಮಹಿಳಾ ಮೋರ್ಚಾ ಅಧ್ಯಕ್ಷೆ ಸೌರಭಿ ಪೈ ಭಾಗಿ",
+      "leadMedia": null
     },
     "local/ಅಪಘಾತದಲ್ಲಿ-ಗಾಯಗೊಂಡಿದ್ದ-ಬೈಕ್-ಸವಾರ-ಆಸ್ಪತ್ರೆಯಲ್ಲಿ": {
       "slug": "ಅಪಘಾತದಲ್ಲಿ-ಗಾಯಗೊಂಡಿದ್ದ-ಬೈಕ್-ಸವಾರ-ಆಸ್ಪತ್ರೆಯಲ್ಲಿ",
@@ -634,7 +713,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಸಂಭವಿಸಿ ಗಾಯಗೊಂಡಿದ್ದ ಬೈಕ್ ಸವಾರ ಮೊಹಮ್ಮದ್ ಝೈದ್ (19)"
+      "subtitle": "ಸಂಭವಿಸಿ ಗಾಯಗೊಂಡಿದ್ದ ಬೈಕ್ ಸವಾರ ಮೊಹಮ್ಮದ್ ಝೈದ್ (19)",
+      "leadMedia": null
     },
     "local/ಉಡುಪಿ-ಜಿಲ್ಲೆಯ-ಅಭಿವೃದ್ಧಿಯಲ್ಲಿ-ಮಹಿಳೆಯರ-ಕೊಡುಗೆ": {
       "slug": "ಉಡುಪಿ-ಜಿಲ್ಲೆಯ-ಅಭಿವೃದ್ಧಿಯಲ್ಲಿ-ಮಹಿಳೆಯರ-ಕೊಡುಗೆ",
@@ -649,7 +729,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಉಡುಪಿ ನಗರ ಬಿಜೆಪಿ ಹಾಗೂ ಮಹಿಳಾ ಮೋರ್ಚಾದ ವತಿಯಿಂದ ಆಯೋಜಿಸಿದ್ದ ವಿಶ್ವ ಮಹಿಳಾ ದಿನಾಚರಣೆ"
+      "subtitle": "ಉಡುಪಿ ನಗರ ಬಿಜೆಪಿ ಹಾಗೂ ಮಹಿಳಾ ಮೋರ್ಚಾದ ವತಿಯಿಂದ ಆಯೋಜಿಸಿದ್ದ ವಿಶ್ವ ಮಹಿಳಾ ದಿನಾಚರಣೆ",
+      "leadMedia": null
     },
     "local/ಕಸಾಪ-ಉಡುಪಿ-ತಾಲೂಕು-ಘಟಕದ-ವತಿಯಿಂದ": {
       "slug": "ಕಸಾಪ-ಉಡುಪಿ-ತಾಲೂಕು-ಘಟಕದ-ವತಿಯಿಂದ",
@@ -664,7 +745,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಖ್ಯಾತ ಸಾಹಿತಿ ಸುಕನ್ಯಾ ಕಳಸ ಹಾಗು ಸಾಹಿತಿ, ಶಿಕ್ಷಣ ತಜ್ಞ ಡಾ.ಮಹಾಬಲೇಶ್ವರ ರಾವ್  ದಂಪತಿಗಳಿಗೆ ಗೌರಬ"
+      "subtitle": "ಖ್ಯಾತ ಸಾಹಿತಿ ಸುಕನ್ಯಾ ಕಳಸ ಹಾಗು ಸಾಹಿತಿ, ಶಿಕ್ಷಣ ತಜ್ಞ ಡಾ.ಮಹಾಬಲೇಶ್ವರ ರಾವ್  ದಂಪತಿಗಳಿಗೆ ಗೌರಬ",
+      "leadMedia": null
     },
     "local/ಜನತಾ-ಕಿರಿಮಂಜೇಶ್ವರದ-ಎಸ್ಎಸ್ಎಲ್-ಸಿ-ವಿದ್ಯಾರ್ಥಿಗಳ": {
       "slug": "ಜನತಾ-ಕಿರಿಮಂಜೇಶ್ವರದ-ಎಸ್ಎಸ್ಎಲ್-ಸಿ-ವಿದ್ಯಾರ್ಥಿಗಳ",
@@ -682,7 +764,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಜನತಾ ಆಂಗ್ಲ ಮಾಧ್ಯಮ ಶಾಲೆಯಲ್ಲಿ ಎಸ್‌ಎಸ್‌ಎಲ್‌ಸಿ ವಿದ್ಯಾರ್ಥಿಗಳ ಬೀಳ್ಕೊಡುಗೆ"
+      "subtitle": "ಜನತಾ ಆಂಗ್ಲ ಮಾಧ್ಯಮ ಶಾಲೆಯಲ್ಲಿ ಎಸ್‌ಎಸ್‌ಎಲ್‌ಸಿ ವಿದ್ಯಾರ್ಥಿಗಳ ಬೀಳ್ಕೊಡುಗೆ",
+      "leadMedia": null
     },
     "local/ಟ್ರಂಪ್-ಕೊಲೆಗಡುಕ-ಸಿಐಟಿಯು-ರಾಜ್ಯ-ಕಾರ್ಯದರ್ಶಿ": {
       "slug": "ಟ್ರಂಪ್-ಕೊಲೆಗಡುಕ-ಸಿಐಟಿಯು-ರಾಜ್ಯ-ಕಾರ್ಯದರ್ಶಿ",
@@ -697,7 +780,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಉಡುಪಿ ಸಮಾನ ಮನಸ್ಕ ಸಂಘಟನೆಗಳಿಂದ ಯುದ್ಧ ವಿರೋಧಿ ದಿನಾಚರಣೆ"
+      "subtitle": "ಉಡುಪಿ ಸಮಾನ ಮನಸ್ಕ ಸಂಘಟನೆಗಳಿಂದ ಯುದ್ಧ ವಿರೋಧಿ ದಿನಾಚರಣೆ",
+      "leadMedia": null
     },
     "local/ತಲೆಗೆ-ಚೊಂಬು-ಸಿಲುಕಿ-ಒದ್ದಾಡುತ್ತಿದ್ದ-ಕೋತಿಯ": {
       "slug": "ತಲೆಗೆ-ಚೊಂಬು-ಸಿಲುಕಿ-ಒದ್ದಾಡುತ್ತಿದ್ದ-ಕೋತಿಯ",
@@ -712,7 +796,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಸ್ಥಳೀಯರ ಕಾರ್ಯಕ್ಕೆ ಮೆಚ್ಚುಗೆ"
+      "subtitle": "ಸ್ಥಳೀಯರ ಕಾರ್ಯಕ್ಕೆ ಮೆಚ್ಚುಗೆ",
+      "leadMedia": null
     },
     "local/ತ್ರಿನಯ-ವೈದ್ಯಕೀಯ-ಚಿಕಿತ್ಸಾಲಯ-ಉದ್ಘಾಟನೆ": {
       "slug": "ತ್ರಿನಯ-ವೈದ್ಯಕೀಯ-ಚಿಕಿತ್ಸಾಲಯ-ಉದ್ಘಾಟನೆ",
@@ -727,7 +812,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಆಧುನಿಕ ತಂತ್ರಜ್ಞಾನದ ಯಂತ್ರಗಳನ್ನು ಒಳಗೊಂಡ ಚರ್ಮ, ಕೂದಲು ಮತ್ತು ಅಲಂಕಾರಿಕ ಚಿಕಿತ್ಸೆಗಳಿಗೆ ಇಲ್ಲಿ ಅವಕಾಶ ಕಲ್ಪಿಸಲಾಗಿದೆ."
+      "subtitle": "ಆಧುನಿಕ ತಂತ್ರಜ್ಞಾನದ ಯಂತ್ರಗಳನ್ನು ಒಳಗೊಂಡ ಚರ್ಮ, ಕೂದಲು ಮತ್ತು ಅಲಂಕಾರಿಕ ಚಿಕಿತ್ಸೆಗಳಿಗೆ ಇಲ್ಲಿ ಅವಕಾಶ ಕಲ್ಪಿಸಲಾಗಿದೆ.",
+      "leadMedia": null
     },
     "local/ಮಣಿಪಾಲ-ನೂತನ-ಅಗ್ನಿಶಾಮಕದಳ-ಘಟಕಕ್ಕೆ-ಶಾಸಕ": {
       "slug": "ಮಣಿಪಾಲ-ನೂತನ-ಅಗ್ನಿಶಾಮಕದಳ-ಘಟಕಕ್ಕೆ-ಶಾಸಕ",
@@ -742,7 +828,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "3 ಕೋಟಿ ವೆಚ್ಚದಲ್ಲಿ ನೂತನವಾಗಿ ನಿರ್ಮಾಣಗೊಳ್ಳಲಿರುವ ಅಗ್ನಿಶಾಮಕ ದಳದ ಕಚೇರಿ"
+      "subtitle": "3 ಕೋಟಿ ವೆಚ್ಚದಲ್ಲಿ ನೂತನವಾಗಿ ನಿರ್ಮಾಣಗೊಳ್ಳಲಿರುವ ಅಗ್ನಿಶಾಮಕ ದಳದ ಕಚೇರಿ",
+      "leadMedia": null
     },
     "local/ಮಹಿಳಾ-ದಿನಾಚರಣೆ-ಅಂಗವಾಗಿ-ಡಾ-ಗೀತಾ": {
       "slug": "ಮಹಿಳಾ-ದಿನಾಚರಣೆ-ಅಂಗವಾಗಿ-ಡಾ-ಗೀತಾ",
@@ -757,7 +844,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಜಿಲ್ಲಾ ಮಹಿಳಾ ಕಾಂಗ್ರೆಸ್ ಅಧ್ಯಕ್ಷೆ ಜ್ಯೋತಿ ಕ್ರೃಷ್ಣ ಹೆಬ್ಬಾರ್‌ ನೇತೃತ್ವದಲ್ಲಿ ಸನ್ಮಾನ"
+      "subtitle": "ಜಿಲ್ಲಾ ಮಹಿಳಾ ಕಾಂಗ್ರೆಸ್ ಅಧ್ಯಕ್ಷೆ ಜ್ಯೋತಿ ಕ್ರೃಷ್ಣ ಹೆಬ್ಬಾರ್‌ ನೇತೃತ್ವದಲ್ಲಿ ಸನ್ಮಾನ",
+      "leadMedia": null
     },
     "local/ರಾಮ-ಭಕ್ತರು-ಆರ್-ಎಸ್-ಎಸ್": {
       "slug": "ರಾಮ-ಭಕ್ತರು-ಆರ್-ಎಸ್-ಎಸ್",
@@ -775,7 +863,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಮಾ.8 ರಂದು ತಿಂಗಳೆ ಪ್ರತಿಷ್ಠಾನದ ವತಿಯಿಂದ ತಿಂಗಳೆಯಲ್ಲಿ ನಡೆದ ಸಾಹಿತ್ಯೋತ್ಸವದಲ್ಲಿ ಮಾತನಾಡಿದರು"
+      "subtitle": "ಮಾ.8 ರಂದು ತಿಂಗಳೆ ಪ್ರತಿಷ್ಠಾನದ ವತಿಯಿಂದ ತಿಂಗಳೆಯಲ್ಲಿ ನಡೆದ ಸಾಹಿತ್ಯೋತ್ಸವದಲ್ಲಿ ಮಾತನಾಡಿದರು",
+      "leadMedia": null
     },
     "local/ರಾಷ್ಟ್ರೀಯ-ಹೆದ್ದಾರಿ-169-ಎ-ಕಾಮಗಾರಿ": {
       "slug": "ರಾಷ್ಟ್ರೀಯ-ಹೆದ್ದಾರಿ-169-ಎ-ಕಾಮಗಾರಿ",
@@ -790,7 +879,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಕುಂದಾಪುರದ ಸಹಾಯಕ ಕಮಿಷನರ್ ರಶ್ಮಿ, ಹೆಚ್ಚುವರಿ ಪೊಲೀಸ್ ಅಧಿಕ್ಷಕ ಸುಧಾಕರ್ ನಾಯಕ್, ರಾಷ್ಟ್ರೀಯ ಹೆದ್ದಾರಿ ಅಧಿಕಾರಿಗಳಾದ ಲೋಕೇಶ್, ಶಶಿಧರ್, ನವೀನ್ ಭಾಗಿ"
+      "subtitle": "ಕುಂದಾಪುರದ ಸಹಾಯಕ ಕಮಿಷನರ್ ರಶ್ಮಿ, ಹೆಚ್ಚುವರಿ ಪೊಲೀಸ್ ಅಧಿಕ್ಷಕ ಸುಧಾಕರ್ ನಾಯಕ್, ರಾಷ್ಟ್ರೀಯ ಹೆದ್ದಾರಿ ಅಧಿಕಾರಿಗಳಾದ ಲೋಕೇಶ್, ಶಶಿಧರ್, ನವೀನ್ ಭಾಗಿ",
+      "leadMedia": null
     },
     "local/ರಾಷ್ಟ್ರೋತ್ಥಾನ-ವಿದ್ಯಾಕೇಂದ್ರಕ್ಕೆ-ವಿದ್ಯಾಭಾರತಿ-ಕರ್ನಾಟಕ": {
       "slug": "ರಾಷ್ಟ್ರೋತ್ಥಾನ-ವಿದ್ಯಾಕೇಂದ್ರಕ್ಕೆ-ವಿದ್ಯಾಭಾರತಿ-ಕರ್ನಾಟಕ",
@@ -805,7 +895,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಚೇರ್ಕಾಡಿಯ ರಾಷ್ಟ್ರೋತ್ಥಾನ ಶಾಲೆಗೆ ಭೇಟಿ"
+      "subtitle": "ಚೇರ್ಕಾಡಿಯ ರಾಷ್ಟ್ರೋತ್ಥಾನ ಶಾಲೆಗೆ ಭೇಟಿ",
+      "leadMedia": null
     }
   },
   "sortedArticles": [
@@ -825,7 +916,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಮಾ.8 ರಂದು ತಿಂಗಳೆ ಪ್ರತಿಷ್ಠಾನದ ವತಿಯಿಂದ ತಿಂಗಳೆಯಲ್ಲಿ ನಡೆದ ಸಾಹಿತ್ಯೋತ್ಸವದಲ್ಲಿ ಮಾತನಾಡಿದರು"
+      "subtitle": "ಮಾ.8 ರಂದು ತಿಂಗಳೆ ಪ್ರತಿಷ್ಠಾನದ ವತಿಯಿಂದ ತಿಂಗಳೆಯಲ್ಲಿ ನಡೆದ ಸಾಹಿತ್ಯೋತ್ಸವದಲ್ಲಿ ಮಾತನಾಡಿದರು",
+      "leadMedia": null
     },
     {
       "slug": "ಲೋಕಾ-ಬಲೆಗೆ-ಬಿದ್ದ-ಕೋಟಿ-ಒಡೆಯ",
@@ -844,7 +936,29 @@
       "placement": "lead",
       "isLead": true,
       "updatedAt": "2026-03-13T15:19:17.361Z",
-      "subtitle": "8.69 ಕೋಟಿ ಮೌಲ್ಯದ ಆಸ್ತಿ ಪತ್ತೆ !"
+      "subtitle": "8.69 ಕೋಟಿ ಮೌಲ್ಯದ ಆಸ್ತಿ ಪತ್ತೆ !",
+      "leadMedia": {
+        "images": [
+          {
+            "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/3abfa49534ce0537.jpg",
+            "alt": "1003472642",
+            "width": 1025,
+            "height": 1113
+          },
+          {
+            "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/171f1dfd9044e359.jpg",
+            "alt": "1003472626",
+            "width": 1080,
+            "height": 831
+          },
+          {
+            "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/82781454c309ef4d.jpg",
+            "alt": "1003472629",
+            "width": 1200,
+            "height": 1600
+          }
+        ]
+      }
     },
     {
       "slug": "ಹಾರ್ಮುಜ್-ಜಲಸಂಧಿಯಿಂದ-ಮುಂಬೈಗೆ-ಮೊದಲ-ತೈಲ",
@@ -859,7 +973,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಸೌದಿ ಅರೇಬಿಯಾದಿಂದ ಕಚ್ಚಾ ತೈಲವನ್ನು ಹೊತ್ತ ಲೈಬೀರಿಯನ್ ಧ್ವಜದ ಟ್ಯಾಂಕರ್ ಮುಂಬೈ ಬಂದರಿಗೆ ಆಗಮಿಸಿದೆ."
+      "subtitle": "ಸೌದಿ ಅರೇಬಿಯಾದಿಂದ ಕಚ್ಚಾ ತೈಲವನ್ನು ಹೊತ್ತ ಲೈಬೀರಿಯನ್ ಧ್ವಜದ ಟ್ಯಾಂಕರ್ ಮುಂಬೈ ಬಂದರಿಗೆ ಆಗಮಿಸಿದೆ.",
+      "leadMedia": null
     },
     {
       "slug": "ಅಮೆರಿಕ-ಇಸ್ರೇಲ್-ಗೆ-ಷರತ್ತು-ಹಾಕಿ",
@@ -874,7 +989,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಯಾವುದೇ ನಿರ್ಣಯವು ಇರಾನ್‌ನ ಕಾನೂನುಬದ್ಧ ಹಕ್ಕುಗಳನ್ನು ಗುರುತಿಸಬೇಕು ಮತ್ತು ದೇಶವು ಭವಿಷ್ಯದ ದಾಳಿಯನ್ನು ಎದುರಿಸುವುದಿಲ್ಲ ಎಂದು ಖಾತರಿಪಡಿಸಬೇಕು ಎಂದು ಇರಾನ್ ಅಧ್ಯಕ್ಷ ಮಸೌದ್ ಪೆಜೆಶ್ಕಿಯಾನ್ ಹೇಳಿದ್ದಾರೆ."
+      "subtitle": "ಯಾವುದೇ ನಿರ್ಣಯವು ಇರಾನ್‌ನ ಕಾನೂನುಬದ್ಧ ಹಕ್ಕುಗಳನ್ನು ಗುರುತಿಸಬೇಕು ಮತ್ತು ದೇಶವು ಭವಿಷ್ಯದ ದಾಳಿಯನ್ನು ಎದುರಿಸುವುದಿಲ್ಲ ಎಂದು ಖಾತರಿಪಡಿಸಬೇಕು ಎಂದು ಇರಾನ್ ಅಧ್ಯಕ್ಷ ಮಸೌದ್ ಪೆಜೆಶ್ಕಿಯಾನ್ ಹೇಳಿದ್ದಾರೆ.",
+      "leadMedia": null
     },
     {
       "slug": "ತಲೆಗೆ-ಚೊಂಬು-ಸಿಲುಕಿ-ಒದ್ದಾಡುತ್ತಿದ್ದ-ಕೋತಿಯ",
@@ -889,7 +1005,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಸ್ಥಳೀಯರ ಕಾರ್ಯಕ್ಕೆ ಮೆಚ್ಚುಗೆ"
+      "subtitle": "ಸ್ಥಳೀಯರ ಕಾರ್ಯಕ್ಕೆ ಮೆಚ್ಚುಗೆ",
+      "leadMedia": null
     },
     {
       "slug": "30-ವರ್ಷದಿಂದ-ಕೊರಗ-ಸಮುದಾಯದ-ವ್ಯಕ್ತಿಯನ್ನು",
@@ -909,7 +1026,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ರಜನಿ ಶೆಟ್ಟಿ ಬಂಧಿತ ಆರೋಪಿ."
+      "subtitle": "ರಜನಿ ಶೆಟ್ಟಿ ಬಂಧಿತ ಆರೋಪಿ.",
+      "leadMedia": null
     },
     {
       "slug": "ಉಡುಪಿ-ಜಿಲ್ಲೆಗೆ-ಸರಕಾರಿ-ಮೆಡಿಕಲ್-ಕಾಲೇಜು",
@@ -928,7 +1046,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಜಿಲ್ಲೆಯಲ್ಲಿ ಮೆಡಿಕಲ್ ಕಾಲೇಜು ನಿರ್ಮಾಣವಾದರೆ ಆರೋಗ್ಯ ಕ್ಷೇತ್ರಕ್ಕೆ ಹೆಚ್ಚಿನ ಬೆಂಬಲ ಸಿಕ್ಕಿದಂತಾಗುತ್ತದೆ"
+      "subtitle": "ಜಿಲ್ಲೆಯಲ್ಲಿ ಮೆಡಿಕಲ್ ಕಾಲೇಜು ನಿರ್ಮಾಣವಾದರೆ ಆರೋಗ್ಯ ಕ್ಷೇತ್ರಕ್ಕೆ ಹೆಚ್ಚಿನ ಬೆಂಬಲ ಸಿಕ್ಕಿದಂತಾಗುತ್ತದೆ",
+      "leadMedia": null
     },
     {
       "slug": "ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ-ಹೆಬ್ಬಾಳ್ಕರ್-ಸಿಕ್ಸರ್-ಗೆ",
@@ -946,7 +1065,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಇಲಾಖೆಯ ಸಿಬ್ಬಂದಿ  ಕ್ರೀಡಾಕೂಟಕ್ಕೆ ಸಚಿವರಿಂದ ಚಾಲನೆ"
+      "subtitle": "ಇಲಾಖೆಯ ಸಿಬ್ಬಂದಿ  ಕ್ರೀಡಾಕೂಟಕ್ಕೆ ಸಚಿವರಿಂದ ಚಾಲನೆ",
+      "leadMedia": null
     },
     {
       "slug": "ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ-ಹೆಬ್ಬಾಳಕರ್-ಅವರನ್ನು-ಭೇಟಿಯಾದ",
@@ -961,7 +1081,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಅಕ್ಕಪಡೆ, ಗೃಹಲಕ್ಷ್ಮಿ, ಶಕ್ತಿ ಯೋಜನೆಗಳ ಮಾಹಿತಿ ಹಂಚಿಕೊಂಡ ಸಚಿವರು"
+      "subtitle": "ಅಕ್ಕಪಡೆ, ಗೃಹಲಕ್ಷ್ಮಿ, ಶಕ್ತಿ ಯೋಜನೆಗಳ ಮಾಹಿತಿ ಹಂಚಿಕೊಂಡ ಸಚಿವರು",
+      "leadMedia": null
     },
     {
       "slug": "90-ದಿನಗಳೊಳಗೆ-ಅಂಗನವಾಡಿ-ಖಾಲಿ-ಹುದ್ದೆ",
@@ -978,7 +1099,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಕಾಪು ಶಾಸಕ ಗುರ್ಮೆ ಸುರೇಶ್‌ ಶೆಟ್ಟಿ ಕೇಳಿದ ಪ್ರಶ್ನೆಗೆ ಸಚಿವರ ಉತ್ತರ"
+      "subtitle": "ಕಾಪು ಶಾಸಕ ಗುರ್ಮೆ ಸುರೇಶ್‌ ಶೆಟ್ಟಿ ಕೇಳಿದ ಪ್ರಶ್ನೆಗೆ ಸಚಿವರ ಉತ್ತರ",
+      "leadMedia": null
     },
     {
       "slug": "ಪೆರ್ಡೂರು-ದೇವಸ್ಥಾನದ-ವಿಚಾರದಲ್ಲಿ-ಸೊರಕೆ-ಬಹಿರಂಗ",
@@ -996,7 +1118,8 @@
       "placement": "lead",
       "isLead": true,
       "updatedAt": null,
-      "subtitle": "ಮಂಗಳವಾರ, ಉಡುಪಿಯಲ್ಲಿ ಈ ಬಗ್ಗೆ ಸುದ್ದಿಗೋಷ್ಠಿ ನಡೆಸಿ ಮಾತನಾಡಿದರು."
+      "subtitle": "ಮಂಗಳವಾರ, ಉಡುಪಿಯಲ್ಲಿ ಈ ಬಗ್ಗೆ ಸುದ್ದಿಗೋಷ್ಠಿ ನಡೆಸಿ ಮಾತನಾಡಿದರು.",
+      "leadMedia": null
     },
     {
       "slug": "ತ್ರಿನಯ-ವೈದ್ಯಕೀಯ-ಚಿಕಿತ್ಸಾಲಯ-ಉದ್ಘಾಟನೆ",
@@ -1011,7 +1134,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಆಧುನಿಕ ತಂತ್ರಜ್ಞಾನದ ಯಂತ್ರಗಳನ್ನು ಒಳಗೊಂಡ ಚರ್ಮ, ಕೂದಲು ಮತ್ತು ಅಲಂಕಾರಿಕ ಚಿಕಿತ್ಸೆಗಳಿಗೆ ಇಲ್ಲಿ ಅವಕಾಶ ಕಲ್ಪಿಸಲಾಗಿದೆ."
+      "subtitle": "ಆಧುನಿಕ ತಂತ್ರಜ್ಞಾನದ ಯಂತ್ರಗಳನ್ನು ಒಳಗೊಂಡ ಚರ್ಮ, ಕೂದಲು ಮತ್ತು ಅಲಂಕಾರಿಕ ಚಿಕಿತ್ಸೆಗಳಿಗೆ ಇಲ್ಲಿ ಅವಕಾಶ ಕಲ್ಪಿಸಲಾಗಿದೆ.",
+      "leadMedia": null
     },
     {
       "slug": "ಮಹಿಳಾ-ದಿನಾಚರಣೆ-ಅಂಗವಾಗಿ-ಡಾ-ಗೀತಾ",
@@ -1026,7 +1150,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಜಿಲ್ಲಾ ಮಹಿಳಾ ಕಾಂಗ್ರೆಸ್ ಅಧ್ಯಕ್ಷೆ ಜ್ಯೋತಿ ಕ್ರೃಷ್ಣ ಹೆಬ್ಬಾರ್‌ ನೇತೃತ್ವದಲ್ಲಿ ಸನ್ಮಾನ"
+      "subtitle": "ಜಿಲ್ಲಾ ಮಹಿಳಾ ಕಾಂಗ್ರೆಸ್ ಅಧ್ಯಕ್ಷೆ ಜ್ಯೋತಿ ಕ್ರೃಷ್ಣ ಹೆಬ್ಬಾರ್‌ ನೇತೃತ್ವದಲ್ಲಿ ಸನ್ಮಾನ",
+      "leadMedia": null
     },
     {
       "slug": "ಕಸಾಪ-ಉಡುಪಿ-ತಾಲೂಕು-ಘಟಕದ-ವತಿಯಿಂದ",
@@ -1041,7 +1166,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಖ್ಯಾತ ಸಾಹಿತಿ ಸುಕನ್ಯಾ ಕಳಸ ಹಾಗು ಸಾಹಿತಿ, ಶಿಕ್ಷಣ ತಜ್ಞ ಡಾ.ಮಹಾಬಲೇಶ್ವರ ರಾವ್  ದಂಪತಿಗಳಿಗೆ ಗೌರಬ"
+      "subtitle": "ಖ್ಯಾತ ಸಾಹಿತಿ ಸುಕನ್ಯಾ ಕಳಸ ಹಾಗು ಸಾಹಿತಿ, ಶಿಕ್ಷಣ ತಜ್ಞ ಡಾ.ಮಹಾಬಲೇಶ್ವರ ರಾವ್  ದಂಪತಿಗಳಿಗೆ ಗೌರಬ",
+      "leadMedia": null
     },
     {
       "slug": "ಜನತಾ-ಕಿರಿಮಂಜೇಶ್ವರದ-ಎಸ್ಎಸ್ಎಲ್-ಸಿ-ವಿದ್ಯಾರ್ಥಿಗಳ",
@@ -1059,7 +1185,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಜನತಾ ಆಂಗ್ಲ ಮಾಧ್ಯಮ ಶಾಲೆಯಲ್ಲಿ ಎಸ್‌ಎಸ್‌ಎಲ್‌ಸಿ ವಿದ್ಯಾರ್ಥಿಗಳ ಬೀಳ್ಕೊಡುಗೆ"
+      "subtitle": "ಜನತಾ ಆಂಗ್ಲ ಮಾಧ್ಯಮ ಶಾಲೆಯಲ್ಲಿ ಎಸ್‌ಎಸ್‌ಎಲ್‌ಸಿ ವಿದ್ಯಾರ್ಥಿಗಳ ಬೀಳ್ಕೊಡುಗೆ",
+      "leadMedia": null
     },
     {
       "slug": "ಅಪಘಾತದಲ್ಲಿ-ಗಾಯಗೊಂಡಿದ್ದ-ಬೈಕ್-ಸವಾರ-ಆಸ್ಪತ್ರೆಯಲ್ಲಿ",
@@ -1074,7 +1201,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಸಂಭವಿಸಿ ಗಾಯಗೊಂಡಿದ್ದ ಬೈಕ್ ಸವಾರ ಮೊಹಮ್ಮದ್ ಝೈದ್ (19)"
+      "subtitle": "ಸಂಭವಿಸಿ ಗಾಯಗೊಂಡಿದ್ದ ಬೈಕ್ ಸವಾರ ಮೊಹಮ್ಮದ್ ಝೈದ್ (19)",
+      "leadMedia": null
     },
     {
       "slug": "ಸ್ಮೃತಿ-ಇರಾನಿ-ಕಾಣುತ್ತಿಲ್ಲ-ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ",
@@ -1089,7 +1217,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಮಹಿಳೆಯರಿಗೆ ಉಡುಗೊರೆ ನೀಡಿರುವ ಕೇಂದ್ರ ಸರ್ಕಾರಕ್ಕೆ ಅಭಿನಂದನೆ ಸಲ್ಲಿಸಲು ಬಯಸುವೆ"
+      "subtitle": "ಮಹಿಳೆಯರಿಗೆ ಉಡುಗೊರೆ ನೀಡಿರುವ ಕೇಂದ್ರ ಸರ್ಕಾರಕ್ಕೆ ಅಭಿನಂದನೆ ಸಲ್ಲಿಸಲು ಬಯಸುವೆ",
+      "leadMedia": null
     },
     {
       "slug": "ಎಲ್-ಪಿಜಿ-ದರ-ಏರಿಕೆ-ವಿರುದ್ಧ",
@@ -1104,7 +1233,29 @@
       "placement": "lead",
       "isLead": true,
       "updatedAt": null,
-      "subtitle": "ಬ್ರಹ್ಮಗಿರಿ ಸರ್ಕಲ್ ಬಳಿ ರಸ್ತೆ ಮಧ್ಯೆ ಕಟ್ಟಿಗೆ ಬಳಸಿ ಒಲೆ ಉರಿಸಿ ಚಹಾ ಮಾಡಿ ಪ್ರತಿಭಟನೆ"
+      "subtitle": "ಬ್ರಹ್ಮಗಿರಿ ಸರ್ಕಲ್ ಬಳಿ ರಸ್ತೆ ಮಧ್ಯೆ ಕಟ್ಟಿಗೆ ಬಳಸಿ ಒಲೆ ಉರಿಸಿ ಚಹಾ ಮಾಡಿ ಪ್ರತಿಭಟನೆ",
+      "leadMedia": {
+        "images": [
+          {
+            "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/90c60855e9c87812.jpg",
+            "alt": "1003457318",
+            "width": 1280,
+            "height": 960
+          },
+          {
+            "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/4353a060141c121c.jpg",
+            "alt": "1003457315",
+            "width": 1280,
+            "height": 960
+          },
+          {
+            "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/088e5e0e71bc336c.jpg",
+            "alt": "1003457312",
+            "width": 1280,
+            "height": 960
+          }
+        ]
+      }
     },
     {
       "slug": "ಉಡುಪಿ-ಜಿಲ್ಲೆಯ-ಅಭಿವೃದ್ಧಿಯಲ್ಲಿ-ಮಹಿಳೆಯರ-ಕೊಡುಗೆ",
@@ -1119,7 +1270,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಉಡುಪಿ ನಗರ ಬಿಜೆಪಿ ಹಾಗೂ ಮಹಿಳಾ ಮೋರ್ಚಾದ ವತಿಯಿಂದ ಆಯೋಜಿಸಿದ್ದ ವಿಶ್ವ ಮಹಿಳಾ ದಿನಾಚರಣೆ"
+      "subtitle": "ಉಡುಪಿ ನಗರ ಬಿಜೆಪಿ ಹಾಗೂ ಮಹಿಳಾ ಮೋರ್ಚಾದ ವತಿಯಿಂದ ಆಯೋಜಿಸಿದ್ದ ವಿಶ್ವ ಮಹಿಳಾ ದಿನಾಚರಣೆ",
+      "leadMedia": null
     },
     {
       "slug": "ಮಣಿಪಾಲ-ನೂತನ-ಅಗ್ನಿಶಾಮಕದಳ-ಘಟಕಕ್ಕೆ-ಶಾಸಕ",
@@ -1134,7 +1286,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "3 ಕೋಟಿ ವೆಚ್ಚದಲ್ಲಿ ನೂತನವಾಗಿ ನಿರ್ಮಾಣಗೊಳ್ಳಲಿರುವ ಅಗ್ನಿಶಾಮಕ ದಳದ ಕಚೇರಿ"
+      "subtitle": "3 ಕೋಟಿ ವೆಚ್ಚದಲ್ಲಿ ನೂತನವಾಗಿ ನಿರ್ಮಾಣಗೊಳ್ಳಲಿರುವ ಅಗ್ನಿಶಾಮಕ ದಳದ ಕಚೇರಿ",
+      "leadMedia": null
     },
     {
       "slug": "ಟ್ರಂಪ್-ಕೊಲೆಗಡುಕ-ಸಿಐಟಿಯು-ರಾಜ್ಯ-ಕಾರ್ಯದರ್ಶಿ",
@@ -1149,7 +1302,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಉಡುಪಿ ಸಮಾನ ಮನಸ್ಕ ಸಂಘಟನೆಗಳಿಂದ ಯುದ್ಧ ವಿರೋಧಿ ದಿನಾಚರಣೆ"
+      "subtitle": "ಉಡುಪಿ ಸಮಾನ ಮನಸ್ಕ ಸಂಘಟನೆಗಳಿಂದ ಯುದ್ಧ ವಿರೋಧಿ ದಿನಾಚರಣೆ",
+      "leadMedia": null
     },
     {
       "slug": "ವೃದ್ದೆಯ-ಬರ್ಬರ-ಹತ್ಯೆ",
@@ -1168,7 +1322,8 @@
       "placement": "top",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಅರೋಪಿಗಳಿಬ್ಬರ ಬಂಧನ"
+      "subtitle": "ಅರೋಪಿಗಳಿಬ್ಬರ ಬಂಧನ",
+      "leadMedia": null
     },
     {
       "slug": "ರಾಷ್ಟ್ರೀಯ-ಹೆದ್ದಾರಿ-169-ಎ-ಕಾಮಗಾರಿ",
@@ -1183,7 +1338,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಕುಂದಾಪುರದ ಸಹಾಯಕ ಕಮಿಷನರ್ ರಶ್ಮಿ, ಹೆಚ್ಚುವರಿ ಪೊಲೀಸ್ ಅಧಿಕ್ಷಕ ಸುಧಾಕರ್ ನಾಯಕ್, ರಾಷ್ಟ್ರೀಯ ಹೆದ್ದಾರಿ ಅಧಿಕಾರಿಗಳಾದ ಲೋಕೇಶ್, ಶಶಿಧರ್, ನವೀನ್ ಭಾಗಿ"
+      "subtitle": "ಕುಂದಾಪುರದ ಸಹಾಯಕ ಕಮಿಷನರ್ ರಶ್ಮಿ, ಹೆಚ್ಚುವರಿ ಪೊಲೀಸ್ ಅಧಿಕ್ಷಕ ಸುಧಾಕರ್ ನಾಯಕ್, ರಾಷ್ಟ್ರೀಯ ಹೆದ್ದಾರಿ ಅಧಿಕಾರಿಗಳಾದ ಲೋಕೇಶ್, ಶಶಿಧರ್, ನವೀನ್ ಭಾಗಿ",
+      "leadMedia": null
     },
     {
       "slug": "ಇಸ್ಪೀಟು-ಜುಗಾರಿ-ಆಡುತ್ತಿದ್ದ-10-ಮಂದಿ",
@@ -1198,7 +1354,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಬ್ರಹ್ಮಾವರ ಠಾಣಾ ವ್ಯಾಪ್ತಿಯ ಹನೇಹಳ್ಳಿಯಲ್ಲಿ ಬಂಧನ"
+      "subtitle": "ಬ್ರಹ್ಮಾವರ ಠಾಣಾ ವ್ಯಾಪ್ತಿಯ ಹನೇಹಳ್ಳಿಯಲ್ಲಿ ಬಂಧನ",
+      "leadMedia": null
     },
     {
       "slug": "ರಾಷ್ಟ್ರೋತ್ಥಾನ-ವಿದ್ಯಾಕೇಂದ್ರಕ್ಕೆ-ವಿದ್ಯಾಭಾರತಿ-ಕರ್ನಾಟಕ",
@@ -1213,7 +1370,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಚೇರ್ಕಾಡಿಯ ರಾಷ್ಟ್ರೋತ್ಥಾನ ಶಾಲೆಗೆ ಭೇಟಿ"
+      "subtitle": "ಚೇರ್ಕಾಡಿಯ ರಾಷ್ಟ್ರೋತ್ಥಾನ ಶಾಲೆಗೆ ಭೇಟಿ",
+      "leadMedia": null
     },
     {
       "slug": "ಕಾಂಗ್ರೆಸ್-ಮುಖಂಡನ-ಆತ್ಮೀಯ-ಡ್ರಗ್ಸ್",
@@ -1233,7 +1391,8 @@
       "placement": "lead",
       "isLead": true,
       "updatedAt": null,
-      "subtitle": "ಬೆಳಪುವಿನ ನಿವಾಸಿಗಳಾದ ಝಹೀರ್ ಅಹ್ಮದ್ (66), ಸಯ್ಯದ್ ಶಮೀಮ್ (28)  ಬಂಧಿತ ಆರೋಪಿಗಳು"
+      "subtitle": "ಬೆಳಪುವಿನ ನಿವಾಸಿಗಳಾದ ಝಹೀರ್ ಅಹ್ಮದ್ (66), ಸಯ್ಯದ್ ಶಮೀಮ್ (28)  ಬಂಧಿತ ಆರೋಪಿಗಳು",
+      "leadMedia": null
     },
     {
       "slug": "rajy-srkardimd-dlitr-mislu",
@@ -1248,7 +1407,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ದಲಿತರ ಮೀಸಲು ನಿಧಿಯನ್ನು ಮುಳುಗಿಸಿದ ನಂತರವಾದರೂ ಗ್ಯಾರಂಟಿ ಯೋಜನೆಗಳು ಸರಿಯಾದ 'ಹಳಿ'ಗಳ ಮೇಲೆ ಹೋಗುತ್ತಿದೆಯೇ?"
+      "subtitle": "ದಲಿತರ ಮೀಸಲು ನಿಧಿಯನ್ನು ಮುಳುಗಿಸಿದ ನಂತರವಾದರೂ ಗ್ಯಾರಂಟಿ ಯೋಜನೆಗಳು ಸರಿಯಾದ 'ಹಳಿ'ಗಳ ಮೇಲೆ ಹೋಗುತ್ತಿದೆಯೇ?",
+      "leadMedia": null
     },
     {
       "slug": "visv-mhila-dinacrney-sulgitti",
@@ -1263,7 +1423,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಶಾಸಕ ಎ ಕಿರಣ್ ಕುಮಾರ್ ಕೊಡ್ಗಿ, ಮಹಿಳಾ ಮೋರ್ಚಾ ಅಧ್ಯಕ್ಷೆ ಸೌರಭಿ ಪೈ ಭಾಗಿ"
+      "subtitle": "ಶಾಸಕ ಎ ಕಿರಣ್ ಕುಮಾರ್ ಕೊಡ್ಗಿ, ಮಹಿಳಾ ಮೋರ್ಚಾ ಅಧ್ಯಕ್ಷೆ ಸೌರಭಿ ಪೈ ಭಾಗಿ",
+      "leadMedia": null
     },
     {
       "slug": "ptrkrt-hesrinlli-blakmel-dmdhege",
@@ -1278,7 +1439,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಉಡುಪಿ ಜಿಲ್ಲೆ–ತಾಲೂಕು ಪತ್ರಕರ್ತರ ಸಂಘಗಳ ಪದಗ್ರಹಣ"
+      "subtitle": "ಉಡುಪಿ ಜಿಲ್ಲೆ–ತಾಲೂಕು ಪತ್ರಕರ್ತರ ಸಂಘಗಳ ಪದಗ್ರಹಣ",
+      "leadMedia": null
     },
     {
       "slug": "d-k-udupi-minu",
@@ -1293,7 +1455,8 @@
       "placement": "top",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಜಿಲ್ಲಾಸ್ಪತ್ರೆಯಲ್ಲಿ ದಿನನಿತ್ಯ ಚಿಕಿತ್ಸೆಗೆ ಬರುವ ನೂರಾರು ರೋಗಿಗಳಿಗೆ ಸಹಕಾರಿ"
+      "subtitle": "ಜಿಲ್ಲಾಸ್ಪತ್ರೆಯಲ್ಲಿ ದಿನನಿತ್ಯ ಚಿಕಿತ್ಸೆಗೆ ಬರುವ ನೂರಾರು ರೋಗಿಗಳಿಗೆ ಸಹಕಾರಿ",
+      "leadMedia": null
     },
     {
       "slug": "karkl-ptrikabhvnkke-rajyadhyks-sivanmd",
@@ -1310,7 +1473,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಕಾರ್ಕಳ ತಾಲೂಕು ಕಾರ್ಯನಿರತ ಪತ್ರಕರ್ತರ ಸಂಘದ ವತಿಯಿಂದ ಸನ್ಮಾನ"
+      "subtitle": "ಕಾರ್ಕಳ ತಾಲೂಕು ಕಾರ್ಯನಿರತ ಪತ್ರಕರ್ತರ ಸಂಘದ ವತಿಯಿಂದ ಸನ್ಮಾನ",
+      "leadMedia": null
     },
     {
       "slug": "guru-prmprege-heccu-ottu",
@@ -1325,7 +1489,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಹುಣಸೂರಿನ ಮಾದಹಳ್ಳಿಯ ಶ್ರೀ ಉಕ್ಕಿನಕಂತೆ ಮಠದಲ್ಲಿ ನಡೆದ ಸಮಾರಂಭದಲ್ಲಿ ಹೇಳಿಕೆ"
+      "subtitle": "ಹುಣಸೂರಿನ ಮಾದಹಳ್ಳಿಯ ಶ್ರೀ ಉಕ್ಕಿನಕಂತೆ ಮಠದಲ್ಲಿ ನಡೆದ ಸಮಾರಂಭದಲ್ಲಿ ಹೇಳಿಕೆ",
+      "leadMedia": null
     },
     {
       "slug": "mlpeylli-kolet-sthitiylli-svptte",
@@ -1340,7 +1505,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಸಮಾಜಸೇವಕ ನಿತ್ಯಾನಂದ ಒಳಕಾಡುವರ ನೇತ್ರತ್ವದಲ್ಲಿ ಕಳೇಬರ ಮೇಲಕೆತ್ತುವ ಕಾರ್ಯಚರಣೆ"
+      "subtitle": "ಸಮಾಜಸೇವಕ ನಿತ್ಯಾನಂದ ಒಳಕಾಡುವರ ನೇತ್ರತ್ವದಲ್ಲಿ ಕಳೇಬರ ಮೇಲಕೆತ್ತುವ ಕಾರ್ಯಚರಣೆ",
+      "leadMedia": null
     },
     {
       "slug": "grh-blkey-elpiji-silimdr-bele",
@@ -1358,7 +1524,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ"
+      "subtitle": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ",
+      "leadMedia": null
     },
     {
       "slug": "hlvaru-desglu-mdhysthike-vhislu-mumde",
@@ -1375,7 +1542,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಸಂಘರ್ಷವನ್ನು ಪರಿಹರಿಸಲು ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ಪ್ರಯತ್ನಗಳನ್ನು ಪ್ರಾರಂಭಿಸಿವೆ"
+      "subtitle": "ಸಂಘರ್ಷವನ್ನು ಪರಿಹರಿಸಲು ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ಪ್ರಯತ್ನಗಳನ್ನು ಪ್ರಾರಂಭಿಸಿವೆ",
+      "leadMedia": null
     },
     {
       "slug": "nerlnnu-himbalisuttiddene-eccr",
@@ -1390,7 +1558,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": "2026-03-06T16:45:53.822Z",
-      "subtitle": "ಉಡುಪಿ ಜಿಲ್ಲೆಯಲ್ಲಿ ಇನ್ನು ಮುಂದೆ ನೆರಳು ಕೂಡ ಪೋಲಿಸರ ಕಣ್ಗಾವಲಿನಿಂದ ತಪ್ಪಿಸಿಕೊಳ್ಳುವುದು ಕಷ್ಟ..!"
+      "subtitle": "ಉಡುಪಿ ಜಿಲ್ಲೆಯಲ್ಲಿ ಇನ್ನು ಮುಂದೆ ನೆರಳು ಕೂಡ ಪೋಲಿಸರ ಕಣ್ಗಾವಲಿನಿಂದ ತಪ್ಪಿಸಿಕೊಳ್ಳುವುದು ಕಷ್ಟ..!",
+      "leadMedia": null
     },
     {
       "slug": "ma-8-rmdu-timgleylli-sahityotsv",
@@ -1409,7 +1578,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ."
+      "subtitle": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ.",
+      "leadMedia": null
     },
     {
       "slug": "yavude-durdrsti-illd-nirs-ayvyy",
@@ -1429,7 +1599,8 @@
       "placement": "top",
       "isLead": false,
       "updatedAt": "2026-03-06T12:06:36.576Z",
-      "subtitle": "ರಾಜ್ಯದ ಜನತೆಗೆ ನಿರಾಶೆ ಉಂಟು ಮಾಡಿದ  ಬಜೆಟ್"
+      "subtitle": "ರಾಜ್ಯದ ಜನತೆಗೆ ನಿರಾಶೆ ಉಂಟು ಮಾಡಿದ  ಬಜೆಟ್",
+      "leadMedia": null
     },
     {
       "slug": "15-vrsglimd-tlemresikomdidd-aropi-bmdhn",
@@ -1448,7 +1619,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": "2026-03-06T11:52:13.544Z",
-      "subtitle": "ಉಡುಪಿ ನಗರ ಪೊಲೀಸ್ ಠಾಣೆಯ ಪ್ರಭಾರ ನಿರೀಕ್ಷಕರಾದ ಮಹೇಶ್ ಪ್ರಸಾದ್ ಅವರ ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ಬಂಧಿಸಿದ್ದಾರೆ."
+      "subtitle": "ಉಡುಪಿ ನಗರ ಪೊಲೀಸ್ ಠಾಣೆಯ ಪ್ರಭಾರ ನಿರೀಕ್ಷಕರಾದ ಮಹೇಶ್ ಪ್ರಸಾದ್ ಅವರ ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ಬಂಧಿಸಿದ್ದಾರೆ.",
+      "leadMedia": null
     },
     {
       "slug": "siddramyy-srkard-sal-gyarmti-bjet",
@@ -1466,7 +1638,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "17 ಬಾರಿ ಬಜೆಟ್ ಮಂಡಿಸಿದ ಮುಖ್ಯಮಂತ್ರಿಗಳು ಎಲ್ಲೋ ಸಾಲ ಮಾಡಿಯಾದ್ರೂ ಅಧಿಕಾರಕ್ಕೆ ಅಂಟಿಕೊಳ್ಳುವ ಕಸರತ್ತು ಮಾಡಿದಂತೆ ತೋರುತ್ತಿದೆ"
+      "subtitle": "17 ಬಾರಿ ಬಜೆಟ್ ಮಂಡಿಸಿದ ಮುಖ್ಯಮಂತ್ರಿಗಳು ಎಲ್ಲೋ ಸಾಲ ಮಾಡಿಯಾದ್ರೂ ಅಧಿಕಾರಕ್ಕೆ ಅಂಟಿಕೊಳ್ಳುವ ಕಸರತ್ತು ಮಾಡಿದಂತೆ ತೋರುತ್ತಿದೆ",
+      "leadMedia": null
     },
     {
       "slug": "dksin-knnd-jilley-abhivrddhige-hos",
@@ -1485,7 +1658,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಕರಾವಳಿ ಅಭಿವೃದ್ಧಿಗೆ ಹೊಸ ಆಯಾಮ"
+      "subtitle": "ಕರಾವಳಿ ಅಭಿವೃದ್ಧಿಗೆ ಹೊಸ ಆಯಾಮ",
+      "leadMedia": null
     },
     {
       "slug": "kravli-jilley-palige-kral-bjet",
@@ -1500,7 +1674,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಜನತೆಯ ನಿರೀಕ್ಷೆಯನ್ನು ಹುಸಿಯಾಗಿಸಿ ಗರಿಷ್ಠ ಸಾಲವನ್ನು ರಾಜ್ಯದ ಜನತೆಯ ಮೇಲೆ ಹೇರುವ ಮೂಲಕ \"ಸಾಲ ರಾಮಯ್ಯ\" ಆಗಿದ್ದಾರೆ"
+      "subtitle": "ಜನತೆಯ ನಿರೀಕ್ಷೆಯನ್ನು ಹುಸಿಯಾಗಿಸಿ ಗರಿಷ್ಠ ಸಾಲವನ್ನು ರಾಜ್ಯದ ಜನತೆಯ ಮೇಲೆ ಹೇರುವ ಮೂಲಕ \"ಸಾಲ ರಾಮಯ್ಯ\" ಆಗಿದ್ದಾರೆ",
+      "leadMedia": null
     },
     {
       "slug": "sald-horeyomdige-gayd-mele-bre",
@@ -1515,7 +1690,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಅಧಿಕಾರಕ್ಕಾಗಿ ಜಾರಿಗೊಳಿಸಿದ್ದ ಗ್ಯಾರಂಟಿಗಳ ನಿರ್ವಹಣೆಗೆ ಪರದಾಡುತ್ತಿರುವ ರಾಜ್ಯ ಸರಕಾರ ಯುವ ನಿಧಿ ಗ್ಯಾರಂಟಿಗೆ ಎಳ್ಳು ನೀರು ಬಿಟ್ಟಂತಾಗಿದೆ"
+      "subtitle": "ಅಧಿಕಾರಕ್ಕಾಗಿ ಜಾರಿಗೊಳಿಸಿದ್ದ ಗ್ಯಾರಂಟಿಗಳ ನಿರ್ವಹಣೆಗೆ ಪರದಾಡುತ್ತಿರುವ ರಾಜ್ಯ ಸರಕಾರ ಯುವ ನಿಧಿ ಗ್ಯಾರಂಟಿಗೆ ಎಳ್ಳು ನೀರು ಬಿಟ್ಟಂತಾಗಿದೆ",
+      "leadMedia": null
     },
     {
       "slug": "brhavr-vmcne-duru-dakhlu",
@@ -1530,7 +1706,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಶಿರಿಯಾರದ ಎಸ್.ಯೋಗೀಶ್ ಎಂಬವರ ಮಾಲಕತ್ವದ ವಿಶ್ವಂಬರ ಕ್ಯಾಶ್ಯೂ ಇಂಡಸ್ಟ್ರೀಸ್‌ನಲ್ಲಿ ವಂಚನೆ"
+      "subtitle": "ಶಿರಿಯಾರದ ಎಸ್.ಯೋಗೀಶ್ ಎಂಬವರ ಮಾಲಕತ್ವದ ವಿಶ್ವಂಬರ ಕ್ಯಾಶ್ಯೂ ಇಂಡಸ್ಟ್ರೀಸ್‌ನಲ್ಲಿ ವಂಚನೆ",
+      "leadMedia": null
     },
     {
       "slug": "smtolit-durdrstiy-bjet-scive-lksmi",
@@ -1545,7 +1722,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "subtitle": "ಮಕ್ಕಳ ಪರ ಯೋಜನೆಗಳಿಗೆ 63,135 ಕೋಟಿ ರೂಪಾಯಿ ಮೀಸಲಿಡಲಾಗಿದೆ."
+      "subtitle": "ಮಕ್ಕಳ ಪರ ಯೋಜನೆಗಳಿಗೆ 63,135 ಕೋಟಿ ರೂಪಾಯಿ ಮೀಸಲಿಡಲಾಗಿದೆ.",
+      "leadMedia": null
     },
     {
       "slug": "klenask-sevisi-diploma-vidyarthini-atmhtye",
@@ -1560,7 +1738,8 @@
       "placement": "top",
       "isLead": false,
       "updatedAt": "2026-03-06T12:03:20.712Z",
-      "subtitle": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ"
+      "subtitle": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ",
+      "leadMedia": null
     },
     {
       "slug": "take-steps-ensure-drinking-water",
@@ -1578,7 +1757,8 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": "2026-03-05T11:07:59.152Z",
-      "subtitle": "ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ"
+      "subtitle": "ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ",
+      "leadMedia": null
     },
     {
       "slug": "71-year-old-grandfather-sentenced",
@@ -1595,7 +1775,8 @@
       "placement": "top",
       "isLead": false,
       "updatedAt": "2026-03-05T11:10:27.868Z",
-      "subtitle": "ಸರಕಾರದ ಪರವಾಗಿ ಸರಕಾರಿ ಅಭಿಯೋಜಕ ಬೇಳೂರು ಪ್ರಕಾಶ್ಚಂದ್ರ ಶೆಟ್ಟಿ ವಾದಿಸಿದ್ದಾರೆ."
+      "subtitle": "ಸರಕಾರದ ಪರವಾಗಿ ಸರಕಾರಿ ಅಭಿಯೋಜಕ ಬೇಳೂರು ಪ್ರಕಾಶ್ಚಂದ್ರ ಶೆಟ್ಟಿ ವಾದಿಸಿದ್ದಾರೆ.",
+      "leadMedia": null
     },
     {
       "slug": "people-kapu-buried-sorake-memorial",
@@ -1614,7 +1795,8 @@
       "placement": "lead",
       "isLead": true,
       "updatedAt": "2026-03-05T10:54:20.022Z",
-      "subtitle": "ಕಾಪುವಿನಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ ಪಕ್ಷದ ಶವಪೆಟ್ಟಿಗೆ ಕೊನೆಯ ಮೊಳೆಯನ್ನು ಸೊರಕೆಯವರೇ ಹೊಡೆಯುತ್ತಿದ್ದಾರೆ"
+      "subtitle": "ಕಾಪುವಿನಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ ಪಕ್ಷದ ಶವಪೆಟ್ಟಿಗೆ ಕೊನೆಯ ಮೊಳೆಯನ್ನು ಸೊರಕೆಯವರೇ ಹೊಡೆಯುತ್ತಿದ್ದಾರೆ",
+      "leadMedia": null
     }
   ],
   "categories": {
@@ -1636,7 +1818,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಜಿಲ್ಲೆಯಲ್ಲಿ ಮೆಡಿಕಲ್ ಕಾಲೇಜು ನಿರ್ಮಾಣವಾದರೆ ಆರೋಗ್ಯ ಕ್ಷೇತ್ರಕ್ಕೆ ಹೆಚ್ಚಿನ ಬೆಂಬಲ ಸಿಕ್ಕಿದಂತಾಗುತ್ತದೆ"
+        "subtitle": "ಜಿಲ್ಲೆಯಲ್ಲಿ ಮೆಡಿಕಲ್ ಕಾಲೇಜು ನಿರ್ಮಾಣವಾದರೆ ಆರೋಗ್ಯ ಕ್ಷೇತ್ರಕ್ಕೆ ಹೆಚ್ಚಿನ ಬೆಂಬಲ ಸಿಕ್ಕಿದಂತಾಗುತ್ತದೆ",
+        "leadMedia": null
       },
       {
         "slug": "ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ-ಹೆಬ್ಬಾಳ್ಕರ್-ಸಿಕ್ಸರ್-ಗೆ",
@@ -1654,7 +1837,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಇಲಾಖೆಯ ಸಿಬ್ಬಂದಿ  ಕ್ರೀಡಾಕೂಟಕ್ಕೆ ಸಚಿವರಿಂದ ಚಾಲನೆ"
+        "subtitle": "ಇಲಾಖೆಯ ಸಿಬ್ಬಂದಿ  ಕ್ರೀಡಾಕೂಟಕ್ಕೆ ಸಚಿವರಿಂದ ಚಾಲನೆ",
+        "leadMedia": null
       },
       {
         "slug": "ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ-ಹೆಬ್ಬಾಳಕರ್-ಅವರನ್ನು-ಭೇಟಿಯಾದ",
@@ -1669,7 +1853,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಅಕ್ಕಪಡೆ, ಗೃಹಲಕ್ಷ್ಮಿ, ಶಕ್ತಿ ಯೋಜನೆಗಳ ಮಾಹಿತಿ ಹಂಚಿಕೊಂಡ ಸಚಿವರು"
+        "subtitle": "ಅಕ್ಕಪಡೆ, ಗೃಹಲಕ್ಷ್ಮಿ, ಶಕ್ತಿ ಯೋಜನೆಗಳ ಮಾಹಿತಿ ಹಂಚಿಕೊಂಡ ಸಚಿವರು",
+        "leadMedia": null
       },
       {
         "slug": "90-ದಿನಗಳೊಳಗೆ-ಅಂಗನವಾಡಿ-ಖಾಲಿ-ಹುದ್ದೆ",
@@ -1686,7 +1871,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಕಾಪು ಶಾಸಕ ಗುರ್ಮೆ ಸುರೇಶ್‌ ಶೆಟ್ಟಿ ಕೇಳಿದ ಪ್ರಶ್ನೆಗೆ ಸಚಿವರ ಉತ್ತರ"
+        "subtitle": "ಕಾಪು ಶಾಸಕ ಗುರ್ಮೆ ಸುರೇಶ್‌ ಶೆಟ್ಟಿ ಕೇಳಿದ ಪ್ರಶ್ನೆಗೆ ಸಚಿವರ ಉತ್ತರ",
+        "leadMedia": null
       },
       {
         "slug": "ಪೆರ್ಡೂರು-ದೇವಸ್ಥಾನದ-ವಿಚಾರದಲ್ಲಿ-ಸೊರಕೆ-ಬಹಿರಂಗ",
@@ -1704,7 +1890,8 @@
         "placement": "lead",
         "isLead": true,
         "updatedAt": null,
-        "subtitle": "ಮಂಗಳವಾರ, ಉಡುಪಿಯಲ್ಲಿ ಈ ಬಗ್ಗೆ ಸುದ್ದಿಗೋಷ್ಠಿ ನಡೆಸಿ ಮಾತನಾಡಿದರು."
+        "subtitle": "ಮಂಗಳವಾರ, ಉಡುಪಿಯಲ್ಲಿ ಈ ಬಗ್ಗೆ ಸುದ್ದಿಗೋಷ್ಠಿ ನಡೆಸಿ ಮಾತನಾಡಿದರು.",
+        "leadMedia": null
       },
       {
         "slug": "ಸ್ಮೃತಿ-ಇರಾನಿ-ಕಾಣುತ್ತಿಲ್ಲ-ಸಚಿವೆ-ಲಕ್ಷ್ಮೀ",
@@ -1719,7 +1906,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಮಹಿಳೆಯರಿಗೆ ಉಡುಗೊರೆ ನೀಡಿರುವ ಕೇಂದ್ರ ಸರ್ಕಾರಕ್ಕೆ ಅಭಿನಂದನೆ ಸಲ್ಲಿಸಲು ಬಯಸುವೆ"
+        "subtitle": "ಮಹಿಳೆಯರಿಗೆ ಉಡುಗೊರೆ ನೀಡಿರುವ ಕೇಂದ್ರ ಸರ್ಕಾರಕ್ಕೆ ಅಭಿನಂದನೆ ಸಲ್ಲಿಸಲು ಬಯಸುವೆ",
+        "leadMedia": null
       },
       {
         "slug": "ಎಲ್-ಪಿಜಿ-ದರ-ಏರಿಕೆ-ವಿರುದ್ಧ",
@@ -1734,7 +1922,29 @@
         "placement": "lead",
         "isLead": true,
         "updatedAt": null,
-        "subtitle": "ಬ್ರಹ್ಮಗಿರಿ ಸರ್ಕಲ್ ಬಳಿ ರಸ್ತೆ ಮಧ್ಯೆ ಕಟ್ಟಿಗೆ ಬಳಸಿ ಒಲೆ ಉರಿಸಿ ಚಹಾ ಮಾಡಿ ಪ್ರತಿಭಟನೆ"
+        "subtitle": "ಬ್ರಹ್ಮಗಿರಿ ಸರ್ಕಲ್ ಬಳಿ ರಸ್ತೆ ಮಧ್ಯೆ ಕಟ್ಟಿಗೆ ಬಳಸಿ ಒಲೆ ಉರಿಸಿ ಚಹಾ ಮಾಡಿ ಪ್ರತಿಭಟನೆ",
+        "leadMedia": {
+          "images": [
+            {
+              "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/90c60855e9c87812.jpg",
+              "alt": "1003457318",
+              "width": 1280,
+              "height": 960
+            },
+            {
+              "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/4353a060141c121c.jpg",
+              "alt": "1003457315",
+              "width": 1280,
+              "height": 960
+            },
+            {
+              "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/088e5e0e71bc336c.jpg",
+              "alt": "1003457312",
+              "width": 1280,
+              "height": 960
+            }
+          ]
+        }
       },
       {
         "slug": "rajy-srkardimd-dlitr-mislu",
@@ -1749,7 +1959,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ದಲಿತರ ಮೀಸಲು ನಿಧಿಯನ್ನು ಮುಳುಗಿಸಿದ ನಂತರವಾದರೂ ಗ್ಯಾರಂಟಿ ಯೋಜನೆಗಳು ಸರಿಯಾದ 'ಹಳಿ'ಗಳ ಮೇಲೆ ಹೋಗುತ್ತಿದೆಯೇ?"
+        "subtitle": "ದಲಿತರ ಮೀಸಲು ನಿಧಿಯನ್ನು ಮುಳುಗಿಸಿದ ನಂತರವಾದರೂ ಗ್ಯಾರಂಟಿ ಯೋಜನೆಗಳು ಸರಿಯಾದ 'ಹಳಿ'ಗಳ ಮೇಲೆ ಹೋಗುತ್ತಿದೆಯೇ?",
+        "leadMedia": null
       },
       {
         "slug": "guru-prmprege-heccu-ottu",
@@ -1764,7 +1975,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಹುಣಸೂರಿನ ಮಾದಹಳ್ಳಿಯ ಶ್ರೀ ಉಕ್ಕಿನಕಂತೆ ಮಠದಲ್ಲಿ ನಡೆದ ಸಮಾರಂಭದಲ್ಲಿ ಹೇಳಿಕೆ"
+        "subtitle": "ಹುಣಸೂರಿನ ಮಾದಹಳ್ಳಿಯ ಶ್ರೀ ಉಕ್ಕಿನಕಂತೆ ಮಠದಲ್ಲಿ ನಡೆದ ಸಮಾರಂಭದಲ್ಲಿ ಹೇಳಿಕೆ",
+        "leadMedia": null
       },
       {
         "slug": "yavude-durdrsti-illd-nirs-ayvyy",
@@ -1784,7 +1996,8 @@
         "placement": "top",
         "isLead": false,
         "updatedAt": "2026-03-06T12:06:36.576Z",
-        "subtitle": "ರಾಜ್ಯದ ಜನತೆಗೆ ನಿರಾಶೆ ಉಂಟು ಮಾಡಿದ  ಬಜೆಟ್"
+        "subtitle": "ರಾಜ್ಯದ ಜನತೆಗೆ ನಿರಾಶೆ ಉಂಟು ಮಾಡಿದ  ಬಜೆಟ್",
+        "leadMedia": null
       },
       {
         "slug": "siddramyy-srkard-sal-gyarmti-bjet",
@@ -1802,7 +2015,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "17 ಬಾರಿ ಬಜೆಟ್ ಮಂಡಿಸಿದ ಮುಖ್ಯಮಂತ್ರಿಗಳು ಎಲ್ಲೋ ಸಾಲ ಮಾಡಿಯಾದ್ರೂ ಅಧಿಕಾರಕ್ಕೆ ಅಂಟಿಕೊಳ್ಳುವ ಕಸರತ್ತು ಮಾಡಿದಂತೆ ತೋರುತ್ತಿದೆ"
+        "subtitle": "17 ಬಾರಿ ಬಜೆಟ್ ಮಂಡಿಸಿದ ಮುಖ್ಯಮಂತ್ರಿಗಳು ಎಲ್ಲೋ ಸಾಲ ಮಾಡಿಯಾದ್ರೂ ಅಧಿಕಾರಕ್ಕೆ ಅಂಟಿಕೊಳ್ಳುವ ಕಸರತ್ತು ಮಾಡಿದಂತೆ ತೋರುತ್ತಿದೆ",
+        "leadMedia": null
       },
       {
         "slug": "dksin-knnd-jilley-abhivrddhige-hos",
@@ -1821,7 +2035,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಕರಾವಳಿ ಅಭಿವೃದ್ಧಿಗೆ ಹೊಸ ಆಯಾಮ"
+        "subtitle": "ಕರಾವಳಿ ಅಭಿವೃದ್ಧಿಗೆ ಹೊಸ ಆಯಾಮ",
+        "leadMedia": null
       },
       {
         "slug": "kravli-jilley-palige-kral-bjet",
@@ -1836,7 +2051,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಜನತೆಯ ನಿರೀಕ್ಷೆಯನ್ನು ಹುಸಿಯಾಗಿಸಿ ಗರಿಷ್ಠ ಸಾಲವನ್ನು ರಾಜ್ಯದ ಜನತೆಯ ಮೇಲೆ ಹೇರುವ ಮೂಲಕ \"ಸಾಲ ರಾಮಯ್ಯ\" ಆಗಿದ್ದಾರೆ"
+        "subtitle": "ಜನತೆಯ ನಿರೀಕ್ಷೆಯನ್ನು ಹುಸಿಯಾಗಿಸಿ ಗರಿಷ್ಠ ಸಾಲವನ್ನು ರಾಜ್ಯದ ಜನತೆಯ ಮೇಲೆ ಹೇರುವ ಮೂಲಕ \"ಸಾಲ ರಾಮಯ್ಯ\" ಆಗಿದ್ದಾರೆ",
+        "leadMedia": null
       },
       {
         "slug": "sald-horeyomdige-gayd-mele-bre",
@@ -1851,7 +2067,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಅಧಿಕಾರಕ್ಕಾಗಿ ಜಾರಿಗೊಳಿಸಿದ್ದ ಗ್ಯಾರಂಟಿಗಳ ನಿರ್ವಹಣೆಗೆ ಪರದಾಡುತ್ತಿರುವ ರಾಜ್ಯ ಸರಕಾರ ಯುವ ನಿಧಿ ಗ್ಯಾರಂಟಿಗೆ ಎಳ್ಳು ನೀರು ಬಿಟ್ಟಂತಾಗಿದೆ"
+        "subtitle": "ಅಧಿಕಾರಕ್ಕಾಗಿ ಜಾರಿಗೊಳಿಸಿದ್ದ ಗ್ಯಾರಂಟಿಗಳ ನಿರ್ವಹಣೆಗೆ ಪರದಾಡುತ್ತಿರುವ ರಾಜ್ಯ ಸರಕಾರ ಯುವ ನಿಧಿ ಗ್ಯಾರಂಟಿಗೆ ಎಳ್ಳು ನೀರು ಬಿಟ್ಟಂತಾಗಿದೆ",
+        "leadMedia": null
       },
       {
         "slug": "smtolit-durdrstiy-bjet-scive-lksmi",
@@ -1866,7 +2083,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಮಕ್ಕಳ ಪರ ಯೋಜನೆಗಳಿಗೆ 63,135 ಕೋಟಿ ರೂಪಾಯಿ ಮೀಸಲಿಡಲಾಗಿದೆ."
+        "subtitle": "ಮಕ್ಕಳ ಪರ ಯೋಜನೆಗಳಿಗೆ 63,135 ಕೋಟಿ ರೂಪಾಯಿ ಮೀಸಲಿಡಲಾಗಿದೆ.",
+        "leadMedia": null
       },
       {
         "slug": "people-kapu-buried-sorake-memorial",
@@ -1885,7 +2103,8 @@
         "placement": "lead",
         "isLead": true,
         "updatedAt": "2026-03-05T10:54:20.022Z",
-        "subtitle": "ಕಾಪುವಿನಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ ಪಕ್ಷದ ಶವಪೆಟ್ಟಿಗೆ ಕೊನೆಯ ಮೊಳೆಯನ್ನು ಸೊರಕೆಯವರೇ ಹೊಡೆಯುತ್ತಿದ್ದಾರೆ"
+        "subtitle": "ಕಾಪುವಿನಲ್ಲಿ ಕಾಂಗ್ರೆಸ್‌ ಪಕ್ಷದ ಶವಪೆಟ್ಟಿಗೆ ಕೊನೆಯ ಮೊಳೆಯನ್ನು ಸೊರಕೆಯವರೇ ಹೊಡೆಯುತ್ತಿದ್ದಾರೆ",
+        "leadMedia": null
       }
     ],
     "crime": [
@@ -1906,7 +2125,29 @@
         "placement": "lead",
         "isLead": true,
         "updatedAt": "2026-03-13T15:19:17.361Z",
-        "subtitle": "8.69 ಕೋಟಿ ಮೌಲ್ಯದ ಆಸ್ತಿ ಪತ್ತೆ !"
+        "subtitle": "8.69 ಕೋಟಿ ಮೌಲ್ಯದ ಆಸ್ತಿ ಪತ್ತೆ !",
+        "leadMedia": {
+          "images": [
+            {
+              "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/3abfa49534ce0537.jpg",
+              "alt": "1003472642",
+              "width": 1025,
+              "height": 1113
+            },
+            {
+              "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/171f1dfd9044e359.jpg",
+              "alt": "1003472626",
+              "width": 1080,
+              "height": 831
+            },
+            {
+              "url": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/82781454c309ef4d.jpg",
+              "alt": "1003472629",
+              "width": 1200,
+              "height": 1600
+            }
+          ]
+        }
       },
       {
         "slug": "30-ವರ್ಷದಿಂದ-ಕೊರಗ-ಸಮುದಾಯದ-ವ್ಯಕ್ತಿಯನ್ನು",
@@ -1926,7 +2167,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ರಜನಿ ಶೆಟ್ಟಿ ಬಂಧಿತ ಆರೋಪಿ."
+        "subtitle": "ರಜನಿ ಶೆಟ್ಟಿ ಬಂಧಿತ ಆರೋಪಿ.",
+        "leadMedia": null
       },
       {
         "slug": "ವೃದ್ದೆಯ-ಬರ್ಬರ-ಹತ್ಯೆ",
@@ -1945,7 +2187,8 @@
         "placement": "top",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಅರೋಪಿಗಳಿಬ್ಬರ ಬಂಧನ"
+        "subtitle": "ಅರೋಪಿಗಳಿಬ್ಬರ ಬಂಧನ",
+        "leadMedia": null
       },
       {
         "slug": "ಇಸ್ಪೀಟು-ಜುಗಾರಿ-ಆಡುತ್ತಿದ್ದ-10-ಮಂದಿ",
@@ -1960,7 +2203,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಬ್ರಹ್ಮಾವರ ಠಾಣಾ ವ್ಯಾಪ್ತಿಯ ಹನೇಹಳ್ಳಿಯಲ್ಲಿ ಬಂಧನ"
+        "subtitle": "ಬ್ರಹ್ಮಾವರ ಠಾಣಾ ವ್ಯಾಪ್ತಿಯ ಹನೇಹಳ್ಳಿಯಲ್ಲಿ ಬಂಧನ",
+        "leadMedia": null
       },
       {
         "slug": "ಕಾಂಗ್ರೆಸ್-ಮುಖಂಡನ-ಆತ್ಮೀಯ-ಡ್ರಗ್ಸ್",
@@ -1980,7 +2224,8 @@
         "placement": "lead",
         "isLead": true,
         "updatedAt": null,
-        "subtitle": "ಬೆಳಪುವಿನ ನಿವಾಸಿಗಳಾದ ಝಹೀರ್ ಅಹ್ಮದ್ (66), ಸಯ್ಯದ್ ಶಮೀಮ್ (28)  ಬಂಧಿತ ಆರೋಪಿಗಳು"
+        "subtitle": "ಬೆಳಪುವಿನ ನಿವಾಸಿಗಳಾದ ಝಹೀರ್ ಅಹ್ಮದ್ (66), ಸಯ್ಯದ್ ಶಮೀಮ್ (28)  ಬಂಧಿತ ಆರೋಪಿಗಳು",
+        "leadMedia": null
       },
       {
         "slug": "nerlnnu-himbalisuttiddene-eccr",
@@ -1995,7 +2240,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": "2026-03-06T16:45:53.822Z",
-        "subtitle": "ಉಡುಪಿ ಜಿಲ್ಲೆಯಲ್ಲಿ ಇನ್ನು ಮುಂದೆ ನೆರಳು ಕೂಡ ಪೋಲಿಸರ ಕಣ್ಗಾವಲಿನಿಂದ ತಪ್ಪಿಸಿಕೊಳ್ಳುವುದು ಕಷ್ಟ..!"
+        "subtitle": "ಉಡುಪಿ ಜಿಲ್ಲೆಯಲ್ಲಿ ಇನ್ನು ಮುಂದೆ ನೆರಳು ಕೂಡ ಪೋಲಿಸರ ಕಣ್ಗಾವಲಿನಿಂದ ತಪ್ಪಿಸಿಕೊಳ್ಳುವುದು ಕಷ್ಟ..!",
+        "leadMedia": null
       },
       {
         "slug": "15-vrsglimd-tlemresikomdidd-aropi-bmdhn",
@@ -2014,7 +2260,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": "2026-03-06T11:52:13.544Z",
-        "subtitle": "ಉಡುಪಿ ನಗರ ಪೊಲೀಸ್ ಠಾಣೆಯ ಪ್ರಭಾರ ನಿರೀಕ್ಷಕರಾದ ಮಹೇಶ್ ಪ್ರಸಾದ್ ಅವರ ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ಬಂಧಿಸಿದ್ದಾರೆ."
+        "subtitle": "ಉಡುಪಿ ನಗರ ಪೊಲೀಸ್ ಠಾಣೆಯ ಪ್ರಭಾರ ನಿರೀಕ್ಷಕರಾದ ಮಹೇಶ್ ಪ್ರಸಾದ್ ಅವರ ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ಬಂಧಿಸಿದ್ದಾರೆ.",
+        "leadMedia": null
       },
       {
         "slug": "brhavr-vmcne-duru-dakhlu",
@@ -2029,7 +2276,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಶಿರಿಯಾರದ ಎಸ್.ಯೋಗೀಶ್ ಎಂಬವರ ಮಾಲಕತ್ವದ ವಿಶ್ವಂಬರ ಕ್ಯಾಶ್ಯೂ ಇಂಡಸ್ಟ್ರೀಸ್‌ನಲ್ಲಿ ವಂಚನೆ"
+        "subtitle": "ಶಿರಿಯಾರದ ಎಸ್.ಯೋಗೀಶ್ ಎಂಬವರ ಮಾಲಕತ್ವದ ವಿಶ್ವಂಬರ ಕ್ಯಾಶ್ಯೂ ಇಂಡಸ್ಟ್ರೀಸ್‌ನಲ್ಲಿ ವಂಚನೆ",
+        "leadMedia": null
       }
     ],
     "court": [
@@ -2048,7 +2296,8 @@
         "placement": "top",
         "isLead": false,
         "updatedAt": "2026-03-05T11:10:27.868Z",
-        "subtitle": "ಸರಕಾರದ ಪರವಾಗಿ ಸರಕಾರಿ ಅಭಿಯೋಜಕ ಬೇಳೂರು ಪ್ರಕಾಶ್ಚಂದ್ರ ಶೆಟ್ಟಿ ವಾದಿಸಿದ್ದಾರೆ."
+        "subtitle": "ಸರಕಾರದ ಪರವಾಗಿ ಸರಕಾರಿ ಅಭಿಯೋಜಕ ಬೇಳೂರು ಪ್ರಕಾಶ್ಚಂದ್ರ ಶೆಟ್ಟಿ ವಾದಿಸಿದ್ದಾರೆ.",
+        "leadMedia": null
       }
     ],
     "world-affairs": [
@@ -2065,7 +2314,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಸೌದಿ ಅರೇಬಿಯಾದಿಂದ ಕಚ್ಚಾ ತೈಲವನ್ನು ಹೊತ್ತ ಲೈಬೀರಿಯನ್ ಧ್ವಜದ ಟ್ಯಾಂಕರ್ ಮುಂಬೈ ಬಂದರಿಗೆ ಆಗಮಿಸಿದೆ."
+        "subtitle": "ಸೌದಿ ಅರೇಬಿಯಾದಿಂದ ಕಚ್ಚಾ ತೈಲವನ್ನು ಹೊತ್ತ ಲೈಬೀರಿಯನ್ ಧ್ವಜದ ಟ್ಯಾಂಕರ್ ಮುಂಬೈ ಬಂದರಿಗೆ ಆಗಮಿಸಿದೆ.",
+        "leadMedia": null
       },
       {
         "slug": "ಅಮೆರಿಕ-ಇಸ್ರೇಲ್-ಗೆ-ಷರತ್ತು-ಹಾಕಿ",
@@ -2080,7 +2330,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಯಾವುದೇ ನಿರ್ಣಯವು ಇರಾನ್‌ನ ಕಾನೂನುಬದ್ಧ ಹಕ್ಕುಗಳನ್ನು ಗುರುತಿಸಬೇಕು ಮತ್ತು ದೇಶವು ಭವಿಷ್ಯದ ದಾಳಿಯನ್ನು ಎದುರಿಸುವುದಿಲ್ಲ ಎಂದು ಖಾತರಿಪಡಿಸಬೇಕು ಎಂದು ಇರಾನ್ ಅಧ್ಯಕ್ಷ ಮಸೌದ್ ಪೆಜೆಶ್ಕಿಯಾನ್ ಹೇಳಿದ್ದಾರೆ."
+        "subtitle": "ಯಾವುದೇ ನಿರ್ಣಯವು ಇರಾನ್‌ನ ಕಾನೂನುಬದ್ಧ ಹಕ್ಕುಗಳನ್ನು ಗುರುತಿಸಬೇಕು ಮತ್ತು ದೇಶವು ಭವಿಷ್ಯದ ದಾಳಿಯನ್ನು ಎದುರಿಸುವುದಿಲ್ಲ ಎಂದು ಖಾತರಿಪಡಿಸಬೇಕು ಎಂದು ಇರಾನ್ ಅಧ್ಯಕ್ಷ ಮಸೌದ್ ಪೆಜೆಶ್ಕಿಯಾನ್ ಹೇಳಿದ್ದಾರೆ.",
+        "leadMedia": null
       },
       {
         "slug": "hlvaru-desglu-mdhysthike-vhislu-mumde",
@@ -2097,7 +2348,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಸಂಘರ್ಷವನ್ನು ಪರಿಹರಿಸಲು ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ಪ್ರಯತ್ನಗಳನ್ನು ಪ್ರಾರಂಭಿಸಿವೆ"
+        "subtitle": "ಸಂಘರ್ಷವನ್ನು ಪರಿಹರಿಸಲು ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ಪ್ರಯತ್ನಗಳನ್ನು ಪ್ರಾರಂಭಿಸಿವೆ",
+        "leadMedia": null
       }
     ],
     "local": [
@@ -2117,7 +2369,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಮಾ.8 ರಂದು ತಿಂಗಳೆ ಪ್ರತಿಷ್ಠಾನದ ವತಿಯಿಂದ ತಿಂಗಳೆಯಲ್ಲಿ ನಡೆದ ಸಾಹಿತ್ಯೋತ್ಸವದಲ್ಲಿ ಮಾತನಾಡಿದರು"
+        "subtitle": "ಮಾ.8 ರಂದು ತಿಂಗಳೆ ಪ್ರತಿಷ್ಠಾನದ ವತಿಯಿಂದ ತಿಂಗಳೆಯಲ್ಲಿ ನಡೆದ ಸಾಹಿತ್ಯೋತ್ಸವದಲ್ಲಿ ಮಾತನಾಡಿದರು",
+        "leadMedia": null
       },
       {
         "slug": "ತಲೆಗೆ-ಚೊಂಬು-ಸಿಲುಕಿ-ಒದ್ದಾಡುತ್ತಿದ್ದ-ಕೋತಿಯ",
@@ -2132,7 +2385,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಸ್ಥಳೀಯರ ಕಾರ್ಯಕ್ಕೆ ಮೆಚ್ಚುಗೆ"
+        "subtitle": "ಸ್ಥಳೀಯರ ಕಾರ್ಯಕ್ಕೆ ಮೆಚ್ಚುಗೆ",
+        "leadMedia": null
       },
       {
         "slug": "ತ್ರಿನಯ-ವೈದ್ಯಕೀಯ-ಚಿಕಿತ್ಸಾಲಯ-ಉದ್ಘಾಟನೆ",
@@ -2147,7 +2401,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಆಧುನಿಕ ತಂತ್ರಜ್ಞಾನದ ಯಂತ್ರಗಳನ್ನು ಒಳಗೊಂಡ ಚರ್ಮ, ಕೂದಲು ಮತ್ತು ಅಲಂಕಾರಿಕ ಚಿಕಿತ್ಸೆಗಳಿಗೆ ಇಲ್ಲಿ ಅವಕಾಶ ಕಲ್ಪಿಸಲಾಗಿದೆ."
+        "subtitle": "ಆಧುನಿಕ ತಂತ್ರಜ್ಞಾನದ ಯಂತ್ರಗಳನ್ನು ಒಳಗೊಂಡ ಚರ್ಮ, ಕೂದಲು ಮತ್ತು ಅಲಂಕಾರಿಕ ಚಿಕಿತ್ಸೆಗಳಿಗೆ ಇಲ್ಲಿ ಅವಕಾಶ ಕಲ್ಪಿಸಲಾಗಿದೆ.",
+        "leadMedia": null
       },
       {
         "slug": "ಮಹಿಳಾ-ದಿನಾಚರಣೆ-ಅಂಗವಾಗಿ-ಡಾ-ಗೀತಾ",
@@ -2162,7 +2417,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಜಿಲ್ಲಾ ಮಹಿಳಾ ಕಾಂಗ್ರೆಸ್ ಅಧ್ಯಕ್ಷೆ ಜ್ಯೋತಿ ಕ್ರೃಷ್ಣ ಹೆಬ್ಬಾರ್‌ ನೇತೃತ್ವದಲ್ಲಿ ಸನ್ಮಾನ"
+        "subtitle": "ಜಿಲ್ಲಾ ಮಹಿಳಾ ಕಾಂಗ್ರೆಸ್ ಅಧ್ಯಕ್ಷೆ ಜ್ಯೋತಿ ಕ್ರೃಷ್ಣ ಹೆಬ್ಬಾರ್‌ ನೇತೃತ್ವದಲ್ಲಿ ಸನ್ಮಾನ",
+        "leadMedia": null
       },
       {
         "slug": "ಕಸಾಪ-ಉಡುಪಿ-ತಾಲೂಕು-ಘಟಕದ-ವತಿಯಿಂದ",
@@ -2177,7 +2433,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಖ್ಯಾತ ಸಾಹಿತಿ ಸುಕನ್ಯಾ ಕಳಸ ಹಾಗು ಸಾಹಿತಿ, ಶಿಕ್ಷಣ ತಜ್ಞ ಡಾ.ಮಹಾಬಲೇಶ್ವರ ರಾವ್  ದಂಪತಿಗಳಿಗೆ ಗೌರಬ"
+        "subtitle": "ಖ್ಯಾತ ಸಾಹಿತಿ ಸುಕನ್ಯಾ ಕಳಸ ಹಾಗು ಸಾಹಿತಿ, ಶಿಕ್ಷಣ ತಜ್ಞ ಡಾ.ಮಹಾಬಲೇಶ್ವರ ರಾವ್  ದಂಪತಿಗಳಿಗೆ ಗೌರಬ",
+        "leadMedia": null
       },
       {
         "slug": "ಜನತಾ-ಕಿರಿಮಂಜೇಶ್ವರದ-ಎಸ್ಎಸ್ಎಲ್-ಸಿ-ವಿದ್ಯಾರ್ಥಿಗಳ",
@@ -2195,7 +2452,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಜನತಾ ಆಂಗ್ಲ ಮಾಧ್ಯಮ ಶಾಲೆಯಲ್ಲಿ ಎಸ್‌ಎಸ್‌ಎಲ್‌ಸಿ ವಿದ್ಯಾರ್ಥಿಗಳ ಬೀಳ್ಕೊಡುಗೆ"
+        "subtitle": "ಜನತಾ ಆಂಗ್ಲ ಮಾಧ್ಯಮ ಶಾಲೆಯಲ್ಲಿ ಎಸ್‌ಎಸ್‌ಎಲ್‌ಸಿ ವಿದ್ಯಾರ್ಥಿಗಳ ಬೀಳ್ಕೊಡುಗೆ",
+        "leadMedia": null
       },
       {
         "slug": "ಅಪಘಾತದಲ್ಲಿ-ಗಾಯಗೊಂಡಿದ್ದ-ಬೈಕ್-ಸವಾರ-ಆಸ್ಪತ್ರೆಯಲ್ಲಿ",
@@ -2210,7 +2468,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಸಂಭವಿಸಿ ಗಾಯಗೊಂಡಿದ್ದ ಬೈಕ್ ಸವಾರ ಮೊಹಮ್ಮದ್ ಝೈದ್ (19)"
+        "subtitle": "ಸಂಭವಿಸಿ ಗಾಯಗೊಂಡಿದ್ದ ಬೈಕ್ ಸವಾರ ಮೊಹಮ್ಮದ್ ಝೈದ್ (19)",
+        "leadMedia": null
       },
       {
         "slug": "ಉಡುಪಿ-ಜಿಲ್ಲೆಯ-ಅಭಿವೃದ್ಧಿಯಲ್ಲಿ-ಮಹಿಳೆಯರ-ಕೊಡುಗೆ",
@@ -2225,7 +2484,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಉಡುಪಿ ನಗರ ಬಿಜೆಪಿ ಹಾಗೂ ಮಹಿಳಾ ಮೋರ್ಚಾದ ವತಿಯಿಂದ ಆಯೋಜಿಸಿದ್ದ ವಿಶ್ವ ಮಹಿಳಾ ದಿನಾಚರಣೆ"
+        "subtitle": "ಉಡುಪಿ ನಗರ ಬಿಜೆಪಿ ಹಾಗೂ ಮಹಿಳಾ ಮೋರ್ಚಾದ ವತಿಯಿಂದ ಆಯೋಜಿಸಿದ್ದ ವಿಶ್ವ ಮಹಿಳಾ ದಿನಾಚರಣೆ",
+        "leadMedia": null
       },
       {
         "slug": "ಮಣಿಪಾಲ-ನೂತನ-ಅಗ್ನಿಶಾಮಕದಳ-ಘಟಕಕ್ಕೆ-ಶಾಸಕ",
@@ -2240,7 +2500,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "3 ಕೋಟಿ ವೆಚ್ಚದಲ್ಲಿ ನೂತನವಾಗಿ ನಿರ್ಮಾಣಗೊಳ್ಳಲಿರುವ ಅಗ್ನಿಶಾಮಕ ದಳದ ಕಚೇರಿ"
+        "subtitle": "3 ಕೋಟಿ ವೆಚ್ಚದಲ್ಲಿ ನೂತನವಾಗಿ ನಿರ್ಮಾಣಗೊಳ್ಳಲಿರುವ ಅಗ್ನಿಶಾಮಕ ದಳದ ಕಚೇರಿ",
+        "leadMedia": null
       },
       {
         "slug": "ಟ್ರಂಪ್-ಕೊಲೆಗಡುಕ-ಸಿಐಟಿಯು-ರಾಜ್ಯ-ಕಾರ್ಯದರ್ಶಿ",
@@ -2255,7 +2516,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಉಡುಪಿ ಸಮಾನ ಮನಸ್ಕ ಸಂಘಟನೆಗಳಿಂದ ಯುದ್ಧ ವಿರೋಧಿ ದಿನಾಚರಣೆ"
+        "subtitle": "ಉಡುಪಿ ಸಮಾನ ಮನಸ್ಕ ಸಂಘಟನೆಗಳಿಂದ ಯುದ್ಧ ವಿರೋಧಿ ದಿನಾಚರಣೆ",
+        "leadMedia": null
       },
       {
         "slug": "ರಾಷ್ಟ್ರೀಯ-ಹೆದ್ದಾರಿ-169-ಎ-ಕಾಮಗಾರಿ",
@@ -2270,7 +2532,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಕುಂದಾಪುರದ ಸಹಾಯಕ ಕಮಿಷನರ್ ರಶ್ಮಿ, ಹೆಚ್ಚುವರಿ ಪೊಲೀಸ್ ಅಧಿಕ್ಷಕ ಸುಧಾಕರ್ ನಾಯಕ್, ರಾಷ್ಟ್ರೀಯ ಹೆದ್ದಾರಿ ಅಧಿಕಾರಿಗಳಾದ ಲೋಕೇಶ್, ಶಶಿಧರ್, ನವೀನ್ ಭಾಗಿ"
+        "subtitle": "ಕುಂದಾಪುರದ ಸಹಾಯಕ ಕಮಿಷನರ್ ರಶ್ಮಿ, ಹೆಚ್ಚುವರಿ ಪೊಲೀಸ್ ಅಧಿಕ್ಷಕ ಸುಧಾಕರ್ ನಾಯಕ್, ರಾಷ್ಟ್ರೀಯ ಹೆದ್ದಾರಿ ಅಧಿಕಾರಿಗಳಾದ ಲೋಕೇಶ್, ಶಶಿಧರ್, ನವೀನ್ ಭಾಗಿ",
+        "leadMedia": null
       },
       {
         "slug": "ರಾಷ್ಟ್ರೋತ್ಥಾನ-ವಿದ್ಯಾಕೇಂದ್ರಕ್ಕೆ-ವಿದ್ಯಾಭಾರತಿ-ಕರ್ನಾಟಕ",
@@ -2285,7 +2548,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಚೇರ್ಕಾಡಿಯ ರಾಷ್ಟ್ರೋತ್ಥಾನ ಶಾಲೆಗೆ ಭೇಟಿ"
+        "subtitle": "ಚೇರ್ಕಾಡಿಯ ರಾಷ್ಟ್ರೋತ್ಥಾನ ಶಾಲೆಗೆ ಭೇಟಿ",
+        "leadMedia": null
       },
       {
         "slug": "visv-mhila-dinacrney-sulgitti",
@@ -2300,7 +2564,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಶಾಸಕ ಎ ಕಿರಣ್ ಕುಮಾರ್ ಕೊಡ್ಗಿ, ಮಹಿಳಾ ಮೋರ್ಚಾ ಅಧ್ಯಕ್ಷೆ ಸೌರಭಿ ಪೈ ಭಾಗಿ"
+        "subtitle": "ಶಾಸಕ ಎ ಕಿರಣ್ ಕುಮಾರ್ ಕೊಡ್ಗಿ, ಮಹಿಳಾ ಮೋರ್ಚಾ ಅಧ್ಯಕ್ಷೆ ಸೌರಭಿ ಪೈ ಭಾಗಿ",
+        "leadMedia": null
       },
       {
         "slug": "ptrkrt-hesrinlli-blakmel-dmdhege",
@@ -2315,7 +2580,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಉಡುಪಿ ಜಿಲ್ಲೆ–ತಾಲೂಕು ಪತ್ರಕರ್ತರ ಸಂಘಗಳ ಪದಗ್ರಹಣ"
+        "subtitle": "ಉಡುಪಿ ಜಿಲ್ಲೆ–ತಾಲೂಕು ಪತ್ರಕರ್ತರ ಸಂಘಗಳ ಪದಗ್ರಹಣ",
+        "leadMedia": null
       },
       {
         "slug": "d-k-udupi-minu",
@@ -2330,7 +2596,8 @@
         "placement": "top",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಜಿಲ್ಲಾಸ್ಪತ್ರೆಯಲ್ಲಿ ದಿನನಿತ್ಯ ಚಿಕಿತ್ಸೆಗೆ ಬರುವ ನೂರಾರು ರೋಗಿಗಳಿಗೆ ಸಹಕಾರಿ"
+        "subtitle": "ಜಿಲ್ಲಾಸ್ಪತ್ರೆಯಲ್ಲಿ ದಿನನಿತ್ಯ ಚಿಕಿತ್ಸೆಗೆ ಬರುವ ನೂರಾರು ರೋಗಿಗಳಿಗೆ ಸಹಕಾರಿ",
+        "leadMedia": null
       },
       {
         "slug": "karkl-ptrikabhvnkke-rajyadhyks-sivanmd",
@@ -2347,7 +2614,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಕಾರ್ಕಳ ತಾಲೂಕು ಕಾರ್ಯನಿರತ ಪತ್ರಕರ್ತರ ಸಂಘದ ವತಿಯಿಂದ ಸನ್ಮಾನ"
+        "subtitle": "ಕಾರ್ಕಳ ತಾಲೂಕು ಕಾರ್ಯನಿರತ ಪತ್ರಕರ್ತರ ಸಂಘದ ವತಿಯಿಂದ ಸನ್ಮಾನ",
+        "leadMedia": null
       },
       {
         "slug": "mlpeylli-kolet-sthitiylli-svptte",
@@ -2362,7 +2630,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಸಮಾಜಸೇವಕ ನಿತ್ಯಾನಂದ ಒಳಕಾಡುವರ ನೇತ್ರತ್ವದಲ್ಲಿ ಕಳೇಬರ ಮೇಲಕೆತ್ತುವ ಕಾರ್ಯಚರಣೆ"
+        "subtitle": "ಸಮಾಜಸೇವಕ ನಿತ್ಯಾನಂದ ಒಳಕಾಡುವರ ನೇತ್ರತ್ವದಲ್ಲಿ ಕಳೇಬರ ಮೇಲಕೆತ್ತುವ ಕಾರ್ಯಚರಣೆ",
+        "leadMedia": null
       },
       {
         "slug": "grh-blkey-elpiji-silimdr-bele",
@@ -2380,7 +2649,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ"
+        "subtitle": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ",
+        "leadMedia": null
       },
       {
         "slug": "ma-8-rmdu-timgleylli-sahityotsv",
@@ -2399,7 +2669,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "subtitle": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ."
+        "subtitle": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ.",
+        "leadMedia": null
       },
       {
         "slug": "klenask-sevisi-diploma-vidyarthini-atmhtye",
@@ -2414,7 +2685,8 @@
         "placement": "top",
         "isLead": false,
         "updatedAt": "2026-03-06T12:03:20.712Z",
-        "subtitle": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ"
+        "subtitle": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ",
+        "leadMedia": null
       },
       {
         "slug": "take-steps-ensure-drinking-water",
@@ -2432,7 +2704,8 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": "2026-03-05T11:07:59.152Z",
-        "subtitle": "ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ"
+        "subtitle": "ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ",
+        "leadMedia": null
       }
     ]
   }

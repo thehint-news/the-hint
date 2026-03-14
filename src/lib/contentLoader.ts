@@ -1,6 +1,7 @@
 import { cache } from "react";
 import fs from "fs";
 import path from "path";
+import { LeadMedia } from "./content/types";
 
 const REPO_OWNER = process.env.GIT_REPO_OWNER || '';
 const REPO_NAME = process.env.GIT_REPO_NAME || '';
@@ -21,6 +22,7 @@ export interface ArticleMetadata {
     image?: string | null;
     isLead?: boolean;
     updatedAt?: string | null;
+    leadMedia?: LeadMedia;
 }
 
 export interface ContentGraph {

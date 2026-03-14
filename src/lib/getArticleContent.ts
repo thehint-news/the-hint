@@ -2,7 +2,6 @@ import { cache } from "react";
 import fs from "fs";
 import path from "path";
 import { parseMarkdown } from "./content/parser"; // assuming we can still use this existing parser
-import { getArticleThumbnail } from "./content/thumbnail"; // assuming we still use this
 
 import { ArticleMetadata } from "./contentLoader";
 
@@ -53,7 +52,7 @@ export const getArticleContent = cache(async (slug: string) => {
             placement: ['lead', 'top', 'standard'].includes(placement) ? placement : 'standard',
             tags: frontmatter.tags ?? [],
             sources: frontmatter.sources ?? [],
-            image: getArticleThumbnail(frontmatter.image, body || ''),
+            image: articleMeta.image || frontmatter.image || null,
             bodyBlocks: frontmatter.bodyBlocks,
             body: body,
             isLead: frontmatter.isLead === true || placement === 'lead',

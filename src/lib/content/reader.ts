@@ -63,6 +63,7 @@ export const getAllArticles = cache(async function getAllArticles(): Promise<Art
             sources: [],
             image: meta.image || undefined,
             isLead: meta.isLead || false,
+            leadMedia: meta.leadMedia,
         }));
 
         allArticles.sort((a, b) => {
