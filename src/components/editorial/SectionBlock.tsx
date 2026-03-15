@@ -188,12 +188,11 @@ function PoliticsLayout({ articles, sectionSlug }: { articles: SectionArticle[];
     );
 }
 
-// Image-led layout for World Affairs - Slightly more breathing room
-// Image-led layout for World Affairs - Only 2 articles
+// Image-led layout for World Affairs - Only 1 article
 function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticle[]; sectionSlug: string }) {
     return (
-        <div style={{ display: "grid", gap: "1.25rem", gridTemplateColumns: "repeat(2, 1fr)" }}>
-            {articles.slice(0, 2).map((article) => {
+        <div style={{ display: "grid", gap: "1.25rem", gridTemplateColumns: "1fr" }}>
+            {articles.slice(0, 1).map((article) => {
                 const articleUrl = `/${sectionSlug}/${article.id}`;
                 const formattedDate = new Date(article.publishedAt).toLocaleDateString("kn-IN", {
                     month: "long",

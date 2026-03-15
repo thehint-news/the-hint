@@ -61,18 +61,14 @@ function isPlacement(article: Article, placement: 'lead' | 'top'): boolean {
 }
 
 /**
- * Sort articles by publishedAt descending (newest first)
- * Returns a new sorted array, does not mutate input
- */
-/**
- * Sort articles by date descending (newest first).
- * Uses 'updatedAt' if available, otherwise 'publishedAt'.
+ * Sort articles by date descending (newest published first).
+ * Uses strictly 'publishedAt' and ignores 'updatedAt'.
  * Returns a new sorted array, does not mutate input.
  */
 function sortByPublishedAtDesc(articles: Article[]): Article[] {
     return [...articles].sort((a, b) => {
-        const dateA = new Date(a.updatedAt || a.publishedAt).getTime();
-        const dateB = new Date(b.updatedAt || b.publishedAt).getTime();
+        const dateA = new Date(a.publishedAt).getTime();
+        const dateB = new Date(b.publishedAt).getTime();
 
         // Validate dates
         if (isNaN(dateA)) {
@@ -252,11 +248,27 @@ export async function getHomepageData(): Promise<HomepageData> {
         return selected;
     };
 
+    // Select World Affairs articles sorted ONLY by publishedAt (latest uploaded article)
+    const selectWorldAffairsWithDedup = (count: number): Article[] => {
+        const candidates = excludeUsed(
+            filterBySection(allArticles, 'world-affairs').filter(a => !isOpinion(a))
+        );
+        // Sort explicitly by latest uploaded (publishedAt) ignoring updatedAt
+        const sorted = [...candidates].sort((a, b) => {
+            const dateA = new Date(a.publishedAt).getTime();
+            const dateB = new Date(b.publishedAt).getTime();
+            return dateB - dateA;
+        });
+        const selected = takeFirst(sorted, count);
+        markUsed(selected);
+        return selected;
+    };
+
     const sections: HomepageSections = {
         crime: selectSectionWithDedup('crime', 6), // UI uses 5
         court: selectSectionWithDedup('court', 6), // UI uses 5
         politics: selectSectionWithDedup('politics', 5), // UI uses 4
-        worldAffairs: selectSectionWithDedup('world-affairs', 3), // UI uses 2
+        worldAffairs: selectWorldAffairsWithDedup(3), // UI uses 2
         opinion: selectOpinionWithDedup(),
     };
 

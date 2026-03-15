@@ -20,6 +20,29 @@
       "updatedAt": "2026-03-05T11:10:27.868Z",
       "leadMedia": null
     },
+    "crime/12-ಗಂಟೆಯೊಳಗೆ-ಕಳ್ಳತನ-ಪ್ರಕರಣ-ಭೇದಿಸಿದ": {
+      "slug": "12-ಗಂಟೆಯೊಳಗೆ-ಕಳ್ಳತನ-ಪ್ರಕರಣ-ಭೇದಿಸಿದ",
+      "category": "crime",
+      "title": "12 ಗಂಟೆಯೊಳಗೆ ಕಳ್ಳತನ ಪ್ರಕರಣ ಭೇದಿಸಿದ ಮಣಿಪಾಲ ಪೋಲಿಸರು..!",
+      "date": "2026-03-14T16:55:57.304Z",
+      "language": "kn",
+      "file": "crime/12-ಗಂಟೆಯೊಳಗೆ-ಕಳ್ಳತನ-ಪ್ರಕರಣ-ಭೇದಿಸಿದ.md",
+      "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/9a5db506fa03149c.png",
+      "excerpt": "ಠಾಣಾಧಿಕಾರಿ ಮಹೇಶ್ ಪ್ರಸಾದ್ ನೇತೃತ್ವದ ತಂಡದ ಮಿಂಚಿನ ಕಾರ್ಯಾಚರಣೆ",
+      "subtitle": "ಠಾಣಾಧಿಕಾರಿ ಮಹೇಶ್ ಪ್ರಸಾದ್ ನೇತೃತ್ವದ ತಂಡದ ಮಿಂಚಿನ ಕಾರ್ಯಾಚರಣೆ",
+      "author": null,
+      "tags": [
+        "theft",
+        "manipal",
+        "12 hours",
+        "arrest"
+      ],
+      "contentType": "news",
+      "placement": "standard",
+      "isLead": false,
+      "updatedAt": null,
+      "leadMedia": null
+    },
     "crime/15-vrsglimd-tlemresikomdidd-aropi-bmdhn": {
       "slug": "15-vrsglimd-tlemresikomdidd-aropi-bmdhn",
       "category": "crime",
@@ -998,6 +1021,29 @@
     }
   },
   "sortedArticles": [
+    {
+      "slug": "12-ಗಂಟೆಯೊಳಗೆ-ಕಳ್ಳತನ-ಪ್ರಕರಣ-ಭೇದಿಸಿದ",
+      "category": "crime",
+      "title": "12 ಗಂಟೆಯೊಳಗೆ ಕಳ್ಳತನ ಪ್ರಕರಣ ಭೇದಿಸಿದ ಮಣಿಪಾಲ ಪೋಲಿಸರು..!",
+      "date": "2026-03-14T16:55:57.304Z",
+      "language": "kn",
+      "file": "crime/12-ಗಂಟೆಯೊಳಗೆ-ಕಳ್ಳತನ-ಪ್ರಕರಣ-ಭೇದಿಸಿದ.md",
+      "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/9a5db506fa03149c.png",
+      "excerpt": "ಠಾಣಾಧಿಕಾರಿ ಮಹೇಶ್ ಪ್ರಸಾದ್ ನೇತೃತ್ವದ ತಂಡದ ಮಿಂಚಿನ ಕಾರ್ಯಾಚರಣೆ",
+      "subtitle": "ಠಾಣಾಧಿಕಾರಿ ಮಹೇಶ್ ಪ್ರಸಾದ್ ನೇತೃತ್ವದ ತಂಡದ ಮಿಂಚಿನ ಕಾರ್ಯಾಚರಣೆ",
+      "author": null,
+      "tags": [
+        "theft",
+        "manipal",
+        "12 hours",
+        "arrest"
+      ],
+      "contentType": "news",
+      "placement": "standard",
+      "isLead": false,
+      "updatedAt": null,
+      "leadMedia": null
+    },
     {
       "slug": "ರಾಮ-ಭಕ್ತರು-ಆರ್-ಎಸ್-ಎಸ್",
       "category": "local",
@@ -2019,6 +2065,29 @@
       }
     ],
     "crime": [
+      {
+        "slug": "12-ಗಂಟೆಯೊಳಗೆ-ಕಳ್ಳತನ-ಪ್ರಕರಣ-ಭೇದಿಸಿದ",
+        "category": "crime",
+        "title": "12 ಗಂಟೆಯೊಳಗೆ ಕಳ್ಳತನ ಪ್ರಕರಣ ಭೇದಿಸಿದ ಮಣಿಪಾಲ ಪೋಲಿಸರು..!",
+        "date": "2026-03-14T16:55:57.304Z",
+        "language": "kn",
+        "file": "crime/12-ಗಂಟೆಯೊಳಗೆ-ಕಳ್ಳತನ-ಪ್ರಕರಣ-ಭೇದಿಸಿದ.md",
+        "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/9a5db506fa03149c.png",
+        "excerpt": "ಠಾಣಾಧಿಕಾರಿ ಮಹೇಶ್ ಪ್ರಸಾದ್ ನೇತೃತ್ವದ ತಂಡದ ಮಿಂಚಿನ ಕಾರ್ಯಾಚರಣೆ",
+        "subtitle": "ಠಾಣಾಧಿಕಾರಿ ಮಹೇಶ್ ಪ್ರಸಾದ್ ನೇತೃತ್ವದ ತಂಡದ ಮಿಂಚಿನ ಕಾರ್ಯಾಚರಣೆ",
+        "author": null,
+        "tags": [
+          "theft",
+          "manipal",
+          "12 hours",
+          "arrest"
+        ],
+        "contentType": "news",
+        "placement": "standard",
+        "isLead": false,
+        "updatedAt": null,
+        "leadMedia": null
+      },
       {
         "slug": "ಲೋಕಾ-ಬಲೆಗೆ-ಬಿದ್ದ-ಕೋಟಿ-ಒಡೆಯ",
         "category": "crime",
