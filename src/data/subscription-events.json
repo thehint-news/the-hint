@@ -3591,10 +3591,10 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-16T13:26:17.663Z",
-    "status": "processing",
+    "status": "pending",
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-03-16T13:26:36.865Z"
+    "totalSubscribers": 3
   }
 ]
