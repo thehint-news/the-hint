@@ -3515,6 +3515,7 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": [],
-    "lastAttemptAt": "2026-03-16T10:56:46.620Z"
+    "lastAttemptAt": "2026-03-16T10:56:46.620Z",
+    "totalSubscribers": 3
   }
 ]
