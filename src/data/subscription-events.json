@@ -3549,5 +3549,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-16T11:02:27.032Z",
     "totalSubscribers": 3
+  },
+  {
+    "id": "bde1afbc-84c9-42fd-8c71-f37624317daf",
+    "articleSlug": "ಶಿಕ್ಷಣ-ಸಾಧಕರಿಗೆ-ಸನ್ಮಾನ",
+    "section": "local",
+    "headline": "ಶಿಕ್ಷಣ ಸಾಧಕರಿಗೆ ಸನ್ಮಾನ",
+    "summary": "ಹೆಬ್ರಿ ಬಿಜೆಪಿ ವತಿಯಿಂದ ಸನ್ಮಾನ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-16T11:05:29.174Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
