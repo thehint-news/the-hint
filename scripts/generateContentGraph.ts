@@ -61,17 +61,23 @@ function runGeneration() {
       const slug = file.replace('.md', '');
       const mdPath = path.join(categoryPath, file);
 
-      // Issue 1 — SLUG SAFETY VALIDATION
+      // SLUG SAFETY VALIDATION
+      // Structural checks — these indicate genuine problems
       const hasWhitespace = /\s/.test(slug);
       const hasSlash = slug.includes('/');
       const hasMd = slug.toLowerCase().endsWith('.md');
-      const isUnicode = /[^\x00-\x7F]/.test(slug);
 
       if (hasWhitespace || hasSlash || hasMd) {
         console.warn(`WARNING: Potential safety issue with slug "${slug}". Slug should not contain whitespace, slashes, or ".md".`);
       }
-      if (isUnicode) {
-        console.warn(`WARNING: slug "${slug}" contains Unicode characters. Ensure canonical URLs are properly encoded.`);
+
+      // URI-encoding round-trip check — ensures the slug survives encode/decode without corruption
+      try {
+        if (decodeURIComponent(encodeURIComponent(slug)) !== slug) {
+          console.warn(`WARNING: slug "${slug}" does not survive URI-encoding round-trip. This may cause broken links.`);
+        }
+      } catch {
+        console.warn(`WARNING: slug "${slug}" contains characters that cannot be URI-encoded. This will cause broken links.`);
       }
 
       try {
@@ -123,16 +129,19 @@ function runGeneration() {
     }
   }
 
-  // Sort articles by date descending
+  // Sort articles by editorial priority: updatedAt (last selection) then date (publishedAt)
   graph.sortedArticles.sort((a, b) => {
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
+    const timeA = new Date(a.updatedAt || a.date).getTime();
+    const timeB = new Date(b.updatedAt || b.date).getTime();
+    return timeB - timeA;
   });
 
   // Issue 2 — MULTIPLE LEAD STORY CONFLICT
   const leadArticles = graph.sortedArticles.filter(a => a.isLead);
   if (leadArticles.length > 1) {
-    console.warn('WARNING: Multiple lead articles detected. Only the newest article will be used as lead.');
+    console.warn('WARNING: Multiple lead articles detected. Only the most recently selected (updated) article will be used as lead.');
     let leadFound = false;
+    // sortedArticles is already sorted by updatedAt DESC
     for (const article of graph.sortedArticles) {
       if (article.isLead) {
         if (!leadFound) {
@@ -147,10 +156,12 @@ function runGeneration() {
     }
   }
 
-  // Sort articles within each category by date descending
+  // Sort articles within each category by editorial priority
   for (const cat in graph.categories) {
     graph.categories[cat].sort((a, b) => {
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
+      const timeA = new Date(a.updatedAt || a.date).getTime();
+      const timeB = new Date(b.updatedAt || b.date).getTime();
+      return timeB - timeA;
     });
   }
 

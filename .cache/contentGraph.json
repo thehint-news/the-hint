@@ -248,27 +248,6 @@
       "updatedAt": null,
       "leadMedia": null
     },
-    "local/grh-blkey-elpiji-silimdr-bele": {
-      "slug": "grh-blkey-elpiji-silimdr-bele",
-      "category": "local",
-      "title": "ಗೃಹ ಬಳಕೆಯ ಎಲ್‌ಪಿಜಿ ಸಿಲಿಂಡರ್‌ ಬೆಲೆ 60 ರೂ. ಏರಿಕೆ",
-      "date": "2026-03-07T06:48:45.791Z",
-      "language": "kn",
-      "file": "local/grh-blkey-elpiji-silimdr-bele.md",
-      "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/51108ef3c204166b.jpg",
-      "excerpt": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ",
-      "subtitle": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ",
-      "author": null,
-      "tags": [
-        "war",
-        "gas"
-      ],
-      "contentType": "news",
-      "placement": "standard",
-      "isLead": false,
-      "updatedAt": null,
-      "leadMedia": null
-    },
     "local/karkl-ptrikabhvnkke-rajyadhyks-sivanmd": {
       "slug": "karkl-ptrikabhvnkke-rajyadhyks-sivanmd",
       "category": "local",
@@ -282,46 +261,6 @@
       "author": null,
       "tags": [
         "karkala press club"
-      ],
-      "contentType": "news",
-      "placement": "standard",
-      "isLead": false,
-      "updatedAt": null,
-      "leadMedia": null
-    },
-    "local/klenask-sevisi-diploma-vidyarthini-atmhtye": {
-      "slug": "klenask-sevisi-diploma-vidyarthini-atmhtye",
-      "category": "local",
-      "title": "ಕಳೆನಾಶಕ ಸೇವಿಸಿ ಡಿಪ್ಲೋಮಾ ವಿದ್ಯಾರ್ಥಿ ಆತ್ಮಹತ್ಯೆ",
-      "date": "2026-03-06T11:10:06.105Z",
-      "language": "kn",
-      "file": "local/klenask-sevisi-diploma-vidyarthini-atmhtye.md",
-      "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/d7287eda986806cc.jpg",
-      "excerpt": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ",
-      "subtitle": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ",
-      "author": null,
-      "tags": [],
-      "contentType": "news",
-      "placement": "top",
-      "isLead": false,
-      "updatedAt": "2026-03-06T12:03:20.712Z",
-      "leadMedia": null
-    },
-    "local/ma-8-rmdu-timgleylli-sahityotsv": {
-      "slug": "ma-8-rmdu-timgleylli-sahityotsv",
-      "category": "local",
-      "title": "ಮಾ.8 ರಂದು ತಿಂಗಳೆಯಲ್ಲಿ ಸಾಹಿತ್ಯೋತ್ಸವ",
-      "date": "2026-03-06T12:21:04.899Z",
-      "language": "kn",
-      "file": "local/ma-8-rmdu-timgleylli-sahityotsv.md",
-      "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/4f7fa35ad5b7345c.jpg",
-      "excerpt": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ.",
-      "subtitle": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ.",
-      "author": null,
-      "tags": [
-        "ಸಾಹಿತ್ಯೋತ್ಸವ",
-        "ತಿಂಗಳೆ ವಿಕ್ರಮಾರ್ಜುನ ಹೆಗ್ಗಡೆ",
-        "ಮಾ.8"
       ],
       "contentType": "news",
       "placement": "standard",
@@ -363,27 +302,6 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "leadMedia": null
-    },
-    "local/take-steps-ensure-drinking-water": {
-      "slug": "take-steps-ensure-drinking-water",
-      "category": "local",
-      "title": "ಕುಡಿಯುವ ನೀರಿಗೆ ಸಮಸ್ಯೆಯಾಗದಂತೆ ಕ್ರಮ ವಹಿಸಿ - ಕಿರಣ್ ಕೊಡ್ಗಿ",
-      "date": "2026-03-05T10:43:57.007Z",
-      "language": "kn",
-      "file": "local/take-steps-ensure-drinking-water.md",
-      "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/d1d5a311fda241bb.webp",
-      "excerpt": "ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ",
-      "subtitle": "ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ",
-      "author": null,
-      "tags": [
-        "ಕುಡಿಯುವ ನೀರಿನ",
-        "ಕುಂದಾಪುರ ತಾಲೂಕು ಪಂಚಾಯಿತಿ"
-      ],
-      "contentType": "news",
-      "placement": "standard",
-      "isLead": false,
-      "updatedAt": "2026-03-05T11:07:59.152Z",
       "leadMedia": null
     },
     "local/visv-mhila-dinacrney-sulgitti": {
@@ -1719,27 +1637,6 @@
       "leadMedia": null
     },
     {
-      "slug": "grh-blkey-elpiji-silimdr-bele",
-      "category": "local",
-      "title": "ಗೃಹ ಬಳಕೆಯ ಎಲ್‌ಪಿಜಿ ಸಿಲಿಂಡರ್‌ ಬೆಲೆ 60 ರೂ. ಏರಿಕೆ",
-      "date": "2026-03-07T06:48:45.791Z",
-      "language": "kn",
-      "file": "local/grh-blkey-elpiji-silimdr-bele.md",
-      "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/51108ef3c204166b.jpg",
-      "excerpt": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ",
-      "subtitle": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ",
-      "author": null,
-      "tags": [
-        "war",
-        "gas"
-      ],
-      "contentType": "news",
-      "placement": "standard",
-      "isLead": false,
-      "updatedAt": null,
-      "leadMedia": null
-    },
-    {
       "slug": "hlvaru-desglu-mdhysthike-vhislu-mumde",
       "category": "world-affairs",
       "title": "ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ವಹಿಸಲು ಮುಂದೆ ಬಂದಿವೆ - ಇರಾನ್ ಅಧ್ಯಕ್ಷ",
@@ -1775,28 +1672,6 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": "2026-03-06T16:45:53.822Z",
-      "leadMedia": null
-    },
-    {
-      "slug": "ma-8-rmdu-timgleylli-sahityotsv",
-      "category": "local",
-      "title": "ಮಾ.8 ರಂದು ತಿಂಗಳೆಯಲ್ಲಿ ಸಾಹಿತ್ಯೋತ್ಸವ",
-      "date": "2026-03-06T12:21:04.899Z",
-      "language": "kn",
-      "file": "local/ma-8-rmdu-timgleylli-sahityotsv.md",
-      "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/4f7fa35ad5b7345c.jpg",
-      "excerpt": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ.",
-      "subtitle": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ.",
-      "author": null,
-      "tags": [
-        "ಸಾಹಿತ್ಯೋತ್ಸವ",
-        "ತಿಂಗಳೆ ವಿಕ್ರಮಾರ್ಜುನ ಹೆಗ್ಗಡೆ",
-        "ಮಾ.8"
-      ],
-      "contentType": "news",
-      "placement": "standard",
-      "isLead": false,
-      "updatedAt": null,
       "leadMedia": null
     },
     {
@@ -1957,45 +1832,6 @@
       "placement": "standard",
       "isLead": false,
       "updatedAt": null,
-      "leadMedia": null
-    },
-    {
-      "slug": "klenask-sevisi-diploma-vidyarthini-atmhtye",
-      "category": "local",
-      "title": "ಕಳೆನಾಶಕ ಸೇವಿಸಿ ಡಿಪ್ಲೋಮಾ ವಿದ್ಯಾರ್ಥಿ ಆತ್ಮಹತ್ಯೆ",
-      "date": "2026-03-06T11:10:06.105Z",
-      "language": "kn",
-      "file": "local/klenask-sevisi-diploma-vidyarthini-atmhtye.md",
-      "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/d7287eda986806cc.jpg",
-      "excerpt": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ",
-      "subtitle": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ",
-      "author": null,
-      "tags": [],
-      "contentType": "news",
-      "placement": "top",
-      "isLead": false,
-      "updatedAt": "2026-03-06T12:03:20.712Z",
-      "leadMedia": null
-    },
-    {
-      "slug": "take-steps-ensure-drinking-water",
-      "category": "local",
-      "title": "ಕುಡಿಯುವ ನೀರಿಗೆ ಸಮಸ್ಯೆಯಾಗದಂತೆ ಕ್ರಮ ವಹಿಸಿ - ಕಿರಣ್ ಕೊಡ್ಗಿ",
-      "date": "2026-03-05T10:43:57.007Z",
-      "language": "kn",
-      "file": "local/take-steps-ensure-drinking-water.md",
-      "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/d1d5a311fda241bb.webp",
-      "excerpt": "ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ",
-      "subtitle": "ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ",
-      "author": null,
-      "tags": [
-        "ಕುಡಿಯುವ ನೀರಿನ",
-        "ಕುಂದಾಪುರ ತಾಲೂಕು ಪಂಚಾಯಿತಿ"
-      ],
-      "contentType": "news",
-      "placement": "standard",
-      "isLead": false,
-      "updatedAt": "2026-03-05T11:07:59.152Z",
       "leadMedia": null
     },
     {
@@ -2589,88 +2425,6 @@
         "placement": "standard",
         "isLead": false,
         "updatedAt": null,
-        "leadMedia": null
-      },
-      {
-        "slug": "grh-blkey-elpiji-silimdr-bele",
-        "category": "local",
-        "title": "ಗೃಹ ಬಳಕೆಯ ಎಲ್‌ಪಿಜಿ ಸಿಲಿಂಡರ್‌ ಬೆಲೆ 60 ರೂ. ಏರಿಕೆ",
-        "date": "2026-03-07T06:48:45.791Z",
-        "language": "kn",
-        "file": "local/grh-blkey-elpiji-silimdr-bele.md",
-        "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/51108ef3c204166b.jpg",
-        "excerpt": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ",
-        "subtitle": "ಇರಾನ್, ಇಸ್ರೇಲ್, ಅಮೇರಿಕಾ ಯುದ್ದದ ಪರಿಣಾಮ",
-        "author": null,
-        "tags": [
-          "war",
-          "gas"
-        ],
-        "contentType": "news",
-        "placement": "standard",
-        "isLead": false,
-        "updatedAt": null,
-        "leadMedia": null
-      },
-      {
-        "slug": "ma-8-rmdu-timgleylli-sahityotsv",
-        "category": "local",
-        "title": "ಮಾ.8 ರಂದು ತಿಂಗಳೆಯಲ್ಲಿ ಸಾಹಿತ್ಯೋತ್ಸವ",
-        "date": "2026-03-06T12:21:04.899Z",
-        "language": "kn",
-        "file": "local/ma-8-rmdu-timgleylli-sahityotsv.md",
-        "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/4f7fa35ad5b7345c.jpg",
-        "excerpt": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ.",
-        "subtitle": "ಮಾರಣಕಟ್ಟೆ ಕ್ಷೇತ್ರದ ಐತಿಹ್ಯವನ್ನು ಸಾರುವ ಶ್ವೇತಾ ಅರೆಹೊಳೆ ನಿರ್ದೇಶನದ \"ಬಿಡುವನೇ ಬ್ರಹ್ಮಲಿಂಗ\" ನೃತ್ಯರೂಪಕ ಪ್ರದರ್ಶನಗೊಳ್ಳಲಿದೆ.",
-        "author": null,
-        "tags": [
-          "ಸಾಹಿತ್ಯೋತ್ಸವ",
-          "ತಿಂಗಳೆ ವಿಕ್ರಮಾರ್ಜುನ ಹೆಗ್ಗಡೆ",
-          "ಮಾ.8"
-        ],
-        "contentType": "news",
-        "placement": "standard",
-        "isLead": false,
-        "updatedAt": null,
-        "leadMedia": null
-      },
-      {
-        "slug": "klenask-sevisi-diploma-vidyarthini-atmhtye",
-        "category": "local",
-        "title": "ಕಳೆನಾಶಕ ಸೇವಿಸಿ ಡಿಪ್ಲೋಮಾ ವಿದ್ಯಾರ್ಥಿ ಆತ್ಮಹತ್ಯೆ",
-        "date": "2026-03-06T11:10:06.105Z",
-        "language": "kn",
-        "file": "local/klenask-sevisi-diploma-vidyarthini-atmhtye.md",
-        "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/d7287eda986806cc.jpg",
-        "excerpt": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ",
-        "subtitle": "ಕಳೆನಾಶಕ ವಿಷ ಪದಾರ್ಥ ಸೇವಿಸಿದ ವಿದ್ಯಾರ್ಥಿ",
-        "author": null,
-        "tags": [],
-        "contentType": "news",
-        "placement": "top",
-        "isLead": false,
-        "updatedAt": "2026-03-06T12:03:20.712Z",
-        "leadMedia": null
-      },
-      {
-        "slug": "take-steps-ensure-drinking-water",
-        "category": "local",
-        "title": "ಕುಡಿಯುವ ನೀರಿಗೆ ಸಮಸ್ಯೆಯಾಗದಂತೆ ಕ್ರಮ ವಹಿಸಿ - ಕಿರಣ್ ಕೊಡ್ಗಿ",
-        "date": "2026-03-05T10:43:57.007Z",
-        "language": "kn",
-        "file": "local/take-steps-ensure-drinking-water.md",
-        "image": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/d1d5a311fda241bb.webp",
-        "excerpt": "ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ",
-        "subtitle": "ಸಮಸ್ಯೆ ಎದುರಾಗದಂತೆ ಈಗಲೇ ಮುಂಜಾಗೃತೆ ವಹಿಸಿ",
-        "author": null,
-        "tags": [
-          "ಕುಡಿಯುವ ನೀರಿನ",
-          "ಕುಂದಾಪುರ ತಾಲೂಕು ಪಂಚಾಯಿತಿ"
-        ],
-        "contentType": "news",
-        "placement": "standard",
-        "isLead": false,
-        "updatedAt": "2026-03-05T11:07:59.152Z",
         "leadMedia": null
       }
     ],

@@ -45,7 +45,6 @@ const notoSerifKannada = Noto_Serif_Kannada({
 });
 
 import { Header, Footer } from "@/components/layout";
-import { SubscribePopup } from "@/components/features/SubscribePopup";
 import ScrollToTop from "@/components/features/ScrollToTop";
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
 import PageViewTracker from '@/components/analytics/PageViewTracker';
@@ -140,7 +139,6 @@ export default async function RootLayout({
             <ScrollToTop />
             {children}
             <Footer />
-            <SubscribePopup />
           </div>
           <GoogleAnalytics />
         </LanguageProvider>

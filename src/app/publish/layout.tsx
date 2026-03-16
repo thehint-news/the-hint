@@ -9,7 +9,6 @@
  * This layout is ISOLATED from the main site layout:
  * - No site Header (masthead, ticker)
  * - No site Footer
- * - No SubscribePopup
  */
 
 import type { Metadata } from 'next';

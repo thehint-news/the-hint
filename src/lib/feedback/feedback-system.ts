@@ -248,12 +248,6 @@ export function detectErrorCode(
         if (msg.includes('support')) return ErrorCodes.MEDIA_VIDEO_UNSUPPORTED;
     }
 
-    // Subscription errors
-    if (msg.includes('subscribe') || msg.includes('email')) {
-        if (msg.includes('already')) return ErrorCodes.SUBSCRIPTION_ALREADY_EXISTS;
-        if (msg.includes('email') || msg.includes('valid')) return ErrorCodes.SUBSCRIPTION_INVALID_EMAIL;
-        return ErrorCodes.SUBSCRIPTION_FAILED;
-    }
 
     // Fallback
     return ErrorCodes.UNKNOWN_ERROR;

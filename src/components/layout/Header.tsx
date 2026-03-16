@@ -17,7 +17,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { SubscribeModal } from "../features/SubscribeModal";
 import { SearchOverlay } from "../features/SearchOverlay";
 import { en } from "@/lib/i18n/en";
 
@@ -39,7 +38,6 @@ interface HeaderProps {
 export function Header({ latestUpdate }: HeaderProps) {
     const [currentDate, setCurrentDate] = useState<string>("");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const pathname = usePathname();
 
@@ -86,7 +84,6 @@ export function Header({ latestUpdate }: HeaderProps) {
 
     return (
         <>
-            <SubscribeModal isOpen={isSubscribeOpen} onClose={() => setIsSubscribeOpen(false)} />
             <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
             <header role="banner" className="sticky top-0 z-50 bg-[#F7F6F2]">
@@ -144,7 +141,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                                 onClick={() => { setIsSearchOpen(true); setIsMenuOpen(false); }}
                                 className="w-full flex items-center gap-3 bg-white border border-[#E5E5E5] px-3 py-2.5 text-[#888] hover:border-[#111] hover:text-[#111] transition-colors group shadow-sm touch-manipulation"
                             >
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#AAA] group-hover:text-[#111] transition-colors">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#AAA] group-hover:text-[#111] transition-colors">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
@@ -168,14 +165,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                                 ))}
                             </ul>
 
-                            <div className="mt-6 sm:mt-8 mb-6 sm:mb-8 space-y-4 sm:space-y-6">
-                                <button
-                                    onClick={() => { setIsSubscribeOpen(true); setIsMenuOpen(false); }}
-                                    className="w-full bg-[#111] text-[#F7F6F2] font-sans font-bold uppercase tracking-widest text-sm py-3 hover:bg-[#333] transition-colors shadow-sm touch-manipulation"
-                                >
-                                    {en.nav.subscribeMobileButton}
-                                </button>
-                            </div>
+
                         </nav>
                     </div>
                 </div>
@@ -228,7 +218,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                                 className="p-2 -mr-2 text-[#111] touch-manipulation"
                                 aria-label="Search"
                             >
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
@@ -316,7 +306,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                                 className="flex items-center gap-2 px-3 py-2 rounded-full text-[#444] hover:bg-[#E5E5E5] hover:text-[#111] transition-all duration-200 group"
                                 aria-label="Search"
                             >
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70 group-hover:opacity-100">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70 group-hover:opacity-100">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
@@ -325,37 +315,23 @@ export function Header({ latestUpdate }: HeaderProps) {
                                 </span>
                             </button>
 
-                            <button
-                                onClick={() => setIsSubscribeOpen(true)}
-                                className="bg-[#111] text-[#F7F6F2] font-sans text-xs xl:text-sm font-bold uppercase tracking-widest px-4 xl:px-6 py-2 rounded-full hover:bg-[#333] transition-colors shadow-sm whitespace-nowrap"
-                            >
-                                <span className="hidden xl:inline">{en.nav.subscribeDesktopButton}</span>
-                                <span className="xl:hidden">{en.nav.subscribeMobileButton}</span>
-                            </button>
                         </div>
                     </nav>
 
-                    {/* Mobile/Tablet Search & Subscribe Bar (md only: 768px-1024px) */}
+                    {/* Mobile/Tablet Search Bar (md only: 768px-1024px) */}
                     <div className="hidden md:flex lg:hidden justify-end items-center gap-3 py-2 border-t border-[#E5E5E5]">
                         <button
                             onClick={() => setIsSearchOpen(true)}
                             className="flex items-center gap-2 px-3 py-2 rounded-full text-[#444] hover:bg-[#E5E5E5] hover:text-[#111] transition-all duration-200 group"
                             aria-label="Search"
                         >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70 group-hover:opacity-100">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70 group-hover:opacity-100">
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
                             <span className="font-sans text-[11px] font-bold uppercase tracking-widest">
                                 {en.nav.searchButton}
                             </span>
-                        </button>
-
-                        <button
-                            onClick={() => setIsSubscribeOpen(true)}
-                            className="bg-[#111] text-[#F7F6F2] font-sans text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full hover:bg-[#333] transition-colors shadow-sm"
-                        >
-                            {en.nav.subscribeMobileButton}
                         </button>
                     </div>
                 </div>

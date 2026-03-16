@@ -350,31 +350,6 @@ export const errorTranslations: Record<ErrorCode, EditorialMessage> = {
         category: 'server',
     },
 
-    // Subscription
-    [ErrorCodes.SUBSCRIPTION_ALREADY_EXISTS]: {
-        message: 'Already subscribed.',
-        displayStyle: 'toast',
-        severity: 'info',
-        category: 'validation',
-    },
-    [ErrorCodes.SUBSCRIPTION_FAILED]: {
-        message: 'Subscription failed. Try again.',
-        displayStyle: 'toast',
-        severity: 'error',
-        category: 'server',
-    },
-    [ErrorCodes.SUBSCRIPTION_INVALID_EMAIL]: {
-        message: 'Enter a valid email.',
-        displayStyle: 'inline',
-        severity: 'error',
-        category: 'validation',
-    },
-    [ErrorCodes.SUBSCRIPTION_WELCOME_EMAIL_FAILED]: {
-        message: 'Subscribed, but welcome email failed.',
-        displayStyle: 'toast',
-        severity: 'warning',
-        category: 'server',
-    },
 
     // Unknown/Fallback
     [ErrorCodes.UNKNOWN_ERROR]: {
@@ -433,15 +408,6 @@ export const successTranslations: Record<SuccessCode, SuccessMessage> = {
         displayStyle: 'toast',
     },
 
-    // Subscription
-    [SuccessCodes.SUBSCRIPTION_SUCCESS]: {
-        message: 'Subscribed successfully.',
-        displayStyle: 'toast',
-    },
-    [SuccessCodes.UNSUBSCRIBE_SUCCESS]: {
-        message: 'You\'ve been unsubscribed.',
-        displayStyle: 'toast',
-    },
 
     // Auth
     [SuccessCodes.LOGIN_SUCCESS]: {

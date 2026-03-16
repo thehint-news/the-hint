@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SubscribeModal } from "../features/SubscribeModal";
 import { en } from "@/lib/i18n/en";
 
 /**
@@ -13,7 +11,6 @@ import { en } from "@/lib/i18n/en";
  * Editorial, calm, authoritative.
  */
 export function Footer() {
-    const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
 
     const pathname = usePathname();
 
@@ -24,7 +21,6 @@ export function Footer() {
 
     return (
         <>
-            <SubscribeModal isOpen={isSubscribeOpen} onClose={() => setIsSubscribeOpen(false)} />
 
             <footer className="bg-[#1a1a1a] text-[#b3b3b3]">
 
@@ -43,12 +39,7 @@ export function Footer() {
                                 <p className="font-sans text-[13px] text-[#999] tracking-wide mb-6">
                                     Digital Kannada Newspaper
                                 </p>
-                                <button
-                                    onClick={() => setIsSubscribeOpen(true)}
-                                    className="bg-[#F7F6F2] text-[#111] font-sans text-sm font-bold uppercase tracking-widest px-5 py-2.5 hover:bg-[#e5e5e5] transition-colors"
-                                >
-                                    {en.nav.subscribeDesktopButton}
-                                </button>
+
                             </div>
 
                             {/* Column 2: Sections (2x3 Grid) */}
@@ -102,9 +93,7 @@ export function Footer() {
                                     <Link href="/privacy" className="block font-sans text-[13px] text-[#999] hover:text-[#e5e5e5] transition-colors">
                                         {en.footer.privacy}
                                     </Link>
-                                    <Link href="/unsubscribe" className="block font-sans text-[13px] text-[#999] hover:text-[#e5e5e5] transition-colors">
-                                        {en.footer.unsubscribe}
-                                    </Link>
+
                                 </div>
                             </div>
 

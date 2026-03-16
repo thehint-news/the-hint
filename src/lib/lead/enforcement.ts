@@ -274,9 +274,11 @@ export async function atomicallySwapLead(
                 const match = oldContent.match(FRONTMATTER_REGEX);
 
                 if (match) {
+                    const now = new Date().toISOString();
                     const frontmatter = yaml.load(match[1]) as Record<string, unknown>;
                     delete frontmatter.isLead;
                     delete frontmatter.leadMedia;
+                    frontmatter.updatedAt = now; // Record selection change
 
                     if (frontmatter.placement === 'lead') {
                         frontmatter.placement = 'standard';
@@ -305,6 +307,7 @@ export async function atomicallySwapLead(
 
         const newFrontmatter = yaml.load(newMatch[1]) as Record<string, unknown>;
         newFrontmatter.isLead = true;
+        newFrontmatter.updatedAt = new Date().toISOString(); // Track selection time
         // Note: leadMedia should already be set in the article during publish
         // We don't modify it here - this is just enforcement of isLead flag
 

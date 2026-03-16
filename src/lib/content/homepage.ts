@@ -214,7 +214,7 @@ export async function getHomepageData(): Promise<HomepageData> {
         allArticles.filter(a => !isOpinion(a) || isPlacement(a, 'top'))
     );
 
-    // Sort by placement='top' priority, then publishedAt descending
+    // Sort by placement='top' priority, then editorial priority (updatedAt fallback to publishedAt)
     const sortedTopStories = [...topStoryCandidates].sort((a, b) => {
         const isTopA = isPlacement(a, 'top');
         const isTopB = isPlacement(b, 'top');
@@ -222,7 +222,9 @@ export async function getHomepageData(): Promise<HomepageData> {
         if (isTopA && !isTopB) return -1;
         if (!isTopA && isTopB) return 1;
 
-        return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+        const dateA = new Date(a.updatedAt || a.publishedAt).getTime();
+        const dateB = new Date(b.updatedAt || b.publishedAt).getTime();
+        return dateB - dateA;
     });
 
     const topStories = takeFirst(sortedTopStories, 2);

@@ -39,15 +39,7 @@ const REQUIRED_PRODUCTION = [
     'APP_BASE_URL',
 ];
 
-/** Subscription-specific variables (required for subscribe/unsubscribe to work) */
-const REQUIRED_SUBSCRIPTION = [
-    'GIT_TOKEN',
-    'GIT_REPO_OWNER',
-    'GIT_REPO_NAME',
-    'RESEND_API_KEY',
-    'EMAIL_FROM',
-    'APP_BASE_URL',
-];
+
 
 import { logger } from './feedback';
 
@@ -81,9 +73,4 @@ export function validateEnv(): { valid: boolean; missing: string[] } {
     return { valid: missing.length === 0, missing };
 }
 
-export function validateSubscriptionEnv(): { valid: boolean; missing: string[] } {
-    if (typeof window !== 'undefined') return { valid: true, missing: [] };
 
-    const missing = REQUIRED_SUBSCRIPTION.filter(key => !process.env[key]);
-    return { valid: missing.length === 0, missing };
-}

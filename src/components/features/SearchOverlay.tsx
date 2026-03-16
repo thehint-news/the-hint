@@ -24,27 +24,43 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
     const [results, setResults] = useState<SearchResult[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasSearched, setHasSearched] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
 
 
-    // Focus input when opened
+    // Animate in/out with a single frame delay for CSS transition trigger
     useEffect(() => {
         if (isOpen) {
-            // Subtle delay for transition
+            // Request animation frame ensures the element is in the DOM before transitioning
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setIsVisible(true);
+                });
+            });
+            document.body.style.overflow = "hidden";
+            // Focus input after animation begins
             const timer = setTimeout(() => {
                 inputRef.current?.focus();
-            }, 50);
-            document.body.style.overflow = "hidden";
+            }, 150);
             return () => clearTimeout(timer);
         } else {
+            setIsVisible(false);
             document.body.style.overflow = "unset";
-            setQuery("");
-            setResults([]);
-            setHasSearched(false);
+            // Clear state after exit animation completes
+            const timer = setTimeout(() => {
+                setQuery("");
+                setResults([]);
+                setHasSearched(false);
+            }, 250);
+            return () => clearTimeout(timer);
         }
-        return () => { document.body.style.overflow = "unset"; };
     }, [isOpen]);
+
+    // Cleanup body overflow on unmount
+    useEffect(() => {
+        return () => { document.body.style.overflow = "unset"; };
+    }, []);
 
     // Handle ESC key
     useEffect(() => {
@@ -89,17 +105,32 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         return () => clearTimeout(timeoutId);
     }, [query]);
 
-    if (!isOpen) return null;
+    // Don't render at all when fully closed and animation complete
+    if (!isOpen && !isVisible) return null;
 
     return (
         <div
             ref={overlayRef}
             onClick={handleOverlayClick}
-            className="fixed inset-0 z-60 bg-black/40 backdrop-blur-sm transition-all duration-300 flex justify-center items-start pt-0 md:pt-[10vh]"
+            className="fixed inset-0 z-60 flex justify-center items-start pt-0 md:pt-[10vh]"
+            style={{
+                backgroundColor: isVisible ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0)',
+                backdropFilter: isVisible ? 'blur(4px)' : 'blur(0px)',
+                WebkitBackdropFilter: isVisible ? 'blur(4px)' : 'blur(0px)',
+                transition: 'background-color 250ms ease, backdrop-filter 250ms ease, -webkit-backdrop-filter 250ms ease',
+                pointerEvents: isVisible ? 'auto' : 'none',
+            }}
             role="dialog"
             aria-modal="true"
         >
-            <div className="w-full md:max-w-3xl bg-[#F7F6F2] shadow-2xl border-b border-[#111] md:border md:rounded-lg animate-in slide-in-from-top-4 duration-300 max-h-screen md:max-h-[80vh] flex flex-col overflow-hidden">
+            <div
+                className="w-full md:max-w-3xl bg-[#F7F6F2] shadow-2xl border-b border-[#111] md:border md:rounded-lg max-h-screen md:max-h-[80vh] flex flex-col overflow-hidden"
+                style={{
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(-12px) scale(0.98)',
+                    transition: 'opacity 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 250ms cubic-bezier(0.16, 1, 0.3, 1)',
+                }}
+            >
                 <div className="w-full">
                     {/* Header / Input Area */}
                     <div className="relative py-6 px-6 flex items-center gap-4 border-b border-[#E5E5E5]">

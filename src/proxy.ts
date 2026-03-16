@@ -151,6 +151,6 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 
 export const config = {
   matcher: [
-    '/((?!api/admin|api/subscribe|api/search|api/auth|api/internal|api/media|api/unsubscribe|api/oembed|_next/static|_next/image|favicon.ico|icon.png|apple-icon.png|robots.txt|sitemap.xml).*)',
+    '/((?!api/admin|api/search|api/auth|api/internal|api/media|api/oembed|_next/static|_next/image|favicon.ico|icon.png|apple-icon.png|robots.txt|sitemap.xml).*)',
   ],
 };
