@@ -3469,5 +3469,19 @@
     "sentEmails": [],
     "totalSubscribers": 3,
     "lastAttemptAt": "2026-03-14T17:45:15.209Z"
+  },
+  {
+    "id": "448716c1-0d53-4410-ba52-487d2744feb6",
+    "articleSlug": "ಯುವತಿಗೆ-ಬೆದರಿಸಿ-14-ಲಕ್ಷ-ರೂ",
+    "section": "crime",
+    "headline": "ಯುವತಿಗೆ ಬೆದರಿಸಿ 14 ಲಕ್ಷ ರೂ. ಪಡೆದ ಯುವಕ: ಪ್ರಕರಣ ದಾಖಲು",
+    "summary": "ಶರತ್ ಎಂಬಾತನಿಂದ ಕೃತ್ಯ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-16T10:48:40.132Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
