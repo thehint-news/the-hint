@@ -67,8 +67,8 @@ export const getAllArticles = cache(async function getAllArticles(): Promise<Art
         }));
 
         allArticles.sort((a, b) => {
-            const dateA = new Date(a.publishedAt).getTime();
-            const dateB = new Date(b.publishedAt).getTime();
+            const dateA = new Date(a.updatedAt || a.publishedAt).getTime();
+            const dateB = new Date(b.updatedAt || b.publishedAt).getTime();
             return dateB - dateA;
         });
 

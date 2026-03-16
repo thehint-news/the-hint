@@ -188,11 +188,11 @@ function PoliticsLayout({ articles, sectionSlug }: { articles: SectionArticle[];
     );
 }
 
-// Image-led layout for World Affairs - Only 1 article
+// Image-led layout for World Affairs - 2 articles
 function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticle[]; sectionSlug: string }) {
     return (
-        <div style={{ display: "grid", gap: "1.25rem", gridTemplateColumns: "1fr" }}>
-            {articles.slice(0, 1).map((article) => {
+        <div style={{ display: "grid", gap: "1.25rem", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+            {articles.slice(0, 2).map((article) => {
                 const articleUrl = `/${sectionSlug}/${article.id}`;
                 const formattedDate = new Date(article.publishedAt).toLocaleDateString("kn-IN", {
                     month: "long",
@@ -204,7 +204,7 @@ function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticl
                     <Link key={article.id} href={articleUrl} className="article-link">
                         <article style={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
                             {/* Thumbnail - World Affairs style */}
-                            <div className="thumbnail-container" style={{ marginBottom: "0.625rem" }}>
+                            <div className="thumbnail-container" style={{ marginBottom: "0.625rem", aspectRatio: "16/9", position: "relative" }}>
                                 {article.image ? (
                                     <Image
                                         src={article.image}
@@ -212,12 +212,14 @@ function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticl
                                         fill
                                         sizes="(max-width: 768px) 50vw, 400px"
                                         className="article-thumbnail thumbnail-world"
+                                        style={{ objectFit: "cover" }}
                                     />
                                 ) : (
                                     <div
                                         className="thumbnail-placeholder thumbnail-world"
                                         role="img"
                                         aria-label={`Illustration for: ${article.title}`}
+                                        style={{ height: "100%" }}
                                     >
                                         IMG
                                     </div>
@@ -228,7 +230,11 @@ function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticl
                             <h3 className="headline-sm" style={{
                                 marginBottom: "0.25rem",
                                 lineHeight: 1.3,
-                                fontSize: "1rem"
+                                fontSize: "0.9375rem",
+                                display: "-webkit-box",
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: "vertical",
+                                overflow: "hidden"
                             }}>
                                 {article.title}
                             </h3>
@@ -240,7 +246,7 @@ function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticl
                                 WebkitLineClamp: 1,
                                 WebkitBoxOrient: "vertical",
                                 overflow: "hidden",
-                                fontSize: "13px",
+                                fontSize: "12px",
                                 lineHeight: 1.4
                             }}>
                                 {article.subtitle}
