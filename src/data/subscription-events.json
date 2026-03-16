@@ -3579,5 +3579,19 @@
     "attempts": 0,
     "processedCount": 0,
     "sentEmails": []
+  },
+  {
+    "id": "9c26e9a3-edd4-41bb-b80d-199ee725b538",
+    "articleSlug": "13-ವರ್ಷದಿಂದ-ತಲೆಮರೆಸಿಕೊಂಡಿದ್ದ-ಆರೋಪಿ-ಬಂಧನ",
+    "section": "court",
+    "headline": "13 ವರ್ಷದಿಂದ ತಲೆಮರೆಸಿಕೊಂಡಿದ್ದ ಆರೋಪಿ ಬಂಧನ",
+    "summary": "ಆರೋಪಿಗೆ ನ್ಯಾಯಾಂಗ ಬಂಧನ ವಿಧಿಸಿ ಸಿಜೆಎಮ್ ಎಮ್.ಪುರುಷೋತ್ತಮ್  ಆದೇಶ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-16T13:26:17.663Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
