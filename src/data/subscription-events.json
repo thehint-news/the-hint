@@ -3565,5 +3565,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-16T11:05:41.670Z",
     "totalSubscribers": 3
+  },
+  {
+    "id": "d148401e-0ba9-4c96-8c30-64d1bef7cb99",
+    "articleSlug": "ನಿಷ್ಠೆಯಿಂದ-ಕೆಲಸ-ಮಾಡಿದರೆ-ಅಧಿಕಾರ-ಮನೆ",
+    "section": "politics",
+    "headline": "ನಿಷ್ಠೆಯಿಂದ ಕೆಲಸ ಮಾಡಿದರೆ ಅಧಿಕಾರ ಮನೆ ಬಾಗಿಲಿಗೆ ಬರುತ್ತದೆ - ಸಚಿವೆ ಲಕ್ಷ್ಮೀ ಹೆಬ್ಬಾಳಕರ್",
+    "summary": "ಮಹಿಳೆಯರು ಗುರಿ ಇಟ್ಟುಕೊಂಡು ರಾಜಕಾರಣಕ್ಕೆ ಬರಬೇಕು",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-16T11:12:35.538Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
