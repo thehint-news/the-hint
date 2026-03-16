@@ -3533,5 +3533,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-16T11:00:28.112Z",
     "totalSubscribers": 3
+  },
+  {
+    "id": "925cc514-99bc-4c5d-bbe7-cf0c9f4e20a3",
+    "articleSlug": "ನವದುರ್ಗಾ-ಲೇಖನ-ಬರೆದು-ವಿಶೇಷ-ಪ್ರಾರ್ಥನೆ",
+    "section": "local",
+    "headline": "ನವದುರ್ಗಾ ಲೇಖನ ಬರೆದು ವಿಶೇಷ ಪ್ರಾರ್ಥನೆ ಸಲ್ಲಿಸಿದ ಮಂಗಳೂರು ವಿವಿ ಉಪಕುಲಪತಿ ಡಾ.ಧರ್ಮ",
+    "summary": "ಮಂಗಳೂರು ವಿಶ್ವವಿದ್ಯಾನಿಲಯದ ಎಲ್ಲಾ ವಿದ್ಯಾರ್ಥಿಗಳು ಕೂಡ ಇದರ ಅನುಭವವನ್ನು ಪಡೆದುಕೊಳ್ಳಿ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-16T11:02:14.674Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
