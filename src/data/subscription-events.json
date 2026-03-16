@@ -3485,5 +3485,19 @@
     "sentEmails": [],
     "lastAttemptAt": "2026-03-16T10:48:52.452Z",
     "totalSubscribers": 3
+  },
+  {
+    "id": "229daaaa-cdf5-4051-8380-310563793cdf",
+    "articleSlug": "ಕಟಪಾಡಿಯಲ್ಲಿ-ಮಗುಚಿ-ಬಿದ್ದ-ಎಲ್-ಪಿಜಿ",
+    "section": "local",
+    "headline": "ಕಟಪಾಡಿಯಲ್ಲಿ ಮಗುಚಿ ಬಿದ್ದ ಎಲ್‌ಪಿಜಿ ಗ್ಯಾಸ್ ಟ್ಯಾಂಕರ್",
+    "summary": "ರಾಷ್ಟ್ರೀಯ ಹೆದ್ದಾರಿ 66ರಲ್ಲಿ ಸಂಚಾರ ಅಸ್ತವ್ಯಸ್ತ",
+    "contentType": "news",
+    "priority": "normal",
+    "createdAt": "2026-03-16T10:53:30.602Z",
+    "status": "pending",
+    "attempts": 0,
+    "processedCount": 0,
+    "sentEmails": []
   }
 ]
