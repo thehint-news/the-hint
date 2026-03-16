@@ -3575,10 +3575,11 @@
     "contentType": "news",
     "priority": "normal",
     "createdAt": "2026-03-16T11:12:35.538Z",
-    "status": "pending",
+    "status": "processing",
     "attempts": 0,
     "processedCount": 0,
-    "sentEmails": []
+    "sentEmails": [],
+    "lastAttemptAt": "2026-03-16T13:26:23.756Z"
   },
   {
     "id": "9c26e9a3-edd4-41bb-b80d-199ee725b538",
