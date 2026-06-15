@@ -1,0 +1,45 @@
+{
+  "headline": "",
+  "subheadline": "",
+  "section": "local",
+  "contentType": "news",
+  "body": ":::image\nsrc: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/06/ed0c238d8fb75615.jpg\nalt: Aropi\nwidth: 1200\nheight: 1600\nsrcset: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/06/ed0c238d8fb75615.jpg 1200w\n:::\n\nಉಡುಪಿ: ಇಲ್ಲಿನ ನಗರ ಠಾಣಾಯಲ್ಲಿ ದಾಖಲಾಗಿದ್ದ 2002  ರ ಪ್ರಕರಣದ ಆರೋಪಿಯೂ ನ್ಯಾಯಾಲಯಕ್ಕೆ ಹಾಜರಾಗದೇ ಸುಮಾರು 24 ವರ್ಷಗಳಿಂದ ತಲೆಮರೆಸಿಕೊಂಡಿದ್ದನು. \n\nಶಿಕಾರಿಪುರ ಮೂಲದ ಆರೋಪಿ ರೇವಣ ಸಿದ್ದ (57) ಇವರನ್ನು ಉಡುಪಿ ನಗರಠಾಣಾ ಪ್ರಭಾರ ನಿರೀಕ್ಷಕ ಮಹೇಶ್ ಪ್ರಸಾದ್ ಅವರ ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ಪಿಎಸ್ಐ ಭರತೇಶ್ ಅವರು ಮಿಂಚಿನ ಕಾರ್ಯಾಚರಣೆ ನಡೆಸಿ ಆರೋಪಿಯನ್ನು ಬಂಧಿಸುವಲ್ಲಿ ಯಶಸ್ವಿಯಾಗಿದ್ದಾರೆ.",
+  "bodyBlocks": [
+    {
+      "id": "ima-mqfkbxww-hd3n",
+      "type": "image",
+      "order": 0,
+      "src": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/06/ed0c238d8fb75615.jpg",
+      "alt": "Aropi",
+      "width": 1200,
+      "height": 1600,
+      "aspectRatio": "original",
+      "srcset": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/06/ed0c238d8fb75615.jpg 1200w"
+    },
+    {
+      "id": "par-mqfkc4k7-nuoi",
+      "type": "paragraph",
+      "order": 1,
+      "content": "ಉಡುಪಿ: ಇಲ್ಲಿನ ನಗರ ಠಾಣಾಯಲ್ಲಿ ದಾಖಲಾಗಿದ್ದ 2002  ರ ಪ್ರಕರಣದ ಆರೋಪಿಯೂ ನ್ಯಾಯಾಲಯಕ್ಕೆ ಹಾಜರಾಗದೇ ಸುಮಾರು 24 ವರ್ಷಗಳಿಂದ ತಲೆಮರೆಸಿಕೊಂಡಿದ್ದನು. \n\nಶಿಕಾರಿಪುರ ಮೂಲದ ಆರೋಪಿ ರೇವಣ ಸಿದ್ದ (57) ಇವರನ್ನು ಉಡುಪಿ ನಗರಠಾಣಾ ಪ್ರಭಾರ ನಿರೀಕ್ಷಕ ಮಹೇಶ್ ಪ್ರಸಾದ್ ಅವರ ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ಪಿಎಸ್ಐ ಭರತೇಶ್ ಅವರು ಮಿಂಚಿನ ಕಾರ್ಯಾಚರಣೆ ನಡೆಸಿ ಆರೋಪಿಯನ್ನು ಬಂಧಿಸುವಲ್ಲಿ ಯಶಸ್ವಿಯಾಗಿದ್ದಾರೆ."
+    },
+    {
+      "id": "par-mqfkcpyi-4pm2",
+      "type": "paragraph",
+      "order": 2,
+      "content": ""
+    },
+    {
+      "id": "par-mqfkcq35-37hk",
+      "type": "paragraph",
+      "order": 3,
+      "content": ""
+    }
+  ],
+  "tags": [],
+  "sources": [],
+  "placement": "standard",
+  "thumbnail": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/06/4c9a5aa8e964b4ff.jpg",
+  "draftId": "draft-1781549180364-lqrdzvxsk",
+  "savedAt": "2026-06-15T18:46:20.364Z",
+  "createdAt": "2026-06-15T18:46:20.364Z"
+}
