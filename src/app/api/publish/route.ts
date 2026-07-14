@@ -84,60 +84,70 @@ async function requireAuth() {
  * 5. Commit atomically: "Publish: {{headline}}"
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+    const cid = `publish-${new Date().toISOString().replace(/\D/g, '').substring(0, 8)}-${Math.random().toString(36).substring(2, 8)}`;
+    let currentStepNum = 1;
+    let currentStepName = 'Request received';
+    let requestPayload: any = null;
+
+    const logStep = (num: number, name: string) => {
+        currentStepNum = num;
+        currentStepName = name;
+        logger.info(`[${cid}] [Publish][${num}] ${name}`);
+    };
+
     try {
+        logStep(1, 'Request received');
+
+        logStep(2, 'Session verified');
         // Enforce strict session
         const authResponse = await requireAuth();
         if (authResponse) return authResponse;
 
+        logStep(3, 'Request body parsed');
         // Parse request body
         let body: unknown;
         try {
             body = await request.json();
+            requestPayload = body;
         } catch {
-            return userResponse(
-                false,
-                'Invalid request format.',
-                { errors: [{ field: 'body', message: 'Request body must be valid JSON' }] },
-                400,
-                'validation_error'
-            );
+            return NextResponse.json({
+                success: false,
+                step: currentStepName,
+                message: 'Invalid request format. Body must be valid JSON'
+            }, { status: 400 });
         }
 
+        logStep(4, 'Request Payload Validated');
         // Ensure body is an object
         if (!body || typeof body !== 'object' || Array.isArray(body)) {
-            return userResponse(
-                false,
-                'Invalid request format.',
-                { errors: [{ field: 'body', message: 'Request body must be a JSON object' }] },
-                400,
-                'validation_error'
-            );
+            return NextResponse.json({
+                success: false,
+                step: currentStepName,
+                message: 'Request body must be a JSON object'
+            }, { status: 400 });
         }
 
         const input = body as PublishArticleInput;
 
         // Verify this is a publish request
         if (input.status !== 'published') {
-            return userResponse(
-                false,
-                'This endpoint is for publishing only. Use /api/publish/draft to save drafts.',
-                { errors: [{ field: 'status', message: 'Status must be "published"' }] },
-                400,
-                'validation_error'
-            );
+            return NextResponse.json({
+                success: false,
+                step: currentStepName,
+                message: 'This endpoint is for publishing only. Use /api/publish/draft to save drafts.'
+            }, { status: 400 });
         }
 
         // Validate all inputs with FULL validation
         const validationResult = validateArticleInput(input);
 
         if (!validationResult.isValid) {
-            return userResponse(
-                false,
-                'Please complete all required fields before publishing.',
-                { errors: validationResult.errors },
-                400,
-                'validation_error'
-            );
+            return NextResponse.json({
+                success: false,
+                step: currentStepName,
+                missing: validationResult.errors.map(e => e.field),
+                message: 'Missing or invalid required fields'
+            }, { status: 400 });
         }
 
         // Generate slug from headline if not explicitly provided
@@ -181,6 +191,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const draftId = (body as Record<string, unknown>).draftId;
         const draftIdString = typeof draftId === 'string' ? draftId : undefined;
 
+        logStep(5, 'Draft Loading');
+        if (draftIdString) {
+            const draftExists = await contentGit.draftExists(draftIdString);
+            if (!draftExists) {
+                return NextResponse.json({
+                    success: false,
+                    step: currentStepName,
+                    message: `Draft not found: ${draftIdString}`
+                }, { status: 404 });
+            }
+        }
+
         // LEAD STORY ENFORCEMENT
         // If this article is marked as lead, attempt to enforce single-lead constraint
         // This runs in the background and doesn't block publishing if it fails
@@ -204,6 +226,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             }
         }
 
+        logStep(6, 'Environment variables verified');
+        const envVars = ['GIT_TOKEN', 'GIT_REPO_OWNER', 'GIT_REPO_NAME', 'GIT_AUTHOR_NAME', 'GIT_AUTHOR_EMAIL'];
+        for (const envVar of envVars) {
+            const exists = !!process.env[envVar];
+            logger.info(`[${cid}] Env var ${envVar} exists: ${exists}`);
+            if (!exists) {
+                return NextResponse.json({
+                    success: false,
+                    step: currentStepName,
+                    message: `Missing required environment variable: ${envVar}`
+                }, { status: 500 });
+            }
+        }
+
+        logStep(7, 'Calling gitService.publish()');
         // Perform atomic publish operation
         const result = await contentGit.publish({
             headline: articleData.headline,
@@ -223,7 +260,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         });
 
         if (!result.success) {
-            logger.error('Publish failed', result.error);
+            logger.error(`[${cid}] Publish failed internally`, result.error);
             
             const isGitError = result.error && typeof (result.error as { toJSON?: () => unknown }).toJSON === 'function';
             if (isGitError) {
@@ -232,14 +269,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 return NextResponse.json(gitErrObj, { status: statusCode });
             }
 
-            return userResponse(
-                false,
-                result.userMessage || 'Publishing didn\'t complete. Please try again.',
-                undefined,
-                500,
-                'system_error'
-            );
+            return NextResponse.json({
+                success: false,
+                step: 'gitService.publish()',
+                message: result.userMessage || 'Publishing didn\'t complete. Please try again.'
+            }, { status: 500 });
         }
+
+        logStep(8, 'Publish completed');
 
 
         // CACHE INVALIDATION: Clear article cache immediately after successful publish
@@ -263,16 +300,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             result.data?.mode === 'create' ? 201 : 200
         );
 
-    } catch (error) {
-            logger.error('Unexpected error in publish API', error);
-            return userResponse(
-                false,
-                'Something went wrong. Please try again.',
-                undefined,
-                500,
-                'system_error'
-            );
-        }
+    } catch (error: any) {
+        logger.error(`[${cid}] [Publish][${currentStepNum}] Error during ${currentStepName}`, {
+            step: currentStepNum,
+            stepName: currentStepName,
+            error: error.message,
+            stack: error.stack,
+            payload: requestPayload
+        });
+
+        return NextResponse.json({
+            success: false,
+            step: currentStepName,
+            message: error.message || 'An unexpected error occurred'
+        }, { status: 500 });
+    }
 }
 
 /**
