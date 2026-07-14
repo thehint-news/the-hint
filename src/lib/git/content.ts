@@ -634,9 +634,12 @@ class ContentGit {
                 height?: number;
             }[];
         };
-    }): Promise<ContentOperationResult<{ slug: string; section: string; url: string; publishedAt: string; mode: 'create' | 'update' }>> {
+    }, correlationId?: string): Promise<ContentOperationResult<{ slug: string; section: string; url: string; publishedAt: string; mode: 'create' | 'update' }>> {
+        const cid = correlationId || `publish-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+        
         try {
             const { section, slug, draftId, headline } = articleData;
+            logger.info(`[${cid}] Starting publish transaction for section: ${section}, slug: ${slug}`);
 
             // 1. Check If File Exists (Detect Mode)
             const articleRelativePath = gitService.getPublishedRelativePath(section, slug);
@@ -718,7 +721,8 @@ class ContentGit {
 
             // 5. Commit all
             const commitMessage = (mode === 'create' ? 'Publish article: ' : 'Update article: ') + headline;
-            await gitService.commitFiles(pathsToCommit, commitMessage, staging);
+            logger.info(`[${cid}] Committing changes with message: "${commitMessage}"`);
+            await gitService.commitFiles(pathsToCommit, commitMessage, staging, cid);
 
             // Push async
             this.pushAsync();
@@ -738,12 +742,21 @@ class ContentGit {
                 userMessage: mode === 'update' ? 'Article updated successfully.' : 'Article published successfully.',
             };
         } catch (error) {
-            logger.error('[GIT-PUBLISH] Failed to publish article', {
+            logger.error(`[${cid}] Failed to publish article`, {
                 error: error instanceof Error ? error.message : String(error),
                 stack: error instanceof Error ? error.stack : undefined,
                 section: articleData.section,
                 slug: articleData.slug,
             });
+            
+            if (error instanceof GitOperationError) {
+                return {
+                    success: false,
+                    userMessage: error.userMessage,
+                    error: error,
+                };
+            }
+
             const gitError = gitService.translateError(error);
             return {
                 success: false,

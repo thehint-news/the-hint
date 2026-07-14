@@ -30,10 +30,24 @@ export class GitOperationError extends Error {
         message: string,
         public readonly type: GitErrorType,
         public readonly userMessage: string,
-        public readonly originalError?: Error
+        public readonly originalError?: Error,
+        public readonly step?: string,
+        public readonly githubStatus?: number
     ) {
         super(message);
         this.name = 'GitOperationError';
+    }
+
+    toJSON() {
+        return {
+            success: false,
+            type: 'github_error',
+            errorType: this.type,
+            step: this.step || 'unknown',
+            githubStatus: this.githubStatus || 500,
+            message: this.message,
+            userMessage: this.userMessage
+        };
     }
 }
 
@@ -92,6 +106,47 @@ class GitService {
             });
         }
         return this._octokit;
+    }
+
+    private async withRetry<T>(
+        operationName: string,
+        correlationId: string,
+        operation: () => Promise<T>
+    ): Promise<T> {
+        let attempt = 0;
+        const maxRetries = 2;
+        while (true) {
+            try {
+                const startTime = Date.now();
+                const result = await operation();
+                logger.info(`[${correlationId}] ${operationName} ✓ (${Date.now() - startTime}ms)`);
+                return result;
+            } catch (error: unknown) {
+                const err = error as Error & { status?: number; code?: string };
+                const status = err.status;
+                const isTransient = status === 502 || status === 503 || status === 504 || err.name === 'TimeoutError' || err.message?.includes('fetch failed') || err.code === 'ECONNRESET';
+                
+                if (isTransient && attempt < maxRetries) {
+                    attempt++;
+                    logger.warn(`[${correlationId}] ${operationName} failed (status ${status}). Retrying... (${attempt}/${maxRetries})`);
+                    await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+                    continue;
+                }
+                logger.error(`[${correlationId}] ${operationName} failed: ${err.message} (status: ${status || 'unknown'})`);
+                if (error instanceof GitOperationError) {
+                    throw error;
+                }
+                
+                throw new GitOperationError(
+                    err.message || `${operationName} failed`,
+                    status === 409 || status === 422 ? GitErrorType.CONFLICT : GitErrorType.NETWORK,
+                    `We couldn't complete the operation during ${operationName}. Please try again.`,
+                    error as Error,
+                    operationName,
+                    status
+                );
+            }
+        }
     }
 
     // Helper to get relative path
@@ -319,7 +374,7 @@ class GitService {
      * Commit a single file (write or update)
      * Now routes through the robust Tree API instead of createOrUpdateFileContents
      */
-    async commitFile(relativePath: string, message: string, staging: GitStaging, retryCount = 0): Promise<GitCommitResult> {
+    async commitFile(relativePath: string, message: string, staging: GitStaging, correlationId?: string): Promise<GitCommitResult> {
         const content = staging.pendingWrites.get(relativePath);
         if (content === undefined) {
             throw new Error(`No pending content for ${relativePath} to commit.`);
@@ -328,7 +383,7 @@ class GitService {
         try {
             // Route through atomic Tree API to avoid finding existing SHAs.
             // This prevents cache problems when updating files rapidly on Vercel.
-            return await this.commitFiles([relativePath], message, staging, retryCount);
+            return await this.commitFiles([relativePath], message, staging, correlationId);
         } catch (error: unknown) {
             throw this.translateError(error);
         }
@@ -370,23 +425,25 @@ class GitService {
     /**
      * Commit multiple changes atomically using Git Data API (Tree)
      */
-    async commitFiles(filesPaths: string[], message: string, staging: GitStaging, retryCount = 0): Promise<GitCommitResult> {
+    async commitFiles(filesPaths: string[], message: string, staging: GitStaging, correlationId?: string): Promise<GitCommitResult> {
+        const cid = correlationId || `git-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+        
         try {
             const client = this.octokit;
             const ref = `heads/${BRANCH}`;
-            const { data: refData } = await client.rest.git.getRef({
-                owner: REPO_OWNER,
-                repo: REPO_NAME,
-                ref,
-            });
-            const latestCommitSha = refData.object.sha;
+            logger.info(`[${cid}] Starting atomic commit for ${filesPaths.length} file(s)`);
 
-            const { data: commitData } = await client.rest.git.getCommit({
-                owner: REPO_OWNER,
-                repo: REPO_NAME,
-                commit_sha: latestCommitSha,
-            });
-            const baseTreeSha = commitData.tree.sha;
+            const refData = await this.withRetry('GET refs', cid, () => 
+                client.rest.git.getRef({ owner: REPO_OWNER, repo: REPO_NAME, ref })
+            );
+            const latestCommitSha = refData.data.object.sha;
+            logger.info(`[${cid}] latestCommitSha: ${latestCommitSha}`);
+
+            const commitData = await this.withRetry('GET commits', cid, () => 
+                client.rest.git.getCommit({ owner: REPO_OWNER, repo: REPO_NAME, commit_sha: latestCommitSha })
+            );
+            const baseTreeSha = commitData.data.tree.sha;
+            logger.info(`[${cid}] baseTreeSha: ${baseTreeSha}`);
 
             const treeItems: { path: string; mode: "100644" | "100755" | "040000" | "160000" | "120000"; type: "blob" | "tree" | "commit"; content?: string; sha?: string | null }[] = [];
             for (const p of filesPaths) {
@@ -410,33 +467,52 @@ class GitService {
             }
 
             if (treeItems.length === 0) {
+                logger.info(`[${cid}] No changes to commit`);
                 return { success: true, message: 'No changes to commit' };
             }
 
-            const { data: treeData } = await client.rest.git.createTree({
-                owner: REPO_OWNER,
-                repo: REPO_NAME,
-                base_tree: baseTreeSha,
-                tree: treeItems,
-            });
+            const treeData = await this.withRetry('POST trees', cid, () => 
+                client.rest.git.createTree({ owner: REPO_OWNER, repo: REPO_NAME, base_tree: baseTreeSha, tree: treeItems })
+            );
+            logger.info(`[${cid}] newTreeSha: ${treeData.data.sha}`);
 
-            const { data: newCommitData } = await client.rest.git.createCommit({
-                owner: REPO_OWNER,
-                repo: REPO_NAME,
-                message,
-                tree: treeData.sha,
-                parents: [latestCommitSha],
-                author: {
-                    name: process.env.GIT_AUTHOR_NAME || 'Editor',
-                    email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
+            const newCommitData = await this.withRetry('POST commits', cid, () => 
+                client.rest.git.createCommit({
+                    owner: REPO_OWNER,
+                    repo: REPO_NAME,
+                    message,
+                    tree: treeData.data.sha,
+                    parents: [latestCommitSha],
+                    author: {
+                        name: process.env.GIT_AUTHOR_NAME || 'Editor',
+                        email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
+                    }
+                })
+            );
+            logger.info(`[${cid}] newCommitSha: ${newCommitData.data.sha}`);
+
+            await this.withRetry('PATCH refs', cid, async () => {
+                try {
+                    return await client.rest.git.updateRef({
+                        owner: REPO_OWNER,
+                        repo: REPO_NAME,
+                        ref,
+                        sha: newCommitData.data.sha,
+                        force: false // Optimistic concurrency: fail if HEAD moved
+                    });
+                } catch (error: unknown) {
+                    if ((error as { status?: number }).status === 422) {
+                        throw new GitOperationError(
+                            'Concurrent modification detected. HEAD has changed.',
+                            GitErrorType.CONFLICT,
+                            'Another user modified the content at the same time. Please try again.',
+                            error as Error,
+                            'PATCH refs',
+                            422
+                        );
+                    }
+                    throw error;
                 }
-            });
-
-            await client.rest.git.updateRef({
-                owner: REPO_OWNER,
-                repo: REPO_NAME,
-                ref,
-                sha: newCommitData.sha,
             });
 
             for (const p of filesPaths) {
@@ -444,36 +520,17 @@ class GitService {
                 staging.pendingDeletes.delete(p);
             }
 
+            logger.info(`[${cid}] Commit successful`);
             return {
                 success: true,
-                commitHash: newCommitData.sha,
+                commitHash: newCommitData.data.sha,
                 message
             };
         } catch (error: unknown) {
-            const err = error as { status?: number; message?: string };
-
-            // PART 1: ATOMIC DELETE - Handle Git 409 Conflicts with explicit SHA refetch
-            if ((err.status === 409 || err.status === 422) && retryCount < 2) {
-                logger.warn(`[GIT-SERVICE] Git conflict detected (status: ${err.status}), refetching latest SHA and retrying... (attempt ${retryCount + 1}/2)`);
-
-                // Add small delay to allow concurrent operations to settle
-                await new Promise(resolve => setTimeout(resolve, 100 * (retryCount + 1)));
-
-                // Retry with fresh SHA fetch (recursive call will fetch new SHA)
-                return this.commitFiles(filesPaths, message, staging, retryCount + 1);
+            logger.error(`[${cid}] Pipeline failed`, error);
+            if (error instanceof GitOperationError) {
+                throw error;
             }
-
-            // If we've exhausted retries, throw a clear error
-            if ((err.status === 409 || err.status === 422) && retryCount >= 2) {
-                logger.error(`[GIT-SERVICE] Git conflict persisted after retries. Concurrent modification detected.`);
-                throw new GitOperationError(
-                    `Git conflict: ${err.message || 'Concurrent modification detected'}`,
-                    GitErrorType.CONFLICT,
-                    'Another user is modifying content. Please refresh and try again.',
-                    error as Error
-                );
-            }
-
             throw this.translateError(error);
         }
     }

@@ -41,17 +41,21 @@ function userResponse(
     success: boolean,
     message: string,
     data?: Record<string, unknown>,
-    status: number = success ? 200 : 400
+    status: number = success ? 200 : 400,
+    errorType: string = 'unknown_error'
 ) {
-    return NextResponse.json(
-        {
-            success,
-            message,
-            error: success ? undefined : message,
-            ...(data && { data }),
-        },
-        { status }
-    );
+    const payload: Record<string, unknown> = {
+        success,
+        message,
+    };
+    if (!success) {
+        payload.type = errorType;
+        payload.error = message;
+    }
+    if (data) {
+        Object.assign(payload, data);
+    }
+    return NextResponse.json(payload, { status });
 }
 
 const AUTH_EXPIRED_MESSAGE = 'Session expired. Please log in again.';
@@ -94,7 +98,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 false,
                 'Invalid request format.',
                 { errors: [{ field: 'body', message: 'Request body must be valid JSON' }] },
-                400
+                400,
+                'validation_error'
             );
         }
 
@@ -104,7 +109,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 false,
                 'Invalid request format.',
                 { errors: [{ field: 'body', message: 'Request body must be a JSON object' }] },
-                400
+                400,
+                'validation_error'
             );
         }
 
@@ -116,7 +122,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 false,
                 'This endpoint is for publishing only. Use /api/publish/draft to save drafts.',
                 { errors: [{ field: 'status', message: 'Status must be "published"' }] },
-                400
+                400,
+                'validation_error'
             );
         }
 
@@ -128,7 +135,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 false,
                 'Please complete all required fields before publishing.',
                 { errors: validationResult.errors },
-                400
+                400,
+                'validation_error'
             );
         }
 
@@ -147,7 +155,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 false,
                 'Could not generate a valid URL from the headline.',
                 { errors: [{ field: 'headline', message: 'Headline must contain at least one alphanumeric character' }] },
-                400
+                400,
+                'validation_error'
             );
         }
 
@@ -215,11 +224,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
         if (!result.success) {
             logger.error('Publish failed', result.error);
+            
+            const isGitError = result.error && typeof (result.error as { toJSON?: () => unknown }).toJSON === 'function';
+            if (isGitError) {
+                const gitErrObj = (result.error as { toJSON: () => { errorType: string; [key: string]: unknown } }).toJSON();
+                const statusCode = gitErrObj.errorType === 'CONFLICT' ? 409 : 500;
+                return NextResponse.json(gitErrObj, { status: statusCode });
+            }
+
             return userResponse(
                 false,
                 result.userMessage || 'Publishing didn\'t complete. Please try again.',
                 undefined,
-                500
+                500,
+                'system_error'
             );
         }
 
@@ -246,14 +264,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         );
 
     } catch (error) {
-        logger.error('Unexpected error in publish API', error);
-        return userResponse(
-            false,
-            'Something went wrong. Please try again.',
-            undefined,
-            500
-        );
-    }
+            logger.error('Unexpected error in publish API', error);
+            return userResponse(
+                false,
+                'Something went wrong. Please try again.',
+                undefined,
+                500,
+                'system_error'
+            );
+        }
 }
 
 /**
