@@ -474,35 +474,75 @@ class GitService {
             const treeData = await this.withRetry('POST trees', cid, () => 
                 client.rest.git.createTree({ owner: REPO_OWNER, repo: REPO_NAME, base_tree: baseTreeSha, tree: treeItems })
             );
-            logger.info(`[${cid}] newTreeSha: ${treeData.data.sha}`);
-            logger.info(`[${cid}] complete treeData object: ${JSON.stringify(treeData, null, 2)}`);
-
-            if (!treeData.data.sha) {
-                throw new Error(`[${cid}] treeData.data.sha is undefined immediately before createCommit!`);
+            try {
+                console.log(`[${cid}] PASS createTree`);
+            } catch (e) {
+                console.error(`[${cid}] FAIL createTree`, e);
             }
-            if (!latestCommitSha) {
-                throw new Error(`[${cid}] latestCommitSha is undefined immediately before createCommit!`);
+
+            try {
+                console.log({
+                    treeData,
+                    treeDataData: treeData?.data,
+                    treeSha: treeData?.data?.sha
+                });
+                console.log(`[${cid}] PASS treeData.data log`);
+            } catch (e) {
+                console.error(`[${cid}] FAIL treeData.data log\nReason:\n${(e as Error).message}`);
+                throw e;
             }
-            logger.info(`[${cid}] latestCommitSha: ${latestCommitSha}`);
 
-            const commitPayload = {
-                owner: REPO_OWNER,
-                repo: REPO_NAME,
-                message,
-                tree: treeData.data.sha,
-                parents: [latestCommitSha],
-                author: {
-                    name: process.env.GIT_AUTHOR_NAME || 'Editor',
-                    email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
-                }
-            };
+            let treeSha: string;
+            try {
+                treeSha = treeData.data.sha;
+                console.log(`[${cid}] PASS treeData.data.sha access`);
+            } catch (e) {
+                console.error(`[${cid}] FAIL treeData.data.sha access\nReason:\n${(e as Error).message}`);
+                throw e;
+            }
 
-            logger.info(`[${cid}] Exact payload for createCommit: ${JSON.stringify(commitPayload, null, 2)}`);
+            try {
+                console.log({
+                    latestCommitSha
+                });
+                console.log(`[${cid}] PASS latestCommitSha log`);
+            } catch (e) {
+                console.error(`[${cid}] FAIL latestCommitSha log\nReason:\n${(e as Error).message}`);
+                throw e;
+            }
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            let commitPayload: any;
+            try {
+                commitPayload = {
+                    owner: REPO_OWNER,
+                    repo: REPO_NAME,
+                    message,
+                    tree: treeSha,
+                    parents: [latestCommitSha],
+                    author: {
+                        name: process.env.GIT_AUTHOR_NAME || 'Editor',
+                        email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
+                    }
+                };
+                console.log(`[${cid}] PASS commitPayload building`);
+            } catch (e) {
+                console.error(`[${cid}] FAIL commitPayload building\nReason:\n${(e as Error).message}`);
+                throw e;
+            }
+
+            try {
+                console.log(`[${cid}] Exact payload for createCommit: ${JSON.stringify(commitPayload, null, 2)}`);
+                console.log(`[${cid}] PASS commitPayload logging`);
+            } catch (e) {
+                console.error(`[${cid}] FAIL commitPayload logging\nReason:\n${(e as Error).message}`);
+                throw e;
+            }
 
             let newCommitData;
             try {
                 // DIRECT EXECUTION: intentionally bypassing withRetry
-                logger.info(`[${cid}] ABOUT TO CALL client.rest.git.createCommit()...`);
+                console.log(`[${cid}] ENTERING createCommit`);
                 newCommitData = await client.rest.git.createCommit(commitPayload);
                 logger.info(`[${cid}] IMMEDIATELY AFTER createCommit() call...`);
                 logger.info(`[${cid}] newCommitSha: ${newCommitData.data.sha}`);
