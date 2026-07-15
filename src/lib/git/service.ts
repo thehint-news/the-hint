@@ -475,6 +475,7 @@ class GitService {
                 client.rest.git.createTree({ owner: REPO_OWNER, repo: REPO_NAME, base_tree: baseTreeSha, tree: treeItems })
             );
             logger.info(`[${cid}] newTreeSha: ${treeData.data.sha}`);
+            logger.info(`[${cid}] complete treeData object: ${JSON.stringify(treeData, null, 2)}`);
 
             if (!treeData.data.sha) {
                 throw new Error(`[${cid}] treeData.data.sha is undefined immediately before createCommit!`);
@@ -482,6 +483,7 @@ class GitService {
             if (!latestCommitSha) {
                 throw new Error(`[${cid}] latestCommitSha is undefined immediately before createCommit!`);
             }
+            logger.info(`[${cid}] latestCommitSha: ${latestCommitSha}`);
 
             const commitPayload = {
                 owner: REPO_OWNER,
@@ -500,7 +502,9 @@ class GitService {
             let newCommitData;
             try {
                 // DIRECT EXECUTION: intentionally bypassing withRetry
+                logger.info(`[${cid}] ABOUT TO CALL client.rest.git.createCommit()...`);
                 newCommitData = await client.rest.git.createCommit(commitPayload);
+                logger.info(`[${cid}] IMMEDIATELY AFTER createCommit() call...`);
                 logger.info(`[${cid}] newCommitSha: ${newCommitData.data.sha}`);
             } catch (error: unknown) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
