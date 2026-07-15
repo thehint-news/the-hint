@@ -87,7 +87,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const cid = `publish-${new Date().toISOString().replace(/\D/g, '').substring(0, 8)}-${Math.random().toString(36).substring(2, 8)}`;
     let currentStepNum = 1;
     let currentStepName = 'Request received';
-    let requestPayload: any = null;
+    let requestPayload: unknown = null;
 
     const logStep = (num: number, name: string) => {
         currentStepNum = num;
@@ -300,19 +300,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             result.data?.mode === 'create' ? 201 : 200
         );
 
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const err = error as Error;
         logger.error(`[${cid}] [Publish][${currentStepNum}] Error during ${currentStepName}`, {
             step: currentStepNum,
             stepName: currentStepName,
-            error: error.message,
-            stack: error.stack,
+            error: err.message,
+            stack: err.stack,
             payload: requestPayload
         });
 
         return NextResponse.json({
             success: false,
             step: currentStepName,
-            message: error.message || 'An unexpected error occurred'
+            message: err.message || 'An unexpected error occurred'
         }, { status: 500 });
     }
 }

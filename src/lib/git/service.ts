@@ -476,20 +476,53 @@ class GitService {
             );
             logger.info(`[${cid}] newTreeSha: ${treeData.data.sha}`);
 
-            const newCommitData = await this.withRetry('POST commits', cid, () => 
-                client.rest.git.createCommit({
-                    owner: REPO_OWNER,
-                    repo: REPO_NAME,
-                    message,
-                    tree: treeData.data.sha,
-                    parents: [latestCommitSha],
-                    author: {
-                        name: process.env.GIT_AUTHOR_NAME || 'Editor',
-                        email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
-                    }
-                })
-            );
-            logger.info(`[${cid}] newCommitSha: ${newCommitData.data.sha}`);
+            if (!treeData.data.sha) {
+                throw new Error(`[${cid}] treeData.data.sha is undefined immediately before createCommit!`);
+            }
+            if (!latestCommitSha) {
+                throw new Error(`[${cid}] latestCommitSha is undefined immediately before createCommit!`);
+            }
+
+            const commitPayload = {
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                message,
+                tree: treeData.data.sha,
+                parents: [latestCommitSha],
+                author: {
+                    name: process.env.GIT_AUTHOR_NAME || 'Editor',
+                    email: process.env.GIT_AUTHOR_EMAIL || 'editor@thehint.news'
+                }
+            };
+
+            logger.info(`[${cid}] Exact payload for createCommit: ${JSON.stringify(commitPayload, null, 2)}`);
+
+            let newCommitData;
+            try {
+                // DIRECT EXECUTION: intentionally bypassing withRetry
+                newCommitData = await client.rest.git.createCommit(commitPayload);
+                logger.info(`[${cid}] newCommitSha: ${newCommitData.data.sha}`);
+            } catch (error: unknown) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const err = error as any;
+                logger.error(`[${cid}] EXCEPTION CAUGHT DIRECTLY IN createCommit!`);
+                logger.error(`[${cid}] error.constructor.name: ${err?.constructor?.name}`);
+                logger.error(`[${cid}] error.message: ${err?.message}`);
+                logger.error(`[${cid}] error.stack: ${err?.stack}`);
+                logger.error(`[${cid}] error.status: ${err?.status}`);
+                logger.error(`[${cid}] error.request: ${JSON.stringify(err?.request)}`);
+                logger.error(`[${cid}] error.response.status: ${err?.response?.status}`);
+                logger.error(`[${cid}] error.response.headers: ${JSON.stringify(err?.response?.headers)}`);
+                logger.error(`[${cid}] error.response.data: ${JSON.stringify(err?.response?.data)}`);
+                logger.error(`[${cid}] error.cause: ${err?.cause}`);
+
+                // If GitHub returns 422 or 409, print the entire response body and throw raw error
+                if (err?.status === 422 || err?.status === 409 || err?.response?.status === 422 || err?.response?.status === 409) {
+                    throw err; 
+                }
+                
+                throw err;
+            }
 
             await this.withRetry('PATCH refs', cid, async () => {
                 try {
