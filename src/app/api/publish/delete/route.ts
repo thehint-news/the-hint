@@ -462,12 +462,33 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
 
                 logger.info(`[DELETE-API] [${requestId}] Git commit confirmed for published article`);
 
+                // Regenerate content graph synchronously to ensure readers get fresh data
+                const syncStartTime = Date.now();
+                let graphVersion = 0;
+                let articleCount = 0;
+                let cacheInvalidated = false;
+
+                try {
+                    const { generateContentGraph } = await import('@/lib/content/generateContentGraph');
+                    const graph = generateContentGraph('delete', section as string, safeSlug);
+                    graphVersion = graph.version;
+                    articleCount = graph.articleCount;
+                    logger.info(`[DELETE-API] [${requestId}] Content graph regenerated successfully`);
+                } catch (e) {
+                    logger.error(`[DELETE-API] [${requestId}] Post-publish synchronization failed`, e);
+                    return NextResponse.json(
+                        { success: false, error: 'Post-publish synchronization failed. The article was deleted from GitHub, but the site may not reflect it immediately.', errorCode: 'SERVER_ERROR' },
+                        { status: 500 }
+                    );
+                }
+
                 // CACHE INVALIDATION: Clear article cache immediately after confirmed Git delete
                 clearArticleCache();
+                cacheInvalidated = true;
 
                 // PART 3 - CACHE & ISR COORDINATION
                 // Must trigger revalidation BEFORE returning success
-                const revalidationPaths = result.data.revalidationPaths;
+                const revalidationPaths = [...result.data.revalidationPaths, '/sitemap.xml'];
                 logger.info(`[DELETE-API] [${requestId}] Triggering ISR revalidation for ${revalidationPaths.length} paths`);
 
                 const revalidationResult = triggerRevalidation(revalidationPaths, requestId);
@@ -499,6 +520,17 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
                 };
 
                 logger.info(`[DELETE-API] [${requestId}] ========== DELETE REQUEST SUCCESS (PUBLISHED) ==========`);
+
+                const syncDuration = Date.now() - syncStartTime;
+                logger.info(`[DELETE-API] [${requestId}] DELETE TRANSACTION COMPLETE`, {
+                    commitSha: result.data.commitHash || 'unknown',
+                    graphVersion,
+                    articleCount,
+                    syncDurationMs: syncDuration,
+                    cacheInvalidated,
+                    isrPathsRevalidated: revalidationPaths,
+                    result: 'Success'
+                });
 
                 // SUPABASE CLEANUP: Delete article images from storage in background
                 // Non-blocking — runs after the response is sent

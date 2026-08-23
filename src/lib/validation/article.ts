@@ -284,6 +284,9 @@ export interface PublishArticleInput {
     isLead?: unknown;
     /** Lead story carousel media - only valid if isLead === true */
     leadMedia?: unknown;
+    imageWidth?: unknown;
+    imageHeight?: unknown;
+    imageType?: unknown;
 }
 
 /**
@@ -303,6 +306,9 @@ export interface DraftArticleInput {
     draftId?: unknown;
     isLead?: unknown;
     leadMedia?: unknown;
+    imageWidth?: unknown;
+    imageHeight?: unknown;
+    imageType?: unknown;
 }
 
 /**
@@ -330,6 +336,9 @@ export interface ValidatedArticleData {
             height?: number;
         }[];
     };
+    imageWidth?: number;
+    imageHeight?: number;
+    imageType?: string;
 }
 
 /**
@@ -358,6 +367,9 @@ export interface ValidatedDraftData {
             height?: number;
         }[];
     };
+    imageWidth?: number;
+    imageHeight?: number;
+    imageType?: string;
 }
 
 /**
@@ -662,6 +674,9 @@ export function transformToValidatedData(input: PublishArticleInput): ValidatedA
         thumbnail,
         isLead,
         leadMedia,
+        imageWidth: typeof input.imageWidth === 'number' ? input.imageWidth : undefined,
+        imageHeight: typeof input.imageHeight === 'number' ? input.imageHeight : undefined,
+        imageType: typeof input.imageType === 'string' ? input.imageType : undefined,
     };
 }
 
@@ -724,6 +739,9 @@ export function transformToDraftData(input: DraftArticleInput, draftId?: string)
         savedAt: new Date().toISOString(),
         isLead,
         leadMedia,
+        imageWidth: typeof input.imageWidth === 'number' ? input.imageWidth : undefined,
+        imageHeight: typeof input.imageHeight === 'number' ? input.imageHeight : undefined,
+        imageType: typeof input.imageType === 'string' ? input.imageType : undefined,
     };
 }
 

@@ -66,7 +66,13 @@ export async function generateArticleMetadata({
             modifiedTime: isoUpdated,
             section: article.section,
             tags: article.tags,
-            images: article.image ? [{ url: article.image, alt: article.title }] : [],
+            images: article.image ? [{
+                url: article.image,
+                alt: article.title,
+                ...(article.imageWidth ? { width: article.imageWidth } : {}),
+                ...(article.imageHeight ? { height: article.imageHeight } : {}),
+                ...(article.imageType ? { type: article.imageType } : {})
+            }] : [],
             url: canonicalUrl,
             locale: 'kn_IN',
             siteName: 'The Hint News',

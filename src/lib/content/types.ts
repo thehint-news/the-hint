@@ -96,6 +96,10 @@ export interface Article {
     /** Featured image URL (optional) */
     image?: string;
 
+    /** Dimensions for featured image (populated by backfill/validation) */
+    imageWidth?: number;
+    imageHeight?: number;
+    imageType?: string;
 
     /** Whether this article is the designated lead story (only ONE can be true globally) */
     isLead?: boolean;

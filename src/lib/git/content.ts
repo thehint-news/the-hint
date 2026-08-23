@@ -634,6 +634,9 @@ class ContentGit {
                 height?: number;
             }[];
         };
+        imageWidth?: number;
+        imageHeight?: number;
+        imageType?: string;
     }, correlationId?: string): Promise<ContentOperationResult<{ slug: string; section: string; url: string; publishedAt: string; mode: 'create' | 'update' }>> {
         const cid = correlationId || `publish-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
         
@@ -938,6 +941,9 @@ class ContentGit {
                 height?: number;
             }[];
         };
+        imageWidth?: number;
+        imageHeight?: number;
+        imageType?: string;
     }): string {
         const frontmatter: Record<string, unknown> = {
             title: data.headline,
@@ -950,6 +956,9 @@ class ContentGit {
             placement: data.placement,
             tags: data.tags,
             sources: data.sources,
+            ...(data.imageWidth && { imageWidth: data.imageWidth }),
+            ...(data.imageHeight && { imageHeight: data.imageHeight }),
+            ...(data.imageType && { imageType: data.imageType }),
         };
 
         // If bodyBlocks exist, add them to frontmatter (CANONICAL)

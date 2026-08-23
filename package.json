@@ -7,6 +7,8 @@
     "build": "npm run generate-graph && npm run verify-content && next build",
     "verify-content": "tsx scripts/verifyContentIndex.ts",
     "generate-graph": "tsx scripts/generateContentGraph.ts",
+    "backfill-image-metadata": "tsx scripts/backfillImageMetadata.ts",
+    "validate-image-metadata": "tsx scripts/validateImageMetadata.ts",
     "start": "next start -p 3002",
     "lint": "eslint"
   },
