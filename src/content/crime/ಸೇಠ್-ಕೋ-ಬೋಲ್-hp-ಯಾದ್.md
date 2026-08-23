@@ -5,8 +5,8 @@ contentType: news
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/08/7c5b6438fb60157c.jpg
 status: published
 publishedAt: '2026-08-23T15:12:32.691Z'
-updatedAt: null
-placement: lead
+updatedAt: '2026-08-23T16:53:27.594Z'
+placement: standard
 tags:
   - ಹೆಚ್‌ಪಿ
   - ಬೆದರಿಕೆ
@@ -70,7 +70,6 @@ bodyBlocks:
     type: quote
     order: 9
     content: 'ಆಡಿಯೋದಲ್ಲಿ ಹೇಮಂತ್ ಪೂಜಾರಿ ಎಂದು ಮಾತನಾಡುತ್ತಿರುವ ವ್ಯಕ್ತಿಯೇ ನಿಜವಾದ ಹೇಮಂತ್ ಪೂಜಾರಿಯ ಎಂದು ಹೇಳಲು ಸಾಧ್ಯವಿಲ್ಲ. ಆತನ ಹೆಸರನ್ನು ಬಳಸಿ ಮೂರನೇ ವ್ಯಕ್ತಿ ಕರೆ ಮಾಡಿದ್ದಾರೆಯೇ...? HP ನಿಜವಾಗಿಯೂ ಬದುಕಿದ್ದಾನೆಯೇ..? ಬದುಕಿದ್ದಾರೆ ಒಂದು ದಶಕಗಳ ಕಾಲ ಎಲ್ಲಿದ್ದ..? ಹೇಗಿದ್ದ..? ಎಂಬ ಬಗ್ಗೆಯೂ ದಾಖಲೆಗಳು ಇಲ್ಲಾ. ಈ ಎಲ್ಲಾ ಅಂಶಗಳು ಪೋಲಿಸ್ ತನಿಖೆಯಿಂದಷ್ಟೇ ಹೊರಬೀಳಲು ಸಾಧ್ಯ. '
-isLead: true
 ---
 
 :::image
