@@ -181,7 +181,7 @@ export async function ArticlePageContent({ section, slug }: ArticlePageContentPr
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <article className="article-kannada-scope px-6 pt-12 pb-4 max-w-[1200px] mx-auto lg:pl-20">
+            <article className="article-kannada-scope px-6 pt-12 pb-4 max-w-300 mx-auto lg:pl-20">
                 <div className="max-w-4xl mx-auto">
                     <ArticleHeader
                         title={article.title}
@@ -194,7 +194,7 @@ export async function ArticlePageContent({ section, slug }: ArticlePageContentPr
                     />
                 </div>
 
-                <div className="max-w-[760px] mx-auto">
+                <div className="max-w-190 mx-auto">
                     <ArticleBody
                         blocks={article.bodyBlocks}
                         content={article.body}
