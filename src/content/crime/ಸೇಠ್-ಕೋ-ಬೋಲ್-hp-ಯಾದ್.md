@@ -5,8 +5,8 @@ contentType: news
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/08/7c5b6438fb60157c.jpg
 status: published
 publishedAt: '2026-08-23T15:12:32.691Z'
-updatedAt: '2026-08-23T16:56:19.998Z'
-placement: standard
+updatedAt: '2026-08-23T16:56:43.294Z'
+placement: lead
 tags:
   - ಹೆಚ್‌ಪಿ
   - ಬೆದರಿಕೆ
