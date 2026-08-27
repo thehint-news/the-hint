@@ -24,9 +24,7 @@ import {
 } from '@/lib/validation';
 import { contentGit, DraftData, PublishedArticleData } from '@/lib/git';
 import { logger } from '@/lib/feedback/console-guard';
-import { revalidatePath } from 'next/cache';
 import { verifyAuth } from '@/lib/auth/session';
-import { clearArticleCache } from '@/lib/cache/article-cache';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -282,46 +280,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         logStep(8, 'Publish completed');
 
 
-        // 7. Regenerate content graph synchronously to ensure readers get fresh data
-        const syncStartTime = Date.now();
-        let graphVersion = 0;
-        let articleCount = 0;
-        let cacheInvalidated = false;
-
-        try {
-            const { generateContentGraph } = await import('@/lib/content/generateContentGraph');
-            const graph = generateContentGraph('publish', articleData.section as string, targetSlug);
-            graphVersion = graph.version;
-            articleCount = graph.articleCount;
-            logger.info(`[${cid}] Content graph regenerated successfully`);
-        } catch (e) {
-            logger.error(`[${cid}] Post-publish synchronization failed`, e);
-            return userResponse(
-                false,
-                'Post-publish synchronization failed. The article was saved to GitHub, but the site may not reflect it immediately.',
-                undefined,
-                500,
-                'sync_error'
-            );
-        }
-
-        // CACHE INVALIDATION: Clear article cache immediately after successful publish and graph regeneration
-        clearArticleCache();
-        cacheInvalidated = true;
-
-        // 8. On-demand revalidation
-        const isrPaths = ['/', `/${articleData.section}`, `/${articleData.section}/${targetSlug}`, '/sitemap.xml'];
-        isrPaths.forEach(p => revalidatePath(p, 'page'));
-
-        const syncDuration = Date.now() - syncStartTime;
-        
         logger.info(`[${cid}] PUBLISH TRANSACTION COMPLETE`, {
-            graphVersion,
-            articleCount,
-            syncDurationMs: syncDuration,
-            cacheInvalidated,
-            isrPathsRevalidated: isrPaths,
-            result: 'Success'
+            result: 'Success',
+            mode: result.data?.mode,
+            slug: result.data?.slug
         });
 
         return userResponse(
