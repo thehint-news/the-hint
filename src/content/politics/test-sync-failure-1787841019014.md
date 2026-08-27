@@ -1,11 +1,11 @@
 ---
-title: Test Sync Failure 1787841019014
-subtitle: Testing the post-publish fix
+title: Test Sync Success
+subtitle: Updating the article
 contentType: news
 image: https://example.com/image.jpg
 status: published
 publishedAt: '2026-08-27T14:30:19.781Z'
-updatedAt: null
+updatedAt: '2026-08-27T14:30:24.913Z'
 placement: standard
 tags:
   - test
@@ -13,4 +13,4 @@ sources:
   - test source
 ---
 
-This is a test article.
+This is an updated article.
