@@ -19,6 +19,7 @@ import {
     TagsList,
     ContinueReading,
 } from '@/components/article';
+import { safeJsonLdStringify } from '@/lib/utils/json-ld';
 
 import { getTranslationsForLang } from '@/lib/i18n';
 
@@ -184,7 +185,7 @@ export async function ArticlePageContent({ section, slug }: ArticlePageContentPr
         <>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
             />
 
             <article className="article-kannada-scope px-6 pt-12 pb-4 max-w-300 mx-auto lg:pl-20">

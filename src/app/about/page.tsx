@@ -3,6 +3,7 @@
  */
 
 import { Metadata } from "next";
+import { safeJsonLdStringify } from "@/lib/utils/json-ld";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -40,7 +41,7 @@ export default function AboutPage() {
         <main id="main-content" className="flex-1">
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
             />
             <article className="about-page">
                 <div className="container-editorial">

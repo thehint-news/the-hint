@@ -476,10 +476,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
                     logger.info(`[DELETE-API] [${requestId}] Content graph regenerated successfully`);
                 } catch (e) {
                     logger.error(`[DELETE-API] [${requestId}] Post-publish synchronization failed`, e);
-                    return NextResponse.json(
-                        { success: false, error: 'Post-publish synchronization failed. The article was deleted from GitHub, but the site may not reflect it immediately.', errorCode: 'SERVER_ERROR' },
-                        { status: 500 }
-                    );
+                    // DO NOT RETURN 500 HERE! GitHub mutation succeeded.
                 }
 
                 // CACHE INVALIDATION: Clear article cache immediately after confirmed Git delete

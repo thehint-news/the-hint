@@ -9,6 +9,7 @@
  * - Legacy markdown fallback only for old articles without bodyBlocks
  */
 import { marked } from 'marked'; // Only used for legacy articles without bodyBlocks
+import DOMPurify from 'isomorphic-dompurify';
 import { parseBodyToBlocks } from '@/lib/content/block-parser';
 import { ImageBlockRenderer } from './ImageBlock';
 import { VideoBlockRenderer } from './VideoBlock';
@@ -199,11 +200,14 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                     }
 
                     // LEGACY FALLBACK: Parse markdown only for old articles without bodyBlocks
-                    const htmlContent = marked.parse(block.content, {
+                    const rawHtmlContent = marked.parse(block.content, {
                         async: false,
                         gfm: true,
                         breaks: true,
                     }) as string;
+
+                    // Sanitize the HTML to prevent Stored XSS
+                    const cleanHtmlContent = DOMPurify.sanitize(rawHtmlContent);
 
                     return (
                         <div
@@ -215,7 +219,7 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                                 color: '#111111',
                                 marginBottom: '1.5rem',
                             }}
-                            dangerouslySetInnerHTML={{ __html: htmlContent }}
+                            dangerouslySetInnerHTML={{ __html: cleanHtmlContent }}
                         />
                     );
                 })}

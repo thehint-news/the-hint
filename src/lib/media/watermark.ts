@@ -9,7 +9,7 @@
  * - High-quality Lanczos resampling
  */
 
-import sharp from 'sharp';
+import sharp, { FormatEnum, JpegOptions, PngOptions, WebpOptions } from 'sharp';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -86,8 +86,8 @@ async function getProcessedLogo(): Promise<Buffer | null> {
  * Get the output format configuration for sharp based on MIME type.
  */
 function getOutputFormat(mimeType: string): {
-    format: keyof sharp.FormatEnum;
-    options: sharp.JpegOptions | sharp.PngOptions | sharp.WebpOptions;
+    format: keyof FormatEnum;
+    options: JpegOptions | PngOptions | WebpOptions;
 } {
     switch (mimeType) {
         case 'image/jpeg':

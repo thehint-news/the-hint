@@ -5,6 +5,7 @@
 import { Metadata } from "next";
 import { getHomepageData } from "@/lib/content/homepage";
 import { LeadStory, TopStories, SectionBlock } from "@/components/editorial";
+import { safeJsonLdStringify } from '@/lib/utils/json-ld';
 import { logger } from "@/lib/feedback";
 import { kn } from "@/lib/i18n";
 
@@ -140,7 +141,7 @@ export default async function HomePage() {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
       />
       {/* 2. LEAD STORY */}
       <div className="container-editorial" style={{ paddingTop: "1rem", paddingBottom: "1.5rem" }}>

@@ -280,7 +280,43 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         logStep(8, 'Publish completed');
 
 
+        // 7. Regenerate content graph synchronously to ensure readers get fresh data
+        const syncStartTime = Date.now();
+        let graphVersion = 0;
+        let articleCount = 0;
+        let cacheInvalidated = false;
+        let isrPaths: string[] = [];
+
+        try {
+            const { generateContentGraph } = await import('@/lib/content/generateContentGraph');
+            const graph = generateContentGraph('publish', articleData.section as string, targetSlug);
+            graphVersion = graph.version;
+            articleCount = graph.articleCount;
+            logger.info(`[${cid}] Content graph regenerated successfully`);
+
+            // CACHE INVALIDATION: Clear article cache immediately after successful publish and graph regeneration
+            const { clearArticleCache } = await import('@/lib/cache/article-cache');
+            clearArticleCache();
+            cacheInvalidated = true;
+
+            // 8. On-demand revalidation
+            const { revalidatePath } = await import('next/cache');
+            isrPaths = ['/', `/${articleData.section}`, `/${articleData.section}/${targetSlug}`, '/sitemap.xml'];
+            isrPaths.forEach(p => revalidatePath(p, 'page'));
+            
+        } catch (e) {
+            logger.error(`[${cid}] Post-publish synchronization failed`, e);
+            // DO NOT RETURN 500 HERE! GitHub mutation succeeded.
+        }
+
+        const syncDuration = Date.now() - syncStartTime;
+        
         logger.info(`[${cid}] PUBLISH TRANSACTION COMPLETE`, {
+            graphVersion,
+            articleCount,
+            syncDurationMs: syncDuration,
+            cacheInvalidated,
+            isrPathsRevalidated: isrPaths,
             result: 'Success',
             mode: result.data?.mode,
             slug: result.data?.slug
