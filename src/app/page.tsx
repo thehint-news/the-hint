@@ -9,8 +9,8 @@ import { safeJsonLdStringify } from '@/lib/utils/json-ld';
 import { logger } from "@/lib/feedback";
 import { kn } from "@/lib/i18n";
 
-// Use ISR for the homepage
-export const revalidate = 300;
+// On-demand ISR (revalidated via revalidatePath on publish/edit/delete)
+export const revalidate = false;
 
 /**
  * Generate SEO metadata for homepage

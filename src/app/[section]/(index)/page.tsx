@@ -10,9 +10,17 @@ import { getSectionPageData, InvalidSectionError } from '@/lib/content';
 import { SectionPageContent } from './SectionPageContent';
 import { kn } from '@/lib/i18n';
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const revalidate = 60;
+import { getValidSections } from '@/lib/content/reader';
+
+// On-demand ISR (revalidated via revalidatePath on publish/edit/delete)
+export const dynamicParams = true;
+export const revalidate = false;
+
+export async function generateStaticParams() {
+    return getValidSections().map((section) => ({
+        section,
+    }));
+}
 
 interface SectionPageProps {
     params: Promise<{

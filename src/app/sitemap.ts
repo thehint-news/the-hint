@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next';
 import { getValidSections } from '@/lib/content/reader';
 import { getArticleIndex } from '@/lib/contentLoader';
 
-// Use ISR for sitemap since we have API limits under control
-export const revalidate = 300;
+// 24-hour fallback ISR (also revalidated on-demand via revalidatePath('/sitemap.xml') on publish)
+export const revalidate = 86400;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
