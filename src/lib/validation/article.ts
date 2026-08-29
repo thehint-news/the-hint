@@ -8,6 +8,7 @@
 
 import { Section } from '../content/types';
 import { ContentBlock } from '../content/media-types';
+import { validateArticleImageUrl } from './image-url';
 
 /** Valid content types - ONLY news or opinion */
 export type ContentType = 'news' | 'opinion';
@@ -477,9 +478,12 @@ export function validateArticleInput(input: PublishArticleInput): ValidationResu
     const isLeadStory = input.isLead === true;
     const hasThumbnail = input.thumbnail && typeof input.thumbnail === 'string' && input.thumbnail.trim();
 
-    console.log('[VALIDATION] Thumbnail check:', { isLeadStory, hasThumbnail: !!hasThumbnail, thumbnail: input.thumbnail });
-
-    if (!hasThumbnail && !isLeadStory) {
+    if (hasThumbnail) {
+        const validation = validateArticleImageUrl(input.thumbnail);
+        if (!validation.isValid) {
+            errors.push({ field: 'thumbnail', message: validation.error || 'Invalid thumbnail image URL' });
+        }
+    } else if (!isLeadStory) {
         errors.push({ field: 'thumbnail', message: 'Thumbnail image is required' });
     }
 
@@ -511,16 +515,9 @@ export function validateArticleInput(input: PublishArticleInput): ValidationResu
                             if (!image.url || typeof image.url !== 'string' || !image.url.trim()) {
                                 errors.push({ field: `leadMedia.images[${index}].url`, message: 'Image URL is required' });
                             } else {
-                                // Validate URL is from allowed storage
-                                const url = image.url;
-                                const isAllowedStorage =
-                                    url.includes('supabase.co') ||
-                                    url.includes('r2.cloudflarestorage.com') ||
-                                    url.startsWith('/media/') ||
-                                    url.startsWith('https://www.thehintnews.in/media/');
-
-                                if (!isAllowedStorage && url.startsWith('http')) {
-                                    errors.push({ field: `leadMedia.images[${index}].url`, message: 'Image URL must be from approved storage (Supabase/R2)' });
+                                const validation = validateArticleImageUrl(image.url);
+                                if (!validation.isValid) {
+                                    errors.push({ field: `leadMedia.images[${index}].url`, message: validation.error || 'Invalid image URL' });
                                 }
                             }
 

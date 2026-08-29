@@ -1,7 +1,7 @@
 {
-  "version": 1787989419455,
-  "generatedAt": "2026-08-29T07:43:39.455Z",
-  "articleCount": 180,
+  "version": 1787991054622,
+  "generatedAt": "2026-08-29T08:10:54.622Z",
+  "articleCount": 179,
   "articles": {
     "court/71-year-old-grandfather-sentenced": {
       "slug": "71-year-old-grandfather-sentenced",
@@ -3324,26 +3324,6 @@
       "imageHeight": 624,
       "imageType": "image/jpeg"
     },
-    "politics/test-api-publish": {
-      "slug": "test-api-publish",
-      "category": "politics",
-      "title": "Test API Publish",
-      "date": "2026-08-27T14:05:09.528Z",
-      "language": "kn",
-      "file": "politics/test-api-publish.md",
-      "image": "https://example.com/image.jpg",
-      "excerpt": "Testing the post-publish fix",
-      "subtitle": "Testing the post-publish fix",
-      "author": null,
-      "tags": [
-        "test"
-      ],
-      "contentType": "news",
-      "placement": "standard",
-      "isLead": false,
-      "updatedAt": "2026-08-27T14:10:01.134Z",
-      "leadMedia": null
-    },
     "politics/yavude-durdrsti-illd-nirs-ayvyy": {
       "slug": "yavude-durdrsti-illd-nirs-ayvyy",
       "category": "politics",
@@ -4220,26 +4200,6 @@
     }
   },
   "sortedArticles": [
-    {
-      "slug": "test-api-publish",
-      "category": "politics",
-      "title": "Test API Publish",
-      "date": "2026-08-27T14:05:09.528Z",
-      "language": "kn",
-      "file": "politics/test-api-publish.md",
-      "image": "https://example.com/image.jpg",
-      "excerpt": "Testing the post-publish fix",
-      "subtitle": "Testing the post-publish fix",
-      "author": null,
-      "tags": [
-        "test"
-      ],
-      "contentType": "news",
-      "placement": "standard",
-      "isLead": false,
-      "updatedAt": "2026-08-27T14:10:01.134Z",
-      "leadMedia": null
-    },
     {
       "slug": "ಅಪ್ಪ-ಅಮ್ಮನ-ತಲೆ-ಒಡೆದು-ಹೆಣದೊಂದಿಗೆ",
       "category": "crime",
@@ -11558,26 +11518,6 @@
       }
     ],
     "politics": [
-      {
-        "slug": "test-api-publish",
-        "category": "politics",
-        "title": "Test API Publish",
-        "date": "2026-08-27T14:05:09.528Z",
-        "language": "kn",
-        "file": "politics/test-api-publish.md",
-        "image": "https://example.com/image.jpg",
-        "excerpt": "Testing the post-publish fix",
-        "subtitle": "Testing the post-publish fix",
-        "author": null,
-        "tags": [
-          "test"
-        ],
-        "contentType": "news",
-        "placement": "standard",
-        "isLead": false,
-        "updatedAt": "2026-08-27T14:10:01.134Z",
-        "leadMedia": null
-      },
       {
         "slug": "ನಿರ್ಬಂಧ-ದಿಂದ-ರಾಷ್ಟ್ರಭಕ್ತಿ-ಹತ್ತಿಕ್ಕಲು-ಸಾಧ್ಯವಿಲ್ಲ",
         "category": "politics",
