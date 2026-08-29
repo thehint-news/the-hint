@@ -135,6 +135,7 @@ export function LeadStory({ article }: LeadStoryProps) {
         year: "numeric",
         month: "long",
         day: "numeric",
+        timeZone: "Asia/Kolkata",
     });
 
     const sectionLabel = (kn.sections as Record<string, string>)[article.section] || article.section

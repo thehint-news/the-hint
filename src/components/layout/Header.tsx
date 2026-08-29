@@ -37,6 +37,7 @@ interface HeaderProps {
 
 export function Header({ latestUpdate }: HeaderProps) {
     const [currentDate, setCurrentDate] = useState<string>("");
+    const [updatedString, setUpdatedString] = useState<string>("");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const pathname = usePathname();
@@ -48,9 +49,34 @@ export function Header({ latestUpdate }: HeaderProps) {
             year: "numeric",
             month: "long",
             day: "numeric",
+            timeZone: "Asia/Kolkata",
         });
         setCurrentDate(formatted);
     }, []);
+
+    // Format "Updated X ago" only after client mount to prevent React hydration mismatch
+    useEffect(() => {
+        if (!latestUpdate) {
+            setUpdatedString("");
+            return;
+        }
+
+        const diff = Date.now() - new Date(latestUpdate).getTime();
+        const minutes = Math.floor(diff / 60000);
+
+        if (minutes < 1) {
+            setUpdatedString(en.time.updatedJustNow);
+        } else if (minutes < 60) {
+            setUpdatedString(en.time.updatedMinutesAgo(minutes));
+        } else {
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) {
+                setUpdatedString(en.time.updatedHoursAgo(hours));
+            } else {
+                setUpdatedString(`${en.time.updatedOn}${new Date(latestUpdate).toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata" })}`);
+            }
+        }
+    }, [latestUpdate]);
 
     // Lock body scroll when menu is open
     useEffect(() => {
@@ -61,21 +87,6 @@ export function Header({ latestUpdate }: HeaderProps) {
         }
         return () => { document.body.style.overflow = 'unset'; };
     }, [isMenuOpen]);
-
-    // Format "Updated X ago"
-    const getUpdatedString = (isoString?: string) => {
-        if (!isoString) return "";
-        const diff = Date.now() - new Date(isoString).getTime();
-        const minutes = Math.floor(diff / 60000);
-
-        if (minutes < 1) return en.time.updatedJustNow;
-        if (minutes < 60) return en.time.updatedMinutesAgo(minutes);
-        const hours = Math.floor(minutes / 60);
-        if (hours < 24) return en.time.updatedHoursAgo(hours);
-        return `${en.time.updatedOn}${new Date(isoString).toLocaleDateString("en-GB")}`;
-    };
-
-    const updatedString = latestUpdate ? getUpdatedString(latestUpdate) : "";
 
     // Hide Header on editorial console pages (they have their own toolbar)
     if (pathname?.startsWith('/publish') || pathname?.startsWith('/newsroom')) {
