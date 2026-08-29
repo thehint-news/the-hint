@@ -114,13 +114,13 @@ export function Header({ latestUpdate }: HeaderProps) {
 
                     {/* Vertical Rail Menu - Redesigned */}
                     <div
-                        className={`fixed inset-y-0 left-0 z-40 w-[85vw] sm:w-[70vw] max-w-[320px] sm:max-w-[360px] bg-[#F7F6F2] border-r border-[#111111] flex flex-col transform transition-transform duration-300 ease-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+                        className={`fixed inset-y-0 left-0 z-40 w-[85vw] sm:w-[70vw] max-w-[320px] sm:max-w-90 bg-[#F7F6F2] border-r border-[#111111] flex flex-col transform transition-transform duration-300 ease-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
                             }`}
                     >
                         {/* Drawer Header */}
                         <div className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 flex justify-between items-start">
                             <div className="flex flex-col gap-3">
-                                <div className="h-[72px] sm:h-[84px] ml-0.5 mt-1">
+                                <div className="h-18 sm:h-21 ml-0.5 mt-1">
                                     <Image
                                         src="/brand/logo.png"
                                         alt={en.brand.name}
@@ -210,7 +210,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                         </button>
 
                         <Link href="/" className="no-underline flex-1 flex justify-center relative z-10">
-                            <div className="w-[220px] sm:w-[280px] flex items-center justify-center -mt-6 -mb-8 sm:-mt-8 sm:-mb-10">
+                            <div className="w-55 sm:w-70 flex items-center justify-center -mt-6 -mb-8 sm:-mt-8 sm:-mb-10">
                                 <Image
                                     src="/brand/header-logo.png"
                                     alt={en.brand.name}
@@ -273,7 +273,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                             </time>
                         )}
                         <Link href="/" className="inline-block no-underline hover:opacity-90 transition-opacity">
-                            <div className="w-[320px] md:w-[400px] lg:w-[500px] xl:w-[580px] mx-auto flex items-center justify-center -mt-12 -mb-6 lg:-mt-24 lg:-mb-16 xl:-mt-28 xl:-mb-20">
+                            <div className="w-[320px] md:w-100 lg:w-125 xl:w-145 mx-auto flex items-center justify-center -mt-12 -mb-6 lg:-mt-24 lg:-mb-16 xl:-mt-28 xl:-mb-20">
                                 <Image
                                     src="/brand/header-logo.png"
                                     alt={en.brand.name}
