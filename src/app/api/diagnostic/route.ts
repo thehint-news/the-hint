@@ -66,23 +66,19 @@ export async function GET() {
         report.checks['github_connection'] = { status: 'skip', reason: 'Environment check failed' };
     }
 
-    // 3. Required Paths Verification
+    // 3. Required Paths Verification (statically scoped checks)
     await check('local_paths', async () => {
-        const paths = [
-            'src/content',
-            'src/content/drafts',
-        ];
-        const missing = [];
-        for (const p of paths) {
-            const fullPath = path.join(process.cwd(), p);
-            if (!fs.existsSync(fullPath)) {
-                missing.push(p);
-            }
-        }
+        const contentDir = path.join(process.cwd(), 'src', 'content');
+        const draftsDir = path.join(process.cwd(), 'src', 'content', 'drafts');
+        const missing: string[] = [];
+
+        if (!fs.existsSync(contentDir)) missing.push('src/content');
+        if (!fs.existsSync(draftsDir)) missing.push('src/content/drafts');
+
         if (missing.length > 0) {
             throw new Error(`Missing local paths: ${missing.join(', ')}`);
         }
-        return { verified_paths: paths };
+        return { verified_paths: ['src/content', 'src/content/drafts'] };
     });
 
     report.success = allChecksPassed;

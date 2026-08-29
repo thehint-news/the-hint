@@ -43,28 +43,17 @@ let cachedTrimmedLogo: Buffer | null = null;
 async function getProcessedLogo(): Promise<Buffer | null> {
     if (cachedTrimmedLogo) return cachedTrimmedLogo;
 
-    const possiblePaths = [
-        join(process.cwd(), 'public', 'brand', 'watermark-logo.png'),
-        join(process.cwd(), '.next', 'server', 'public', 'brand', 'watermark-logo.png'),
-        join(process.cwd(), 'brand', 'watermark-logo.png'),
-        '/var/task/public/brand/watermark-logo.png',
-        '/var/task/.next/server/public/brand/watermark-logo.png',
-    ];
+    const watermarkLogoPath = join(process.cwd(), 'public', 'brand', 'watermark-logo.png');
 
     let rawBuffer: Buffer | null = null;
 
-    for (const logoPath of possiblePaths) {
-        try {
-            rawBuffer = readFileSync(logoPath);
-            if (rawBuffer && rawBuffer.length > 0) {
-                console.info(`[MediaUpload] Watermark source loaded: ${logoPath}`);
-                break;
-            }
-        } catch { /* continue */ }
-    }
-
-    if (!rawBuffer) {
-        console.warn('[MediaUpload] ⚠️ Watermark logo not found in paths:', possiblePaths);
+    try {
+        rawBuffer = readFileSync(watermarkLogoPath);
+        if (rawBuffer && rawBuffer.length > 0) {
+            console.info(`[MediaUpload] Watermark source loaded: ${watermarkLogoPath}`);
+        }
+    } catch {
+        console.warn(`[MediaUpload] ⚠️ Watermark logo not found at: ${watermarkLogoPath}`);
         return null;
     }
 
