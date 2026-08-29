@@ -184,7 +184,7 @@ export function Header({ latestUpdate }: HeaderProps) {
                 {/* Utility Bar (Top Right Desktop) */}
                 <div className="hidden md:flex justify-end items-center container-editorial py-0.5 gap-3 lg:gap-6 border-b border-[#E5E5E5]">
                     {updatedString && (
-                        <span className="inline-flex items-center gap-1.5 font-sans text-[9px] text-[#8A8A8A] uppercase tracking-wide hidden sm:inline-flex">
+                        <span className="hidden sm:inline-flex items-center gap-1.5 font-sans text-[9px] text-[#8A8A8A] uppercase tracking-wide">
                             <span className="live-beacon-dot" aria-hidden="true" />
                             <span>{updatedString}</span>
                         </span>
