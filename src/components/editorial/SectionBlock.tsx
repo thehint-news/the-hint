@@ -74,7 +74,7 @@ function WireStyleLayout({ articles, sectionSlug }: { articles: SectionArticle[]
                             {/* Content: Heading, Sub-headline, Date */}
                             <div style={{ flex: 1, minWidth: 0 }}>
                                 {/* Heading */}
-                                <h3 className="headline-sm editorial-headline-link" style={{
+                                <h3 className="headline-sm editorial-headline-text font-bold" style={{
                                     marginBottom: "0.25rem",
                                     display: "-webkit-box",
                                     WebkitLineClamp: 2,
@@ -154,7 +154,7 @@ function PoliticsLayout({ articles, sectionSlug }: { articles: SectionArticle[];
 
                             {/* Headline, Subtitles, Date */}
                             <div style={{ flex: 1, minWidth: 0 }}>
-                                <h3 className="headline-sm editorial-headline-link" style={{
+                                <h3 className="headline-sm editorial-headline-text font-bold" style={{
                                     marginBottom: "0.25rem",
                                     fontSize: "0.875rem",
                                     lineHeight: 1.3
@@ -202,7 +202,7 @@ function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticl
 
                 return (
                     <Link key={article.id} href={articleUrl} className="article-link group block">
-                        <article style={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
+                        <article className="editorial-card-interactive" style={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
                             {/* Thumbnail - World Affairs style */}
                             <div className="thumbnail-container editorial-image-lift" style={{ marginBottom: "0.625rem", aspectRatio: "16/9", position: "relative" }}>
                                 {article.image ? (
@@ -227,7 +227,7 @@ function WorldAffairsLayout({ articles, sectionSlug }: { articles: SectionArticl
                             </div>
 
                             {/* Headline */}
-                            <h3 className="headline-sm editorial-headline-link" style={{
+                            <h3 className="headline-sm editorial-headline-text font-bold" style={{
                                 marginBottom: "0.25rem",
                                 lineHeight: 1.3,
                                 fontSize: "0.9375rem",
@@ -287,7 +287,7 @@ function OpinionLayout({ articles, sectionSlug }: { articles: SectionArticle[]; 
 
                 return (
                     <Link key={article.id} href={articleUrl} className="article-link group block h-full">
-                        <article className="flex flex-col h-full">
+                        <article className="editorial-card-interactive flex flex-col h-full">
                             {/* Image Container */}
                             <div className="thumbnail-container editorial-image-lift mb-2.5 aspect-video w-full">
                                 {article.image ? (
@@ -319,7 +319,7 @@ function OpinionLayout({ articles, sectionSlug }: { articles: SectionArticle[]; 
                                 )}
 
                                 {/* Headline - using global class */}
-                                <h3 className="headline-sm editorial-headline-link mb-1 line-clamp-3">
+                                <h3 className="headline-sm editorial-headline-text font-bold mb-1 line-clamp-3">
                                     {article.title}
                                 </h3>
 

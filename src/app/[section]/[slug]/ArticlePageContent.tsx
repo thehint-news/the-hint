@@ -211,7 +211,7 @@ export async function ArticlePageContent({ section, slug }: ArticlePageContentPr
                 dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
             />
 
-            <ReadingProgressBar />
+            <ReadingProgressBar readingTimeMinutes={readingTimeMinutes} />
 
             <article className="article-kannada-scope px-6 pt-12 pb-4 max-w-300 mx-auto lg:pl-20">
                 <div className="max-w-4xl mx-auto">

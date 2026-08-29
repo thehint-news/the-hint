@@ -1779,71 +1779,85 @@ a:focus:not(:focus-visible) {
 }
 
 /* ----------------------------------------------------------------------------
-   EDITORIAL SUBTLE ANIMATIONS & MICRO-INTERACTIONS
-   Authoritative broadsheet print-inspired interactions.
-   Respects prefers-reduced-motion, no layout shifts (GPU transform/opacity only).
+   EDITORIAL PREMIUM ANIMATIONS & MICRO-INTERACTIONS
+   High-end broadsheet editorial interactions (inspired by The Atlantic & NYT).
+   Respects prefers-reduced-motion, zero layout shifts (GPU transform/opacity).
    ---------------------------------------------------------------------------- */
 
-/* 1. Headline Ink Underline Reveal */
-.editorial-headline-link {
+/* 1. Custom Editorial Ink Selection */
+::selection {
+  background-color: var(--color-ink, #111111);
+  color: var(--color-paper, #F7F6F2);
+}
+
+/* 2. Editorial Headline & Title Styling (Clean, Authoritative, NO Gimmicky Underlines) */
+.editorial-headline-text {
+  color: var(--color-ink, #111111);
+  transition: color 0.18s ease;
+}
+
+.group:hover .editorial-headline-text,
+.editorial-card-interactive:hover .editorial-headline-text {
+  color: #000000;
+}
+
+/* 3. Editorial Card Depth Lift */
+.editorial-card-interactive {
   position: relative;
-  display: inline;
-  text-decoration: none;
-  background-image: linear-gradient(var(--color-ink, #111), var(--color-ink, #111));
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  background-size: 0% 1.5px;
-  transition: background-size 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.15s ease;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, background-color 0.2s ease, border-color 0.2s ease;
+  border-radius: 4px;
 }
 
-.editorial-headline-link:hover,
-.group:hover .editorial-headline-link {
-  background-size: 100% 1.5px;
+.editorial-card-interactive:hover {
+  transform: translateY(-2px);
 }
 
-.editorial-headline-link:focus-visible {
-  outline: 2px solid var(--color-ink, #111);
-  outline-offset: 2px;
-}
-
-@media (hover: none) {
-  .editorial-headline-link {
-    background-size: 0% 0px;
-  }
-}
-
-/* 2. Editorial Image Lift */
+/* 4. Cinematic Editorial Image Lift with Contrast Depth */
 .editorial-image-lift {
   overflow: hidden;
   position: relative;
+  border-radius: 2px;
+  background-color: #EAE8E1;
 }
 
 .editorial-image-lift img {
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
-  will-change: transform;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+  will-change: transform, filter;
 }
 
 .editorial-image-lift:hover img,
-.group:hover .editorial-image-lift img {
-  transform: scale(1.02);
-  filter: contrast(1.015);
+.group:hover .editorial-image-lift img,
+.editorial-card-interactive:hover .editorial-image-lift img {
+  transform: scale(1.03);
+  filter: contrast(1.02) saturate(1.03);
 }
 
-/* 3. Story List Wire Row Interaction */
+/* 5. Story List Wire Row Interaction */
 .wire-row-interactive {
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, padding 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .wire-row-interactive .wire-thumb {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.wire-row-interactive .wire-thumb img {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
 
-.wire-row-interactive:hover .wire-thumb {
-  transform: translateX(3px);
+.wire-row-interactive:hover {
+  background-color: rgba(0, 0, 0, 0.025);
 }
 
-/* 4. Section Double Rule Subtle Entrance */
+.wire-row-interactive:hover .wire-thumb img {
+  transform: scale(1.04);
+}
+
+/* 6. Section Double Rule */
 .section-double-rule {
   position: relative;
   display: flex;
@@ -1855,21 +1869,17 @@ a:focus:not(:focus-visible) {
 
 .section-double-rule-thick {
   height: 3px;
-  background-color: var(--color-ink, #111);
+  background-color: var(--color-ink, #111111);
   width: 100%;
-  transform-origin: left center;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .section-double-rule-thin {
   height: 1px;
-  background-color: var(--color-ink, #111);
+  background-color: var(--color-ink, #111111);
   width: 100%;
-  transform-origin: left center;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* 5. Live Update Beacon */
+/* 7. Live Update Beacon */
 .live-beacon-dot {
   display: inline-block;
   width: 7px;
@@ -1886,11 +1896,11 @@ a:focus:not(:focus-visible) {
   }
   50% {
     opacity: 0.35;
-    transform: scale(0.88);
+    transform: scale(0.85);
   }
 }
 
-/* 6. Reading Progress Track & Bar */
+/* 8. Top Slim Reading Progress Bar */
 .reading-progress-container {
   position: fixed;
   top: 0;
@@ -1898,61 +1908,99 @@ a:focus:not(:focus-visible) {
   width: 100%;
   height: 2.5px;
   z-index: 9999;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.04);
   pointer-events: none;
 }
 
 .reading-progress-fill {
   height: 100%;
   width: 100%;
-  background-color: var(--color-ink, #111);
+  background-color: var(--color-ink, #111111);
+  box-shadow: 0 0 6px rgba(17, 17, 17, 0.3);
   transform-origin: left center;
   transform: scaleX(0);
   will-change: transform;
 }
 
-/* 7. Back-to-Top Reader Control */
-.back-to-top-button {
+/* 9. Floating Reading Companion Pill Widget */
+.reading-companion-pill {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 50%;
-  background-color: var(--color-surface, #FFFFFF);
-  color: var(--color-ink, #111);
-  border: 1px solid var(--color-border, #D9D9D9);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  bottom: 1.75rem;
+  right: 1.75rem;
+  z-index: 90;
   display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 90;
-  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, border-color 0.15s ease;
+  gap: 0.625rem;
+  padding: 0.45rem 0.85rem;
+  background: rgba(247, 246, 242, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(17, 17, 17, 0.15);
+  border-radius: 9999px;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.06);
+  font-family: var(--font-sans-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-ink, #111111);
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background-color 0.2s ease;
   will-change: transform, opacity;
 }
 
-.back-to-top-button:hover {
-  background-color: var(--color-ink, #111);
-  color: var(--color-surface, #FFF);
-  border-color: var(--color-ink, #111);
+.reading-companion-pill:hover {
+  background: #FFFFFF;
+  border-color: rgba(17, 17, 17, 0.3);
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.16);
   transform: translateY(-2px);
 }
 
-.back-to-top-button:focus-visible {
-  outline: 2px solid var(--color-ink, #111);
-  outline-offset: 2px;
+.reading-companion-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: var(--color-ink, #111111);
+  color: #FFFFFF;
+  transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
-/* 8. Global Reduced Motion Overrides */
+.reading-companion-pill:hover .reading-companion-btn {
+  transform: translateY(-1px);
+}
+
+/* 10. Tags & Source Micro-Interactions */
+.editorial-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--color-border, #D9D9D9);
+  border-radius: 9999px;
+  background-color: #FFFFFF;
+  color: var(--color-ink, #111111);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-tag-pill:hover {
+  background-color: var(--color-ink, #111111);
+  color: #FFFFFF;
+  border-color: var(--color-ink, #111111);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 11. Global Reduced Motion Overrides */
 @media (prefers-reduced-motion: reduce) {
-  .editorial-headline-link,
+  .editorial-card-interactive,
   .editorial-image-lift img,
-  .wire-row-interactive .wire-thumb,
-  .section-double-rule-thick,
-  .section-double-rule-thin,
+  .wire-row-interactive,
+  .wire-row-interactive .wire-thumb img,
   .reading-progress-fill,
-  .back-to-top-button {
+  .reading-companion-pill,
+  .editorial-tag-pill {
     transition: none !important;
     animation: none !important;
     transform: none !important;
@@ -1961,9 +2009,5 @@ a:focus:not(:focus-visible) {
   .live-beacon-dot {
     animation: none !important;
     opacity: 1 !important;
-  }
-  
-  .carousel-slide img {
-    animation: none !important;
   }
 }

@@ -158,7 +158,7 @@ export function LeadStory({ article }: LeadStoryProps) {
                 <Link href={articleUrl} className="article-link group">
                     <h2
                         id="lead-story-heading"
-                        className="headline-xl editorial-headline-link"
+                        className="headline-xl editorial-headline-text"
                         style={{ marginBottom: "1.25rem", maxWidth: "900px" }}
                     >
                         {article.title}

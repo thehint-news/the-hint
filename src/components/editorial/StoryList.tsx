@@ -78,7 +78,7 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
 
                                 {/* Content */}
                                 <div className="flex-1 flex flex-col justify-center min-w-0">
-                                    <h2 className="headline-sm mb-1.5 line-clamp-2 editorial-headline-link">
+                                    <h2 className="headline-sm mb-1.5 line-clamp-2 editorial-headline-text font-bold">
                                         {article.title}
                                     </h2>
                                     {article.subtitle && (
@@ -113,7 +113,7 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
                         className="article-link group block"
                     >
                         <article
-                            className={`flex gap-6 py-6 ${index < articles.length - 1 ? 'border-b border-[#E5E5E5]' : ''
+                            className={`editorial-card-interactive flex gap-6 py-6 ${index < articles.length - 1 ? 'border-b border-[#E5E5E5]' : ''
                                 }`}
                         >
                             {/* Thumbnail */}
@@ -134,7 +134,7 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
 
                             {/* Content */}
                             <div className="flex-1 flex flex-col justify-center min-w-0">
-                                <h2 className="headline-md mb-3 line-clamp-3 editorial-headline-link">
+                                <h2 className="headline-md mb-3 line-clamp-3 editorial-headline-text font-bold">
                                     {article.title}
                                 </h2>
                                 {article.subtitle && (

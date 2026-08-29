@@ -59,7 +59,7 @@ export function TopStories({ articles }: TopStoriesProps) {
                     });
 
                     return (
-                        <article key={article.id} className="group" style={{ paddingBottom: "0.75rem" }}>
+                        <article key={article.id} className="editorial-card-interactive group" style={{ paddingBottom: "0.75rem" }}>
                             {/* Thumbnail - Larger, more visible */}
                             <Link href={articleUrl} className="article-link block" style={{ marginBottom: "0.5rem" }}>
                                 <div className="thumbnail-container editorial-image-lift">
@@ -85,7 +85,7 @@ export function TopStories({ articles }: TopStoriesProps) {
 
                             {/* Smaller Headline - Secondary to lead */}
                             <Link href={articleUrl} className="article-link block">
-                                <h3 className="headline-md editorial-headline-link" style={{ marginBottom: "0.25rem", lineHeight: 1.25 }}>
+                                <h3 className="headline-md editorial-headline-text font-bold" style={{ marginBottom: "0.25rem", lineHeight: 1.25 }}>
                                     {article.title}
                                 </h3>
                             </Link>

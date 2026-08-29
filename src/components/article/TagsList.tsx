@@ -31,28 +31,13 @@ export function TagsList({ tags }: TagsListProps) {
                 {t.article.keywords}
             </h3>
 
-            <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '0.5rem',
-                borderTop: '1px solid #E5E5E5',
-                paddingTop: '0.75rem',
-            }}>
+            <div className="flex flex-wrap gap-2 border-t border-[#E5E5E5] pt-3">
                 {tags.map((tag, index) => (
                     <span
                         key={index}
-                        style={{
-                            fontFamily: 'var(--font-sans-full)',
-                            fontSize: '0.75rem',
-                            fontWeight: 600,
-                            padding: '0.375rem 0.875rem',
-                            backgroundColor: '#F7F7F7',
-                            color: '#404040',
-                            borderRadius: '9999px',
-                            border: '1px solid #E5E5E5',
-                        }}
+                        className="editorial-tag-pill"
                     >
-                        {tag}
+                        #{tag}
                     </span>
                 ))}
             </div>
