@@ -19,6 +19,7 @@ interface ArticleHeaderProps {
     contentTypeLabel?: string;
     publishedAt: string;
     updatedAt: string | null;
+    readingTimeMinutes?: number;
 }
 
 export function ArticleHeader({
@@ -29,6 +30,7 @@ export function ArticleHeader({
     contentTypeLabel,
     publishedAt,
     updatedAt,
+    readingTimeMinutes,
 }: ArticleHeaderProps) {
     // Format dates
     const formattedPublished = new Date(publishedAt).toLocaleDateString('kn-IN', {
@@ -77,7 +79,7 @@ export function ArticleHeader({
 
             {/* 4. Meta Row with Share (mobile only) */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-4 text-sm font-sans text-[#6B6B6B] mb-6">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center flex-wrap gap-2 sm:gap-4">
                     <time dateTime={publishedAt}>
                         {formattedPublished}
                     </time>
@@ -93,6 +95,18 @@ export function ArticleHeader({
                             </time>
                         </>
                     )}
+                    {readingTimeMinutes && readingTimeMinutes > 0 ? (
+                        <>
+                            <span aria-hidden="true" className="text-[#D9D9D9]">•</span>
+                            <span className="inline-flex items-center gap-1 text-[#595959] font-medium">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span>{kn.article.readTime ? kn.article.readTime(readingTimeMinutes) : `${readingTimeMinutes} min read`}</span>
+                            </span>
+                        </>
+                    ) : null}
                 </div>
                 <div className="md:hidden flex items-center mt-2">
                     <ShareButtons

@@ -17,5 +17,6 @@ export { VideoBlockRenderer } from './VideoBlock';
 export { PostBlockRenderer } from './PostBlock';
 export { ContinueReading } from './ContinueReading';
 
-// Page Wrapper
+// Page Wrapper & Reader Utilities
 export { ArticlePageWrapper } from './ArticlePageWrapper';
+export { ReadingProgressBar } from './ReadingProgressBar';

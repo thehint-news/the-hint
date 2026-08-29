@@ -69,7 +69,10 @@ export function SectionHeader({ name, sectionSlug, description, articleCount }: 
                     </span>
                 )}
             </div>
-            <div className="section-line" aria-hidden="true" style={{ marginBottom: "0.75rem" }} />
+            <div className="section-double-rule" aria-hidden="true">
+                <div className="section-double-rule-thick" />
+                <div className="section-double-rule-thin" />
+            </div>
 
             {/* Section Description */}
             {description && (
