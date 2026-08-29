@@ -1,0 +1,15 @@
+{
+  "headline": "Test Article",
+  "subheadline": "Testing for the same",
+  "section": "local",
+  "contentType": "news",
+  "body": "",
+  "bodyBlocks": [],
+  "tags": [],
+  "sources": [],
+  "placement": "standard",
+  "thumbnail": "https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/08/af77afe433ece039.jpg",
+  "draftId": "draft-1787987681625-xpze78lde",
+  "savedAt": "2026-08-29T07:14:41.625Z",
+  "createdAt": "2026-08-29T07:14:41.625Z"
+}
