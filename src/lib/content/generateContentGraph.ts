@@ -39,11 +39,7 @@ export interface ContentGraph {
   categories: Record<string, ArticleMetadata[]>;
 }
 
-export function generateContentGraph(
-  operation?: 'publish' | 'delete' | 'build',
-  targetSection?: string,
-  targetSlug?: string
-): ContentGraph {
+export function generateContentGraph(): ContentGraph {
   logger.info('Generating Content Graph by scanning markdown files...');
 
   let imageMetadataCache: Record<string, { width: number; height: number; type: string }> = {};
@@ -171,19 +167,6 @@ export function generateContentGraph(
   // Integrity Validation
   if (graph.articleCount === 0) {
     throw new Error('Graph generation failed: 0 articles found.');
-  }
-
-  if (operation && targetSection && targetSlug) {
-    const targetId = `${targetSection}/${targetSlug}`;
-    const articleExists = !!graph.articles[targetId];
-
-    if (operation === 'publish' && !articleExists) {
-      throw new Error(`Graph integrity failure: Target article ${targetId} was not found in the generated graph after publish.`);
-    }
-
-    if (operation === 'delete' && articleExists) {
-      throw new Error(`Graph integrity failure: Target article ${targetId} is still present in the generated graph after delete.`);
-    }
   }
 
   // Sort articles by editorial priority

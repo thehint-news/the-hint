@@ -2,7 +2,6 @@ import { NextRequest, NextResponse, after } from 'next/server';
 import { contentGit, PublishedArticleData, DraftData } from '@/lib/git';
 import { logger } from '@/lib/feedback/console-guard';
 import { verifyAuth } from '@/lib/auth/session';
-import { revalidatePath } from 'next/cache';
 import { Section } from '@/lib/git/service';
 import { clearArticleCache } from '@/lib/cache/article-cache';
 import { extractStorageKeyFromUrl, deleteMultipleFromStorage } from '@/lib/media';
@@ -196,6 +195,9 @@ interface DeleteSuccessResponse {
     alreadyDeleted?: boolean;
     commitHash?: string;
     message: string;
+    deploymentPending?: boolean;
+    graphVersion?: number | null;
+    articleCount?: number | null;
 }
 
 interface DeleteErrorResponse {
@@ -224,40 +226,6 @@ function validateEnvironment(): { valid: true } | { valid: false; error: string 
     }
 
     return { valid: true };
-}
-
-/**
- * PART 3: CACHE & ISR COORDINATION
- * Triggers revalidation for all affected paths
- * Returns true if all revalidations succeeded, false otherwise
- */
-function triggerRevalidation(paths: string[], operationId: string): { success: boolean; results: { path: string; success: boolean; error?: string }[] } {
-    logger.info(`[DELETE-REVALIDATE] [${operationId}] Triggering revalidation for ${paths.length} paths: ${paths.join(', ')}`);
-
-    const results: { path: string; success: boolean; error?: string }[] = [];
-
-    for (const path of paths) {
-        try {
-            revalidatePath(path, 'page');
-            results.push({ path, success: true });
-            logger.info(`[DELETE-REVALIDATE] [${operationId}] ✓ Revalidated: ${path}`);
-        } catch (error) {
-            const errorMsg = error instanceof Error ? error.message : String(error);
-            results.push({ path, success: false, error: errorMsg });
-            logger.error(`[DELETE-REVALIDATE] [${operationId}] ✗ Failed to revalidate ${path}:`, error);
-        }
-    }
-
-    const allSuccess = results.every(r => r.success);
-
-    if (allSuccess) {
-        logger.info(`[DELETE-REVALIDATE] [${operationId}] All revalidations successful`);
-    } else {
-        const failed = results.filter(r => !r.success).map(r => r.path);
-        logger.error(`[DELETE-REVALIDATE] [${operationId}] Some revalidations failed: ${failed.join(', ')}`);
-    }
-
-    return { success: allSuccess, results };
 }
 
 /**
@@ -462,58 +430,35 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
 
                 logger.info(`[DELETE-API] [${requestId}] Git commit confirmed for published article`);
 
-                // Regenerate content graph synchronously to ensure readers get fresh data
+                // Post-delete in-memory cache invalidation
+                // Note: The content graph and reader pages are deployment-driven. A GitHub mutation
+                // does not update the running serverless container's filesystem. The content graph
+                // is authoritatively rebuilt by `npm run generate-graph` during the Vercel build triggered by Git.
                 const syncStartTime = Date.now();
-                let graphVersion = 0;
-                let articleCount = 0;
                 let cacheInvalidated = false;
 
                 try {
-                    const { generateContentGraph } = await import('@/lib/content/generateContentGraph');
-                    const graph = generateContentGraph('delete', section as string, safeSlug);
-                    graphVersion = graph.version;
-                    articleCount = graph.articleCount;
-                    logger.info(`[DELETE-API] [${requestId}] Content graph regenerated successfully`);
+                    // CACHE INVALIDATION: Clear article cache immediately after confirmed Git delete
+                    clearArticleCache();
+                    cacheInvalidated = true;
+                    logger.info(`[DELETE-API] [${requestId}] In-memory article cache invalidated`);
                 } catch (e) {
-                    logger.error(`[DELETE-API] [${requestId}] Post-publish synchronization failed`, e);
-                    // DO NOT RETURN 500 HERE! GitHub mutation succeeded.
+                    logger.error(`[DELETE-API] [${requestId}] Post-delete in-memory cache invalidation failed`, e);
                 }
 
-                // CACHE INVALIDATION: Clear article cache immediately after confirmed Git delete
-                clearArticleCache();
-                cacheInvalidated = true;
-
-                // PART 3 - CACHE & ISR COORDINATION
-                // Must trigger revalidation BEFORE returning success
-                const revalidationPaths = [...result.data.revalidationPaths, '/sitemap.xml'];
-                logger.info(`[DELETE-API] [${requestId}] Triggering ISR revalidation for ${revalidationPaths.length} paths`);
-
-                const revalidationResult = triggerRevalidation(revalidationPaths, requestId);
-
-                // PRODUCTION FIX: ISR revalidation failure is now a SOFT success.
-                // The Git deletion (source of truth) already succeeded. Telling the user
-                // it failed would be misleading and could cause them to retry, which is
-                // wasteful. The ISR cache will self-heal on the next visitor request.
-                if (!revalidationResult.success) {
-                    logger.error(`[DELETE-API] [${requestId}] WARNING: Revalidation failed after successful Git delete — cache will self-heal`);
-                    // Continue to return success below, but with revalidated: false
-                }
-
-                if (revalidationResult.success) {
-                    logger.info(`[DELETE-API] [${requestId}] ISR revalidation successful for all paths`);
-                }
-
-                // PART 6 - STRUCTURED API RESPONSE
+                // STRUCTURED API RESPONSE
+                // Content graph and ISR pages are deployment-driven (rebuilt during Vercel build triggered by Git commit)
                 const response: DeleteSuccessResponse = {
                     success: true,
                     type: 'published',
                     slug: safeSlug,
-                    revalidated: revalidationResult.success,
+                    revalidated: false,
+                    deploymentPending: true,
+                    graphVersion: null,
+                    articleCount: null,
                     alreadyDeleted: result.data.alreadyDeleted,
                     commitHash: result.data.commitHash,
-                    message: revalidationResult.success
-                        ? result.userMessage
-                        : result.userMessage + ' (Cache may take a moment to refresh.)'
+                    message: result.userMessage + ' (Cache will refresh once deployment finishes.)'
                 };
 
                 logger.info(`[DELETE-API] [${requestId}] ========== DELETE REQUEST SUCCESS (PUBLISHED) ==========`);
@@ -521,11 +466,11 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<DeleteA
                 const syncDuration = Date.now() - syncStartTime;
                 logger.info(`[DELETE-API] [${requestId}] DELETE TRANSACTION COMPLETE`, {
                     commitSha: result.data.commitHash || 'unknown',
-                    graphVersion,
-                    articleCount,
+                    deploymentPending: true,
+                    graphVersion: null,
+                    articleCount: null,
                     syncDurationMs: syncDuration,
                     cacheInvalidated,
-                    isrPathsRevalidated: revalidationPaths,
                     result: 'Success'
                 });
 

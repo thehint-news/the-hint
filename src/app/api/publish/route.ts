@@ -85,7 +85,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const cid = `publish-${new Date().toISOString().replace(/\D/g, '').substring(0, 8)}-${Math.random().toString(36).substring(2, 8)}`;
     let currentStepNum = 1;
     let currentStepName = 'Request received';
-    let requestPayload: unknown = null;
 
     const logStep = (num: number, name: string) => {
         currentStepNum = num;
@@ -106,7 +105,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         let body: unknown;
         try {
             body = await request.json();
-            requestPayload = body;
         } catch {
             return NextResponse.json({
                 success: false,
@@ -280,43 +278,32 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         logStep(8, 'Publish completed');
 
 
-        // 7. Regenerate content graph synchronously to ensure readers get fresh data
+        // 7. Post-publish cache invalidation
+        // Note: The content graph and reader pages are deployment-driven. A GitHub mutation
+        // does not update the running serverless container's filesystem. The content graph
+        // is authoritatively rebuilt by `npm run generate-graph` during the Vercel build triggered by Git.
         const syncStartTime = Date.now();
-        let graphVersion = 0;
-        let articleCount = 0;
         let cacheInvalidated = false;
-        let isrPaths: string[] = [];
 
         try {
-            const { generateContentGraph } = await import('@/lib/content/generateContentGraph');
-            const graph = generateContentGraph('publish', articleData.section as string, targetSlug);
-            graphVersion = graph.version;
-            articleCount = graph.articleCount;
-            logger.info(`[${cid}] Content graph regenerated successfully`);
-
-            // CACHE INVALIDATION: Clear article cache immediately after successful publish and graph regeneration
+            // CACHE INVALIDATION: Clear in-memory article cache immediately after confirmed Git publish
             const { clearArticleCache } = await import('@/lib/cache/article-cache');
             clearArticleCache();
             cacheInvalidated = true;
-
-            // 8. On-demand revalidation
-            const { revalidatePath } = await import('next/cache');
-            isrPaths = ['/', `/${articleData.section}`, `/${articleData.section}/${targetSlug}`, '/sitemap.xml'];
-            isrPaths.forEach(p => revalidatePath(p, 'page'));
-            
+            logger.info(`[${cid}] In-memory article cache invalidated`);
         } catch (e) {
-            logger.error(`[${cid}] Post-publish synchronization failed`, e);
-            // DO NOT RETURN 500 HERE! GitHub mutation succeeded.
+            logger.error(`[${cid}] Post-publish in-memory cache invalidation failed`, e);
         }
 
         const syncDuration = Date.now() - syncStartTime;
         
         logger.info(`[${cid}] PUBLISH TRANSACTION COMPLETE`, {
-            graphVersion,
-            articleCount,
+            commitSha: (result.data as { commitHash?: string })?.commitHash || 'confirmed',
+            deploymentPending: true,
+            graphVersion: null,
+            articleCount: null,
             syncDurationMs: syncDuration,
             cacheInvalidated,
-            isrPathsRevalidated: isrPaths,
             result: 'Success',
             mode: result.data?.mode,
             slug: result.data?.slug
@@ -331,18 +318,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 url: result.data?.url,
                 publishedAt: result.data?.publishedAt,
                 mode: result.data?.mode,
+                deploymentPending: true,
+                graphVersion: null,
+                articleCount: null,
             },
             result.data?.mode === 'create' ? 201 : 200
         );
 
     } catch (error: unknown) {
-        const err = error as Error;
-        logger.error(`[${cid}] [Publish][${currentStepNum}] Error during ${currentStepName}`, {
+        const err = error instanceof Error ? error : new Error(String(error));
+        logger.error(`[${cid}] [Publish][${currentStepNum}] Error during ${currentStepName}`, err, {
             step: currentStepNum,
             stepName: currentStepName,
-            error: err.message,
-            stack: err.stack,
-            payload: requestPayload
         });
 
         return NextResponse.json({

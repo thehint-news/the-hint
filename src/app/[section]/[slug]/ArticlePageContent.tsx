@@ -23,17 +23,22 @@ import {
 import { safeJsonLdStringify } from '@/lib/utils/json-ld';
 
 import { getTranslationsForLang } from '@/lib/i18n';
+import type { ContentBlock } from '@/lib/content/media-types';
 
-function calculateReadingTimeMinutes(body?: string, blocks?: any[]): number {
+function calculateReadingTimeMinutes(body?: string, blocks?: ContentBlock[]): number {
     let wordCount = 0;
     if (blocks && Array.isArray(blocks)) {
         for (const block of blocks) {
-            if (block.type === 'paragraph' && block.text) {
-                wordCount += block.text.trim().split(/\s+/).filter(Boolean).length;
-            } else if (block.type === 'subheading' && block.text) {
-                wordCount += block.text.trim().split(/\s+/).filter(Boolean).length;
-            } else if (block.type === 'quote' && block.quote) {
-                wordCount += block.quote.trim().split(/\s+/).filter(Boolean).length;
+            const rawBlock = block as unknown as Record<string, unknown>;
+            const textVal = typeof rawBlock.content === 'string'
+                ? rawBlock.content
+                : typeof rawBlock.text === 'string'
+                    ? rawBlock.text
+                    : typeof rawBlock.quote === 'string'
+                        ? rawBlock.quote
+                        : '';
+            if (textVal) {
+                wordCount += textVal.trim().split(/\s+/).filter(Boolean).length;
             }
         }
     } else if (body) {

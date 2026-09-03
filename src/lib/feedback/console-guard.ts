@@ -53,21 +53,37 @@ export const logger = {
     },
 
     /**
-     * Log errors with full details (development only)
-     * In production, logs minimal info for monitoring
+     * Log errors with full details
+     * In production, logs serialized Error { name, message, stack } and sanitized context
      */
     error: (message: string, error?: Error | unknown, context?: Record<string, unknown>): void => {
+        const serializedError = error !== undefined && error !== null ? {
+            name: error instanceof Error ? error.name : (typeof error === 'object' && 'name' in error ? String((error as { name?: unknown }).name) : undefined),
+            message: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : (typeof error === 'object' && 'stack' in error ? String((error as { stack?: unknown }).stack) : undefined),
+        } : undefined;
+
         if (isDevelopment) {
             console.error(`[ERROR] ${message}`, error, context ?? {});
         } else {
-            // In production, only log the message and code for monitoring
-            // No stack traces, no sensitive data
-            const safeContext = context ? {
-                code: context.code,
-                source: context.source,
+            const sanitizedContext: Record<string, unknown> = {};
+            if (context && typeof context === 'object') {
+                for (const [key, value] of Object.entries(context)) {
+                    const lowerKey = key.toLowerCase();
+                    if (['password', 'token', 'secret', 'authorization', 'cookie', 'credential', 'body', 'payload'].some(s => lowerKey.includes(s))) {
+                        sanitizedContext[key] = '[REDACTED]';
+                    } else {
+                        sanitizedContext[key] = value;
+                    }
+                }
+            }
+
+            const safePayload = {
                 timestamp: new Date().toISOString(),
-            } : {};
-            console.error(`[ERROR] ${message}`, safeContext);
+                ...sanitizedContext,
+                ...(serializedError ?? {}),
+            };
+            console.error(`[ERROR] ${message}`, safePayload);
         }
     },
 
@@ -134,17 +150,10 @@ export function safeStringify(obj: unknown, indent?: number): string {
  */
 export function extractSafeErrorInfo(error: unknown): Record<string, unknown> {
     if (error instanceof Error) {
-        if (isDevelopment) {
-            return {
-                name: error.name,
-                message: error.message,
-                stack: error.stack,
-            };
-        }
-        // In production, only name and message
         return {
             name: error.name,
             message: error.message,
+            stack: error.stack,
         };
     }
 
