@@ -45,6 +45,7 @@ export const kn = {
         continueReading: "ಓದುವುದನ್ನು ಮುಂದುವರಿಸಿ",
         share: "ಹಂಚಿಕೊಳ್ಳಿ",
         copied: "ನಕಲಿಸಲಾಗಿದೆ",
+        readTime: (min: number) => `${min} ನಿಮಿಷ ಓದು`,
         correction: "ತಿದ್ದುಪಡಿ",
         updatedNotice: "ಮೂಲ ಪ್ರಕಟಣೆಯ ನಂತರ ಈ ಲೇಖನವನ್ನು ನವೀಕರಿಸಲಾಗಿದೆ.",
         sources: "ಮೂಲಗಳು",

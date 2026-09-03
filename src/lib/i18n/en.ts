@@ -52,6 +52,7 @@ export const en = {
         continueReading: "Continue Reading",
         share: "Share",
         copied: "Copied",
+        readTime: (min: number) => `${min} min read`,
         correction: "Correction",
         updatedNotice: "This article has been updated since its original publication.",
         sources: "Sources",

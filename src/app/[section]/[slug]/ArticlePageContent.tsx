@@ -18,9 +18,31 @@ import {
     SourcesList,
     TagsList,
     ContinueReading,
+    ReadingProgressBar,
 } from '@/components/article';
+import { safeJsonLdStringify } from '@/lib/utils/json-ld';
 
 import { getTranslationsForLang } from '@/lib/i18n';
+
+function calculateReadingTimeMinutes(body?: string, blocks?: any[]): number {
+    let wordCount = 0;
+    if (blocks && Array.isArray(blocks)) {
+        for (const block of blocks) {
+            if (block.type === 'paragraph' && block.text) {
+                wordCount += block.text.trim().split(/\s+/).filter(Boolean).length;
+            } else if (block.type === 'subheading' && block.text) {
+                wordCount += block.text.trim().split(/\s+/).filter(Boolean).length;
+            } else if (block.type === 'quote' && block.quote) {
+                wordCount += block.quote.trim().split(/\s+/).filter(Boolean).length;
+            }
+        }
+    } else if (body) {
+        const clean = body.replace(/<[^>]*>/g, ' ').replace(/[#*`_\[\]()]/g, ' ').trim();
+        wordCount = clean.split(/\s+/).filter(Boolean).length;
+    }
+    // 160 words per minute average reading speed
+    return Math.max(1, Math.ceil(wordCount / 160));
+}
 
 interface ArticlePageContentProps {
     section: string;
@@ -180,12 +202,16 @@ export async function ArticlePageContent({ section, slug }: ArticlePageContentPr
         ],
     };
 
+    const readingTimeMinutes = calculateReadingTimeMinutes(article.body, article.bodyBlocks);
+
     return (
         <>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
             />
+
+            <ReadingProgressBar readingTimeMinutes={readingTimeMinutes} />
 
             <article className="article-kannada-scope px-6 pt-12 pb-4 max-w-300 mx-auto lg:pl-20">
                 <div className="max-w-4xl mx-auto">
@@ -197,6 +223,7 @@ export async function ArticlePageContent({ section, slug }: ArticlePageContentPr
                         contentTypeLabel={article.contentType}
                         publishedAt={article.publishedAt}
                         updatedAt={article.updatedAt}
+                        readingTimeMinutes={readingTimeMinutes}
                     />
                 </div>
 

@@ -11,9 +11,9 @@ import { Metadata } from 'next';
 import { ArticlePageContent, generateArticleMetadata } from './ArticlePageContent';
 import { ArticlePageWrapper } from '@/components/article';
 
-// Allow ISR with dynamic fallback
+// On-demand ISR (revalidated via revalidatePath on publish/edit/delete)
 export const dynamicParams = true;
-export const revalidate = 300;
+export const revalidate = false;
 
 import { getArticleIndex } from '@/lib/contentLoader';
 

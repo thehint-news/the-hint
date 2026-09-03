@@ -9,6 +9,7 @@
  * - Legacy markdown fallback only for old articles without bodyBlocks
  */
 import { marked } from 'marked'; // Only used for legacy articles without bodyBlocks
+import sanitizeHtml from 'sanitize-html';
 import { parseBodyToBlocks } from '@/lib/content/block-parser';
 import { ImageBlockRenderer } from './ImageBlock';
 import { VideoBlockRenderer } from './VideoBlock';
@@ -28,6 +29,25 @@ interface ArticleBodyProps {
     content?: string;
     blocks?: ContentBlock[]; // Canonical source
 }
+
+const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
+    allowedTags: [
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
+        'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
+        'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 's', 'del',
+        'img', 'span', 'figure', 'figcaption'
+    ],
+    allowedAttributes: {
+        a: ['href', 'name', 'target', 'rel', 'title'],
+        img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading'],
+        '*': ['class', 'id']
+    },
+    allowedSchemes: ['http', 'https', 'mailto', 'tel'],
+    allowedSchemesByTag: {
+        img: ['http', 'https']
+    },
+    disallowedTagsMode: 'discard'
+};
 
 export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProps) {
     // USE BLOCKS DIRECTLY if available (Canonical)
@@ -199,11 +219,14 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                     }
 
                     // LEGACY FALLBACK: Parse markdown only for old articles without bodyBlocks
-                    const htmlContent = marked.parse(block.content, {
+                    const rawHtmlContent = marked.parse(block.content, {
                         async: false,
                         gfm: true,
                         breaks: true,
                     }) as string;
+
+                    // Sanitize the HTML to prevent Stored XSS
+                    const cleanHtmlContent = sanitizeHtml(rawHtmlContent, SANITIZE_OPTIONS);
 
                     return (
                         <div
@@ -215,7 +238,7 @@ export function ArticleBody({ content, blocks: providedBlocks }: ArticleBodyProp
                                 color: '#111111',
                                 marginBottom: '1.5rem',
                             }}
-                            dangerouslySetInnerHTML={{ __html: htmlContent }}
+                            dangerouslySetInnerHTML={{ __html: cleanHtmlContent }}
                         />
                     );
                 })}

@@ -75,7 +75,7 @@ export function Pagination({
                     {hasPrevious ? (
                         <Link
                             href={getPageHref(currentPage - 1)}
-                            className="px-3 py-1.5 font-sans text-[12px] font-bold uppercase tracking-wider text-[#111] hover:bg-[#111] hover:text-white transition-colors"
+                            className="px-3 py-1.5 font-sans text-[12px] font-bold uppercase tracking-wider text-[#111] hover:bg-[#111] hover:text-white transition-all duration-150 ease-out active:scale-95"
                             aria-label="Previous page"
                         >
                             ←
@@ -108,7 +108,7 @@ export function Pagination({
                                 key={page}
                                 href={getPageHref(page)}
                                 className={`
-                                    px-3 py-1.5 font-sans text-[12px] font-bold uppercase tracking-wider transition-colors
+                                    px-3 py-1.5 font-sans text-[12px] font-bold uppercase tracking-wider transition-all duration-150 ease-out active:scale-95
                                     ${isCurrent
                                         ? 'bg-[#111] text-white'
                                         : 'text-[#111] hover:bg-[#111] hover:text-white'
@@ -126,7 +126,7 @@ export function Pagination({
                     {hasNext ? (
                         <Link
                             href={getPageHref(currentPage + 1)}
-                            className="px-3 py-1.5 font-sans text-[12px] font-bold uppercase tracking-wider text-[#111] hover:bg-[#111] hover:text-white transition-colors"
+                            className="px-3 py-1.5 font-sans text-[12px] font-bold uppercase tracking-wider text-[#111] hover:bg-[#111] hover:text-white transition-all duration-150 ease-out active:scale-95"
                             aria-label="Next page"
                         >
                             →

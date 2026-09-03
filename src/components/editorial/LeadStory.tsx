@@ -135,6 +135,7 @@ export function LeadStory({ article }: LeadStoryProps) {
         year: "numeric",
         month: "long",
         day: "numeric",
+        timeZone: "Asia/Kolkata",
     });
 
     const sectionLabel = (kn.sections as Record<string, string>)[article.section] || article.section
@@ -154,10 +155,10 @@ export function LeadStory({ article }: LeadStoryProps) {
                 </div>
 
                 {/* Dominant Headline - Largest on page */}
-                <Link href={articleUrl} className="article-link">
+                <Link href={articleUrl} className="article-link group">
                     <h2
                         id="lead-story-heading"
-                        className="headline-xl"
+                        className="headline-xl editorial-headline-text"
                         style={{ marginBottom: "1.25rem", maxWidth: "900px" }}
                     >
                         {article.title}
@@ -165,9 +166,9 @@ export function LeadStory({ article }: LeadStoryProps) {
                 </Link>
 
                 {/* Hero Thumbnail - Large, top-focused, more image visibility */}
-                <Link href={articleUrl} className="article-link" style={{ display: "block", marginBottom: "1.25rem" }}>
+                <Link href={articleUrl} className="article-link group" style={{ display: "block", marginBottom: "1.25rem" }}>
                     <div
-                        className="thumbnail-container"
+                        className="thumbnail-container editorial-image-lift"
                         onMouseEnter={() => setIsPaused(true)}
                         onMouseLeave={() => setIsPaused(false)}
                     >

@@ -59,10 +59,10 @@ export function TopStories({ articles }: TopStoriesProps) {
                     });
 
                     return (
-                        <article key={article.id} style={{ paddingBottom: "0.75rem" }}>
+                        <article key={article.id} className="editorial-card-interactive group" style={{ paddingBottom: "0.75rem" }}>
                             {/* Thumbnail - Larger, more visible */}
-                            <Link href={articleUrl} className="article-link" style={{ display: "block", marginBottom: "0.5rem" }}>
-                                <div className="thumbnail-container">
+                            <Link href={articleUrl} className="article-link block" style={{ marginBottom: "0.5rem" }}>
+                                <div className="thumbnail-container editorial-image-lift">
                                     {article.image ? (
                                         <Image
                                             src={article.image}
@@ -84,8 +84,8 @@ export function TopStories({ articles }: TopStoriesProps) {
                             </Link>
 
                             {/* Smaller Headline - Secondary to lead */}
-                            <Link href={articleUrl} className="article-link">
-                                <h3 className="headline-md" style={{ marginBottom: "0.25rem", lineHeight: 1.25 }}>
+                            <Link href={articleUrl} className="article-link block">
+                                <h3 className="headline-md editorial-headline-text font-bold" style={{ marginBottom: "0.25rem", lineHeight: 1.25 }}>
                                     {article.title}
                                 </h3>
                             </Link>

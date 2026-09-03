@@ -62,5 +62,14 @@ export type {
     MediaValidationResult,
 } from './media';
 
+// Canonical image URL validation
+export {
+    validateArticleImageUrl,
+} from './image-url';
+
+export type {
+    ImageUrlValidationResult,
+} from './image-url';
+
 // Export Section from content types
 export type { Section } from '../content/types';

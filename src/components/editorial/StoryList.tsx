@@ -60,12 +60,12 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
                             className="article-link group block"
                         >
                             <article
-                                className={`flex gap-4 py-4 ${index < articles.length - 1 ? 'border-b border-[#E5E5E5]' : ''
+                                className={`wire-row-interactive flex gap-4 py-4 ${index < articles.length - 1 ? 'border-b border-[#E5E5E5]' : ''
                                     }`}
                             >
                                 {/* Small thumbnail */}
                                 {article.image && (
-                                    <div className="thumbnail-container thumbnail-wire">
+                                    <div className="thumbnail-container thumbnail-wire wire-thumb">
                                         <Image
                                             src={article.image}
                                             alt=""
@@ -78,7 +78,7 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
 
                                 {/* Content */}
                                 <div className="flex-1 flex flex-col justify-center min-w-0">
-                                    <h2 className="headline-sm mb-1.5 line-clamp-2 group-hover:underline decoration-1 underline-offset-4 decoration-[#111]">
+                                    <h2 className="headline-sm mb-1.5 line-clamp-2 editorial-headline-text font-bold">
                                         {article.title}
                                     </h2>
                                     {article.subtitle && (
@@ -113,13 +113,13 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
                         className="article-link group block"
                     >
                         <article
-                            className={`flex gap-6 py-6 ${index < articles.length - 1 ? 'border-b border-[#E5E5E5]' : ''
+                            className={`editorial-card-interactive flex gap-6 py-6 ${index < articles.length - 1 ? 'border-b border-[#E5E5E5]' : ''
                                 }`}
                         >
                             {/* Thumbnail */}
                             {article.image && (
                                 <div
-                                    className="thumbnail-container shrink-0 overflow-hidden"
+                                    className="thumbnail-container editorial-image-lift shrink-0"
                                     style={{ width: "200px", aspectRatio: "3/2" }}
                                 >
                                     <Image
@@ -127,14 +127,14 @@ export function StoryList({ articles, sectionSlug }: StoryListProps) {
                                         alt=""
                                         fill
                                         sizes="200px"
-                                        className="article-thumbnail w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
+                                        className="article-thumbnail w-full h-full object-cover"
                                     />
                                 </div>
                             )}
 
                             {/* Content */}
                             <div className="flex-1 flex flex-col justify-center min-w-0">
-                                <h2 className="headline-md mb-3 line-clamp-3 group-hover:underline decoration-2 underline-offset-4 decoration-[#111]">
+                                <h2 className="headline-md mb-3 line-clamp-3 editorial-headline-text font-bold">
                                     {article.title}
                                 </h2>
                                 {article.subtitle && (

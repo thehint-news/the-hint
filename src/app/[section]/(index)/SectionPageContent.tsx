@@ -7,6 +7,7 @@
 import { notFound } from 'next/navigation';
 import { getSectionPageData, InvalidSectionError } from '@/lib/content';
 import { SectionHeader, StoryList, Pagination, LeadStory } from '@/components/editorial';
+import { safeJsonLdStringify } from '@/lib/utils/json-ld';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { kn } from '@/lib/i18n';
 
@@ -118,7 +119,7 @@ export async function SectionPageContent({ sectionSlug, currentPage }: SectionPa
         <main id="main-content" className="flex-1">
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
             />
             {/* hreflang links */}
             <link rel="alternate" hrefLang="kn" href={canonicalUrl} />

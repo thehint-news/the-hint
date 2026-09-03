@@ -142,12 +142,12 @@ export function ShareButtons({
             title={label}
             className={`
                 flex items-center justify-center
-                w-10 h-10 rounded-full
-                transition-all duration-200
+                w-9 h-9 rounded-full
+                transition-all duration-200 ease-out
                 ${colorClass}
                 ${hoverClass}
-                focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-opacity-50
-                active:scale-95
+                focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-[#111]
+                hover:scale-105 active:scale-95
             `}
         >
             <Icon />
@@ -156,41 +156,41 @@ export function ShareButtons({
 
     return (
         <div className={`flex items-center gap-2 ${className}`}>
-            <span className="text-xs text-[#6B6B6B] mr-2">Share:</span>
+            <span className="text-xs text-[#6B6B6B] mr-1 select-none font-medium">ಹಂಚಿಕೊಳ್ಳಿ:</span>
             <ShareButton
                 onClick={shareToWhatsApp}
                 icon={WhatsAppIcon}
-                label="Share on WhatsApp"
+                label="WhatsApp ನಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ"
                 colorClass="bg-[#25D366] text-white"
                 hoverClass="hover:bg-[#128C7E]"
             />
             <ShareButton
                 onClick={shareToX}
                 icon={XIcon}
-                label="Share on X"
+                label="X ನಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ"
                 colorClass="bg-black text-white"
                 hoverClass="hover:bg-gray-800"
             />
             <ShareButton
                 onClick={shareToFacebook}
                 icon={FacebookIcon}
-                label="Share on Facebook"
+                label="Facebook ನಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ"
                 colorClass="bg-[#1877F2] text-white"
                 hoverClass="hover:bg-[#166fe5]"
             />
             <button
                 onClick={copyToClipboard}
-                aria-label={copied ? 'Link copied!' : 'Copy link'}
-                title={copied ? 'Link copied!' : 'Copy link'}
+                aria-label={copied ? 'ಲಿಂಕ್ ನಕಲಿಸಲಾಗಿದೆ' : 'ಲಿಂಕ್ ಕಾಪಿ ಮಾಡಿ'}
+                title={copied ? 'ಲಿಂಕ್ ನಕಲಿಸಲಾಗಿದೆ' : 'ಲಿಂಕ್ ಕಾಪಿ ಮಾಡಿ'}
                 className={`
-                        flex items-center justify-center
-                        w-10 h-10 rounded-full
-                        transition-all duration-200
+                        relative flex items-center justify-center
+                        w-9 h-9 rounded-full
+                        transition-all duration-200 ease-out
                         ${copied
-                        ? 'bg-green-500 text-white'
-                        : 'bg-[#F0F0F0] text-[#6B6B6B] hover:bg-[#E0E0E0]'
+                        ? 'bg-[#111111] text-white scale-105 ring-2 ring-[#111]'
+                        : 'bg-[#F0F0F0] text-[#6B6B6B] hover:bg-[#E0E0E0] hover:text-[#111] hover:scale-105'
                     }
-                        focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-opacity-50
+                        focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-[#111]
                         active:scale-95
                     `}
             >

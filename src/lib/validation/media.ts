@@ -34,6 +34,7 @@ import {
     SocialVideoProvider,
     PostPlatform,
 } from '../content/media-types';
+import { validateArticleImageUrl } from './image-url';
 
 // ... (skipping types section which I will update in next chunk if needed or just use imports)
 
@@ -72,13 +73,25 @@ function validateVideoBlock(
     // Poster Thumbnail check
     // Required for File/CDN sources (to show before play).
     // Optional for Social sources (iframe can self-render preview).
-    if (block.sourceType !== 'social' && (!block.posterThumbnail || block.posterThumbnail.trim() === '')) {
-        errors.push({
-            type: 'missing_poster_url',
-            message: 'Video requires a poster/thumbnail image',
-            blockId: block.id,
-            blockIndex: index,
-        });
+    if (block.sourceType !== 'social') {
+        if (!block.posterThumbnail || block.posterThumbnail.trim() === '') {
+            errors.push({
+                type: 'missing_poster_url',
+                message: 'Video requires a poster/thumbnail image',
+                blockId: block.id,
+                blockIndex: index,
+            });
+        } else {
+            const validation = validateArticleImageUrl(block.posterThumbnail);
+            if (!validation.isValid) {
+                errors.push({
+                    type: 'invalid_poster_url',
+                    message: validation.error || 'Video poster URL must be from approved storage',
+                    blockId: block.id,
+                    blockIndex: index,
+                });
+            }
+        }
     }
 
     // Caption REQUIRED
@@ -178,6 +191,7 @@ export type MediaValidationErrorType =
     | 'image_too_large'
     | 'invalid_video_provider'
     | 'missing_poster_url'
+    | 'invalid_poster_url'
     | 'empty_blocks'
     | 'missing_caption'
     | 'media_only_article';
@@ -382,7 +396,7 @@ function validateImageBlock(
         });
     }
 
-    // URL is required
+    // URL is required and must belong to approved storage
     if (!block.src || block.src.trim() === '') {
         errors.push({
             type: 'invalid_image_url',
@@ -390,6 +404,16 @@ function validateImageBlock(
             blockId: block.id,
             blockIndex: index,
         });
+    } else {
+        const validation = validateArticleImageUrl(block.src);
+        if (!validation.isValid) {
+            errors.push({
+                type: 'invalid_image_url',
+                message: validation.error || 'Image source URL must be from approved storage',
+                blockId: block.id,
+                blockIndex: index,
+            });
+        }
     }
 
     // Caption warning (encouraged but not required)
