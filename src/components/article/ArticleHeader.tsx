@@ -19,7 +19,6 @@ interface ArticleHeaderProps {
     contentTypeLabel?: string;
     publishedAt: string;
     updatedAt: string | null;
-    readingTimeMinutes?: number;
 }
 
 export function ArticleHeader({
@@ -30,7 +29,6 @@ export function ArticleHeader({
     contentTypeLabel,
     publishedAt,
     updatedAt,
-    readingTimeMinutes,
 }: ArticleHeaderProps) {
     // Format dates
     const formattedPublished = new Date(publishedAt).toLocaleDateString('kn-IN', {
@@ -95,18 +93,6 @@ export function ArticleHeader({
                             </time>
                         </>
                     )}
-                    {readingTimeMinutes && readingTimeMinutes > 0 ? (
-                        <>
-                            <span aria-hidden="true" className="text-[#D9D9D9]">•</span>
-                            <span className="inline-flex items-center gap-1 text-[#595959] font-medium">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polyline points="12 6 12 12 16 14"></polyline>
-                                </svg>
-                                <span>{kn.article.readTime ? kn.article.readTime(readingTimeMinutes) : `${readingTimeMinutes} min read`}</span>
-                            </span>
-                        </>
-                    ) : null}
                 </div>
                 <div className="md:hidden flex items-center mt-2">
                     <ShareButtons

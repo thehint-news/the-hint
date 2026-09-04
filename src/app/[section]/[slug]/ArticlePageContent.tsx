@@ -228,7 +228,6 @@ export async function ArticlePageContent({ section, slug }: ArticlePageContentPr
                         contentTypeLabel={article.contentType}
                         publishedAt={article.publishedAt}
                         updatedAt={article.updatedAt}
-                        readingTimeMinutes={readingTimeMinutes}
                     />
                 </div>
 

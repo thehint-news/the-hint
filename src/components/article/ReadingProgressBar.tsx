@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 interface ReadingProgressBarProps {
     /** Target container selector to measure article progress, defaults to 'article' */
     targetSelector?: string;
-    /** Total reading time in minutes for companion widget calculation */
+    /** Optional reading time for backwards compatibility */
     readingTimeMinutes?: number;
 }
 
@@ -20,12 +20,9 @@ interface ReadingProgressBarProps {
  */
 export function ReadingProgressBar({ 
     targetSelector = 'article',
-    readingTimeMinutes = 3 
 }: ReadingProgressBarProps) {
     const progressRef = useRef<HTMLDivElement>(null);
-    const pillProgressRef = useRef<HTMLSpanElement>(null);
-    const pillRemainingRef = useRef<HTMLSpanElement>(null);
-    const [showCompanion, setShowCompanion] = useState(false);
+    const [showScrollTop, setShowScrollTop] = useState(false);
     const isVisibleRef = useRef(false);
     const rafIdRef = useRef<number | null>(null);
 
@@ -43,7 +40,7 @@ export function ReadingProgressBar({
             progressRef.current.style.transform = 'scaleX(0)';
             if (isVisibleRef.current) {
                 isVisibleRef.current = false;
-                setShowCompanion(false);
+                setShowScrollTop(false);
             }
             return;
         }
@@ -52,26 +49,17 @@ export function ReadingProgressBar({
         const scrolled = -rect.top;
         const rawProgress = scrolled / totalHeight;
         const clampedProgress = Math.min(Math.max(rawProgress, 0), 1);
-        const percent = Math.round(clampedProgress * 100);
-        const remainingMinutes = Math.max(1, Math.ceil((1 - clampedProgress) * readingTimeMinutes));
 
         // Update DOM transform directly for 60fps performance without React re-renders
         progressRef.current.style.transform = `scaleX(${clampedProgress})`;
-        
-        if (pillProgressRef.current) {
-            pillProgressRef.current.textContent = `${percent}%`;
-        }
-        if (pillRemainingRef.current) {
-            pillRemainingRef.current.textContent = `~${remainingMinutes} ನಿಮಿಷ ಬಾಕಿ`;
-        }
 
-        // Reveal companion pill past 20% scroll
-        const shouldShow = clampedProgress > 0.20 && clampedProgress < 0.98;
+        // Reveal scroll-to-top button past 15% scroll
+        const shouldShow = clampedProgress > 0.15;
         if (shouldShow !== isVisibleRef.current) {
             isVisibleRef.current = shouldShow;
-            setShowCompanion(shouldShow);
+            setShowScrollTop(shouldShow);
         }
-    }, [targetSelector, readingTimeMinutes]);
+    }, [targetSelector]);
 
     const handleScroll = useCallback(() => {
         if (rafIdRef.current !== null) return;
@@ -116,39 +104,30 @@ export function ReadingProgressBar({
                 <div ref={progressRef} className="reading-progress-fill" />
             </div>
 
-            {/* Floating Reading Companion Pill */}
-            {showCompanion && (
-                <div 
-                    className="reading-companion-pill cursor-pointer select-none"
+            {/* Scroll to Top Arrow Button */}
+            {showScrollTop && (
+                <button 
+                    type="button"
+                    className="reading-companion-pill group"
                     onClick={scrollToTop}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') scrollToTop(); }}
                     aria-label="ಪುಟದ ಮೇಲಕ್ಕೆ ಸ್ಕ್ರೋಲ್ ಮಾಡಿ"
                     title="ಮೇಲಕ್ಕೆ ಸ್ಕ್ರೋಲ್ ಮಾಡಿ"
                 >
-                    <span className="text-[11px] font-bold text-[#111] uppercase tracking-wider flex items-center gap-1.5">
-                        <span ref={pillProgressRef} className="font-mono text-[12px] font-bold">20%</span>
-                        <span className="text-[#888] font-normal font-serif">ಓದಾಗಿದೆ</span>
-                        <span className="text-[#D0D0D0]">•</span>
-                        <span ref={pillRemainingRef} className="text-[#666] font-medium text-[10px]">~{readingTimeMinutes} ನಿಮಿಷ ಬಾಕಿ</span>
-                    </span>
-                    <div className="reading-companion-btn" aria-hidden="true">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <polyline points="18 15 12 9 6 15" />
-                        </svg>
-                    </div>
-                </div>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="transition-transform duration-200 group-hover:-translate-y-0.5"
+                    >
+                        <polyline points="18 15 12 9 6 15" />
+                    </svg>
+                </button>
             )}
         </>
     );
