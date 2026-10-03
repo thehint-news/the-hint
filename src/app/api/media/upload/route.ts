@@ -25,11 +25,19 @@ interface UploadSuccessResponse {
     data: {
         id: string;
         url: string;
+        thumbnailUrl?: string;
+        socialImageUrl?: string;
+        originalUrl?: string;
         srcset: string;
         width: number;
         height: number;
         mimeType: string;
         size: number;
+        variants?: {
+            original: { url: string; width: number; height: number; size: number; mimeType: string };
+            thumbnail: { url: string; width: number; height: number; size: number; mimeType: string };
+            social: { url: string; width: number; height: number; size: number; mimeType: string };
+        };
     };
 }
 

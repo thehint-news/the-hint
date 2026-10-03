@@ -18,6 +18,7 @@ import { logger } from '../feedback/console-guard';
 import path from 'path';
 import yaml from 'js-yaml';
 import { ContentBlock } from '../content/media-types';
+import { ensureSocialImageForUrl } from '../media/supabase-storage';
 
 
 /** Draft data structure */
@@ -33,6 +34,7 @@ export interface DraftData {
     sources: string[];
     placement: string;
     thumbnail?: string;
+    socialImage?: string;
     slug?: string;
     savedAt: string;
     createdAt: string;
@@ -65,6 +67,7 @@ export interface PublishedArticleData {
     tags: string[];
     sources: string[];
     image?: string;
+    socialImage?: string;
     bodyBlocks?: ContentBlock[];
     body?: string;
     /** Whether this article is the designated lead story */
@@ -624,6 +627,7 @@ class ContentGit {
         placement: string;
         slug: string;
         thumbnail?: string;
+        socialImage?: string;
         draftId?: string;
         isLead?: boolean;
         leadMedia?: {
@@ -695,10 +699,24 @@ class ContentGit {
                 }
             }
 
-            // 4. Generate markdown content
+            // 4. Ensure socialImage variant exists if thumbnail is provided
+            let finalSocialImage = articleData.socialImage;
+            if (!finalSocialImage && articleData.thumbnail) {
+                try {
+                    const ensured = await ensureSocialImageForUrl(articleData.thumbnail);
+                    if (ensured) {
+                        finalSocialImage = ensured;
+                    }
+                } catch (e: unknown) {
+                    logger.warn(`Failed to derive social image for ${articleData.thumbnail}`, e);
+                }
+            }
+
+            // 5. Generate markdown content
             const markdownContent = this.generateMarkdownContent({
                 ...articleData,
                 image: articleData.thumbnail,
+                socialImage: finalSocialImage,
                 publishedAt,
                 updatedAt: mode === 'update' ? new Date().toISOString() : undefined,
             });
@@ -930,6 +948,7 @@ class ContentGit {
         sources: string[];
         placement: string;
         image?: string;
+        socialImage?: string;
         publishedAt: string;
         updatedAt?: string;
         isLead?: boolean;
@@ -950,15 +969,16 @@ class ContentGit {
             subtitle: data.subheadline,
             contentType: data.contentType,
             image: data.image,
+            ...(data.socialImage && { socialImage: data.socialImage }),
             status: 'published',
             publishedAt: data.publishedAt,
             updatedAt: data.updatedAt || null,
             placement: data.placement,
             tags: data.tags,
             sources: data.sources,
-            ...(data.imageWidth && { imageWidth: data.imageWidth }),
-            ...(data.imageHeight && { imageHeight: data.imageHeight }),
-            ...(data.imageType && { imageType: data.imageType }),
+            imageWidth: data.imageWidth || (data.image ? 1200 : undefined),
+            imageHeight: data.imageHeight || (data.image ? 900 : undefined),
+            imageType: data.imageType || (data.image ? 'image/jpeg' : undefined),
         };
 
         // If bodyBlocks exist, add them to frontmatter (CANONICAL)
@@ -1091,6 +1111,7 @@ class ContentGit {
                 tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
                 sources: Array.isArray(data.sources) ? data.sources.map(String) : [],
                 image: data.image ? String(data.image) : undefined,
+                socialImage: data.socialImage ? String(data.socialImage) : undefined,
                 bodyBlocks: Array.isArray(data.bodyBlocks) ? data.bodyBlocks as ContentBlock[] : undefined,
                 body,
                 isLead: data.isLead === true,

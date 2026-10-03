@@ -27,6 +27,11 @@ function collectArticleImageKeys(article: PublishedArticleData): string[] {
         urls.push(article.image);
     }
 
+    // 1b. Social image
+    if (article.socialImage) {
+        urls.push(article.socialImage);
+    }
+
     // 2. Body block images and video poster thumbnails
     if (article.bodyBlocks && Array.isArray(article.bodyBlocks)) {
         for (const block of article.bodyBlocks) {

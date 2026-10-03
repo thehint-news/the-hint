@@ -4,17 +4,22 @@
  * Uploads images to Supabase Storage (free tier, no credit card).
  * Returns public CDN URLs. No local filesystem writes.
  *
- * Storage path: articles/{year}/{month}/{hash}.{ext}
+ * Canonical Storage paths:
+ * - Original:  articles/{year}/{month}/{hash}-original.{ext}
+ * - Thumbnail: articles/{year}/{month}/{hash}-thumb-4x3.jpg (1200x900)
+ * - Social OG: articles/{year}/{month}/{hash}-og-1200x630.jpg (1200x630)
  *
  * RULES:
  * - No images in /public/media or in the repository
  * - All images served from Supabase Storage CDN
  * - Max 5MB per image enforced
  * - Graceful failure: never crash on upload error
+ * - Atomic variant uploads: all succeed or rollback
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { createHash } from 'crypto';
+import { ProcessedImageResult, createSocialVariantFromBuffer } from './image-processor';
 
 // =============================================================================
 // CONFIGURATION
@@ -34,7 +39,6 @@ function getSupabaseConfig() {
 }
 
 // Server-side client uses service role key to bypass RLS
-// (safe because uploads are already gated by our auth middleware)
 let _serverClient: SupabaseClient | null = null;
 
 function getServerClient(): SupabaseClient | null {
@@ -43,7 +47,6 @@ function getServerClient(): SupabaseClient | null {
     const config = getSupabaseConfig();
     if (!config) return null;
 
-    // Prefer service role key for server-side operations (bypasses RLS)
     const key = config.serviceRoleKey || config.anonKey;
     if (!key) return null;
 
@@ -76,6 +79,31 @@ export interface StorageUploadResult {
     error?: string;
 }
 
+export interface StorageVariantsUploadResult {
+    success: boolean;
+    data?: {
+        id: string;
+        /** Primary editorial URL (4:3 thumbnail 1200x900) */
+        url: string;
+        thumbnailUrl: string;
+        socialImageUrl: string;
+        originalUrl: string;
+        thumbnailKey: string;
+        socialKey: string;
+        originalKey: string;
+        width: number;
+        height: number;
+        mimeType: string;
+        size: number;
+        variants: {
+            original: { url: string; key: string; width: number; height: number; size: number; mimeType: string };
+            thumbnail: { url: string; key: string; width: number; height: number; size: number; mimeType: string };
+            social: { url: string; key: string; width: number; height: number; size: number; mimeType: string };
+        };
+    };
+    error?: string;
+}
+
 // =============================================================================
 // HASH + PATH GENERATION
 // =============================================================================
@@ -102,7 +130,7 @@ function getExtension(mimeType: string): string {
 }
 
 /**
- * Generate the storage path.
+ * Generate legacy single-image storage path.
  * Pattern: articles/{year}/{month}/{hash}.{ext}
  */
 function generateStoragePath(hash: string, mimeType: string): string {
@@ -113,20 +141,30 @@ function generateStoragePath(hash: string, mimeType: string): string {
     return `articles/${year}/${month}/${hash}.${ext}`;
 }
 
+/**
+ * Generate canonical variant paths for an image.
+ */
+export function generateCanonicalPaths(hash: string, originalExt: string) {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const prefix = `articles/${year}/${month}/${hash}`;
+    return {
+        original: `${prefix}-original.${originalExt}`,
+        thumbnail: `${prefix}-thumb-4x3.jpg`,
+        social: `${prefix}-og-1200x630.jpg`,
+    };
+}
+
 // =============================================================================
-// IMAGE DIMENSION EXTRACTION
+// IMAGE DIMENSION EXTRACTION (FALLBACK)
 // =============================================================================
 
-/**
- * Extract dimensions from an image buffer (PNG/JPEG/WebP).
- * Falls back to defaults if extraction fails.
- */
 export function extractDimensions(
     buffer: Buffer,
     mimeType: string
 ): { width: number; height: number } {
     try {
-        // PNG: dimensions at bytes 16-23 in IHDR chunk
         if (mimeType === 'image/png' && buffer.length > 24) {
             if (buffer.toString('ascii', 1, 4) === 'PNG') {
                 return {
@@ -136,7 +174,6 @@ export function extractDimensions(
             }
         }
 
-        // JPEG: scan for SOF0 (0xFFC0) or SOF2 (0xFFC2) marker
         if (mimeType === 'image/jpeg') {
             let offset = 2;
             while (offset < buffer.length - 9) {
@@ -153,7 +190,6 @@ export function extractDimensions(
             }
         }
 
-        // WebP: RIFF header, VP8 chunk
         if (mimeType === 'image/webp' && buffer.length > 30) {
             const riff = buffer.toString('ascii', 0, 4);
             const webp = buffer.toString('ascii', 8, 12);
@@ -175,25 +211,154 @@ export function extractDimensions(
             }
         }
     } catch {
-        // Dimension extraction is best-effort
+        // Best-effort
     }
 
-    // Default fallback
     return { width: 1200, height: 800 };
 }
 
 // =============================================================================
-// UPLOAD
+// VARIANT UPLOAD (ATOMIC)
 // =============================================================================
 
 /**
- * Upload an image to Supabase Storage.
- *
- * - Generates a hash-based filename
- * - Stores under articles/{year}/{month}/{hash}.{ext}
- * - Returns the public CDN URL
- * - Fails gracefully: returns error, never throws
+ * Upload all canonical variants to Supabase Storage atomically.
  */
+export async function uploadVariantsToStorage(
+    variants: ProcessedImageResult
+): Promise<StorageVariantsUploadResult> {
+    const config = getSupabaseConfig();
+    if (!config) {
+        return {
+            success: false,
+            error: 'Supabase Storage is not configured. Please check environment variables.',
+        };
+    }
+
+    const client = getServerClient();
+    if (!client) {
+        return {
+            success: false,
+            error: 'Failed to initialize Supabase storage client.',
+        };
+    }
+
+    const paths = generateCanonicalPaths(variants.hash, variants.original.ext);
+    const uploadedKeys: string[] = [];
+
+    try {
+        // 1. Upload Original
+        const { error: errOrig } = await client.storage
+            .from(config.bucket)
+            .upload(paths.original, variants.original.buffer, {
+                contentType: variants.original.mimeType,
+                cacheControl: '31536000',
+                upsert: true,
+            });
+
+        if (errOrig) {
+            throw new Error(`Original variant upload failed: ${errOrig.message}`);
+        }
+        uploadedKeys.push(paths.original);
+
+        // 2. Upload Editorial Thumbnail (4:3, 1200x900)
+        const { error: errThumb } = await client.storage
+            .from(config.bucket)
+            .upload(paths.thumbnail, variants.thumbnail.buffer, {
+                contentType: variants.thumbnail.mimeType,
+                cacheControl: '31536000',
+                upsert: true,
+            });
+
+        if (errThumb) {
+            throw new Error(`Thumbnail variant upload failed: ${errThumb.message}`);
+        }
+        uploadedKeys.push(paths.thumbnail);
+
+        // 3. Upload Social / Open Graph (1.91:1, 1200x630)
+        const { error: errSocial } = await client.storage
+            .from(config.bucket)
+            .upload(paths.social, variants.social.buffer, {
+                contentType: variants.social.mimeType,
+                cacheControl: '31536000',
+                upsert: true,
+            });
+
+        if (errSocial) {
+            throw new Error(`Social variant upload failed: ${errSocial.message}`);
+        }
+        uploadedKeys.push(paths.social);
+
+        // Retrieve public CDN URLs
+        const origUrl = client.storage.from(config.bucket).getPublicUrl(paths.original).data.publicUrl;
+        const thumbUrl = client.storage.from(config.bucket).getPublicUrl(paths.thumbnail).data.publicUrl;
+        const socialUrl = client.storage.from(config.bucket).getPublicUrl(paths.social).data.publicUrl;
+
+        return {
+            success: true,
+            data: {
+                id: variants.hash,
+                url: thumbUrl,
+                thumbnailUrl: thumbUrl,
+                socialImageUrl: socialUrl,
+                originalUrl: origUrl,
+                thumbnailKey: paths.thumbnail,
+                socialKey: paths.social,
+                originalKey: paths.original,
+                width: variants.thumbnail.width,
+                height: variants.thumbnail.height,
+                mimeType: variants.thumbnail.mimeType,
+                size: variants.thumbnail.size,
+                variants: {
+                    original: {
+                        url: origUrl,
+                        key: paths.original,
+                        width: variants.original.width,
+                        height: variants.original.height,
+                        size: variants.original.size,
+                        mimeType: variants.original.mimeType,
+                    },
+                    thumbnail: {
+                        url: thumbUrl,
+                        key: paths.thumbnail,
+                        width: variants.thumbnail.width,
+                        height: variants.thumbnail.height,
+                        size: variants.thumbnail.size,
+                        mimeType: variants.thumbnail.mimeType,
+                    },
+                    social: {
+                        url: socialUrl,
+                        key: paths.social,
+                        width: variants.social.width,
+                        height: variants.social.height,
+                        size: variants.social.size,
+                        mimeType: variants.social.mimeType,
+                    },
+                },
+            },
+        };
+    } catch (err: unknown) {
+        // Rollback already uploaded keys on failure
+        if (uploadedKeys.length > 0) {
+            try {
+                await client.storage.from(config.bucket).remove(uploadedKeys);
+            } catch {
+                // Ignore rollback errors
+            }
+        }
+        const message = err instanceof Error ? err.message : 'Upload processing failed';
+        console.error('[SUPABASE] Variant upload error:', message);
+        return {
+            success: false,
+            error: message,
+        };
+    }
+}
+
+// =============================================================================
+// LEGACY SINGLE IMAGE UPLOAD (COMPATIBILITY)
+// =============================================================================
+
 export async function uploadToStorage(
     buffer: Buffer,
     mimeType: string,
@@ -204,7 +369,7 @@ export async function uploadToStorage(
         if (!config) {
             return {
                 success: false,
-                error: 'Supabase Storage is not configured. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.',
+                error: 'Supabase Storage is not configured.',
             };
         }
 
@@ -212,11 +377,10 @@ export async function uploadToStorage(
         if (!client) {
             return {
                 success: false,
-                error: 'Failed to initialize storage client. Check SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_ANON_KEY.',
+                error: 'Failed to initialize storage client.',
             };
         }
 
-        // Validate file size (5MB max)
         const MAX_SIZE = 5 * 1024 * 1024;
         if (buffer.length > MAX_SIZE) {
             return {
@@ -225,36 +389,26 @@ export async function uploadToStorage(
             };
         }
 
-        // Generate unique path
         const hash = generateImageHash(buffer);
         const key = generateStoragePath(hash, mimeType);
-
-        // Extract dimensions
         const dimensions = providedDimensions || extractDimensions(buffer, mimeType);
 
-        // Upload to Supabase Storage
         const { error: uploadError } = await client.storage
             .from(config.bucket)
             .upload(key, buffer, {
                 contentType: mimeType,
-                cacheControl: '31536000', // 1 year cache (immutable content-addressed)
-                upsert: true, // Allow re-upload of same hash (idempotent)
+                cacheControl: '31536000',
+                upsert: true,
             });
 
         if (uploadError) {
-            console.error('[SUPABASE] Upload error:', uploadError.message, uploadError);
             return {
                 success: false,
                 error: `Storage upload failed: ${uploadError.message}`,
             };
         }
 
-        // Get public URL
-        const { data: urlData } = client.storage
-            .from(config.bucket)
-            .getPublicUrl(key);
-
-        const url = urlData.publicUrl;
+        const url = client.storage.from(config.bucket).getPublicUrl(key).data.publicUrl;
 
         return {
             success: true,
@@ -270,7 +424,6 @@ export async function uploadToStorage(
         };
     } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown upload error';
-        console.error('[SUPABASE] Upload failed:', message, error);
         return {
             success: false,
             error: `Upload processing failed: ${message}`,
@@ -279,12 +432,85 @@ export async function uploadToStorage(
 }
 
 // =============================================================================
-// DELETE
+// SOCIAL IMAGE RESOLUTION (DETERMINISTIC FALLBACK & MIGRATION)
 // =============================================================================
 
 /**
- * Delete an image from storage. Fire-and-forget safe.
+ * Ensure a 1200x630 social image exists for a given image URL.
+ * If given a thumbnail URL or legacy image URL, checks if the -og-1200x630.jpg variant exists.
+ * If not, fetches the image, crops it with sharp to 1200x630 JPEG, and uploads it.
  */
+export async function ensureSocialImageForUrl(sourceUrl: string): Promise<string | null> {
+    if (!sourceUrl || !sourceUrl.startsWith('https://')) return null;
+
+    // Already a canonical 1200x630 OG image
+    if (sourceUrl.includes('-og-1200x630.jpg')) {
+        return sourceUrl;
+    }
+
+    const config = getSupabaseConfig();
+    const client = getServerClient();
+    if (!config || !client) return null;
+
+    // Only process URLs that belong to our Supabase bucket
+    const key = extractStorageKeyFromUrl(sourceUrl);
+    if (!key) return null;
+
+    // Determine target social key
+    let socialKey: string;
+    if (key.includes('-thumb-4x3.jpg')) {
+        socialKey = key.replace('-thumb-4x3.jpg', '-og-1200x630.jpg');
+    } else if (key.includes('-original.')) {
+        socialKey = key.replace(/-original\.[a-z0-9]+$/i, '-og-1200x630.jpg');
+    } else {
+        // Legacy format: articles/YYYY/MM/<hash>.<ext>
+        socialKey = key.replace(/\.[a-z0-9]+$/i, '-og-1200x630.jpg');
+    }
+
+    // Check if the social variant already exists in Supabase
+    const candidateUrl = client.storage.from(config.bucket).getPublicUrl(socialKey).data.publicUrl;
+
+    try {
+        const headRes = await fetch(candidateUrl, { method: 'HEAD' });
+        if (headRes.ok) {
+            return candidateUrl;
+        }
+    } catch {
+        // Fall through to generation
+    }
+
+    // Variant does not exist yet: download source image, generate social variant, and upload
+    try {
+        const srcRes = await fetch(sourceUrl);
+        if (!srcRes.ok) return null;
+
+        const srcBuffer = Buffer.from(await srcRes.arrayBuffer());
+        const socialVariant = await createSocialVariantFromBuffer(srcBuffer);
+
+        const { error: uploadError } = await client.storage
+            .from(config.bucket)
+            .upload(socialKey, socialVariant.buffer, {
+                contentType: 'image/jpeg',
+                cacheControl: '31536000',
+                upsert: true,
+            });
+
+        if (uploadError) {
+            console.error('[SUPABASE] Failed to upload derived social variant:', uploadError.message);
+            return null;
+        }
+
+        return candidateUrl;
+    } catch (err: unknown) {
+        console.error('[SUPABASE] ensureSocialImageForUrl error:', err);
+        return null;
+    }
+}
+
+// =============================================================================
+// DELETE
+// =============================================================================
+
 export async function deleteFromStorage(key: string): Promise<boolean> {
     try {
         const config = getSupabaseConfig();
@@ -303,24 +529,16 @@ export async function deleteFromStorage(key: string): Promise<boolean> {
     }
 }
 
-/**
- * Extract the storage key from a Supabase public URL.
- * URL format: https://{project}.supabase.co/storage/v1/object/public/{bucket}/{key}
- * Returns null if the URL is not from our Supabase storage.
- */
 export function extractStorageKeyFromUrl(url: string): string | null {
     try {
         const config = getSupabaseConfig();
         if (!config) return null;
 
-        // Match the Supabase storage URL pattern
-        // e.g. https://xxx.supabase.co/storage/v1/object/public/article-images/articles/2026/03/abc123.webp
         const bucketPrefix = `/storage/v1/object/public/${config.bucket}/`;
         const idx = url.indexOf(bucketPrefix);
         if (idx === -1) return null;
 
         const key = url.substring(idx + bucketPrefix.length);
-        // Basic validation: key should start with "articles/" and have content
         if (!key || !key.startsWith('articles/')) return null;
 
         return key;
@@ -329,11 +547,6 @@ export function extractStorageKeyFromUrl(url: string): string | null {
     }
 }
 
-/**
- * Delete multiple images from storage in a single call.
- * Fire-and-forget safe — never throws.
- * Returns the count of successfully deleted keys.
- */
 export async function deleteMultipleFromStorage(keys: string[]): Promise<number> {
     if (keys.length === 0) return 0;
 

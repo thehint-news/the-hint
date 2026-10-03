@@ -9,12 +9,13 @@
  * - Max 3 images enforced at validation layer
  * - Max 5MB per image enforced at storage layer
  * - Graceful failure: never crash
- * - No base64 in responses
+ * - Generates canonical variants (Editorial 4:3 and Social 1.91:1)
+ * - Atomic: if variant generation/upload fails, returns clean error
  */
 
-import { uploadToStorage, type StorageUploadResult } from './supabase-storage';
+import { uploadVariantsToStorage, type StorageVariantsUploadResult } from './supabase-storage';
 import { validateImageFile, type MediaValidationResult } from '../validation/media';
-import { applyWatermark } from './watermark';
+import { processImageVariants } from './image-processor';
 
 // =============================================================================
 // TYPES
@@ -28,9 +29,15 @@ export interface ImageUploadResult {
     data?: {
         /** Unique asset ID (hash-based) */
         id: string;
-        /** Public CDN URL */
+        /** Canonical editorial thumbnail URL (4:3) */
         url: string;
-        /** Responsive srcset string (single URL for now) */
+        /** Explicit thumbnail URL (4:3, 1200x900) */
+        thumbnailUrl: string;
+        /** Explicit social / Open Graph image URL (1.91:1, 1200x630) */
+        socialImageUrl: string;
+        /** Original source image URL */
+        originalUrl: string;
+        /** Responsive srcset string */
         srcset: string;
         /** Image width */
         width: number;
@@ -40,6 +47,12 @@ export interface ImageUploadResult {
         mimeType: string;
         /** File size in bytes */
         size: number;
+        /** Canonical variants */
+        variants: {
+            original: { url: string; width: number; height: number; size: number; mimeType: string };
+            thumbnail: { url: string; width: number; height: number; size: number; mimeType: string };
+            social: { url: string; width: number; height: number; size: number; mimeType: string };
+        };
     };
     /** Error message (if failed) */
     error?: string;
@@ -52,21 +65,20 @@ export interface ImageUploadResult {
 // =============================================================================
 
 /**
- * Process and upload an image to Supabase Storage.
+ * Process and upload an image to Supabase Storage with canonical variants.
  *
- * Validation flow:
- * 1. Validate file type + size
- * 2. Upload to Supabase Storage
- * 3. Return CDN URL + metadata
- *
- * No local filesystem writes at any point.
+ * Flow:
+ * 1. Validate file size and MIME format
+ * 2. Process into canonical variants (4:3 thumbnail, 1.91:1 OG image, original)
+ * 3. Upload all variants atomically to Supabase Storage
+ * 4. Return CDN URLs for all variants
  */
 export async function processImageUpload(
     buffer: Buffer,
     filename: string,
     mimeType: string,
-    providedDimensions?: { width: number; height: number },
-    shouldWatermark: boolean = false // Optional flag
+    _providedDimensions?: { width: number; height: number },
+    shouldWatermark: boolean = false
 ): Promise<ImageUploadResult> {
     // 1. Validate file
     const validation = validateImageFile({
@@ -84,49 +96,49 @@ export async function processImageUpload(
     }
 
     try {
-        // 2. Apply watermark ONLY if requested (usually for article body images)
-        let finalBuffer = buffer;
-        if (shouldWatermark) {
-            console.info('[MediaUpload] Watermark requested for body image');
-            finalBuffer = await applyWatermark(buffer, mimeType);
-        }
+        // 2. Decode bytes and generate canonical variants
+        const variants = await processImageVariants(buffer, mimeType, {
+            shouldWatermark,
+        });
 
-        // 3. Upload to Supabase Storage
-        const result: StorageUploadResult = await uploadToStorage(
-            finalBuffer,
-            mimeType,
-            providedDimensions
-        );
+        // 3. Upload all variants atomically to Supabase Storage
+        const uploadResult: StorageVariantsUploadResult = await uploadVariantsToStorage(variants);
 
-        if (!result.success || !result.data) {
+        if (!uploadResult.success || !uploadResult.data) {
             return {
                 success: false,
-                error: result.error || 'Upload to storage failed',
+                error: uploadResult.error || 'Failed to upload image variants to storage.',
             };
         }
 
-        console.info('[MediaUpload] Upload completed');
-
-        // 4. Return CDN-backed response
-        const { id, url, width, height, size } = result.data;
+        const { id, url, thumbnailUrl, socialImageUrl, originalUrl, width, height, size } = uploadResult.data;
 
         return {
             success: true,
             data: {
                 id,
                 url,
-                srcset: `${url} ${width}w`,
+                thumbnailUrl,
+                socialImageUrl,
+                originalUrl,
+                srcset: `${url} 1200w`,
                 width,
                 height,
-                mimeType,
+                mimeType: 'image/jpeg',
                 size,
+                variants: {
+                    original: uploadResult.data.variants.original,
+                    thumbnail: uploadResult.data.variants.thumbnail,
+                    social: uploadResult.data.variants.social,
+                },
             },
         };
-    } catch (error) {
-        console.error('[UPLOAD] Image processing error:', error);
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Unknown image processing error';
+        console.error('[UPLOAD] Image processing error:', message);
         return {
             success: false,
-            error: 'Failed to process image. Please try again.',
+            error: 'Image processing failed. Please upload another image.',
         };
     }
 }

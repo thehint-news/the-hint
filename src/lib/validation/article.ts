@@ -281,6 +281,7 @@ export interface PublishArticleInput {
     sources: unknown;
     slug?: unknown;
     thumbnail?: unknown;
+    socialImage?: unknown;
     /** Whether this article should be marked as the lead story */
     isLead?: unknown;
     /** Lead story carousel media - only valid if isLead === true */
@@ -304,6 +305,7 @@ export interface DraftArticleInput {
     placement?: unknown;
     sources?: unknown;
     thumbnail?: unknown;
+    socialImage?: unknown;
     draftId?: unknown;
     isLead?: unknown;
     leadMedia?: unknown;
@@ -328,6 +330,7 @@ export interface ValidatedArticleData {
     sources: string[];
     slug: string;
     thumbnail?: string;
+    socialImage?: string;
     isLead?: boolean;
     leadMedia?: {
         images: {
@@ -357,6 +360,7 @@ export interface ValidatedDraftData {
     placement: Placement;
     sources: string[];
     thumbnail?: string;
+    socialImage?: string;
     slug?: string;
     savedAt: string;
     isLead?: boolean;
@@ -669,6 +673,7 @@ export function transformToValidatedData(input: PublishArticleInput): ValidatedA
         sources,
         slug,
         thumbnail,
+        socialImage: typeof input.socialImage === 'string' && input.socialImage ? input.socialImage : undefined,
         isLead,
         leadMedia,
         imageWidth: typeof input.imageWidth === 'number' ? input.imageWidth : undefined,
@@ -732,6 +737,7 @@ export function transformToDraftData(input: DraftArticleInput, draftId?: string)
         placement,
         sources,
         thumbnail,
+        socialImage: typeof input.socialImage === 'string' && input.socialImage ? input.socialImage : undefined,
         slug,
         savedAt: new Date().toISOString(),
         isLead,

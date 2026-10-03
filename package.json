@@ -9,6 +9,7 @@
     "generate-graph": "tsx scripts/generateContentGraph.ts",
     "backfill-image-metadata": "tsx scripts/backfillImageMetadata.ts",
     "validate-image-metadata": "tsx scripts/validateImageMetadata.ts",
+    "test-image-matrix": "tsx scripts/test-image-pipeline-matrix.ts",
     "start": "next start -p 3002",
     "lint": "eslint"
   },

@@ -187,7 +187,11 @@ export function ArticleEditor({
             const result = await response.json();
 
             if (result.success && result.data) {
-                onFormChange({ ...formDataRef.current, thumbnail: result.data.url });
+                onFormChange({
+                    ...formDataRef.current,
+                    thumbnail: result.data.thumbnailUrl || result.data.url,
+                    socialImage: result.data.socialImageUrl || undefined,
+                });
             } else {
                 setThumbnailError(result.error || 'Upload failed');
             }
@@ -202,7 +206,7 @@ export function ArticleEditor({
     }, [onFormChange]);
 
     const handleRemoveThumbnail = useCallback(() => {
-        onFormChange({ ...formDataRef.current, thumbnail: '' });
+        onFormChange({ ...formDataRef.current, thumbnail: '', socialImage: '' });
     }, [onFormChange]);
 
     return (

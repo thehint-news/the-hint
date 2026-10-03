@@ -198,6 +198,7 @@ export default function PublishPage() {
             status: formData.status,
             slug: formData.slug || undefined,
             thumbnail: formData.thumbnail || undefined,
+            socialImage: formData.socialImage || undefined,
             isLead: formData.isLead,
             leadMedia: leadMedia,
         };
