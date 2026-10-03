@@ -3,7 +3,7 @@ title: 'ಪತ್ರಕರ್ತ ಹೆಸರಿನಲ್ಲಿ ಬ್ಲಾಕ�
 subtitle: ಉಡುಪಿ ಜಿಲ್ಲೆ–ತಾಲೂಕು ಪತ್ರಕರ್ತರ ಸಂಘಗಳ ಪದಗ್ರಹಣ
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/834b894f193bb05a.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/834b894f193bb05a-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-07T12:09:38.936Z'
 updatedAt: null

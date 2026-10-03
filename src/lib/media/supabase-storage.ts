@@ -19,7 +19,7 @@
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { createHash } from 'crypto';
-import { ProcessedImageResult, createSocialVariantFromBuffer } from './image-processor';
+import { ProcessedImageResult, createSocialVariantFromBuffer, createThumbnailVariantFromBuffer } from './image-processor';
 
 // =============================================================================
 // CONFIGURATION
@@ -503,6 +503,78 @@ export async function ensureSocialImageForUrl(sourceUrl: string): Promise<string
         return candidateUrl;
     } catch (err: unknown) {
         console.error('[SUPABASE] ensureSocialImageForUrl error:', err);
+        return null;
+    }
+}
+
+/**
+ * Ensure a 1200x900 4:3 editorial thumbnail exists for a given image URL.
+ * If given a legacy image URL, checks if the -thumb-4x3.jpg variant exists.
+ * If not, fetches the image, crops it with sharp to 1200x900 JPEG, and uploads it.
+ */
+export async function ensureThumbnailImageForUrl(sourceUrl: string): Promise<string | null> {
+    if (!sourceUrl || !sourceUrl.startsWith('https://')) return null;
+
+    // Already a canonical 1200x900 thumbnail image
+    if (sourceUrl.includes('-thumb-4x3.jpg')) {
+        return sourceUrl;
+    }
+
+    const config = getSupabaseConfig();
+    const client = getServerClient();
+    if (!config || !client) return null;
+
+    // Only process URLs that belong to our Supabase bucket
+    const key = extractStorageKeyFromUrl(sourceUrl);
+    if (!key) return null;
+
+    // Determine target thumbnail key
+    let thumbKey: string;
+    if (key.includes('-og-1200x630.jpg')) {
+        thumbKey = key.replace('-og-1200x630.jpg', '-thumb-4x3.jpg');
+    } else if (key.includes('-original.')) {
+        thumbKey = key.replace(/-original\.[a-z0-9]+$/i, '-thumb-4x3.jpg');
+    } else {
+        // Legacy format: articles/YYYY/MM/<hash>.<ext>
+        thumbKey = key.replace(/\.[a-z0-9]+$/i, '-thumb-4x3.jpg');
+    }
+
+    // Check if the thumbnail variant already exists in Supabase
+    const candidateUrl = client.storage.from(config.bucket).getPublicUrl(thumbKey).data.publicUrl;
+
+    try {
+        const headRes = await fetch(candidateUrl, { method: 'HEAD' });
+        if (headRes.ok) {
+            return candidateUrl;
+        }
+    } catch {
+        // Fall through to generation
+    }
+
+    // Variant does not exist yet: download source image, generate thumbnail variant, and upload
+    try {
+        const srcRes = await fetch(sourceUrl);
+        if (!srcRes.ok) return null;
+
+        const srcBuffer = Buffer.from(await srcRes.arrayBuffer());
+        const thumbVariant = await createThumbnailVariantFromBuffer(srcBuffer);
+
+        const { error: uploadError } = await client.storage
+            .from(config.bucket)
+            .upload(thumbKey, thumbVariant.buffer, {
+                contentType: 'image/jpeg',
+                cacheControl: '31536000',
+                upsert: true,
+            });
+
+        if (uploadError) {
+            console.error('[SUPABASE] Failed to upload derived thumbnail variant:', uploadError.message);
+            return null;
+        }
+
+        return candidateUrl;
+    } catch (err: unknown) {
+        console.error('[SUPABASE] ensureThumbnailImageForUrl error:', err);
         return null;
     }
 }

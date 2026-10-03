@@ -3,7 +3,7 @@ title: ಯಾವುದೇ ದೂರದೃಷ್ಟಿ ಇಲ್ಲದ ನೀರ�
 subtitle: ರಾಜ್ಯದ ಜನತೆಗೆ ನಿರಾಶೆ ಉಂಟು ಮಾಡಿದ  ಬಜೆಟ್
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/68032a642166a8f2.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/68032a642166a8f2-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-06T12:01:28.083Z'
 updatedAt: '2026-03-06T12:06:36.576Z'

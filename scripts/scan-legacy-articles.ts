@@ -56,9 +56,8 @@ async function scanLegacy() {
             brokenOgMetadata++;
         } else {
             const ratio = width / height;
-            // Target OG is 1.91:1 (1200x630, approx 1.905)
             // Target Thumbnail is 4:3 (1200x900, 1.333)
-            if (Math.abs(ratio - 1.905) > 0.05) {
+            if (Math.abs(ratio - (4 / 3)) > 0.05) {
                 wrongDimensions++;
             }
         }

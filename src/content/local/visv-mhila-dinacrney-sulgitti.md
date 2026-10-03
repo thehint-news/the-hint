@@ -3,7 +3,7 @@ title: ವಿಶ್ವ ಮಹಿಳಾ ದಿನಾಚರಣೆಯ ಸೂಲಗ�
 subtitle: 'ಶಾಸಕ ಎ ಕಿರಣ್ ಕುಮಾರ್ ಕೊಡ್ಗಿ, ಮಹಿಳಾ ಮೋರ್ಚಾ ಅಧ್ಯಕ್ಷೆ ಸೌರಭಿ ಪೈ ಭಾಗಿ'
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/164b80118c1f38f8.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/164b80118c1f38f8-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-07T12:11:44.714Z'
 updatedAt: null

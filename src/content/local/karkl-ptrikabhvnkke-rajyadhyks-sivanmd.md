@@ -3,7 +3,7 @@ title: ಕಾರ್ಕಳ ಪತ್ರಿಕಾಭವನಕ್ಕೆ ರಾಜ�
 subtitle: ಕಾರ್ಕಳ ತಾಲೂಕು ಕಾರ್ಯನಿರತ ಪತ್ರಕರ್ತರ ಸಂಘದ ವತಿಯಿಂದ ಸನ್ಮಾನ
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/7691955f8121db44.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/7691955f8121db44-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-07T12:03:53.246Z'
 updatedAt: null

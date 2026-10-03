@@ -5,7 +5,7 @@ subtitle: >-
   ಅಂಟಿಕೊಳ್ಳುವ ಕಸರತ್ತು ಮಾಡಿದಂತೆ ತೋರುತ್ತಿದೆ
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/80f95e22a9b44baf.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/80f95e22a9b44baf-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-06T11:44:15.411Z'
 updatedAt: null

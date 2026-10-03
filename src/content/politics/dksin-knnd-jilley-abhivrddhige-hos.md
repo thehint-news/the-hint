@@ -5,7 +5,7 @@ title: >-
 subtitle: ಕರಾವಳಿ ಅಭಿವೃದ್ಧಿಗೆ ಹೊಸ ಆಯಾಮ
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/66eb3dc6d2261715.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/66eb3dc6d2261715-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-06T11:38:41.926Z'
 updatedAt: null

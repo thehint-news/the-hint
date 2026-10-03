@@ -3,7 +3,7 @@ title: 'Article 22(2)ರ 24 ಗಂಟೆ: ಡೇವಿಡ್ ಹತ್ಯೆ ಕ
 subtitle: ಆರೋಪಿ ಕೆಪಿ ನ್ಯಾಯಾಲಯದ ಹೇಳಿಕೆಯಿಂದ ಚರ್ಚೆ ಆರಂಭ
 contentType: opinion
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/08/e2fdca0806b32484.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/08/e2fdca0806b32484-thumb-4x3.jpg
 status: published
 publishedAt: '2026-08-16T17:35:20.160Z'
 updatedAt: null

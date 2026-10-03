@@ -3,7 +3,7 @@ title: ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ವ�
 subtitle: ಸಂಘರ್ಷವನ್ನು ಪರಿಹರಿಸಲು ಹಲವಾರು ದೇಶಗಳು ಮಧ್ಯಸ್ಥಿಕೆ ಪ್ರಯತ್ನಗಳನ್ನು ಪ್ರಾರಂಭಿಸಿವೆ
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/11a67638e0bc2e88.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/11a67638e0bc2e88-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-07T06:44:02.524Z'
 updatedAt: null

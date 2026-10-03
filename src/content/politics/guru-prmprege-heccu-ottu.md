@@ -3,7 +3,7 @@ title: 'ಗುರು ಪರಂಪರೆಗೆ ಹೆಚ್ಚು ಒತ್ತು
 subtitle: ಹುಣಸೂರಿನ ಮಾದಹಳ್ಳಿಯ ಶ್ರೀ ಉಕ್ಕಿನಕಂತೆ ಮಠದಲ್ಲಿ ನಡೆದ ಸಮಾರಂಭದಲ್ಲಿ ಹೇಳಿಕೆ
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/a4bd8bc5d5c22212.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/a4bd8bc5d5c22212-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-07T12:00:30.460Z'
 updatedAt: null

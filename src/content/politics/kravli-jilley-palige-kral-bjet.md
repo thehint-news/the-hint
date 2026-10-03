@@ -5,7 +5,7 @@ subtitle: >-
   "ಸಾಲ ರಾಮಯ್ಯ" ಆಗಿದ್ದಾರೆ
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/f3a24d2f74c5bbac.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/f3a24d2f74c5bbac-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-06T11:24:55.725Z'
 updatedAt: null

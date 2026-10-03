@@ -3,7 +3,7 @@ title: AI ಎನ್ನುವುದು ಕೇವಲ ತಂತ್ರಜ್ಞಾ�
 subtitle: 'ಇದು ಮೂಲಭೂತವಾಗಿ ನಂಬಿಕೆ, ಜವಾಬ್ದಾರಿ, ಪಾರದರ್ಶಕತೆ ಮತ್ತು ನಾಗರಿಕರ ಮೇಲಿನ ಪ್ರಭಾವ'
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/05/b96321aa9c4cc665.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/05/b96321aa9c4cc665-thumb-4x3.jpg
 status: published
 publishedAt: '2026-05-26T17:22:59.227Z'
 updatedAt: null

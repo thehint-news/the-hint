@@ -5,7 +5,7 @@ subtitle: >-
   ಮೇಲೆ ಹೋಗುತ್ತಿದೆಯೇ?
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/5bb95c0b47a9b018.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/5bb95c0b47a9b018-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-07T12:13:38.739Z'
 updatedAt: null

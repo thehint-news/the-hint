@@ -3,7 +3,7 @@ title: 'ಸಮತೋಲಿತ, ದೂರದೃಷ್ಟಿಯ ಬಜೆಟ್:  
 subtitle: 'ಮಕ್ಕಳ ಪರ ಯೋಜನೆಗಳಿಗೆ 63,135 ಕೋಟಿ ರೂಪಾಯಿ ಮೀಸಲಿಡಲಾಗಿದೆ.'
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/762289a143539eeb.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/762289a143539eeb-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-06T11:16:35.518Z'
 updatedAt: null

@@ -7,7 +7,7 @@ subtitle: >-
   ನಿಧಿ ಗ್ಯಾರಂಟಿಗೆ ಎಳ್ಳು ನೀರು ಬಿಟ್ಟಂತಾಗಿದೆ
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/3ce90c825cd28734.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/3ce90c825cd28734-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-06T11:22:11.934Z'
 updatedAt: null

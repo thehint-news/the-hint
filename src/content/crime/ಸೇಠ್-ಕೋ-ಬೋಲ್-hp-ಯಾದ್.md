@@ -3,7 +3,7 @@ title: ಸೇಠ್ ಕೋ ಬೋಲ್ HP ಯಾದ್ ಕಿಯಾ..! ಸಮ�
 subtitle: ದುಬಾರಾ ಕರ್ತೆ ಪೋನ್ ಉಟಾ
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/08/7c5b6438fb60157c.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/08/7c5b6438fb60157c-thumb-4x3.jpg
 status: published
 publishedAt: '2026-08-23T15:12:32.691Z'
 updatedAt: '2026-08-24T02:48:22.367Z'

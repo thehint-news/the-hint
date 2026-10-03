@@ -183,6 +183,33 @@ export async function processImageVariants(
 }
 
 /**
+ * Generate a 1200x900 4:3 editorial thumbnail from an existing image buffer.
+ * Used for legacy migration and thumbnail derivation.
+ */
+export async function createThumbnailVariantFromBuffer(buffer: Buffer): Promise<ProcessedVariant> {
+    const thumbBuffer = await sharp(buffer)
+        .rotate()
+        .resize(1200, 900, {
+            fit: 'cover',
+            position: sharp.strategy.attention || 'centre',
+        })
+        .jpeg({
+            quality: 85,
+            mozjpeg: true,
+        })
+        .toBuffer();
+
+    return {
+        buffer: thumbBuffer,
+        width: 1200,
+        height: 900,
+        mimeType: 'image/jpeg',
+        size: thumbBuffer.length,
+        ext: 'jpg',
+    };
+}
+
+/**
  * Generate a 1200x630 social image from an existing image buffer or URL.
  * Used for legacy migration and backward compatibility fallback.
  */

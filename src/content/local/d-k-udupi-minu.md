@@ -5,7 +5,7 @@ title: >-
 subtitle: ಜಿಲ್ಲಾಸ್ಪತ್ರೆಯಲ್ಲಿ ದಿನನಿತ್ಯ ಚಿಕಿತ್ಸೆಗೆ ಬರುವ ನೂರಾರು ರೋಗಿಗಳಿಗೆ ಸಹಕಾರಿ
 contentType: news
 image: >-
-  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/88ee5ca6d5fb3ff0.jpg
+  https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/88ee5ca6d5fb3ff0-thumb-4x3.jpg
 status: published
 publishedAt: '2026-03-07T12:07:20.291Z'
 updatedAt: null
