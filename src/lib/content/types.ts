@@ -96,6 +96,9 @@ export interface Article {
     /** Featured image URL (optional) */
     image?: string;
 
+    /** Social / Open Graph image URL (optional, 1.91:1) */
+    socialImage?: string;
+
     /** Dimensions for featured image (populated by backfill/validation) */
     imageWidth?: number;
     imageHeight?: number;
@@ -120,6 +123,7 @@ export interface ArticleFrontmatter {
     updatedAt?: string | null;
     placement?: 'lead' | 'top' | 'standard';
     image?: string;
+    socialImage?: string;
     tags?: string[];
     sources?: string[];
     status?: 'published' | 'draft';

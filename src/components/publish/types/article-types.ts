@@ -54,6 +54,7 @@ export interface ArticleFormData {
     placement: PlacementValue;
     sources: string;
     thumbnail: string; // Thumbnail image URL
+    socialImage?: string; // OG Social image URL (1200x630)
     draftId: string | null;
     status: StatusValue;
     /** For editing published articles */
@@ -78,6 +79,7 @@ export const INITIAL_FORM_DATA: ArticleFormData = {
     placement: 'standard',
     sources: '',
     thumbnail: '',
+    socialImage: '',
     draftId: null,
     status: 'draft',
     isLead: false,

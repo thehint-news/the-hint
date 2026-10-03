@@ -249,6 +249,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             sources: articleData.sources,
             placement: articleData.placement,
             thumbnail: articleData.thumbnail,
+            socialImage: articleData.socialImage,
             slug: targetSlug,
             draftId: draftIdString,
             isLead: articleData.isLead,

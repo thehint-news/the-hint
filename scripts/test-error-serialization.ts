@@ -3,7 +3,7 @@ import { logger } from '../src/lib/feedback/console-guard';
 console.log('=== TEST 1: ERROR SERIALIZATION IN PRODUCTION ===');
 
 // Simulate production environment
-Object.defineProperty(process.env, 'NODE_ENV', { value: 'production', configurable: true, writable: true });
+Object.defineProperty(process.env, 'NODE_ENV', { value: 'production', configurable: true, writable: true, enumerable: true });
 
 // Capture console.error output
 const logs: unknown[][] = [];

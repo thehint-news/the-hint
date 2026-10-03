@@ -20,6 +20,7 @@ export interface ArticleMetadata {
   placement?: 'lead' | 'top' | 'standard';
   tags?: string[];
   image?: string | null;
+  socialImage?: string | null;
   excerpt?: string | null;
   author?: string | null;
   isLead?: boolean;
@@ -131,6 +132,7 @@ export function generateContentGraph(): ContentGraph {
           language: "kn",
           file: `${category}/${file}`,
           image: imgUrl,
+          socialImage: frontmatter.socialImage || null,
           excerpt: frontmatter.excerpt || frontmatter.description || frontmatter.subtitle || null,
           subtitle: frontmatter.subtitle || '',
           author: frontmatter.author || null,

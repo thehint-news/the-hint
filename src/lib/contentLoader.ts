@@ -15,6 +15,7 @@ export interface ArticleMetadata {
     placement?: 'lead' | 'top' | 'standard';
     tags?: string[];
     image?: string | null;
+    socialImage?: string | null;
     isLead?: boolean;
     updatedAt?: string | null;
     leadMedia?: LeadMedia;

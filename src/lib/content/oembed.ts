@@ -128,7 +128,7 @@ export async function fetchOEmbedData(url: string): Promise<OEmbedResponse> {
             headers: {
                 'Accept': 'application/json',
                 // Using a generic user agent to prevent basic blocking
-                'User-Agent': 'Mozilla/5.0 (compatible; EditorialEmbedFetcher/1.0; +https://thehint.in)',
+                'User-Agent': 'Mozilla/5.0 (compatible; EditorialEmbedFetcher/1.0; +https://www.thehintnews.in)',
             },
             signal: AbortSignal.timeout(8000), // Prevent hanging requests
         });

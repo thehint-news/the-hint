@@ -53,6 +53,7 @@ export const getArticleContent = cache(async (slug: string) => {
             tags: frontmatter.tags ?? [],
             sources: frontmatter.sources ?? [],
             image: articleMeta.image || frontmatter.image || null,
+            socialImage: articleMeta.socialImage || (fr.socialImage as string) || null,
             imageWidth: articleMeta.imageWidth,
             imageHeight: articleMeta.imageHeight,
             imageType: articleMeta.imageType,

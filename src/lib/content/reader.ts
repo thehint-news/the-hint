@@ -62,6 +62,7 @@ export const getAllArticles = cache(async function getAllArticles(): Promise<Art
             tags: meta.tags || [],
             sources: [],
             image: meta.image || undefined,
+            socialImage: meta.socialImage || undefined,
             isLead: meta.isLead || false,
             leadMedia: meta.leadMedia,
         }));

@@ -74,7 +74,14 @@ export async function generateArticleMetadata({
     const isoDate = new Date(article.publishedAt).toISOString();
     const isoUpdated = article.updatedAt ? new Date(article.updatedAt).toISOString() : isoDate;
 
-    const canonicalUrl = `/${article.section}/${article.id}`;
+    const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thehintnews.in';
+    const siteUrl = rawSiteUrl.endsWith('/') ? rawSiteUrl.slice(0, -1) : rawSiteUrl;
+    const canonicalUrl = `${siteUrl}/${article.section}/${article.id}`;
+
+    const ogImageUrl = article.socialImage || article.image;
+    const ogWidth = article.socialImage ? 1200 : (article.imageWidth || 1200);
+    const ogHeight = article.socialImage ? 630 : (article.imageHeight || 630);
+    const ogType = article.socialImage ? 'image/jpeg' : (article.imageType || 'image/jpeg');
 
     return {
         title: article.title,
@@ -93,13 +100,19 @@ export async function generateArticleMetadata({
             modifiedTime: isoUpdated,
             section: article.section,
             tags: article.tags,
-            images: article.image ? [{
-                url: article.image,
+            images: ogImageUrl ? [{
+                url: ogImageUrl,
                 alt: article.title,
-                ...(article.imageWidth ? { width: article.imageWidth } : {}),
-                ...(article.imageHeight ? { height: article.imageHeight } : {}),
-                ...(article.imageType ? { type: article.imageType } : {})
-            }] : [],
+                width: ogWidth,
+                height: ogHeight,
+                type: ogType,
+            }] : [{
+                url: `${siteUrl}/brand/logo.png`,
+                alt: article.title,
+                width: 1200,
+                height: 630,
+                type: 'image/png',
+            }],
             url: canonicalUrl,
             locale: 'kn_IN',
             siteName: 'The Hint News',
@@ -108,7 +121,7 @@ export async function generateArticleMetadata({
             card: 'summary_large_image',
             title: article.title,
             description: article.subtitle,
-            images: article.image ? [article.image] : [],
+            images: ogImageUrl ? [ogImageUrl] : [`${siteUrl}/brand/logo.png`],
         },
     };
 }
@@ -153,7 +166,7 @@ export async function ArticlePageContent({ section, slug }: ArticlePageContentPr
                 url: canonicalUrl,
                 headline: article.title,
                 description: article.subtitle,
-                image: article.image ? [article.image] : [],
+                image: (article.socialImage || article.image) ? [article.socialImage || article.image!] : [],
                 datePublished: new Date(article.publishedAt).toISOString(),
                 dateModified: new Date(article.updatedAt || article.publishedAt).toISOString(),
                 author: [{
