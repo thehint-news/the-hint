@@ -63,7 +63,7 @@ bodyBlocks:
 socialImage: >-
   https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/03/88ee5ca6d5fb3ff0-og-1200x630.jpg
 imageWidth: 1200
-imageHeight: 630
+imageHeight: 900
 imageType: image/jpeg
 ---
 
