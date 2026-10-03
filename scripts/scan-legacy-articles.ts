@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 
 
+import matter from 'gray-matter';
+
 async function scanLegacy() {
-
-
     let withImage = 0;
     let withSocialImage = 0;
     let missingSocialImage = 0;
@@ -30,13 +30,11 @@ async function scanLegacy() {
 
     for (const mf of markdownFiles) {
         const raw = fs.readFileSync(mf.file, 'utf8');
-        const imgMatch = raw.match(/^image:\s*"?([^"\r\n]+)"?/m);
-        const socialMatch = raw.match(/^socialImage:\s*"?([^"\r\n]+)"?/m);
-        const widthMatch = raw.match(/^imageWidth:\s*([0-9]+)/m);
-        const heightMatch = raw.match(/^imageHeight:\s*([0-9]+)/m);
+        const parsed = matter(raw);
+        const data = parsed.data;
 
-        const imgUrl = imgMatch ? imgMatch[1].trim() : null;
-        const socialUrl = socialMatch ? socialMatch[1].trim() : null;
+        const imgUrl = typeof data.image === 'string' ? data.image.trim() : null;
+        const socialUrl = typeof data.socialImage === 'string' ? data.socialImage.trim() : null;
 
         if (imgUrl) {
             withImage++;
@@ -51,8 +49,8 @@ async function scanLegacy() {
             missingSocialImage++;
         }
 
-        const width = widthMatch ? parseInt(widthMatch[1], 10) : null;
-        const height = heightMatch ? parseInt(heightMatch[1], 10) : null;
+        const width = typeof data.imageWidth === 'number' ? data.imageWidth : null;
+        const height = typeof data.imageHeight === 'number' ? data.imageHeight : null;
 
         if (!width || !height) {
             brokenOgMetadata++;

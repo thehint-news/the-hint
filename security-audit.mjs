@@ -109,7 +109,7 @@ registerTest('INPUT-01', 'XSS payload rejected/sanitized', async () => {
         headers: { 'Cookie': `the_hint_session=${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ headline: '<script>alert(1)</script>', body: 'test' })
     });
-    const data = await res.json();
+    await res.json();
     // Assuming validation checks for XSS in headline, or at least accepts it but sanitizes later?
     // Let's just check if it throws an error or not for the test script.
     // If it succeeds, the audit will note that it's allowed in the DB but must be sanitized on render.
@@ -117,7 +117,7 @@ registerTest('INPUT-01', 'XSS payload rejected/sanitized', async () => {
 
 registerTest('INPUT-04', 'malicious image URL rejected', async () => {
     const token = await getToken();
-    const res = await fetch(`${BASE_URL}/api/publish/post-metadata`, {
+    await fetch(`${BASE_URL}/api/publish/post-metadata`, {
         method: 'POST',
         headers: { 'Cookie': `the_hint_session=${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ imageUrl: 'http://localhost:22' })
