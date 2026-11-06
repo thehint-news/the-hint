@@ -1,12 +1,12 @@
 ---
-title: HP ಸಿಕ್ಕಿಬಿದ್ದನಾ...? ಅಥವಾ ಬಲೆಗೆ ಬಿದ್ದದ್ದು ಆತನ ನೆರಳಾ..?
+title: HP ಸಿಕ್ಕಿಬಿದ್ದನಾ...? ಬಲೆಗೆ ಬಿದ್ದದ್ದು ಅಸಲಿಯೋ, ಆತನ ನೆರಳೋ...?
 subtitle: ನೇಪಾಳ, ಮ್ಯಾನ್ಮಾರ್, ಮಲೇಷ್ಯಾ, ಸಿಂಗಾಪುರ... ದೇಶದಿಂದ ದೇಶಕ್ಕೆ HP ಹುಡುಕಾಟ; ಅಸಲಿ HP ಅಡಗಿರುವುದು ಎಲ್ಲಿ..?
 contentType: news
 image: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/11/709d510c0bcdae64-thumb-4x3.jpg
 socialImage: https://vknkmbsapbnahnlkwbnz.supabase.co/storage/v1/object/public/article-images/articles/2026/11/709d510c0bcdae64-og-1200x630.jpg
 status: published
 publishedAt: '2026-11-06T13:03:52.691Z'
-updatedAt: null
+updatedAt: '2026-11-06T13:06:39.501Z'
 placement: lead
 tags:
   - hp
