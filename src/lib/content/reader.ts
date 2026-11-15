@@ -99,13 +99,14 @@ export const getArticleBySlug = cache(async function getArticleBySlug(section: s
         );
     }
 
-    const { data: cached, isStale } = getCachedArticleBySlug(slug);
+    const cacheKey = `${section}/${slug}`;
+    const { data: cached, isStale } = getCachedArticleBySlug(cacheKey);
     if (cached && !isStale) {
         return cached;
     }
 
     try {
-        const fullArticleContent = await getArticleContent(slug);
+        const fullArticleContent = await getArticleContent(section, slug);
         
         if (!fullArticleContent) {
            return null;
@@ -113,11 +114,11 @@ export const getArticleBySlug = cache(async function getArticleBySlug(section: s
 
         const article: Article = fullArticleContent as unknown as Article; // Mapped properly in getArticleContent
 
-        setCachedArticleBySlug(slug, article);
+        setCachedArticleBySlug(cacheKey, article);
         return article;
     } catch {
         if (cached) {
-            console.warn(`[getArticleBySlug] Fetch failed for ${slug}, serving stale cache`);
+            console.warn(`[getArticleBySlug] Fetch failed for ${cacheKey}, serving stale cache`);
             return cached;
         }
         return null;

@@ -41,10 +41,10 @@ export function setCachedArticlesList(articles: Article[]): void {
 }
 
 /**
- * Get cached article by slug. Returns { data, isStale }
+ * Get cached article by compound key (section/slug) or slug. Returns { data, isStale }
  */
-export function getCachedArticleBySlug(slug: string): { data: Article | null, isStale: boolean } {
-    const entry = globalThis.__articleBySlugCache!.get(slug);
+export function getCachedArticleBySlug(key: string): { data: Article | null, isStale: boolean } {
+    const entry = globalThis.__articleBySlugCache!.get(key);
     if (!entry) {
         return { data: null, isStale: false };
     }
@@ -52,8 +52,8 @@ export function getCachedArticleBySlug(slug: string): { data: Article | null, is
     return { data: entry.data, isStale: age >= CACHE_TTL_MS };
 }
 
-export function setCachedArticleBySlug(slug: string, article: Article): void {
-    globalThis.__articleBySlugCache!.set(slug, {
+export function setCachedArticleBySlug(key: string, article: Article): void {
+    globalThis.__articleBySlugCache!.set(key, {
         data: article,
         timestamp: Date.now(),
     });

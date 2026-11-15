@@ -5,7 +5,7 @@ import { parseMarkdown } from "./content/parser"; // assuming we can still use t
 
 import { ArticleMetadata } from "./contentLoader";
 
-export const getArticleContent = cache(async (slug: string) => {
+export const getArticleContent = cache(async (section: string, slug: string) => {
     // 1. Read Content Graph directly
     const graphPath = path.join(process.cwd(), ".cache", "contentGraph.json");
     if (!fs.existsSync(graphPath)) {
@@ -14,13 +14,13 @@ export const getArticleContent = cache(async (slug: string) => {
 
     const rawGraph = fs.readFileSync(graphPath, "utf-8");
     const contentGraph = JSON.parse(rawGraph);
-    const articles = Object.values(contentGraph.articles) as ArticleMetadata[];
 
-    // 2. Locate Article Metadata
-    const articleMeta = articles.find((a) => a.slug === slug);
+    // 2. Locate Article Metadata using compound identity section/slug
+    const compoundId = `${section}/${slug}`;
+    const articleMeta = contentGraph.articles?.[compoundId] as ArticleMetadata | undefined;
 
     if (!articleMeta) {
-        throw new Error(`Article metadata not found in content graph for slug: ${slug}`);
+        throw new Error(`Article metadata not found in content graph for: ${compoundId}`);
     }
 
     const { file, category } = articleMeta;
